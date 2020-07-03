@@ -22,11 +22,13 @@ public class Database
 	{
         try 
         {
-        	Connection connectionString = DriverManager.getConnection(url, user, password);
-            Statement commandAdapter = connectionString.createStatement();
+        	Connection connection = DriverManager.getConnection(url, user, password);
+            Statement commandAdapter = connection.createStatement();
             ResultSet resultTable = commandAdapter.executeQuery(sql);
+			connection.close();
 			return resultTable;
-        } catch (SQLException exception) 
+        }
+        catch (SQLException exception) 
         {
         	System.out.println(exception.toString());
         	return null;
@@ -36,23 +38,27 @@ public class Database
 	{
         try 
         {
-        	Connection connectionString = DriverManager.getConnection(url, user, password);
-            Statement commandAdapter = connectionString.createStatement();
+        	Connection connection = DriverManager.getConnection(url, user, password);
+            Statement commandAdapter = connection.createStatement();
             commandAdapter.executeUpdate(sql);
-        } catch (SQLException exception) 
+            connection.close();
+        }
+        catch (SQLException exception) 
         {
         	System.out.println(exception.toString());
-        } 
+        }
     }
 	public static int ScalarCommand(String sql) 
 	{
         try 
         {
-        	Connection connectionString = DriverManager.getConnection(url, user, password);
-            Statement commandAdapter = connectionString.createStatement();
+        	Connection connection = DriverManager.getConnection(url, user, password);
+            Statement commandAdapter = connection.createStatement();
             ResultSet resultTable = commandAdapter.executeQuery(sql);
             resultTable.next();
-            return resultTable.getInt(1);
+            int result = resultTable.getInt(1);
+            connection.close();
+            return result;
         } 
         catch (SQLException exception) 
         {
