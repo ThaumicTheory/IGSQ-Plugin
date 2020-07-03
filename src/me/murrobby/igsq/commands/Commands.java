@@ -101,8 +101,8 @@ public class Commands implements CommandExecutor{
 	}
 	private Boolean Version() 
 	{
-		String version = "RELEASE1";
-		String forBuild = "Spigot 1.16.1";
+		String version = plugin.getDescription().getVersion();
+		String forBuild = plugin.getDescription().getAPIVersion();
 		if(args.length == 0) 
 		{
 			sender.sendMessage(Common.ChatColour("&bIGSQ Version " + version + " for " + forBuild + "!"));
