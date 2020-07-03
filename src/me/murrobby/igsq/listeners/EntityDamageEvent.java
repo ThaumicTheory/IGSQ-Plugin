@@ -58,7 +58,7 @@ public class EntityDamageEvent implements Listener
 					{
 						player.removePotionEffect(PotionEffectType.LUCK);
 					}
-					if(event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK || event.getCause() == DamageCause.MAGIC || event.getCause() == DamageCause.ENTITY_EXPLOSION || event.getCause() == DamageCause.POISON || event.getCause() == DamageCause.WITHER || event.getCause() == DamageCause.PROJECTILE) 
+					if(event.getCause() == DamageCause.ENTITY_ATTACK || event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK || event.getCause() == DamageCause.MAGIC || event.getCause() == DamageCause.ENTITY_EXPLOSION || event.getCause() == DamageCause.WITHER || event.getCause() == DamageCause.PROJECTILE) 
 					{
 						//Entity Based Attacks
 						event.setDamage(event.getDamage()*2);
@@ -88,6 +88,17 @@ public class EntityDamageEvent implements Listener
 					else if(event.getCause() == DamageCause.DROWNING) 
 					{
 						event.setDamage(event.getDamage()*2);
+					}
+					else if(event.getCause() == DamageCause.POISON) 
+					{
+						if(player.getHealth() > 2) 
+						{
+							event.setDamage(event.getDamage()*2);
+						}
+						else 
+						{
+							
+						}
 					}
 					else 
 					{
