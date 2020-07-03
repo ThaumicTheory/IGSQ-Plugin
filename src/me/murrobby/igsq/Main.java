@@ -67,8 +67,7 @@ public class Main extends JavaPlugin{
 				} catch (Exception e)
 				{
 					System.out.println("DATABASE ERROR: " + e.toString());
-				}
-				
+				}				
 				
 			}
 			

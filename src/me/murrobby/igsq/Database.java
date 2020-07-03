@@ -6,17 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.bukkit.plugin.Plugin;
+
 public class Database 
 {
-    static String url = "jdbc:mysql://localhost:3306/igsq?useSSL=false";
-    static String user = "igsq";
-    static String password = "fgvGpSHwzxt7Q4PM";
+    static String url;
+    static String user;
+    static String password;
+    static Plugin plugin;
 	public Database(Main plugin)
 	{
+		Database.plugin = plugin;
 		UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(uuid VARCHAR(36) PRIMARY KEY,id VARCHAR(18),current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37));");
+		url = Common.getFieldString("MYSQL.database", "config");
+		user = Common.getFieldString("MYSQL.username", "config");
+		password = Common.getFieldString("MYSQL.password", "config");
 	}
 	public static ResultSet QueryCommand(String sql) 
 	{
@@ -25,7 +32,22 @@ public class Database
         	Connection connection = DriverManager.getConnection(url, user, password);
             Statement commandAdapter = connection.createStatement();
             ResultSet resultTable = commandAdapter.executeQuery(sql);
-			connection.close();
+            plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable()
+	    	{
+
+				@Override
+				public void run() 
+				{
+					try
+					{
+						connection.close();
+					}
+					catch (Exception exception)
+					{
+						System.out.println(exception.toString());
+					}
+				} 		
+	    	},60);
 			return resultTable;
         }
         catch (SQLException exception) 
