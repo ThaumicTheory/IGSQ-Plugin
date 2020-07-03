@@ -1,2 +1,2 @@
 # IGSQ
-Official Repo of the IGSQ Minecraft server backend.
+Official Repo of the IGSQ Minecraft server plugin.
