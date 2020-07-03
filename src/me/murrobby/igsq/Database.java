@@ -8,15 +8,18 @@ import java.sql.Statement;
 
 public class Database 
 {
-    static String url = "jdbc:mysql://localhost:3306/igsq?useSSL=false";
-    static String user = "igsq";
-    static String password = "fgvGpSHwzxt7Q4PM";
+    static String url;
+    static String user;
+    static String password;
 	public Database(Main plugin)
 	{
 		UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(uuid VARCHAR(36) PRIMARY KEY,id VARCHAR(18),current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37));");
+		url = Common.getFieldString("MYSQL.database", "config");
+		user = Common.getFieldString("MYSQL.username", "config");
+		password = Common.getFieldString("MYSQL.password", "config");
 	}
 	public static ResultSet QueryCommand(String sql) 
 	{
