@@ -1,2 +1,2 @@
 # IGSQ
-this is the spigot backend for the IGSQ server
+Official Repo of the IGSQ Minecraft server backend.
