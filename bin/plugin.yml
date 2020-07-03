@@ -1,0 +1,11 @@
+name: IGSQ-Spigot
+version: 0.0.2
+author: Murrobby
+main: me.murrobby.igsq.Main
+description: Custom IGSQ Plugin Made By Murrobby
+api-version: 1.16
+
+commands:
+  igsq:
+   aliases: [sq]
+   description: Holds Every igsq command.
