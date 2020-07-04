@@ -39,20 +39,9 @@ public class EntityTargetEvent implements Listener
 	{
 		if(Common.getFieldBool("GAMEPLAY.expert", "config"))
 		{
-			if(event.getEntity() instanceof Enderman) 
+			if(event.getEntity() instanceof Phantom) 
 			{
-				if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase("Expert Enderman Warrior")) 
-				{
-					if(!(event.getTarget() instanceof Player)) 
-					{
-						Enderman enderman = (Enderman) event.getEntity();
-						enderman.setHealth(0);
-					}
-				}
-			}
-			else if(event.getEntity() instanceof Phantom) 
-			{
-				if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase("Expert Enderman Warrior")) 
+				if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase("Expert Phantom Warrior")) 
 				{
 					if(!(event.getTarget() instanceof Player)) 
 					{
