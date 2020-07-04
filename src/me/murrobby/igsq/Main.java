@@ -240,10 +240,6 @@ public class Main extends JavaPlugin{
 						{
 							
 						}
-						if(random.nextInt(100) == 1) 
-						{
-							
-						}
 						if(worldTimeSecs == 600) //NightBegins
 						{
 							if(random.nextInt(8) == 1 && selectedWorld.getAllowMonsters()) 
