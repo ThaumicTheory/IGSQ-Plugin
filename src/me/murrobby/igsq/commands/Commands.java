@@ -37,7 +37,8 @@ public class Commands implements CommandExecutor{
 		this.plugin = plugin;
 		plugin.getCommand("igsq").setExecutor(this);
 	}
-	@Override
+	@Override 
+	
 	public boolean onCommand(CommandSender sender,Command command,String label,String[] args) 
 	{
 		this.sender = sender;
@@ -46,6 +47,7 @@ public class Commands implements CommandExecutor{
 			sender.sendMessage(Common.ChatColour("&cPlease Specify a command!"));
 			return false;
 		}
+		//Detect which arguments are used in the /igsq command
 		this.args = Common.Depend(args, 0);
     	switch(args[0].toLowerCase()) 
     	{
@@ -72,6 +74,7 @@ public class Commands implements CommandExecutor{
   	  			return false;
     	}
 	}
+	//Permission checking function
 	private boolean RequirePermission(String permission) 
 	{
 		if(IsPlayer() && player.hasPermission(permission))
@@ -185,30 +188,29 @@ public class Commands implements CommandExecutor{
 		if(args.length != 0) 
 		{
 			plugin.scheduler.cancelTask(realtimeTask);
-			realtimeTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
+			realtimeTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() //start a task to run the command
 	    	{
 
 				@Override
 				public void run() 
 				{
-					Calendar calendar = Calendar.getInstance();
+					Calendar calendar = Calendar.getInstance(); //get IRL time
 					int seconds = calendar.get(Calendar.SECOND);
 					int minutes = calendar.get(Calendar.MINUTE);
 					int hours = calendar.get(Calendar.HOUR_OF_DAY);
-					//long unix = (long) calendar.getTimeInMillis();
 					long totalSeconds = (long) ((double)seconds + ((double)minutes*60) + ((double)hours*3600));
-					//long totalSeconds = unix;
-					long mctime = (long)((double)totalSeconds/72*20);
-					world.setTime((mctime*realtimeSpeed)-5000);
+					long mctime = (long)((double)totalSeconds/72*20); //get mc time
+					world.setTime((mctime*realtimeSpeed)-5000); //set mc time
 				} 		
 	    	}, 0, 20);
-			Common.internalData.set("Modules.realtime", true);
+			//cleanup
+			Common.internalData.set("Modules.realtime", true); 
 			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-			world.setGameRule(GameRule.RANDOM_TICK_SPEED,realtimeSpeed);
+			world.setGameRule(GameRule.RANDOM_TICK_SPEED,realtimeSpeed); //redundant
 			sender.sendMessage(Common.ChatColour("&bRealtime mode Turned On!"));
 			return true;
 		}
-		else if(Common.getFieldBool("Modules.realtime", "internal").equals(false)) 
+		else if(Common.getFieldBool("Modules.realtime", "internal").equals(false)) //when no speed multiplier is given, defualt to 1
 		{
 			realtimeTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
 	    	{
@@ -220,9 +222,7 @@ public class Commands implements CommandExecutor{
 					int seconds = calendar.get(Calendar.SECOND);
 					int minutes = calendar.get(Calendar.MINUTE);
 					int hours = calendar.get(Calendar.HOUR_OF_DAY);
-					//long unix = (long) calendar.getTimeInMillis();
 					long totalSeconds = (long) ((double)seconds + ((double)minutes*60) + ((double)hours*3600));
-					//long totalSeconds = unix;
 					long mctime = (long)((double)totalSeconds/72*20);
 					world.setTime((mctime*realtimeSpeed)-5000);
 				} 		
@@ -484,17 +484,17 @@ public class Commands implements CommandExecutor{
         }
 }
 
-    private boolean Notification() {
+    private boolean Notification() { //handles user configuration for notifications
         if(args.length != 2) 
         {
         	 return false;
         }
-        else if(args[0].equalsIgnoreCase("sound"))
+        else if(args[0].equalsIgnoreCase("sound")) //select notification sound
         {
             try
             {
-            	Sound sound = Sound.valueOf(args[1].toUpperCase());
-            	Common.playerData.set(player.getUniqueId().toString() + ".notification.sound",sound.toString());
+            	Sound sound = Sound.valueOf(args[1].toUpperCase()); 
+            	Common.playerData.set(player.getUniqueId().toString() + ".notification.sound",sound.toString()); //set sound configuration to playerData.yml
             	Common.playerData.save(Common.playerDataFile);
             	player.sendMessage(Common.ChatColour("&bSound set to &a" + sound.toString() + "&b!"));
             }
@@ -505,7 +505,7 @@ public class Commands implements CommandExecutor{
             }
             return true;
         }
-        else if(args[0].equalsIgnoreCase("pitch"))
+        else if(args[0].equalsIgnoreCase("pitch")) //adjust pitch of notifications
         {
             try
             {
@@ -534,7 +534,7 @@ public class Commands implements CommandExecutor{
             }
             return true;
         }
-        else if(args[0].equalsIgnoreCase("enabled"))
+        else if(args[0].equalsIgnoreCase("enabled")) //enable or disable notifications
         {
             try
             {
@@ -557,7 +557,7 @@ public class Commands implements CommandExecutor{
             }
             return true;
         }
-        else if(args[0].equalsIgnoreCase("allowself"))
+        else if(args[0].equalsIgnoreCase("allowself")) //controls whether you ping yourself
         {
             try
             {
@@ -580,7 +580,7 @@ public class Commands implements CommandExecutor{
             }
             return true;
         }
-        else if(args[0].equalsIgnoreCase("allowconsole"))
+        else if(args[0].equalsIgnoreCase("allowconsole")) //allow or deny server sided pings
         {
             try
             {
@@ -631,7 +631,7 @@ public class Commands implements CommandExecutor{
         }
 }
 
-    private boolean ExpertDifficulty()
+    private boolean ExpertDifficulty() //turn expert mode on or off
     {
     	 try
          {
