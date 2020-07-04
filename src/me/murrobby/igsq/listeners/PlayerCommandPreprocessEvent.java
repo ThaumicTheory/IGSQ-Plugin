@@ -30,7 +30,7 @@ public class PlayerCommandPreprocessEvent implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerBedEnter(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
+	public void PlayerCommandPreprocess(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
 	{
 		if(!event.getPlayer().hasPermission("igsq.commandwatchbypass"))
 		{
