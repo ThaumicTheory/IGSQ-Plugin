@@ -31,7 +31,7 @@ public class SlimeSplitEvent_Expert implements Listener
 	@EventHandler
 	public void SlimeSplit_Expert(org.bukkit.event.entity.SlimeSplitEvent event) 
 	{
-		if(!event.isCancelled()) 
+		if(Common.ExpertCheck() && !event.isCancelled()) 
 		{
 			if(event.getEntity().getType() == EntityType.SLIME) 
 			{

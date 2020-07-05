@@ -41,7 +41,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 	@EventHandler
 	public void EntityDamagedByEntity_Expert(org.bukkit.event.entity.EntityDamageByEntityEvent event) 
 	{
-		if(!event.isCancelled()) 
+		if(Common.ExpertCheck() && !event.isCancelled()) 
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{

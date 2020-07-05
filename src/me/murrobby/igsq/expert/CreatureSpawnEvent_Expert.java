@@ -36,7 +36,7 @@ public class CreatureSpawnEvent_Expert implements Listener
 	@EventHandler
 	public void CreatureSpawn_Expert(org.bukkit.event.entity.CreatureSpawnEvent event) 
 	{
-		if(!event.isCancelled()) 
+		if(Common.ExpertCheck() && !event.isCancelled()) 
 		{
 			if(Common.getFieldBool(event.getLocation().getWorld().getUID() + ".event.bloodmoon", "internal")) 
 			{

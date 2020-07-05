@@ -29,7 +29,7 @@ public class BlockSpreadEvent_Expert implements Listener
 	@EventHandler
 	public void BlockSpread_Expert(org.bukkit.event.block.BlockSpreadEvent event) 
 	{
-		if(!event.isCancelled()) 
+		if(Common.ExpertCheck() && !event.isCancelled()) 
 		{
 			if(event.getSource().getBlockData().getMaterial() == Material.FIRE) 
 			{

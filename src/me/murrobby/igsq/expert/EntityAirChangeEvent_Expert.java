@@ -24,7 +24,7 @@ public class EntityAirChangeEvent_Expert implements Listener
 	@EventHandler
 	public void EntityAirChange_Expert(org.bukkit.event.entity.EntityAirChangeEvent event) 
 	{
-		if(!event.isCancelled()) 
+		if(Common.ExpertCheck() && !event.isCancelled()) 
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{

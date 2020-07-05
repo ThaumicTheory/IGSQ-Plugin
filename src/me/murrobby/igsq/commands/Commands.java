@@ -18,6 +18,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Main;
+import me.murrobby.igsq.expert.Main_Expert;
 
 public class Commands implements CommandExecutor{
 	private Main plugin;
@@ -641,6 +642,7 @@ public class Commands implements CommandExecutor{
          	if(enabled) 
          	{
          		player.sendMessage(Common.ChatColour("&bExpert Mode &aEnabled&b!"));
+         		Main_Expert.Start_Expert();
          	}
          	else 
          	{
