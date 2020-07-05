@@ -12,17 +12,17 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 public class BloodMoon_Expert {
-	Main plugin;
+	Main_Spigot plugin;
 	Random random = new Random();
 	
 	final int taskID;
 	
 	private int bloodMoonTask = -1;
 	
-	public BloodMoon_Expert(Main plugin,int taskID) 
+	public BloodMoon_Expert(Main_Spigot plugin,int taskID) 
 	{
 		this.taskID = taskID;
 		this.plugin = plugin;

@@ -11,16 +11,16 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 import org.bukkit.Material;
 import java.util.Random;
 
 @SuppressWarnings("unused")
 public class BlockSpreadEvent_Main implements Listener
 {
-	private Main plugin;
+	private Main_Spigot plugin;
 	Random random = new Random();
-	public BlockSpreadEvent_Main(Main plugin)
+	public BlockSpreadEvent_Main(Main_Spigot plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);

@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 import java.util.Random;
 
@@ -31,8 +31,8 @@ import java.util.Random;
 public class EntityDamageByEntityEvent_Main implements Listener
 {
 	Random random = new Random();
-	private Main plugin;
-	public EntityDamageByEntityEvent_Main(Main plugin)
+	private Main_Spigot plugin;
+	public EntityDamageByEntityEvent_Main(Main_Spigot plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);

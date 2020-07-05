@@ -22,13 +22,13 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 @SuppressWarnings("unused")
 public class EntityDamageEvent_Expert implements Listener
 {
-	private Main plugin;
-	public EntityDamageEvent_Expert(Main plugin)
+	private Main_Spigot plugin;
+	public EntityDamageEvent_Expert(Main_Spigot plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);

@@ -8,17 +8,17 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Database;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 public class PlayerJoinEvent_Main implements Listener
 {
 	@SuppressWarnings("unused")
-	private Main plugin;
+	private Main_Spigot plugin;
 	private String playerUUID;
 	private String username;
 	private int usernameUpdate;
 	private Boolean playedBefore;
-	public PlayerJoinEvent_Main(Main plugin)
+	public PlayerJoinEvent_Main(Main_Spigot plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);

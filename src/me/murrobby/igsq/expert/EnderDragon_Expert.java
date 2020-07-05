@@ -14,18 +14,18 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 import java.util.Random;
 
 public class EnderDragon_Expert
 {	
-	Main plugin;
+	Main_Spigot plugin;
 	Random random = new Random();
 	int enderDragonTask = -1;
 	final int taskID;
 	
-	public EnderDragon_Expert(Main plugin,int taskID) 
+	public EnderDragon_Expert(Main_Spigot plugin,int taskID) 
 	{
 		this.plugin = plugin;
 		this.taskID = taskID;

@@ -3,16 +3,16 @@ package me.murrobby.igsq.commands;
 import org.bukkit.command.CommandSender;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 public class Version_Command {
 
-	private Main plugin;
+	private Main_Spigot plugin;
 	private Executor_Command commands;
 	private CommandSender sender;
 	private String[] args = new String[0];
 	public Boolean result;
-	public Version_Command(Main plugin,Executor_Command commands,CommandSender sender,String[] args) 
+	public Version_Command(Main_Spigot plugin,Executor_Command commands,CommandSender sender,String[] args) 
 	{
 		this.plugin = plugin;
 		this.commands = commands;

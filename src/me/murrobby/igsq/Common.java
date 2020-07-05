@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class Common {
-	public static Main plugin;
+	public static Main_Spigot plugin;
     public static File playerDataFile;
     public static FileConfiguration playerData;
     public static File internalDataFile;

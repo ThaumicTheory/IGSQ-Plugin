@@ -18,7 +18,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 import java.util.Random;
 
@@ -27,8 +27,8 @@ import java.util.Random;
 public class EntityTargetEvent_Expert implements Listener
 {
 	Random random = new Random();
-	private Main plugin;
-	public EntityTargetEvent_Expert(Main plugin)
+	private Main_Spigot plugin;
+	public EntityTargetEvent_Expert(Main_Spigot plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);

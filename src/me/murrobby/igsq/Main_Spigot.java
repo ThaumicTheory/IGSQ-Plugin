@@ -12,7 +12,7 @@ import me.murrobby.igsq.main.PlayerJoinEvent_Main;
 import java.sql.ResultSet;
 import java.util.Random;
 
-public class Main extends JavaPlugin{
+public class Main_Spigot extends JavaPlugin{
 	public BukkitScheduler scheduler = getServer().getScheduler();
 	Random random = new Random();
 	@Override

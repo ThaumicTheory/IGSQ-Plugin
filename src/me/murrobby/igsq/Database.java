@@ -14,7 +14,7 @@ public class Database
     static String user;
     static String password;
     static Plugin plugin;
-	public Database(Main plugin)
+	public Database(Main_Spigot plugin)
 	{
 		Database.plugin = plugin;
 		url = Common.getFieldString("MYSQL.database", "config");

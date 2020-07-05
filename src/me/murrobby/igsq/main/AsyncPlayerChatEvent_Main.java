@@ -8,12 +8,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 public class AsyncPlayerChatEvent_Main implements Listener
 {
-	private Main plugin;
-	public AsyncPlayerChatEvent_Main(Main plugin)
+	private Main_Spigot plugin;
+	public AsyncPlayerChatEvent_Main(Main_Spigot plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
