@@ -57,6 +57,10 @@ public class Common {
             e.printStackTrace();
         }
     }
+    public static Boolean ExpertCheck() 
+    {
+    	return Common.getFieldBool("GAMEPLAY.expert", "config");
+    }
     public static void loadConfiguration()
     {
         addField("MYSQL",true);

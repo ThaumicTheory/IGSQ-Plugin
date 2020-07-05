@@ -1,4 +1,4 @@
-package me.murrobby.igsq.listeners;
+package me.murrobby.igsq.expert;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -12,19 +12,19 @@ import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Main;
 
 @SuppressWarnings("unused")
-public class EntityAirChangeEvent implements Listener
+public class EntityAirChangeEvent_Expert implements Listener
 {
 	private Main plugin;
-	public EntityAirChangeEvent(Main plugin)
+	public EntityAirChangeEvent_Expert(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void EntityOxygenChange(org.bukkit.event.entity.EntityAirChangeEvent event) 
+	public void EntityAirChange_Expert(org.bukkit.event.entity.EntityAirChangeEvent event) 
 	{
-		if(Common.getFieldBool("GAMEPLAY.expert", "config")) 
+		if(Common.ExpertCheck() && !event.isCancelled()) 
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{

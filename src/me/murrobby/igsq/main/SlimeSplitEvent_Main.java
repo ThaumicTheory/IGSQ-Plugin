@@ -1,4 +1,4 @@
-package me.murrobby.igsq.listeners;
+package me.murrobby.igsq.main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World.Environment;
@@ -18,23 +18,22 @@ import java.util.Random;
 
 
 @SuppressWarnings("unused")
-public class PlayerBedEnterEvent implements Listener
+public class SlimeSplitEvent_Main implements Listener
 {
 	Random random = new Random();
 	private Main plugin;
-	public PlayerBedEnterEvent(Main plugin)
+	public SlimeSplitEvent_Main(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void PlayerBedEnter(org.bukkit.event.player.PlayerBedEnterEvent event) 
+	public void SlimeSplit_Main(org.bukkit.event.entity.SlimeSplitEvent event) 
 	{
-		if(Common.getFieldBool(event.getPlayer().getWorld().getUID() + ".event.bloodmoon", "internal") && event.getPlayer().getWorld().getEnvironment() != Environment.NETHER && event.getPlayer().getWorld().getEnvironment() != Environment.THE_END) 
+		if(!event.isCancelled()) 
 		{
-			event.setCancelled(true);
-			event.getPlayer().sendTitle(Common.ChatColour("&cExpert Mode Event Present!"),Common.ChatColour("&4You Cant Sleep Through a Blood Moon!"),10,70,20);
+			
 		}
 	}
 	

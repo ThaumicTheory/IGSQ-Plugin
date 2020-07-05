@@ -17,13 +17,13 @@ public class Database
 	public Database(Main plugin)
 	{
 		Database.plugin = plugin;
+		url = Common.getFieldString("MYSQL.database", "config");
+		user = Common.getFieldString("MYSQL.username", "config");
+		password = Common.getFieldString("MYSQL.password", "config");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(uuid VARCHAR(36) PRIMARY KEY,id VARCHAR(18),current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37));");
-		url = Common.getFieldString("MYSQL.database", "config");
-		user = Common.getFieldString("MYSQL.username", "config");
-		password = Common.getFieldString("MYSQL.password", "config");
 	}
 	public static ResultSet QueryCommand(String sql) 
 	{
@@ -44,7 +44,7 @@ public class Database
 					}
 					catch (Exception exception)
 					{
-						System.out.println(exception.toString());
+						System.out.println("Database Query Close: " + exception.toString());
 					}
 				} 		
 	    	},60);
@@ -52,7 +52,7 @@ public class Database
         }
         catch (SQLException exception) 
         {
-        	System.out.println(exception.toString());
+        	System.out.println("Database Query:" + exception.toString());
         	return null;
         } 
     }
@@ -67,7 +67,7 @@ public class Database
         }
         catch (SQLException exception) 
         {
-        	System.out.println(exception.toString());
+        	System.out.println("Database Update:" + exception.toString());
         }
     }
 	public static int ScalarCommand(String sql) 
@@ -84,7 +84,7 @@ public class Database
         } 
         catch (SQLException exception) 
         {
-        	System.out.println(exception.toString());
+        	System.out.println("Database Scalar:" + exception.toString());
         	return -1;
         } 
     }

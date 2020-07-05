@@ -1,4 +1,4 @@
-package me.murrobby.igsq.listeners;
+package me.murrobby.igsq.main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World.Environment;
@@ -19,18 +19,18 @@ import java.util.Random;
 
 
 @SuppressWarnings("unused")
-public class PlayerCommandPreprocessEvent implements Listener
+public class PlayerCommandPreprocessEvent_Main implements Listener
 {
 	Random random = new Random();
 	private Main plugin;
-	public PlayerCommandPreprocessEvent(Main plugin)
+	public PlayerCommandPreprocessEvent_Main(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void PlayerCommandPreprocess(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
+	public void PlayerCommandPreprocess_Main(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
 	{
 		if(!event.getPlayer().hasPermission("igsq.commandwatchbypass"))
 		{

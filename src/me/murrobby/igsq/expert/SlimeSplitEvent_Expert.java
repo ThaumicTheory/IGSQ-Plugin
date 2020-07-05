@@ -1,4 +1,4 @@
-package me.murrobby.igsq.listeners;
+package me.murrobby.igsq.expert;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World.Environment;
@@ -18,20 +18,20 @@ import java.util.Random;
 
 
 @SuppressWarnings("unused")
-public class SlimeSplitEvent implements Listener
+public class SlimeSplitEvent_Expert implements Listener
 {
 	Random random = new Random();
 	private Main plugin;
-	public SlimeSplitEvent(Main plugin)
+	public SlimeSplitEvent_Expert(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void SlimeSplit(org.bukkit.event.entity.SlimeSplitEvent event) 
+	public void SlimeSplit_Expert(org.bukkit.event.entity.SlimeSplitEvent event) 
 	{
-		if(Common.getFieldBool("GAMEPLAY.expert", "config")) 
+		if(Common.ExpertCheck() && !event.isCancelled()) 
 		{
 			if(event.getEntity().getType() == EntityType.SLIME) 
 			{

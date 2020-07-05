@@ -1,4 +1,4 @@
-package me.murrobby.igsq.listeners;
+package me.murrobby.igsq.expert;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
@@ -23,20 +23,20 @@ import java.util.Random;
 
 
 @SuppressWarnings("unused")
-public class CreatureSpawnEvent implements Listener
+public class CreatureSpawnEvent_Expert implements Listener
 {
 	Random random = new Random();
 	private Main plugin;
-	public CreatureSpawnEvent(Main plugin)
+	public CreatureSpawnEvent_Expert(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void EntitySpawn(org.bukkit.event.entity.CreatureSpawnEvent event) 
+	public void CreatureSpawn_Expert(org.bukkit.event.entity.CreatureSpawnEvent event) 
 	{
-		if(Common.getFieldBool("GAMEPLAY.expert", "config")) 
+		if(Common.ExpertCheck() && !event.isCancelled()) 
 		{
 			if(Common.getFieldBool(event.getLocation().getWorld().getUID() + ".event.bloodmoon", "internal")) 
 			{

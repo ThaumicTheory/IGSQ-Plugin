@@ -1,4 +1,4 @@
-package me.murrobby.igsq.listeners;
+package me.murrobby.igsq.main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,18 +21,18 @@ import java.util.Random;
 
 
 @SuppressWarnings("unused")
-public class InventoryClickEvent implements Listener
+public class InventoryClickEvent_Main implements Listener
 {
 	Random random = new Random();
 	private Main plugin;
-	public InventoryClickEvent(Main plugin)
+	public InventoryClickEvent_Main(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	String[] illegalNameTagWords = {"EXPERT","NIGGER","NOGGER","COON","NIGGA"};
 	@EventHandler
-	public void InventoryClick(org.bukkit.event.inventory.InventoryClickEvent event) 
+	public void InventoryClick_Main(org.bukkit.event.inventory.InventoryClickEvent event) 
 	{
 		if(event.getClickedInventory().getType() == InventoryType.ANVIL) 
 		{
