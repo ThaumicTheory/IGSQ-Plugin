@@ -18,18 +18,26 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 
 import me.murrobby.igsq.commands.Commands;
-import me.murrobby.igsq.listeners.BlockBreak;
+import me.murrobby.igsq.expert.BlockSpreadEvent_Expert;
+import me.murrobby.igsq.expert.CreatureSpawnEvent_Expert;
+import me.murrobby.igsq.expert.EntityAirChangeEvent_Expert;
+import me.murrobby.igsq.expert.EntityDamageByEntityEvent_Expert;
+import me.murrobby.igsq.expert.EntityDamageEvent_Expert;
+import me.murrobby.igsq.expert.EntityTargetEvent_Expert;
+import me.murrobby.igsq.expert.PlayerBedEnterEvent_Expert;
+import me.murrobby.igsq.expert.SlimeSplitEvent_Expert;
+import me.murrobby.igsq.listeners.BlockBreakEvent_Main;
 import me.murrobby.igsq.listeners.BlockSpreadEvent;
-import me.murrobby.igsq.listeners.Chat;
-import me.murrobby.igsq.listeners.CreatureSpawnEvent;
-import me.murrobby.igsq.listeners.EntityAirChangeEvent;
-import me.murrobby.igsq.listeners.EntityDamageByEntityEvent;
-import me.murrobby.igsq.listeners.EntityDamageEvent;
-import me.murrobby.igsq.listeners.EntityTargetEvent;
-import me.murrobby.igsq.listeners.InventoryClickEvent;
-import me.murrobby.igsq.listeners.Join;
+import me.murrobby.igsq.listeners.AsyncPlayerChatEvent_Main;
+import me.murrobby.igsq.listeners.CreatureSpawnEvent_Main;
+import me.murrobby.igsq.listeners.EntityAirChangeEvent_Main;
+import me.murrobby.igsq.listeners.EntityDamageByEntityEvent_Main;
+import me.murrobby.igsq.listeners.EntityDamageEvent_Main;
+import me.murrobby.igsq.listeners.EntityTargetEvent_Main;
+import me.murrobby.igsq.listeners.InventoryClickEvent_Main;
+import me.murrobby.igsq.listeners.PlayerJoinEvent_Main;
 import me.murrobby.igsq.listeners.PlayerBedEnterEvent;
-import me.murrobby.igsq.listeners.PlayerCommandPreprocessEvent;
+import me.murrobby.igsq.listeners.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.listeners.SlimeSplitEvent;
 
 import java.sql.ResultSet;
@@ -242,52 +250,13 @@ public class Main extends JavaPlugin{
 						}
 						if(worldTimeSecs == 600) //NightBegins
 						{
-							if(random.nextInt(8) == 1 && selectedWorld.getAllowMonsters()) 
-							{
-								try 
-								{
-									Common.internalData.set(selectedWorld.getUID() + ".event.bloodmoon",true);
-									Common.internalData.save(Common.internalDataFile);
-								}
-								catch (Exception exception) 
-								{
-									exception.printStackTrace();
-								}
-								if(selectedWorld.getEnvironment() == Environment.NORMAL) 
-								{
-									Bukkit.broadcastMessage(Common.ChatColour("&2The Blood Moon is rising..."));
-								}
-								else if(selectedWorld.getEnvironment() == Environment.NETHER) 
-								{
-									Bukkit.broadcastMessage(Common.ChatColour("&2Screams echo from deep bellow..."));
-								}
-								else if(selectedWorld.getEnvironment() == Environment.THE_END) 
-								{
-									Bukkit.broadcastMessage(Common.ChatColour("&2Some otherworldly place calls your name..."));
-								}
-								else 
-								{
-									Bukkit.broadcastMessage(Common.ChatColour("&2I wouldn't enter \""+ selectedWorld.getName() + "\" tonight..."));
-								}
-								selectedWorld.setMonsterSpawnLimit(selectedWorld.getMonsterSpawnLimit()*3);
-								selectedWorld.setTicksPerMonsterSpawns(10);
-							}
+							BloodMoonToggler(selectedWorld,true);
 						}
 						else if(worldTimeSecs > 1150 || worldTimeSecs < 600) //Day
 						{
 							if(Common.getFieldBool(selectedWorld.getUID() + ".event.bloodmoon", "internal")) 
 							{
-								try 
-								{
-									Common.internalData.set(selectedWorld.getUID() + ".event.bloodmoon",false);
-									Common.internalData.save(Common.internalDataFile);
-									selectedWorld.setMonsterSpawnLimit(-1);
-									selectedWorld.setTicksPerMonsterSpawns(-1);
-								}
-								catch (Exception exception) 
-								{
-									exception.printStackTrace();
-								}
+								BloodMoonToggler(selectedWorld,false);
 							}
 						}
 					}
@@ -295,17 +264,7 @@ public class Main extends JavaPlugin{
 					{
 						if(Common.getFieldBool(selectedWorld.getUID() + ".event.bloodmoon", "internal")) 
 						{
-							try 
-							{
-								Common.internalData.set(selectedWorld.getUID() + ".event.bloodmoon",false);
-								Common.internalData.save(Common.internalDataFile);
-								selectedWorld.setMonsterSpawnLimit(-1);
-								selectedWorld.setTicksPerMonsterSpawns(-1);
-							}
-							catch (Exception exception) 
-							{
-								exception.printStackTrace();
-							}
+							BloodMoonToggler(selectedWorld,false);
 						}
 					}
 					for(Player selectedPlayer : getServer().getOnlinePlayers()) 
@@ -345,24 +304,86 @@ public class Main extends JavaPlugin{
 				}
 			}
     	}, 0, 20);
-		new Join(this);
-		new BlockBreak(this);
 		new Database(this);
+		new PlayerJoinEvent_Main(this);
+		new BlockBreakEvent_Main(this);
 		new Commands(this);
-		new Chat(this);
-		new CreatureSpawnEvent(this);
-		new EntityDamageEvent(this);
-		new EntityAirChangeEvent(this);
-		new BlockSpreadEvent(this);
-		new PlayerBedEnterEvent(this);
-		new EntityDamageByEntityEvent(this);
-		new SlimeSplitEvent(this);
-		new InventoryClickEvent(this);
-		new EntityTargetEvent(this);
-		new PlayerCommandPreprocessEvent(this);
+		new AsyncPlayerChatEvent_Main(this);
+		//new CreatureSpawnEvent_Main(this);
+		//new EntityDamageEvent_Main(this);
+		//new EntityAirChangeEvent_Main(this);
+		//new BlockSpreadEvent(this);
+		//new PlayerBedEnterEvent(this);
+		//new EntityDamageByEntityEvent_Main(this);
+		//new SlimeSplitEvent(this);
+		new InventoryClickEvent_Main(this);
+		//new EntityTargetEvent_Main(this);
+		new PlayerCommandPreprocessEvent_Main(this);
+		if(Common.getFieldBool("GAMEPLAY.expert", "config")) 
+		{
+			new BlockSpreadEvent_Expert(this);
+			new CreatureSpawnEvent_Expert(this);
+			new EntityAirChangeEvent_Expert(this);
+			new EntityDamageByEntityEvent_Expert(this);
+			new EntityDamageEvent_Expert(this);
+			new EntityTargetEvent_Expert(this);
+			new PlayerBedEnterEvent_Expert(this);
+			new SlimeSplitEvent_Expert(this);
+		}
 	}
 
 	public void onLoad()
 	{
+	}
+	
+	public void BloodMoonToggler(World world,Boolean enabled) 
+	{
+		if(!enabled) 
+		{
+			try 
+			{
+				Common.internalData.set(world.getUID() + ".event.bloodmoon",false);
+				Common.internalData.save(Common.internalDataFile);
+				world.setMonsterSpawnLimit(-1);
+				world.setTicksPerMonsterSpawns(-1);
+			}
+			catch (Exception exception) 
+			{
+				exception.printStackTrace();
+			}
+		}
+		else 
+		{
+			if(random.nextInt(8) == 1 && world.getAllowMonsters()) 
+			{
+				try 
+				{
+					Common.internalData.set(world.getUID() + ".event.bloodmoon",true);
+					Common.internalData.save(Common.internalDataFile);
+				}
+				catch (Exception exception) 
+				{
+					exception.printStackTrace();
+				}
+				if(world.getEnvironment() == Environment.NORMAL) 
+				{
+					Bukkit.broadcastMessage(Common.ChatColour("&2The Blood Moon is rising..."));
+				}
+				else if(world.getEnvironment() == Environment.NETHER) 
+				{
+					Bukkit.broadcastMessage(Common.ChatColour("&2Screams echo from deep bellow..."));
+				}
+				else if(world.getEnvironment() == Environment.THE_END) 
+				{
+					Bukkit.broadcastMessage(Common.ChatColour("&2Some otherworldly place calls your name..."));
+				}
+				else 
+				{
+					Bukkit.broadcastMessage(Common.ChatColour("&2I wouldn't enter \""+ world.getName() + "\" tonight..."));
+				}
+				world.setMonsterSpawnLimit(world.getMonsterSpawnLimit()*3);
+				world.setTicksPerMonsterSpawns(10);
+			}
+		}
 	}
 }

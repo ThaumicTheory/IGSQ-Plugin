@@ -6,6 +6,7 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
@@ -18,22 +19,28 @@ import java.util.Random;
 
 
 @SuppressWarnings("unused")
-public class SlimeSplitEvent implements Listener
+public class PlayerCommandPreprocessEvent_Main implements Listener
 {
 	Random random = new Random();
 	private Main plugin;
-	public SlimeSplitEvent(Main plugin)
+	public PlayerCommandPreprocessEvent_Main(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void SlimeSplit_Main(org.bukkit.event.entity.SlimeSplitEvent event) 
+	public void PlayerCommandPreprocess_Main(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
 	{
-		if(!event.isCancelled()) 
+		if(!event.getPlayer().hasPermission("igsq.commandwatchbypass"))
 		{
-			
+			for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
+			{
+				if(selectedPlayer.hasPermission("igsq.commandwatch") && selectedPlayer != event.getPlayer()) 
+				{
+					selectedPlayer.sendMessage(Common.GetMessage("commandwatch1") + event.getPlayer().getName() + Common.GetMessage("commandwatch2") + event.getMessage());
+				}
+			}
 		}
 	}
 	

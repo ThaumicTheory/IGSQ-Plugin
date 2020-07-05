@@ -9,12 +9,12 @@ import org.bukkit.event.Listener;
 import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Main;
 
-public class BlockBreak implements Listener
+public class BlockBreakEvent_Main implements Listener
 {
 	@SuppressWarnings("unused")
 	private Main plugin;
 	private String cancelMessage;
-	public BlockBreak(Main plugin)
+	public BlockBreakEvent_Main(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -22,7 +22,7 @@ public class BlockBreak implements Listener
 	}
 	
 	@EventHandler
-	public void BlockBreakEvent(org.bukkit.event.block.BlockBreakEvent event) 
+	public void BlockBreak_Main(org.bukkit.event.block.BlockBreakEvent event) 
 	{
 		@SuppressWarnings("unused")
 		Block block = event.getBlock();

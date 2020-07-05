@@ -10,7 +10,7 @@ import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Database;
 import me.murrobby.igsq.Main;
 
-public class Join implements Listener
+public class PlayerJoinEvent_Main implements Listener
 {
 	@SuppressWarnings("unused")
 	private Main plugin;
@@ -18,14 +18,14 @@ public class Join implements Listener
 	private String username;
 	private int usernameUpdate;
 	private Boolean playedBefore;
-	public Join(Main plugin)
+	public PlayerJoinEvent_Main(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void onJoin(PlayerJoinEvent event) 
+	public void PlayerJoin_Main(PlayerJoinEvent event) 
 	{
 		Player player = event.getPlayer();
 		username = player.getDisplayName();

@@ -29,12 +29,11 @@ public class PlayerBedEnterEvent implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerBedEnter(org.bukkit.event.player.PlayerBedEnterEvent event) 
+	public void PlayerBedEnter_Main(org.bukkit.event.player.PlayerBedEnterEvent event) 
 	{
-		if(Common.getFieldBool(event.getPlayer().getWorld().getUID() + ".event.bloodmoon", "internal") && event.getPlayer().getWorld().getEnvironment() != Environment.NETHER && event.getPlayer().getWorld().getEnvironment() != Environment.THE_END) 
+		if(!event.isCancelled()) 
 		{
-			event.setCancelled(true);
-			event.getPlayer().sendTitle(Common.ChatColour("&cExpert Mode Event Present!"),Common.ChatColour("&4You Cant Sleep Through a Blood Moon!"),10,70,20);
+			
 		}
 	}
 	

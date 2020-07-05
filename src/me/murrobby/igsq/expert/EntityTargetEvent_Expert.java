@@ -1,4 +1,4 @@
-package me.murrobby.igsq.listeners;
+package me.murrobby.igsq.expert;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
@@ -24,20 +24,20 @@ import java.util.Random;
 
 
 @SuppressWarnings("unused")
-public class EntityTargetEvent implements Listener
+public class EntityTargetEvent_Expert implements Listener
 {
 	Random random = new Random();
 	private Main plugin;
-	public EntityTargetEvent(Main plugin)
+	public EntityTargetEvent_Expert(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void EntityTarget(org.bukkit.event.entity.EntityTargetEvent event) 
+	public void EntityTarget_Expert(org.bukkit.event.entity.EntityTargetEvent event) 
 	{
-		if(Common.getFieldBool("GAMEPLAY.expert", "config"))
+		if(!event.isCancelled())
 		{
 			if(event.getEntity() instanceof Phantom) 
 			{

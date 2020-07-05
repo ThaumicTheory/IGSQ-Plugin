@@ -10,17 +10,17 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Main;
 
-public class Chat implements Listener
+public class AsyncPlayerChatEvent_Main implements Listener
 {
 	private Main plugin;
-	public Chat(Main plugin)
+	public AsyncPlayerChatEvent_Main(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void onChat(AsyncPlayerChatEvent event) 
+	public void AsyncPlayerChat_Main(AsyncPlayerChatEvent event) 
 	{
 		for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
 		{

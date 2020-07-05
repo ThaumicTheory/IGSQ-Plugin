@@ -1,4 +1,4 @@
-package me.murrobby.igsq.listeners;
+package me.murrobby.igsq.expert;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -16,22 +16,32 @@ import org.bukkit.Material;
 import java.util.Random;
 
 @SuppressWarnings("unused")
-public class BlockSpreadEvent implements Listener
+public class BlockSpreadEvent_Expert implements Listener
 {
 	private Main plugin;
 	Random random = new Random();
-	public BlockSpreadEvent(Main plugin)
+	public BlockSpreadEvent_Expert(Main plugin)
 	{
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void BlockSpread_Main(org.bukkit.event.block.BlockSpreadEvent event) 
+	public void BlockSpread_Expert(org.bukkit.event.block.BlockSpreadEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
-			
+			if(event.getSource().getBlockData().getMaterial() == Material.FIRE) 
+			{
+				if(random.nextInt(25) == 1) 
+				{
+					event.getSource().setType(Material.SOUL_FIRE);
+				}
+				else if(random.nextInt(3) == 1) 
+				{
+					event.getSource().setType(Material.FIRE);
+				}
+			}
 		}
 	}
 	
