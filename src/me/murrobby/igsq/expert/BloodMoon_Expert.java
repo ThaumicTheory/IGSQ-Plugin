@@ -48,6 +48,7 @@ public class BloodMoon_Expert {
 				if(Main_Expert.taskID != taskID || !Common.ExpertCheck()) 
 				{
 					plugin.scheduler.cancelTask(bloodMoonTask);
+					System.out.println("Task: \"Blood Moon Expert\" Expired Closing Task To Save Resources.");
 				}
 			} 		
     	}, 0, 20);

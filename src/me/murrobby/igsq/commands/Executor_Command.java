@@ -20,7 +20,7 @@ import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Main;
 import me.murrobby.igsq.expert.Main_Expert;
 
-public class Commands implements CommandExecutor{
+public class Executor_Command implements CommandExecutor{
 	private Main plugin;
 	private Player player;
 	private CommandSender sender;
@@ -31,9 +31,8 @@ public class Commands implements CommandExecutor{
 	private String display = "Yourself";
 	
 	private int realtimeTask = -1;
-	private int realtimeSpeed = 1;
 	
-	public Commands(Main plugin)
+	public Executor_Command(Main plugin)
 	{
 		this.plugin = plugin;
 		plugin.getCommand("igsq").setExecutor(this);
@@ -53,7 +52,8 @@ public class Commands implements CommandExecutor{
     	switch(args[0].toLowerCase()) 
     	{
   	  		case "version":
-  	  			return VersionQuery();
+  	  			Version_Command version = new Version_Command(plugin,this,sender,args);
+  	  			return version.result;
   	  		case "nightvision":
   	  			return NightVisionQuery();
   	  		case "nv":
@@ -76,7 +76,7 @@ public class Commands implements CommandExecutor{
     	}
 	}
 	//Permission checking function
-	private boolean RequirePermission(String permission) 
+	public boolean RequirePermission(String permission) 
 	{
 		if(IsPlayer() && player.hasPermission(permission))
 		{	
@@ -91,7 +91,7 @@ public class Commands implements CommandExecutor{
 			return false;
 		}
 	}
-	private boolean IsPlayer() 
+	public boolean IsPlayer() 
 	{
 		if(sender instanceof Player) 
 		{
@@ -102,48 +102,6 @@ public class Commands implements CommandExecutor{
 		{
 			return false;
 		}
-	}
-	private Boolean Version() 
-	{
-		String version = plugin.getDescription().getVersion();
-		String forBuild = plugin.getDescription().getAPIVersion();
-		if(args.length == 0) 
-		{
-			sender.sendMessage(Common.ChatColour("&bIGSQ Version " + version + " for " + forBuild + "!"));
-			return true;
-		}
-		if(args[0].equalsIgnoreCase("version")) 
-		{
-			sender.sendMessage(Common.ChatColour("&bIGSQ Version " + version + "!"));
-			return true;
-		}
-		else if(args[0].equalsIgnoreCase("build"))
-		{
-			sender.sendMessage(Common.ChatColour("&bIGSQ for " + forBuild + "!"));
-			return true;
-		}
-		return false;
-		
-	}
-	private Boolean VersionQuery() 
-	{
-			if(RequirePermission("igsq.version")) 
-			{
-				if(Version()) 
-				{
-					return true;
-				}
-				else 
-				{
-					sender.sendMessage(Common.ChatColour("&1version [build/version]"));
-					return false;
-				}
-			}
-			else 
-			{
-				sender.sendMessage(Common.ChatColour("&cYou cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
-	  			return false;
-			}
 	}
 	private boolean RealTimeQuery()
 	{
@@ -168,50 +126,7 @@ public class Commands implements CommandExecutor{
 	}
 	private boolean RealTime() {
 		World world = player.getWorld();
-		realtimeSpeed = 1;
-		if(args.length > 1) 
-		{
-			Common.ChatColour("&cToo many arguments were given");
-			return false;
-		}
-		else if(args.length == 1) 
-		{
-			try 
-			{
-				realtimeSpeed = Integer.parseInt(args[0]);
-			}
-			catch(Exception exception) 
-			{
-				Common.ChatColour("&cSomething went wrong when making the speed multiplier");
-				return false;
-			}
-		}
-		if(args.length != 0) 
-		{
-			plugin.scheduler.cancelTask(realtimeTask);
-			realtimeTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() //start a task to run the command
-	    	{
-
-				@Override
-				public void run() 
-				{
-					Calendar calendar = Calendar.getInstance(); //get IRL time
-					int seconds = calendar.get(Calendar.SECOND);
-					int minutes = calendar.get(Calendar.MINUTE);
-					int hours = calendar.get(Calendar.HOUR_OF_DAY);
-					long totalSeconds = (long) ((double)seconds + ((double)minutes*60) + ((double)hours*3600));
-					long mctime = (long)((double)totalSeconds/72*20); //get mc time
-					world.setTime((mctime*realtimeSpeed)-5000); //set mc time
-				} 		
-	    	}, 0, 20);
-			//cleanup
-			Common.internalData.set("Modules.realtime", true); 
-			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-			world.setGameRule(GameRule.RANDOM_TICK_SPEED,realtimeSpeed); //redundant
-			sender.sendMessage(Common.ChatColour("&bRealtime mode Turned On!"));
-			return true;
-		}
-		else if(Common.getFieldBool("Modules.realtime", "internal").equals(false)) //when no speed multiplier is given, defualt to 1
+		if(Common.getFieldBool("Modules.realtime", "internal").equals(false))
 		{
 			realtimeTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
 	    	{
@@ -225,12 +140,11 @@ public class Commands implements CommandExecutor{
 					int hours = calendar.get(Calendar.HOUR_OF_DAY);
 					long totalSeconds = (long) ((double)seconds + ((double)minutes*60) + ((double)hours*3600));
 					long mctime = (long)((double)totalSeconds/72*20);
-					world.setTime((mctime*realtimeSpeed)-5000);
+					world.setTime((mctime)-5000);
 				} 		
 	    	}, 0, 20);
 			Common.internalData.set("Modules.realtime", true);
 			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-			world.setGameRule(GameRule.RANDOM_TICK_SPEED,realtimeSpeed);
 			sender.sendMessage(Common.ChatColour("&bRealtime mode Turned On!"));
 			return true;
 		}
@@ -238,7 +152,6 @@ public class Commands implements CommandExecutor{
 		{
 			Common.internalData.set("Modules.realtime", false);
 			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,true);
-			world.setGameRule(GameRule.RANDOM_TICK_SPEED,3);
 			plugin.scheduler.cancelTask(realtimeTask);
 			sender.sendMessage(Common.ChatColour("&3Realtime mode Turned Off!"));
 			return true;

@@ -2,7 +2,7 @@ package me.murrobby.igsq;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import me.murrobby.igsq.commands.Commands;
+import me.murrobby.igsq.commands.Executor_Command;
 import me.murrobby.igsq.expert.Main_Expert;
 import me.murrobby.igsq.main.AsyncPlayerChatEvent_Main;
 import me.murrobby.igsq.main.BlockBreakEvent_Main;
@@ -52,7 +52,7 @@ public class Main extends JavaPlugin{
     	}, 0, 200);
 		new Database(this);
 		
-		new Commands(this);
+		new Executor_Command(this);
 		
 		
 		new PlayerJoinEvent_Main(this);
