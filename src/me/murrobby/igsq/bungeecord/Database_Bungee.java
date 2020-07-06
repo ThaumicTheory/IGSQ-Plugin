@@ -1,25 +1,24 @@
-package me.murrobby.igsq;
+package me.murrobby.igsq.bungeecord;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.TimeUnit;
 
-import org.bukkit.plugin.Plugin;
-
-public class Database 
+public class Database_Bungee 
 {
     static String url;
     static String user;
     static String password;
-    static Plugin plugin;
-	public Database(Plugin plugin)
+    static Main_Bungee plugin;
+	public Database_Bungee(Main_Bungee plugin)
 	{
-		Database.plugin = plugin;
-		url = Common.getFieldString("MYSQL.database", "config");
-		user = Common.getFieldString("MYSQL.username", "config");
-		password = Common.getFieldString("MYSQL.password", "config");
+		Database_Bungee.plugin = plugin;
+		url = Common_Bungee.getFieldString("MYSQL.database", "config");
+		user = Common_Bungee.getFieldString("MYSQL.username", "config");
+		password = Common_Bungee.getFieldString("MYSQL.password", "config");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(uuid VARCHAR(36) PRIMARY KEY,id VARCHAR(18),current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
@@ -32,7 +31,7 @@ public class Database
         	Connection connection = DriverManager.getConnection(url, user, password);
             Statement commandAdapter = connection.createStatement();
             ResultSet resultTable = commandAdapter.executeQuery(sql);
-            plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable()
+            plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 	    	{
 
 				@Override
@@ -47,7 +46,7 @@ public class Database
 						System.out.println("Database Query Close: " + exception.toString());
 					}
 				} 		
-	    	},60);
+	    	},3,TimeUnit.SECONDS);
 			return resultTable;
         }
         catch (SQLException exception) 

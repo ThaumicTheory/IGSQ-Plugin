@@ -36,7 +36,7 @@ public class InventoryClickEvent_Main implements Listener
 	{
 		if(event.getClickedInventory().getType() == InventoryType.ANVIL) 
 		{
-			if(event.getCurrentItem().getType() == Material.NAME_TAG) 
+		if(event.getCurrentItem().getType() == Material.NAME_TAG && event.getCurrentItem().getItemMeta().getDisplayName() != null) 
 			{
 				for(String illegalNameTagWord : illegalNameTagWords)
 				{
