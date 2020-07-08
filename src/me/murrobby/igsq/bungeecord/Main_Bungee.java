@@ -31,10 +31,8 @@ public class Main_Bungee extends Plugin
 						{
 							twoFAStatus = discord_2fa.getString(2);
 						}
-						Common_Bungee.configuration = Common_Bungee.CreateFile("playerData.yml");
-						Common_Bungee.configuration.set(uuid + ".2fa",twoFAStatus);
+						Common_Bungee.SetField(uuid + ".2fa","playerData.yml", twoFAStatus);
 					}
-					Common_Bungee.SaveFile("playerData.yml");
 				}
 				catch (Exception e)
 				{

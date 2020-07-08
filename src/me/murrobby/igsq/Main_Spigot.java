@@ -9,7 +9,6 @@ import me.murrobby.igsq.main.BlockBreakEvent_Main;
 import me.murrobby.igsq.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.main.PlayerJoinEvent_Main;
-import java.sql.ResultSet;
 import java.util.Random;
 
 public class Main_Spigot extends JavaPlugin{
@@ -22,34 +21,6 @@ public class Main_Spigot extends JavaPlugin{
 		Common.loadConfiguration();
 		Common.createPlayerData();
 		Common.createInternalData();
-    	scheduler.scheduleSyncRepeatingTask(this, new Runnable() 
-    	{
-
-			@Override
-			public void run() {
-				ResultSet mc_accounts = Database.QueryCommand("SELECT * FROM mc_accounts;");
-				try {
-					while(mc_accounts.next()) 
-					{
-						ResultSet discord_2fa = Database.QueryCommand("SELECT * FROM discord_2fa WHERE uuid = '"+ mc_accounts.getString(1) +"';");
-						String uuid = mc_accounts.getString(1);
-						String twoFAStatus = "off";
-						if(discord_2fa.next()) 
-						{
-							twoFAStatus = discord_2fa.getString(2);
-						}
-						Common.playerData.set(uuid + ".2fa",twoFAStatus);
-					}
-					Common.playerData.save(Common.playerDataFile);
-				} catch (Exception e)
-				{
-					System.out.println("DATABASE ERROR: " + e.toString());
-				}				
-				
-			}
-			
-    		
-    	}, 0, 200);
 		new Database(this);
 		
 		new Executor_Command(this);

@@ -10,62 +10,51 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 public class Common_Bungee {
 	static Main_Bungee bungee;
-    public static Configuration configuration;
     public static File configFile;
+    private static final ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
     
-    public static Configuration CreateFile(String fileName) 
+    public static void CreateFile(String fileName) 
     {
-    	configFile = new File(bungee.getDataFolder(),fileName);
-    	if (!configFile.exists())
-    	{
-    		 try
-             {
-    			 configFile.createNewFile();
-             }
-             catch (IOException e)
-    		 {
- 				e.printStackTrace();
-    		 }
-    	}
-    	try 
-    	{
-			configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(bungee.getDataFolder(), fileName));
-		}
-    	catch (Exception exception)
-    	{
-			exception.printStackTrace();
-		}
-    	return configuration;
+		 try
+         {
+	    	if (!bungee.getDataFolder().exists()) 
+	    	{
+	            bungee.getDataFolder().mkdir();
+	    	}
+		    	
+		    configFile = new File(bungee.getDataFolder(),fileName);
+			configFile.createNewFile();
+         }
+         catch (IOException e)
+		 {
+			e.printStackTrace();
+		 }
     	
     }
     public static void LoadConfiguration()
     {
         //addField("MYSQL",true);
-        addField("MYSQL.username","username");
-        addField("MYSQL.password","password");
-        addField("MYSQL.database","database");
-        try
-        {
-			ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, new File(bungee.getDataFolder(), "config.yml"));
-		} catch (Exception exception) {
-			exception.printStackTrace();
-		}
+        addFieldDefault("MYSQL.username","config.yml","username");
+        addFieldDefault("MYSQL.password","config.yml","password");
+        addFieldDefault("MYSQL.database","config.yml","database");
     }
-    public static void addField(String path,String data) 
+    public static void addFieldDefault(String path,String fileName,String data) 
     {
-    	configuration.set(path, data);
+    	String existingSetting = getFieldString(path,fileName);
+    	if(existingSetting.equals(""))
+    	{
+    		SetField(path,fileName,data);
+    	}
+    	else 
+    	{
+    		System.out.println("Config option" + path + " Is already " + existingSetting + " . No Default Is needed!");
+    	}
     }
-    public static void addField(String path,Boolean data) 
+    public static Boolean getFieldBool(String path,String fileName) 
     {
-    	configuration.set(path, data);
-    }
-    public static Boolean getFieldBool(String path,String tableName) 
-    {
-    	tableName += ".yml";
     	try
     	{
-			configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(bungee.getDataFolder(), tableName));
-			return configuration.getBoolean(path);
+			return provider.load(new File(bungee.getDataFolder(), fileName)).getBoolean(path);
 		}
     	catch (Exception exception)
     	{
@@ -74,13 +63,11 @@ public class Common_Bungee {
 		}
 
     }
-    public static String getFieldString(String path,String tableName) 
+    public static String getFieldString(String path,String fileName) 
     {
-    	tableName += ".yml";
     	try
     	{
-			configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(bungee.getDataFolder(), tableName));
-			return configuration.getString(path);
+			return provider.load(new File(bungee.getDataFolder(), fileName)).getString(path);
 		}
     	catch (Exception exception)
     	{
@@ -89,13 +76,11 @@ public class Common_Bungee {
 		}
     }
     
-    public static int getFieldInt(String path,String tableName) 
+    public static int getFieldInt(String path,String fileName) 
     {
-    	tableName += ".yml";
     	try
     	{
-			configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(bungee.getDataFolder(), tableName));
-			return configuration.getInt(path);
+			return provider.load(new File(bungee.getDataFolder(), fileName)).getInt(path);
 		}
     	catch (Exception exception)
     	{
@@ -104,12 +89,26 @@ public class Common_Bungee {
 		}
 
     }
-    public static void SaveFile(String fileName) 
+    public static void SetField(String path,String fileName,String data) 
+    {
+    	Configuration configuration;
+    	try
+    	{
+			configuration = provider.load(new File(bungee.getDataFolder(), fileName));
+			configuration.set(path, data);
+			Common_Bungee.SaveFile(fileName,configuration);
+		}
+    	catch (Exception exception)
+    	{
+			exception.printStackTrace();
+		}
+    }
+    public static void SaveFile(String fileName,Configuration configuration) 
     {
     	
     	try 
     	{
-			ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, new File(bungee.getDataFolder(), "config.yml"));
+    		provider.save(configuration, new File(bungee.getDataFolder(),fileName));
 		}
     	catch (Exception exception)
     	{

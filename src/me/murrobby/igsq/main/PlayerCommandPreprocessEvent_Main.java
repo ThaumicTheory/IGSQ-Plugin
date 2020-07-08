@@ -38,9 +38,10 @@ public class PlayerCommandPreprocessEvent_Main implements Listener
 			{
 				if(selectedPlayer.hasPermission("igsq.commandwatch") && selectedPlayer != event.getPlayer()) 
 				{
-					selectedPlayer.sendMessage(Common.GetMessage("commandwatch1") + event.getPlayer().getName() + Common.GetMessage("commandwatch2") + event.getMessage());
+					selectedPlayer.sendMessage(Common.GetMessage("commandwatch1","<player>",event.getPlayer().getName(),"<command>",event.getMessage()));
 				}
 			}
+			System.out.println(Common.GetMessage("commandwatch1","<player>",event.getPlayer().getName(),"<command>",event.getMessage()));
 		}
 	}
 	

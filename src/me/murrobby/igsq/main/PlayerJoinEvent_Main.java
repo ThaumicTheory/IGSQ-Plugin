@@ -64,11 +64,11 @@ public class PlayerJoinEvent_Main implements Listener
 		//welcome message
 		if(playedBefore) 
 		{
-			player.sendMessage(Common.GetMessage("join1") + username + Common.GetMessage("join2"));
+			player.sendMessage(Common.GetMessage("join","<player>",username));
 		}
 		else 
 		{
-			player.sendMessage(Common.GetMessage("firstjoin1") + username + Common.GetMessage("firstjoin2"));
+			player.sendMessage(Common.GetMessage("firstjoin","<player>",username));
 			Common.Default(player);
 		}
 		if(player.hasPermission("igsq.discord2FA")) 

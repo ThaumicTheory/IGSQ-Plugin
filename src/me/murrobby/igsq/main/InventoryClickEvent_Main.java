@@ -44,11 +44,11 @@ public class InventoryClickEvent_Main implements Listener
 			       {
 			    	   if(event.getWhoClicked().hasPermission("IGSQ.NameTagOverride")) 
 			    	   {
-			    		   event.getWhoClicked().sendMessage(Common.GetMessage("illegalnametagnameoverride1") + illegalNameTagWord + Common.GetMessage("illegalnametagnameoverride2"));
+			    		   event.getWhoClicked().sendMessage(Common.GetMessage("illegalnametagnameoverride","<blocked>",illegalNameTagWord));
 			    	   }
 			    	   else 
 			    	   {
-			    		   event.getWhoClicked().sendMessage(Common.GetMessage("illegalnametagname1") + illegalNameTagWord + Common.GetMessage("illegalnametagname2"));
+			    		   event.getWhoClicked().sendMessage(Common.GetMessage("illegalnametagname","<blocked>",illegalNameTagWord));
 				    	   event.setCancelled(true);
 			    	   }
 			       }
