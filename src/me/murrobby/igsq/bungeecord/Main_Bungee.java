@@ -42,7 +42,7 @@ public class Main_Bungee extends Plugin
 			}
 			
     		
-    	}, 0, 10, TimeUnit.SECONDS);
+    	}, 5, 10, TimeUnit.SECONDS);
 		new Database_Bungee(this);
 	}
 
