@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class Common {
 	public static Main_Spigot plugin;
@@ -68,8 +70,6 @@ public class Common {
         addField("MYSQL.username","username");
         addField("MYSQL.password","password");
         addField("MYSQL.database","database");
-        addField("MESSAGE.firstjoin","&aWelcome &b <player> To &dIGSQ!");
-        addField("MESSAGE.join","&aWelcome &bBack <player>!");
         addField("MESSAGE.illegalnametagname","&cSorry! But &4<blocked> &cIs Protected from Name Tags.");
         addField("MESSAGE.illegalnametagnameoverride","&bNormally &a<blocked> &bWould be Protected from Name Tags but you bypass this check.");
         addField("MESSAGE.commandwatch","&eCommand &5| &6 <player> &5| &c<command>");
@@ -216,5 +216,12 @@ public class Common {
     public static String GetMessage(String messageName, String replace,String with, String replace2,String with2)
     {
     	return ChatColor.translateAlternateColorCodes('&', Common.getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2));
+    }
+    public static void GiveBlindness(Player player,int time) 
+    {
+    	if(!player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
+    	{
+    		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,time,0,false));
+    	}
     }
 }

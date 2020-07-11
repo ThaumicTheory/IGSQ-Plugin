@@ -99,12 +99,13 @@ public class EnderDragon_Expert
 
 									if(enderDragon.getPhase() == Phase.LAND_ON_PORTAL) 
 									{
-										player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,79,4,true));
+										player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,199,2,true));
 										player.spawnParticle(Particle.DRAGON_BREATH,player.getLocation(), 20,.5,.5,.5,.25);
 									}
-									else if(enderDragon.getPhase() == Phase.SEARCH_FOR_BREATH_ATTACK_TARGET && player.hasPotionEffect(PotionEffectType.LEVITATION)) 
+									else if((enderDragon.getPhase() == Phase.SEARCH_FOR_BREATH_ATTACK_TARGET || enderDragon.getPhase() == Phase.BREATH_ATTACK) && player.hasPotionEffect(PotionEffectType.LEVITATION)) 
 									{
-										player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,10,128,true));
+										player.removePotionEffect(PotionEffectType.LEVITATION);
+										player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,5,128,true));
 										player.spawnParticle(Particle.END_ROD,player.getLocation(), 20,.5,.5,.5,.25);
 										player.playSound(player.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1,2);
 									}
@@ -150,7 +151,7 @@ public class EnderDragon_Expert
 								{
 
 									Player player = (Player) nearbyEntity;
-									player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,59,0,false));
+									Common.GiveBlindness(player,59);
 
 								}
 
@@ -174,7 +175,7 @@ public class EnderDragon_Expert
 									{
 
 										Player player = (Player) nearbyEntity;
-										player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,59,0,false));
+										Common.GiveBlindness(player,59);
 										player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,39,0,false));
 
 									}

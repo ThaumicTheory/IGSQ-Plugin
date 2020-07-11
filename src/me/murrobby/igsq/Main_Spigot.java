@@ -50,4 +50,10 @@ public class Main_Spigot extends JavaPlugin{
 	{
 	}
 	
+	public void onDisable()
+	{
+		this.getServer().getScheduler().cancelTasks(this);
+		this.getServer().getPluginManager().disablePlugin(this);
+	}
+	
 }

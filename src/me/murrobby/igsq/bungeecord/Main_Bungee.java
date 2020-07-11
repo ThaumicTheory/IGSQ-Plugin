@@ -43,12 +43,21 @@ public class Main_Bungee extends Plugin
 			
     		
     	}, 5, 10, TimeUnit.SECONDS);
+    	
 		new Database_Bungee(this);
+		new PostLoginEvent_Bungee(this);
+		//new ServerConnectedEvent_Bungee(this);
 	}
 
 	public void onLoad()
 	{
 		
+	}
+	
+	public void onDisable()
+	{
+		this.getProxy().getScheduler().cancel(this);
+		this.getProxy().getPluginManager().unregisterListeners(this);
 	}
 	
 }

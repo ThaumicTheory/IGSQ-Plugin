@@ -3,6 +3,7 @@ package me.murrobby.igsq.bungeecord;
 import java.io.File;
 import java.io.IOException;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -37,6 +38,9 @@ public class Common_Bungee {
         addFieldDefault("MYSQL.username","config.yml","username");
         addFieldDefault("MYSQL.password","config.yml","password");
         addFieldDefault("MYSQL.database","config.yml","database");
+        addFieldDefault("MESSAGE.join","config.yml","&aWelcome &b<player>!");
+        addFieldDefault("MESSAGE.joinvanilla","config.yml","&3No extra data was found in handshake! Assuming vanilla.");
+        addFieldDefault("MESSAGE.joinforge","config.yml","&6You are using a forge client with the following mods: <modlist>");
     }
     public static void addFieldDefault(String path,String fileName,String data) 
     {
@@ -115,5 +119,17 @@ public class Common_Bungee {
 			exception.printStackTrace();
 		}
     }
+	public static String GetMessage(String messageName, String replace,String with, String replace2,String with2)
+	{
+    	return ChatColor.translateAlternateColorCodes('&', Common_Bungee.getFieldString("MESSAGE." + messageName, "config.yml").replace(replace, with).replace(replace2, with2));
+	}
+	public static String GetMessage(String messageName, String replace,String with)
+	{
+    	return ChatColor.translateAlternateColorCodes('&', Common_Bungee.getFieldString("MESSAGE." + messageName, "config.yml").replace(replace, with));
+	}
+	public static String GetMessage(String messageName)
+	{
+    	return ChatColor.translateAlternateColorCodes('&', Common_Bungee.getFieldString("MESSAGE." + messageName, "config.yml"));
+	}
 
 }

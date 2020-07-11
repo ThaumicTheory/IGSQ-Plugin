@@ -3,14 +3,10 @@ package me.murrobby.igsq.expert;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.World.Environment;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Player;
@@ -19,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Main_Spigot;
@@ -27,14 +22,11 @@ import me.murrobby.igsq.Main_Spigot;
 import java.util.Random;
 
 
-@SuppressWarnings("unused")
 public class EntityDamageByEntityEvent_Expert implements Listener
 {
 	Random random = new Random();
-	private Main_Spigot plugin;
 	public EntityDamageByEntityEvent_Expert(Main_Spigot plugin)
 	{
-		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
@@ -50,22 +42,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				{
 					if(random.nextInt(200) < event.getDamage()*10) 
 					{
-						player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,(int) ((event.getDamage()*5 * random.nextInt(3))+20),0));
-					}
-					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase("Expert Enderman Warrior") && event.getDamager() instanceof Enderman) 
-					{
-						Enderman enderman = (Enderman) event.getDamager();
-						player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,(int) ((event.getDamage()*5 * random.nextInt(5))+20),0));
-						for(Entity nearbyEntity : enderman.getNearbyEntities(32, 32, 32)) 
-						{
-							if(nearbyEntity instanceof Player) 
-							{
-								Player playerEffect = (Player) nearbyEntity;
-								playerEffect.spawnParticle(Particle.CLOUD,enderman.getLocation(), 100,1,1,1,0);
-								playerEffect.playSound(enderman.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 0);
-								
-							}
-						}
+						Common.GiveBlindness(player,(int) ((event.getDamage()*5 * random.nextInt(3))+20));
 					}
 				}
 				else if(event.getDamager().getType() == EntityType.ENDER_DRAGON) 
@@ -78,7 +55,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 					{
 						if(random.nextInt(200) < event.getDamage()*10) 
 						{
-							player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,(int) ((event.getDamage()*5 * random.nextInt(3))+20),0));
+							Common.GiveBlindness(player,(int) ((event.getDamage()*10 * random.nextInt(5))+20));
 						}
 					}
 				}
@@ -109,7 +86,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 					Phantom phantom = (Phantom) event.getDamager();
 					if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase("Expert Phantom Warrior")) 
 					{
-						player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,(int) ((event.getDamage()*10 * random.nextInt(5))+20),0));
+						Common.GiveBlindness(player,(int) ((event.getDamage()*10 * random.nextInt(5))+20));
 						for(Entity nearbyEntity : phantom.getNearbyEntities(32, 32, 32)) 
 						{
 							if(nearbyEntity instanceof Player) 
@@ -180,7 +157,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 						if(arrow.getShooter() instanceof Player) 
 						{
 							Player player = (Player) arrow.getShooter();
-							player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,59,0,false));
+							Common.GiveBlindness(player,59);
 						}
 					}
 				}

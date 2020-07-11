@@ -2,13 +2,10 @@ package me.murrobby.igsq.expert;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
@@ -22,14 +19,11 @@ import me.murrobby.igsq.Main_Spigot;
 import java.util.Random;
 
 
-@SuppressWarnings("unused")
 public class CreatureSpawnEvent_Expert implements Listener
 {
 	Random random = new Random();
-	private Main_Spigot plugin;
 	public CreatureSpawnEvent_Expert(Main_Spigot plugin)
 	{
-		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	

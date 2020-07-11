@@ -1,30 +1,22 @@
 package me.murrobby.igsq.expert;
 
-import java.io.IOException;
-import java.time.LocalTime;
-import java.util.Collection;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Main_Spigot;
 
-@SuppressWarnings("unused")
 public class EntityDamageEvent_Expert implements Listener
 {
 	private Main_Spigot plugin;
@@ -119,7 +111,7 @@ public class EntityDamageEvent_Expert implements Listener
 						if(selectedPlayer.getWorld().getEnvironment() == Environment.THE_END) 
 						{
 							selectedPlayer.sendTitle(Common.ChatColour("&cEnder Dragon Phase 2"),Common.ChatColour("&eThe True Expert Ender Dragon"),10,70,20);
-							selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.MUSIC_DRAGON, 10000, 2);
+							selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.MUSIC_END, 10000, 2f);
 						}
 					}
 				}

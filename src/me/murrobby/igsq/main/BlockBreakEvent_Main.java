@@ -11,12 +11,9 @@ import me.murrobby.igsq.Main_Spigot;
 
 public class BlockBreakEvent_Main implements Listener
 {
-	@SuppressWarnings("unused")
-	private Main_Spigot plugin;
 	private String cancelMessage;
 	public BlockBreakEvent_Main(Main_Spigot plugin)
 	{
-		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 		cancelMessage = "Sorry You cant break blocks Yet!";
 	}

@@ -1,23 +1,16 @@
 package me.murrobby.igsq.main;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.Common;
 import me.murrobby.igsq.Main_Spigot;
 
-@SuppressWarnings("unused")
+
 public class EntityAirChangeEvent_Main implements Listener
 {
-	private Main_Spigot plugin;
 	public EntityAirChangeEvent_Main(Main_Spigot plugin)
 	{
-		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
