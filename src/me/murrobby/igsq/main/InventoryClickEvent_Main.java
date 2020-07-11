@@ -22,7 +22,7 @@ public class InventoryClickEvent_Main implements Listener
 	@EventHandler
 	public void InventoryClick_Main(org.bukkit.event.inventory.InventoryClickEvent event) 
 	{
-		if(event.getClickedInventory().getType() == InventoryType.ANVIL) 
+		if(event.getClickedInventory().getType() != null && event.getClickedInventory().getType() == InventoryType.ANVIL) 
 		{
 		if(event.getCurrentItem().getType() == Material.NAME_TAG && event.getCurrentItem().getItemMeta().getDisplayName() != null) 
 			{
