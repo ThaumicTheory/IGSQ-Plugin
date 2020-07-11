@@ -17,11 +17,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 import me.murrobby.igsq.expert.Main_Expert;
 
 public class Executor_Command implements CommandExecutor{
-	private Main plugin;
+	private Main_Spigot plugin;
 	private Player player;
 	private CommandSender sender;
 	private String[] args = new String[0];
@@ -32,7 +32,7 @@ public class Executor_Command implements CommandExecutor{
 	
 	private int realtimeTask = -1;
 	
-	public Executor_Command(Main plugin)
+	public Executor_Command(Main_Spigot plugin)
 	{
 		this.plugin = plugin;
 		plugin.getCommand("igsq").setExecutor(this);

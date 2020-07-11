@@ -1,13 +1,13 @@
 package me.murrobby.igsq.expert;
 
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 
 public class Main_Expert 
 {
-	private static Main plugin;
+	private static Main_Spigot plugin;
 	public static int taskID = 0;
-	public Main_Expert(Main plugin)
+	public Main_Expert(Main_Spigot plugin)
 	{
 		Main_Expert.plugin = plugin;
 		//Events run forever and cannot be turned off they must induvidualy have checks for expert mode

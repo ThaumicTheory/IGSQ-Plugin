@@ -7,21 +7,22 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class Common {
-	public static Main plugin;
+	public static Main_Spigot plugin;
     public static File playerDataFile;
     public static FileConfiguration playerData;
     public static File internalDataFile;
     public static FileConfiguration internalData;
-    
+    // TODO commenting
     public static void createPlayerData() {
         playerDataFile = new File(plugin.getDataFolder(),"playerData.yml");
         if (!playerDataFile.exists()) {
             try {
 				playerDataFile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             plugin.saveResource("playerData.yml", false);
@@ -36,13 +37,13 @@ public class Common {
             e.printStackTrace();
         }
     }
+    // TODO commenting
     public static void createInternalData() {
     	internalDataFile = new File(plugin.getDataFolder(),"internalData.yml");
         if (!internalDataFile.exists()) {
             try {
             	internalDataFile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             plugin.saveResource("internalData.yml", false);
@@ -57,40 +58,36 @@ public class Common {
             e.printStackTrace();
         }
     }
+    // TODO commenting
     public static Boolean ExpertCheck() 
     {
     	return Common.getFieldBool("GAMEPLAY.expert", "config");
     }
+    // TODO commenting
     public static void loadConfiguration()
     {
         addField("MYSQL",true);
         addField("MYSQL.username","username");
         addField("MYSQL.password","password");
         addField("MYSQL.database","database");
-        addField("MESSAGE.firstjoin1","&aWelcome &b");
-        addField("MESSAGE.firstjoin2","&b To &dIGSQ!");
-        addField("MESSAGE.join1","&aWelcome &bBack ");
-        addField("MESSAGE.join2","&b!");
-        addField("MESSAGE.illegalnametagname1","&cSorry! But &4");
-        addField("MESSAGE.illegalnametagname2"," &cIs Protected from Name Tags.");
-        addField("MESSAGE.illegalnametagnameoverride1","&bNormally &a");
-        addField("MESSAGE.illegalnametagnameoverride2"," &bWould be Protected from Name Tags but you bypass this check.");
-        addField("MESSAGE.commandwatch1","&eCommand &5| &6");
-        addField("MESSAGE.commandwatch2"," &5| &c");
+        addField("MESSAGE.illegalnametagname","&cSorry! But &4<blocked> &cIs Protected from Name Tags.");
+        addField("MESSAGE.illegalnametagnameoverride","&bNormally &a<blocked> &bWould be Protected from Name Tags but you bypass this check.");
+        addField("MESSAGE.commandwatch","&eCommand &5| &6 <player> &5| &c<command>");
         addField("GAMEPLAY.expert",false);
-        //See "Creating you're defaults"
-        plugin.getConfig().options().copyDefaults(true); // NOTE: You do not have to use "plugin." if the class extends the java plugin
-        //Save the config whenever you manipulate it
+        plugin.getConfig().options().copyDefaults(true);
         plugin.saveConfig();
     }
+    // TODO commenting
     public static void addField(String path,String data) 
     {
     	plugin.getConfig().addDefault(path, data);
     }
+    // TODO commenting
     public static void addField(String path,Boolean data) 
     {
     	plugin.getConfig().addDefault(path, data);
     }
+    // TODO commenting
     public static Boolean getFieldBool(String path,String tableName) 
     {
     	switch(tableName) {
@@ -103,6 +100,7 @@ public class Common {
     	}
 
     }
+    // TODO commenting
     public static String getFieldString(String path,String tableName) 
     {
     	switch(tableName) {
@@ -115,7 +113,7 @@ public class Common {
     	}
 
     }
-    
+    // TODO commenting
     public static int getFieldInt(String path,String tableName) 
     {
     	switch(tableName) {
@@ -139,6 +137,7 @@ public class Common {
     	arrayAppended[array.length] = value;
     	return arrayAppended;
     }
+    // TODO commenting
     public static Player[] Append(Player[] array, Player value)
     {
     	Player[] arrayAppended = new Player[array.length+1];
@@ -149,6 +148,7 @@ public class Common {
     	arrayAppended[array.length] = value;
     	return arrayAppended;
     }
+    // TODO commenting
     public static String[] Depend(String[] array, int location)
     {
         String[] arrayDepended = new String[array.length-1];
@@ -164,6 +164,7 @@ public class Common {
         }
         return arrayDepended;
     }
+    // TODO commenting
     public static String[] GetBetween(String[] array, int leftSide,int rightSide)
     {
         String[] arrayBetween = new String[0];
@@ -183,6 +184,7 @@ public class Common {
         }
         return arrayBetween;
     }
+    // TODO commenting
     public static void Default(Player player) 
     {
     	try {
@@ -200,12 +202,26 @@ public class Common {
 			player.sendMessage("Something went wrong when creating your defaults!");
 		}
     }
+    // TODO commenting
     public static String ChatColour(String textToColour) 
     {
     	return ChatColor.translateAlternateColorCodes('&', textToColour);
     }
-    public static String GetMessage(String messageName) 
+    // TODO commenting
+    public static String GetMessage(String messageName, String replace,String with)
     {
-    	return ChatColor.translateAlternateColorCodes('&', Common.getFieldString("MESSAGE." + messageName, "config"));
+    	return ChatColor.translateAlternateColorCodes('&', Common.getFieldString("MESSAGE." + messageName, "config").replace(replace, with));
+    }
+    // TODO commenting
+    public static String GetMessage(String messageName, String replace,String with, String replace2,String with2)
+    {
+    	return ChatColor.translateAlternateColorCodes('&', Common.getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2));
+    }
+    public static void GiveBlindness(Player player,int time) 
+    {
+    	if(!player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
+    	{
+    		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,time,0,false));
+    	}
     }
 }

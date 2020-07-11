@@ -1,28 +1,18 @@
 package me.murrobby.igsq.expert;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
-
 import me.murrobby.igsq.Common;
-import me.murrobby.igsq.Main;
+import me.murrobby.igsq.Main_Spigot;
 import org.bukkit.Material;
 import java.util.Random;
 
-@SuppressWarnings("unused")
 public class BlockSpreadEvent_Expert implements Listener
 {
-	private Main plugin;
 	Random random = new Random();
-	public BlockSpreadEvent_Expert(Main plugin)
+	public BlockSpreadEvent_Expert(Main_Spigot plugin)
 	{
-		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
