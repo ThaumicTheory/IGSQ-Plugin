@@ -19,7 +19,10 @@ public class PlayerCommandPreprocessEvent_Security implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			Common_Security.FilterCommand(event.getMessage(),event.getPlayer());
+			if(!Common_Security.FilterCommand(event.getMessage(),event.getPlayer())) 
+			{
+				event.setCancelled(true);
+			}
 		}
 	}
 	

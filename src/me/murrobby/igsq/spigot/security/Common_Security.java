@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.security;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.Common_Spigot;
 
@@ -12,10 +13,21 @@ public class Common_Security
     {
 		for(String illegalCommand: illegalCommands)
 		{
-			if(command.toUpperCase().contains(illegalCommand)) 
+			if(sender instanceof Player) 
 			{
-				sender.sendMessage(Common_Spigot.GetMessage("MESSAGE.illegalcommand", "<blocked>", illegalCommand));
-				return false;
+				if(command.toUpperCase().startsWith("/" +illegalCommand)) 
+				{
+					sender.sendMessage(Common_Spigot.GetMessage("illegalcommand", "<blocked>", illegalCommand));
+					return false;
+				}
+			}
+			else 
+			{
+				if(command.toUpperCase().startsWith(illegalCommand)) 
+				{
+					sender.sendMessage(Common_Spigot.GetMessage("illegalcommand", "<blocked>", illegalCommand));
+					return false;
+				}
 			}
 		}
     	return true;
