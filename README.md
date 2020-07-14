@@ -4,7 +4,7 @@ Official Repo of the IGSQ Minecraft server plugin.
 ## Tasks
 
 **bungeecord:**
-- [ ] change join commands to bungee join.
+- [x] change join commands to bungee join.
 - [ ] Add option for per server login locations.
 
 **Commands:**
@@ -14,7 +14,7 @@ Official Repo of the IGSQ Minecraft server plugin.
 - [ ] tab completion
 
 **Chat:**
-- [ ] Change Message Support to support custom inputs rather than halfs.
+- [x] Change Message Support to support custom inputs rather than halfs.
 - [ ] Hex Support
 - [ ] Chat Prefix and suffixes
 
