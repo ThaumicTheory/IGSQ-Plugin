@@ -75,7 +75,6 @@ public class Common_Spigot {
         addField("MESSAGE.illegalitemnameoverride","&bNormally &a<blocked> &bWould be A Blocked Word For &e<material> &bbut you bypass this check.");
         addField("MESSAGE.illegalcommand","&cSorry! But &4<blocked> &cIs A Blocked Command.");
         addField("MESSAGE.illegalchat","&cSorry! But &4<blocked> &cIs A Blocked Word.");
-        addField("MESSAGE.commandwatch","&eCommand &5| &6 <player> &5| &c<command>");
         addField("GAMEPLAY.expert",false);
         plugin.getConfig().options().copyDefaults(true);
         plugin.saveConfig();
