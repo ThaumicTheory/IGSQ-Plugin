@@ -11,7 +11,6 @@ public class Main_Expert
 	{
 		Main_Expert.plugin = plugin;
 		//Events run forever and cannot be turned off they must induvidualy have checks for expert mode
-		new BlockSpreadEvent_Expert(plugin);
 		new CreatureSpawnEvent_Expert(plugin);
 		new EntityAirChangeEvent_Expert(plugin);
 		new EntityDamageByEntityEvent_Expert(plugin);

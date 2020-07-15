@@ -9,11 +9,8 @@ import org.bukkit.event.inventory.InventoryType;
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
-import java.util.Random;
-
 public class InventoryClickEvent_Main implements Listener
 {
-	Random random = new Random();
 	public InventoryClickEvent_Main(Main_Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);

@@ -8,12 +8,9 @@ import org.bukkit.event.Listener;
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
-import java.util.Random;
-
 
 public class SlimeSplitEvent_Expert implements Listener
 {
-	Random random = new Random();
 	public SlimeSplitEvent_Expert(Main_Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);

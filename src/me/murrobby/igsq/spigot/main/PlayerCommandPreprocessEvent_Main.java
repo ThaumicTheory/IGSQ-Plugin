@@ -10,7 +10,6 @@ import me.murrobby.igsq.spigot.Main_Spigot;
 
 public class PlayerCommandPreprocessEvent_Main implements Listener
 {
-	String[] illegalCommands = {"MINECRAFT:OP","OP","MINECRAFT:DEOP","DEOP"};
 	public PlayerCommandPreprocessEvent_Main(Main_Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
