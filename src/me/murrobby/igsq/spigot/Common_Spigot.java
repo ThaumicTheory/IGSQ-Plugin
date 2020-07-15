@@ -199,7 +199,7 @@ public class Common_Spigot {
     public static void Default(Player player) 
     {
     	try {
-        	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".2fa",false);
+        	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".2fa","off");
 			Common_Spigot.internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());
 			Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
 		} 
