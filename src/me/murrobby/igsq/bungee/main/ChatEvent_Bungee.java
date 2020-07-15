@@ -3,7 +3,7 @@ package me.murrobby.igsq.bungee.main;
 import me.murrobby.igsq.bungee.Common_Bungee;
 import me.murrobby.igsq.bungee.Database_Bungee;
 import me.murrobby.igsq.bungee.Main_Bungee;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -15,7 +15,7 @@ public class ChatEvent_Bungee implements Listener
 	public ChatEvent_Bungee(Main_Bungee plugin)
 	{
 		this.plugin = plugin;
-		BungeeCord.getInstance().getPluginManager().registerListener(plugin, this);
+		ProxyServer.getInstance().getPluginManager().registerListener(plugin, this);
 	}
 	
 	@EventHandler

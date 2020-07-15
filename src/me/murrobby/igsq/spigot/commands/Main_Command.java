@@ -6,6 +6,7 @@ import org.bukkit.GameRule;
 import org.bukkit.block.Block;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -373,7 +374,13 @@ public class Main_Command implements CommandExecutor{
         }
 
     }
-    /*
+    /**
+     * No Longer Works Properly (will be removed on next minor patch)
+     *
+     * @deprecated use Bungeecord implementation instead.  
+     */
+	@Deprecated
+    @SuppressWarnings("unused")
 	private boolean NotificationQuery() 
     {
         if(IsPlayer() && RequirePermission("igsq.notification"))
@@ -393,8 +400,13 @@ public class Main_Command implements CommandExecutor{
             sender.sendMessage(Common_Spigot.ChatColour("&cYou cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
               return false;
         }
-}
-
+    }
+    /**
+     * No Longer Works Properly (will be removed on next minor patch)
+     *
+     * @deprecated use Bungeecord implementation instead.  
+     */
+    @Deprecated
     private boolean Notification() { //handles user configuration for notifications
         if(args.length != 2) 
         {
@@ -521,7 +533,6 @@ public class Main_Command implements CommandExecutor{
 
 
     }
-    */
 	private boolean ExpertDifficultyQuery() 
     {
         if(RequirePermission("igsq.difficulty"))
