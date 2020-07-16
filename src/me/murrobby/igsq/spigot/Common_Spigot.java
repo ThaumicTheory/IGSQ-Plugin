@@ -202,6 +202,7 @@ public class Common_Spigot {
         	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".2fa","off");
 			Common_Spigot.internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());
 			Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
+			Common_Spigot.internalData.save(Common_Spigot.internalDataFile);
 		} 
     	catch (Exception exception) {
 			System.out.println("Could not add player Defaults!");
