@@ -25,6 +25,7 @@ public class Version_Command {
 	{
 		String version = plugin.getDescription().getVersion();
 		String forBuild = plugin.getDescription().getAPIVersion();
+		String description = plugin.getDescription().getDescription();
 		if(args.length == 0) 
 		{
 			sender.sendMessage(Common_Spigot.ChatColour("&bIGSQ Version " + version + " for " + forBuild + "!"));
