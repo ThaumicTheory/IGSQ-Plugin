@@ -6,7 +6,6 @@ import org.bukkit.GameRule;
 import org.bukkit.block.Block;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -53,7 +52,7 @@ public class Main_Command implements CommandExecutor{
     	switch(args[0].toLowerCase()) 
     	{
   	  		case "version":
-  	  			Version_Command version = new Version_Command(plugin,this,sender,args);
+  	  			Version_Command version = new Version_Command(plugin,this,sender,this.args);
   	  			return version.result;
   	  		case "nightvision":
   	  			return NightVisionQuery();
@@ -372,165 +371,6 @@ public class Main_Command implements CommandExecutor{
         	
         	return false;
         }
-
-    }
-    /**
-     * No Longer Works Properly (will be removed on next minor patch)
-     *
-     * @deprecated use Bungeecord implementation instead.  
-     */
-	@Deprecated
-    @SuppressWarnings("unused")
-	private boolean NotificationQuery() 
-    {
-        if(IsPlayer() && RequirePermission("igsq.notification"))
-        {
-            if(Notification()) 
-            {
-                return true;
-            }
-            else 
-            {
-                sender.sendMessage(Common_Spigot.ChatColour("&9notification [enabled/sound]"));
-                return false;
-            }
-        }
-        else 
-        {
-            sender.sendMessage(Common_Spigot.ChatColour("&cYou cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
-              return false;
-        }
-    }
-    /**
-     * No Longer Works Properly (will be removed on next minor patch)
-     *
-     * @deprecated use Bungeecord implementation instead.  
-     */
-    @Deprecated
-    private boolean Notification() { //handles user configuration for notifications
-        if(args.length != 2) 
-        {
-        	 return false;
-        }
-        else if(args[0].equalsIgnoreCase("sound")) //select notification sound
-        {
-            try
-            {
-            	Sound sound = Sound.valueOf(args[1].toUpperCase()); 
-            	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".notification.sound",sound.toString()); //set sound configuration to playerData.yml
-            	Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
-            	player.sendMessage(Common_Spigot.ChatColour("&bSound set to &a" + sound.toString() + "&b!"));
-            }
-            catch(Exception exception)
-            {
-                sender.sendMessage(Common_Spigot.ChatColour("&cThis Sound could not be found!"));
-                return false;
-            }
-            return true;
-        }
-        else if(args[0].equalsIgnoreCase("pitch")) //adjust pitch of notifications
-        {
-            try
-            {
-            	Float pitch;
-            	if(Float.parseFloat(args[1]) > 2f) 
-            	{
-            		pitch = 2f;
-            	}
-            	else if(Float.parseFloat(args[1]) < 0f) 
-            	{
-            		pitch = 0f;
-            	}
-            	else 
-            	{
-            		pitch = Float.parseFloat(args[1]);
-            	}
-            	
-            	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".notification.pitch",pitch);
-            	Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
-            	player.sendMessage(Common_Spigot.ChatColour("&bPitch set to &a" + pitch.toString() +"&b!"));
-            }
-            catch(Exception exception)
-            {
-                sender.sendMessage(Common_Spigot.ChatColour("&cThis Pitch is not valid!"));
-                return false;
-            }
-            return true;
-        }
-        else if(args[0].equalsIgnoreCase("enabled")) //enable or disable notifications
-        {
-            try
-            {
-            	boolean enabled = Boolean.parseBoolean(args[1]);
-            	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".notification.enabled",enabled);
-            	Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
-            	if(enabled) 
-            	{
-            		player.sendMessage(Common_Spigot.ChatColour("&bNotifications &aEnabled&b!"));
-            	}
-            	else 
-            	{
-            		player.sendMessage(Common_Spigot.ChatColour("&bNotifications &cDisabled&b!"));
-            	}
-            }
-            catch(Exception exception)
-            {
-                sender.sendMessage(Common_Spigot.ChatColour("&cThis Boolean is not valid!"));
-                return false;
-            }
-            return true;
-        }
-        else if(args[0].equalsIgnoreCase("allowself")) //controls whether you ping yourself
-        {
-            try
-            {
-            	boolean allowSelf = Boolean.parseBoolean(args[1]);
-            	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".notification.allowself",allowSelf);
-            	Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
-            	if(allowSelf) 
-            	{
-            		player.sendMessage(Common_Spigot.ChatColour("&bSelf notify is &aAllowed&b!"));
-            	}
-            	else 
-            	{
-            		player.sendMessage(Common_Spigot.ChatColour("&bSelf notify is &cNot Allowed&b!"));
-            	}
-            }
-            catch(Exception exception)
-            {
-                sender.sendMessage(Common_Spigot.ChatColour("&cThis Boolean is not valid!"));
-                return false;
-            }
-            return true;
-        }
-        else if(args[0].equalsIgnoreCase("allowconsole")) //allow or deny server sided pings
-        {
-            try
-            {
-            	boolean allowConsole = Boolean.parseBoolean(args[1]);
-            	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".notification.allowconsole",allowConsole);
-            	Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
-            	if(allowConsole) 
-            	{
-            		player.sendMessage(Common_Spigot.ChatColour("&bServer notify is &aAllowed&b!"));
-            	}
-            	else 
-            	{
-            		player.sendMessage(Common_Spigot.ChatColour("&bServer notify is &cNot Allowed&b!"));
-            	}
-            }
-            catch(Exception exception)
-            {
-                sender.sendMessage(Common_Spigot.ChatColour("&cThis Boolean is not valid!"));
-                return false;
-            }
-            return true;
-        }
-        else 
-        {
-        	return false;
-        }
-
 
     }
 	private boolean ExpertDifficultyQuery() 
