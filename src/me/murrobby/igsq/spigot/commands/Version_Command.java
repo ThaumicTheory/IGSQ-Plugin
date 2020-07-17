@@ -25,12 +25,13 @@ public class Version_Command {
 	{
 		String version = plugin.getDescription().getVersion();
 		String forBuild = plugin.getDescription().getAPIVersion();
+		String description = plugin.getDescription().getDescription();
 		if(args.length == 0) 
 		{
 			sender.sendMessage(Common_Spigot.ChatColour("&bIGSQ Version " + version + " for " + forBuild + "!"));
 			return true;
 		}
-		if(args[0].equalsIgnoreCase("version")) 
+		else if(args[0].equalsIgnoreCase("version")) 
 		{
 			sender.sendMessage(Common_Spigot.ChatColour("&bIGSQ Version " + version + "!"));
 			return true;
@@ -40,6 +41,13 @@ public class Version_Command {
 			sender.sendMessage(Common_Spigot.ChatColour("&bIGSQ for " + forBuild + "!"));
 			return true;
 		}
+		else if(args[0].equalsIgnoreCase("description"))
+		{
+			sender.sendMessage(Common_Spigot.ChatColour("&b" + description + "!"));
+			return true;
+		}
+		
+	
 		return false;
 		
 	}
@@ -53,7 +61,7 @@ public class Version_Command {
 				}
 				else 
 				{
-					sender.sendMessage(Common_Spigot.ChatColour("&1version [build/version]"));
+					sender.sendMessage(Common_Spigot.ChatColour("&1version [build/version/description]"));
 					return false;
 				}
 			}

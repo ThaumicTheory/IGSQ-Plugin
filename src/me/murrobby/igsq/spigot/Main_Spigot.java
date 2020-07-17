@@ -73,7 +73,6 @@ public class Main_Spigot extends JavaPlugin{
 		
 		new Database_Spigot(this);
 		
-		new Main_Command(this);
 		
 		
 		new PlayerJoinEvent_Main(this);
@@ -83,6 +82,7 @@ public class Main_Spigot extends JavaPlugin{
 		
 		new Main_Expert(this);
 		new Main_Security(this);
+		new Main_Command(this);
 	}
 
 	public void onLoad()

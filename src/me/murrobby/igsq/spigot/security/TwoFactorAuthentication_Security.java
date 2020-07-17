@@ -18,9 +18,9 @@ public class TwoFactorAuthentication_Security
 	{
 		this.plugin = plugin;
 		this.taskID = taskID;
-		EnderDragonQuery();
+		TwoFactorAuthenticationQuery();
 	}
-	private void EnderDragonQuery() 
+	private void TwoFactorAuthenticationQuery() 
 	{
 		twofaTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
     	{
