@@ -50,7 +50,7 @@ public class ChatEvent_Bungee implements Listener
 			}
 			else
 			{
-				event.setCancelled(true);
+				
 				for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
 				{
 					

@@ -52,6 +52,7 @@ public class Block_Command {
 						players = Common_Spigot.Append(players,selectedPlayer);
 					}
 				}
+//				depracated code
 //				else if(args[2].equalsIgnoreCase("@others")) 
 //				{
 //					display = "Everyone Else";

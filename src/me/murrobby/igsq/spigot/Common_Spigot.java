@@ -62,7 +62,7 @@ public class Common_Spigot {
     // TODO commenting
     public static Boolean ExpertCheck() 
     {
-    	return Common_Spigot.getFieldBool("GAMEPLAY.expert", "config");
+    	return getFieldBool("GAMEPLAY.expert", "config");
     }
     // TODO commenting
     public static void loadConfiguration()
@@ -186,7 +186,7 @@ public class Common_Spigot {
         for (int i = 0;i < array.length;i++)
         {
             if(i >= leftSide && i <= rightSide){
-            	arrayBetween = Common_Spigot.Append(arrayBetween, array[i]);
+            	arrayBetween = Append(arrayBetween, array[i]);
             }
             else if(i > rightSide)
             {
@@ -199,10 +199,10 @@ public class Common_Spigot {
     public static void Default(Player player) 
     {
     	try {
-        	Common_Spigot.playerData.set(player.getUniqueId().toString() + ".2fa","off");
-			Common_Spigot.internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());
-			Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
-			Common_Spigot.internalData.save(Common_Spigot.internalDataFile);
+        	playerData.set(player.getUniqueId().toString() + ".2fa","off");
+			internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());
+			playerData.save(playerDataFile);
+			internalData.save(internalDataFile);
 		} 
     	catch (Exception exception) {
 			System.out.println("Could not add player Defaults!");
@@ -217,12 +217,12 @@ public class Common_Spigot {
     // TODO commenting
     public static String GetMessage(String messageName, String replace,String with)
     {
-    	return ChatColor.translateAlternateColorCodes('&', Common_Spigot.getFieldString("MESSAGE." + messageName, "config").replace(replace, with));
+    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with));
     }
     // TODO commenting
     public static String GetMessage(String messageName, String replace,String with, String replace2,String with2)
     {
-    	return ChatColor.translateAlternateColorCodes('&', Common_Spigot.getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2));
+    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2));
     }
     public static void GiveBlindness(Player player,int time) 
     {
@@ -237,7 +237,7 @@ public class Common_Spigot {
 		{
 			if(message.toUpperCase().contains(illegalChat)) 
 			{
-				player.sendMessage(Common_Spigot.GetMessage("MESSAGE.illegalchat", "<blocked>", illegalChat));
+				player.sendMessage(GetMessage("illegalchat", "<blocked>", illegalChat));
 				return false;
 			}
 		}
