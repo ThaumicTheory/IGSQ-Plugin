@@ -13,9 +13,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 import me.murrobby.igsq.spigot.expert.Main_Expert;
@@ -55,9 +52,11 @@ public class Main_Command implements CommandExecutor{
   	  			Version_Command version = new Version_Command(plugin,this,sender,this.args);
   	  			return version.result;
   	  		case "nightvision":
-  	  			return NightVisionQuery();
+  	  			NightVision_Command nightvision = new NightVision_Command(plugin,this,sender,this.args);
+  	  			return nightvision.result;
   	  		case "nv":
-  	  			return NightVisionQuery();
+  	  			NightVision_Command nv = new NightVision_Command(plugin,this,sender,this.args);
+  	  			return nv.result;
   	  		case "block":
   	  			return BlockQuery();
   	  		case "entity":
@@ -154,58 +153,7 @@ public class Main_Command implements CommandExecutor{
 		}
 		
 	}
-	private boolean NightVisionQuery() 
-	{
-			if(IsPlayer() && RequirePermission("igsq.nightvision")) 
-			{
-				if(NightVision()) 
-				{
-					return true;
-				}
-				else 
-				{
-					sender.sendMessage(Common_Spigot.ChatColour("&cSomething Went Wrong When Executing this Command!"));
-					return false;
-				}
-			}
-			else 
-			{
-				sender.sendMessage(Common_Spigot.ChatColour("&cYou cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
-	  			return false;
-			}
-	}
-	private boolean NightVision() {
-		String display;
-		if(args.length == 0) 
-		{
-			display = "Yourself";
-			player = (Player)sender;
-		}
-		else 
-		{
-			try
-			{
-				player = Bukkit.getPlayer(args[0]);
-				display = player.getName();
-			}
-			catch(Exception exception) 
-			{
-				sender.sendMessage(Common_Spigot.ChatColour("&cPlayer Could not be found!"));
-				return false;
-			}
-		}
-		if(player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
-		{
-			player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-			sender.sendMessage(Common_Spigot.ChatColour("&3Removed nightvision from " + display + "!"));
-		}
-		else 
-		{
-			player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000,255,true));
-			sender.sendMessage(Common_Spigot.ChatColour("&bGave nightvision too " + display + "!"));
-		}
-		return true;
-	}
+
 	private boolean BlockQuery() 
 	{
 			if(RequirePermission("igsq.block") && IsPlayer()) 
