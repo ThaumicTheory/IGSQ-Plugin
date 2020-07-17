@@ -26,16 +26,18 @@ public class Block_Command {
 		this.commands = commands;
 		this.sender = sender;
 		this.args = args;
+		this.plugin = plugin;
 		result = BlockQuery();
 	}
 		
 	
 	private boolean Block() {
+		player = (Player) sender;
 		Location location = player.getLocation();
-		players = new Player[1];
-		players[0] = player;
 		String[] playerArgs = new String[0];
 		Material material;
+		players = new Player[1];
+		players[0] = player;
 		try 
 		{
 			material = Material.valueOf(args[0].toUpperCase());
@@ -50,17 +52,17 @@ public class Block_Command {
 						players = Common_Spigot.Append(players,selectedPlayer);
 					}
 				}
-				else if(args[2].equalsIgnoreCase("@others")) 
-				{
-					display = "Everyone Else";
-					for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
-					{
-						if(!(selectedPlayer.equals(player))) 
-						{
-							players = Common_Spigot.Append(players,selectedPlayer);
-						}
-					}
-				}
+//				else if(args[2].equalsIgnoreCase("@others")) 
+//				{
+//					display = "Everyone Else";
+//					for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
+//					{
+//						if(!(selectedPlayer.equals(player))) 
+//						{
+//							players = Common_Spigot.Append(players,selectedPlayer);
+//						}
+//					}
+//				}
 				else 
 				{
 					players = new Player[0];
@@ -122,7 +124,7 @@ public class Block_Command {
 			}
 			else 
 			{
-				sender.sendMessage(Common_Spigot.ChatColour("&9block [block_ID] [*fake*/real/trap] {@all/@others/username/*\"you\"*} {\"another user\"} ..."));
+				sender.sendMessage(Common_Spigot.ChatColour("&9block [block_ID] [*fake*/real/trap] {@all/username/*\"you\"*} {\"another user\"} ..."));
 				return false;
 			}
 		}
