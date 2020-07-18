@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -224,6 +226,7 @@ public class Common_Spigot {
     {
     	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2));
     }
+ // TODO commenting
     public static void GiveBlindness(Player player,int time) 
     {
     	if(!player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
@@ -231,6 +234,7 @@ public class Common_Spigot {
     		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,time,0,false));
     	}
     }
+ // TODO commenting
     public static boolean FilterChat(String message,Player player) 
     {
 		for(String illegalChat: illegalChats)
@@ -242,5 +246,28 @@ public class Common_Spigot {
 			}
 		}
     	return true;
+    }
+    /**
+     * gets the highest block From a Location.
+     * @implSpec See if the player is directly below the sky.<br>Define Lightning strikes location.
+     * @since 0.0.5
+     * @see org.bukkit.Location
+     * @see org.bukkit.block.Block
+     * @return <b>Block</b>
+     * @param org.bukkit.Location
+     * @throws java.lang.NullPointerException
+     * @author Murrobby
+     */
+    public static Block GetHighestBlock(Location location) throws NullPointerException
+    {
+    	for(int i = 255;i > 0;i--) 
+    	{
+    		location.setY(i);
+    		if(!(location.getBlock().isEmpty() || location.getBlock().isPassable())) 
+    		{
+    			return location.getBlock();
+    		}
+    	}
+    	throw null;
     }
 }

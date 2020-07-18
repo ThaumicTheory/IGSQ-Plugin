@@ -8,7 +8,12 @@ import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
-
+/**
+ * This Class is no longer required please use alternatives.
+ *
+ * @deprecated use {@link Common_Spigot#GetHighestBlock()} instead.  
+ */
+@Deprecated
 public class Nearby_Blocks_Command {
 	private Main_Command commands;
 	private CommandSender sender;

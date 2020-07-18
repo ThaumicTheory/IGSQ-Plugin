@@ -2,9 +2,7 @@ package me.murrobby.igsq.spigot.expert;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LightningStrike;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,13 +45,22 @@ public class ThunderChangeEvent_Expert implements Listener
 						{
 							if(selectedPlayer.getWorld() == event.getWorld())
 							{
-								if(random.nextInt(20) == 1)
+								if(random.nextInt(3) == 1)
 								{
 									randomX = random.nextInt(16);
 									randomZ = random.nextInt(16);
 									Location location = selectedPlayer.getLocation();
 									location.add(randomX, 0 , randomZ);
-									Entity strike = selectedPlayer.getWorld().strikeLightning(location);
+									try 
+									{
+										Block target = Common_Spigot.GetHighestBlock(location);
+										location = target.getLocation().add(0,1,0);
+										event.getWorld().strikeLightning(location);
+									}
+									catch(NullPointerException e) 
+									{
+										//Failed To Find Spot For Lightning
+									}
 								}
 							}
 						}
