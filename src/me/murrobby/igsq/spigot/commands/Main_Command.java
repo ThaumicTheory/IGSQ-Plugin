@@ -59,6 +59,9 @@ public class Main_Command implements CommandExecutor{
   	  			return RealTimeQuery();
   	  		case "expert":
   	  			return ExpertDifficultyQuery();
+  	  		case "nearby":
+  	  			Nearby_Blocks_Command nearby = new Nearby_Blocks_Command(plugin,this,sender,this.args);
+  	  			return nearby.result;
   	  		default:
   	  			Help();
   	  			return false;
