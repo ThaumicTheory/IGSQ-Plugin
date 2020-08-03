@@ -78,6 +78,9 @@ public class Common_Spigot {
         addField("MESSAGE.illegalcommand","&cSorry! But &4<blocked> &cIs A Blocked Command.");
         addField("MESSAGE.illegalchat","&cSorry! But &4<blocked> &cIs A Blocked Word.");
         addField("GAMEPLAY.expert",false);
+        addField("MESSAGE.message","&6(&e<server>&6) &5| &6<prefix><player> &5| &d<message>");
+        addField("MESSAGE.server","Server");
+        addField("SUPPORT.luckperms",true);
         plugin.getConfig().options().copyDefaults(true);
         plugin.saveConfig();
     }
@@ -222,9 +225,24 @@ public class Common_Spigot {
     	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with));
     }
     // TODO commenting
+    public static String GetMessage(String messageName)
+    {
+    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config"));
+    }
+    // TODO commenting
     public static String GetMessage(String messageName, String replace,String with, String replace2,String with2)
     {
     	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2));
+    }
+    // TODO commenting
+    public static String GetMessage(String messageName, String replace,String with, String replace2,String with2, String replace3,String with3)
+    {
+    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2).replace(replace3, with3));
+    }
+    // TODO commenting
+    public static String GetMessage(String messageName, String replace,String with, String replace2,String with2, String replace3,String with3, String replace4,String with4)
+    {
+    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2).replace(replace3, with3).replace(replace4, with4));
     }
  // TODO commenting
     public static void GiveBlindness(Player player,int time) 
@@ -249,14 +267,10 @@ public class Common_Spigot {
     }
     /**
      * gets the highest block From a Location.
-     * @implSpec See if the player is directly below the sky.<br>Define Lightning strikes location.
-     * @since 0.0.5
-     * @see org.bukkit.Location
-     * @see org.bukkit.block.Block
+     * @apiNote Raycasts downwards until it hits a Block. Returns the block it hit. Ignores Passable.
+     * @see org.bukkit.block.Block#isPassable
      * @return <b>Block</b>
-     * @param org.bukkit.Location
      * @throws java.lang.NullPointerException
-     * @author Murrobby
      */
     public static Block GetHighestBlock(Location location) throws NullPointerException
     {

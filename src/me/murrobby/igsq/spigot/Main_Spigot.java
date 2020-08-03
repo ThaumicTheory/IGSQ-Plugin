@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import me.murrobby.igsq.spigot.expert.Main_Expert;
+import me.murrobby.igsq.spigot.lp.Main_LP;
 import me.murrobby.igsq.spigot.main.AsyncPlayerChatEvent_Main;
 import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
@@ -76,13 +77,22 @@ public class Main_Spigot extends JavaPlugin{
 		
 		
 		new PlayerJoinEvent_Main(this);
-		new AsyncPlayerChatEvent_Main(this);
 		new InventoryClickEvent_Main(this);
 		new PlayerCommandPreprocessEvent_Main(this);
 		
 		new Main_Expert(this);
 		new Main_Security(this);
 		new Main_Command(this);
+		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && Common_Spigot.getFieldBool("SUPPORT.luckperms", "config")) 
+		{
+			System.out.println("Luckperms Module Enabled.");
+			new Main_LP(this);
+		}
+		else 
+		{
+			System.out.println("Luckperms Module Disabled.");
+			new AsyncPlayerChatEvent_Main(this);
+		}
 	}
 
 	public void onLoad()

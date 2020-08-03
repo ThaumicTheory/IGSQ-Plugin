@@ -55,14 +55,14 @@ public class PostLoginEvent_Bungee implements Listener
 			System.out.println("DATABASE ERROR ("+ usernameUpdate + "): Failed Update Check "+ playerUUID + " in minecraft accounts Database!");
 		}
 		//welcome message
-		player.sendMessage(new TextComponent(Common_Bungee.GetMessage("join","<player>",username)));
+		player.sendMessage(new TextComponent(Common_Bungee.ChatColour(Common_Bungee.GetMessage("join","<player>",username))));
 		if(player.isForgeUser()) 
 		{
-			player.sendMessage(new TextComponent(Common_Bungee.GetMessage("joinforge","<modlist>",player.getModList().toString())));
+			player.sendMessage(new TextComponent(Common_Bungee.ChatColour(Common_Bungee.GetMessage("joinforge","<modlist>",player.getModList().toString()))));
 		}
 		else 
 		{
-			player.sendMessage(new TextComponent(Common_Bungee.GetMessage("joinvanilla")));
+			player.sendMessage(new TextComponent(Common_Bungee.ChatColour(Common_Bungee.GetMessage("joinvanilla"))));
 		}
 		if(player.hasPermission("igsq.discord2FA")) 
 		{

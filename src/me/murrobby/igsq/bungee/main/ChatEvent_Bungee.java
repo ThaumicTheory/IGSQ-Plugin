@@ -43,7 +43,7 @@ public class ChatEvent_Bungee implements Listener
 					{
 						if(selectedPlayer.hasPermission("igsq.commandwatch") && selectedPlayer != player)
 						{
-							selectedPlayer.sendMessage(new TextComponent(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server)));
+							selectedPlayer.sendMessage(new TextComponent(Common_Bungee.ChatColour(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server))));
 						}
 					}
 				}

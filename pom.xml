@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.murrobby</groupId>
 	<artifactId>IGSQ</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<build>
     	<sourceDirectory>src</sourceDirectory>
     	<resources>
@@ -49,5 +49,11 @@
 			<version>1.16-R0.3-SNAPSHOT</version>
 			<scope>provided</scope>
         </dependency>
+	        <dependency>
+	        <groupId>net.luckperms</groupId>
+	        <artifactId>api</artifactId>
+	        <version>5.1</version>
+	        <scope>provided</scope>
+    	</dependency>
     </dependencies>
 </project>

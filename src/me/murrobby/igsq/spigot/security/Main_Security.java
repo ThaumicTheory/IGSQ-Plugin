@@ -15,7 +15,7 @@ public class Main_Security
 		new ServerCommandEvent_Security(plugin);
 		Start_Security();
 	}
-	public static void Start_Security() //Tasks will close if expert is turned off therefor they will need to be rerun for enabling security
+	public static void Start_Security() //Tasks will need to be closed if security is turned off therefor they will need to be rerun for enabling security
 	{
 		taskID++;
 		new TwoFactorAuthentication_Security(plugin,taskID);
