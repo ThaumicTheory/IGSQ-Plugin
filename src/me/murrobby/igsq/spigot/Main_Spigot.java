@@ -12,6 +12,7 @@ import me.murrobby.igsq.spigot.main.AsyncPlayerChatEvent_Main;
 import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
+import me.murrobby.igsq.spigot.main.ThunderChangeEvent_Main;
 import me.murrobby.igsq.spigot.security.Main_Security;
 import me.murrobby.igsq.spigot.commands.Main_Command;
 
@@ -79,6 +80,7 @@ public class Main_Spigot extends JavaPlugin{
 		new PlayerJoinEvent_Main(this);
 		new InventoryClickEvent_Main(this);
 		new PlayerCommandPreprocessEvent_Main(this);
+		new ThunderChangeEvent_Main(this);
 		
 		new Main_Expert(this);
 		new Main_Security(this);

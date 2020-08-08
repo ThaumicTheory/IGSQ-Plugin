@@ -2,6 +2,7 @@ package me.murrobby.igsq.spigot.expert;
 
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.main.ThunderChangeEvent_Main;
 
 public class Main_Expert 
 {
@@ -18,7 +19,7 @@ public class Main_Expert
 		new EntityTargetEvent_Expert(plugin);
 		new PlayerBedEnterEvent_Expert(plugin);
 		new SlimeSplitEvent_Expert(plugin);
-		new ThunderChangeEvent_Expert(plugin);
+		new ThunderChangeEvent_Main(plugin);
 		//Tasks
 		Start_Expert();
 	}
