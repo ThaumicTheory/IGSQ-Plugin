@@ -81,6 +81,7 @@ public class Common_Spigot {
         addField("MESSAGE.message","&6(&e<server>&6) &5| &6<prefix><player> &5| &d<message>");
         addField("MESSAGE.server","Server");
         addField("SUPPORT.luckperms",true);
+        addField("SUPPORT.nametagedit",true);
         plugin.getConfig().options().copyDefaults(true);
         plugin.saveConfig();
     }
@@ -204,7 +205,7 @@ public class Common_Spigot {
     public static void Default(Player player) 
     {
     	try {
-        	playerData.set(player.getUniqueId().toString() + ".2fa","off");
+        	playerData.set(player.getUniqueId().toString() + ".discord.2fa","");
 			internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());
 			playerData.save(playerDataFile);
 			internalData.save(internalDataFile);

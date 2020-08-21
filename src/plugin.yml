@@ -1,6 +1,6 @@
 name: IGSQ-Spigot
 version: 0.1.0
-softdepend: [LuckPerms]
+softdepend: [LuckPerms,NametagEdit]
 author: Murrobby
 main: me.murrobby.igsq.spigot.Main_Spigot
 description: Custom Plugin Made For The Official IGSQ Server

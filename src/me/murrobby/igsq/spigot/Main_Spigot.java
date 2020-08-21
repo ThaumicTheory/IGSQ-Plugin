@@ -56,8 +56,8 @@ public class Main_Spigot extends JavaPlugin{
 					    	  	case "sound":
 					    	  		player.playSound(player.getLocation(), Sound.valueOf(arg1), Float.parseFloat(arg2), Float.parseFloat(arg3));
 					    	  		break;
-					    	  	case "message":
-					    	  		player.sendMessage(arg1);
+					    	  	case "mention":
+					    	  		player.sendMessage(Common_Spigot.ChatColour("&9" + arg3 + "&bMentioned You In &6" + arg2 + "&bSaying &e" + arg1));
 					    	  		break;
 					    	  	default:
 					    	  		break;
@@ -85,10 +85,17 @@ public class Main_Spigot extends JavaPlugin{
 		new Main_Expert(this);
 		new Main_Security(this);
 		new Main_Command(this);
+		Boolean nametagEdit = false;
+		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Common_Spigot.getFieldBool("SUPPORT.nametagedit", "config")) 
+		{
+			System.out.println("NametagEdit Hook in Luckperms Module Enabled.");
+			nametagEdit = true;
+		}
+		else System.out.println("NametagEdit Hook in Luckperms Module Disabled.");
 		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && Common_Spigot.getFieldBool("SUPPORT.luckperms", "config")) 
 		{
 			System.out.println("Luckperms Module Enabled.");
-			new Main_LP(this);
+			new Main_LP(this,nametagEdit);
 		}
 		else 
 		{
