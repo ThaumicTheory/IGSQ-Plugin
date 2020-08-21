@@ -1,6 +1,7 @@
 name: IGSQ-BUNGEE
-version: 0.0.5
+version: 0.1.0
 author: Murrobby
+softdepend: [LuckPerms]
 main: me.murrobby.igsq.bungee.Main_Bungee
 description: Custom Plugin Made For The Official IGSQ Server
 api-version: 1.16

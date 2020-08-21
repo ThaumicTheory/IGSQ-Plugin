@@ -24,7 +24,7 @@ public class BlockBreakEvent_Security implements Listener
 		{
 			Player player = event.getPlayer();
 			String uuid = player.getUniqueId().toString();
-			String player2FA = Common_Spigot.getFieldString(uuid + ".2fa", "playerdata");
+			String player2FA = Common_Spigot.getFieldString(uuid + ".discord.2fa", "playerdata");
 			if(player2FA == null) 
 			{
 				

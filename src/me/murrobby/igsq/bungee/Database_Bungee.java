@@ -20,10 +20,10 @@ public class Database_Bungee
 		url = Common_Bungee.getFieldString("MYSQL.database", "config.yml");
 		user = Common_Bungee.getFieldString("MYSQL.username", "config.yml");
 		password = Common_Bungee.getFieldString("MYSQL.password", "config.yml");
-		UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(uuid VARCHAR(36) PRIMARY KEY,id VARCHAR(18),current_status VARCHAR(16));");
+		UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(link_number int PRIMARY KEY AUTO_INCREMENT,uuid VARCHAR(36),id VARCHAR(18),current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
-		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37));");
+		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37),nickname VARCHAR(32),role VARCHAR(32),founder bit(1),birthday bit(1),nitroboost bit(1),supporter bit(1));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS player_command_communicator(command_number int PRIMARY KEY AUTO_INCREMENT,command VARCHAR(32),uuid VARCHAR(36),arg1 VARCHAR(32),arg2 VARCHAR(32),arg3 VARCHAR(32),arg4 VARCHAR(32),arg5 VARCHAR(32));");
 	}
 	public static ResultSet QueryCommand(String sql) 

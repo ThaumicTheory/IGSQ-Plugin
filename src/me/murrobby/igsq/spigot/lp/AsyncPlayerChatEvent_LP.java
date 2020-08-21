@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.main;
+package me.murrobby.igsq.spigot.lp;
 
 
 import org.bukkit.Bukkit;
@@ -9,9 +9,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
-public class AsyncPlayerChatEvent_Main implements Listener
+public class AsyncPlayerChatEvent_LP implements Listener
 {
-	public AsyncPlayerChatEvent_Main(Main_Spigot plugin)
+	public AsyncPlayerChatEvent_LP(Main_Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
@@ -19,7 +19,7 @@ public class AsyncPlayerChatEvent_Main implements Listener
 	@EventHandler
 	public void AsyncPlayerChat_Main(AsyncPlayerChatEvent event) 
 	{
-		//Runs only if luckperms is not detected
+		//Player Chat Capturing
 		if(!event.isCancelled()) 
 		{
 			if(!Common_Spigot.FilterChat(event.getMessage(), event.getPlayer())) 
@@ -28,7 +28,7 @@ public class AsyncPlayerChatEvent_Main implements Listener
 			}
 			String username = Common_Spigot.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "playerdata");
 			if (username.equals("")) username = event.getPlayer().getName();
-			event.setFormat((Common_Spigot.ChatColour(Common_Spigot.GetMessage("message", "<server>",Common_Spigot.GetMessage("server"), "<prefix>","", "<player>", username, "<message>", event.getMessage()))));
+			event.setFormat(Common_Spigot.ChatColour(Common_Spigot.GetMessage("message", "<server>",Common_Spigot.GetMessage("server"), "<prefix>",Common_LP.GetPrefix(event.getPlayer()) , "<player>", username, "<message>", event.getMessage())));
 		}
 	}
 	

@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.murrobby</groupId>
 	<artifactId>IGSQ</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<build>
     	<sourceDirectory>src</sourceDirectory>
     	<resources>
@@ -34,6 +34,10 @@
 			<id>bungeecord-repo</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</repository>
+		<repository>
+    		<id>upstream</id>
+    		<url>http://ci.nametagedit.com/plugin/repository/everything/</url>
+		</repository>
 	</repositories>
 	<dependencies>
     	<!--This adds the Spigot API artifact to the build -->
@@ -49,5 +53,16 @@
 			<version>1.16-R0.3-SNAPSHOT</version>
 			<scope>provided</scope>
         </dependency>
+	        <dependency>
+	        <groupId>net.luckperms</groupId>
+	        <artifactId>api</artifactId>
+	        <version>5.1</version>
+	        <scope>provided</scope>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.nametagedit</groupId>
+    		<artifactId>nametagedit</artifactId>
+    		<version>4.1.0</version>
+		</dependency>
     </dependencies>
 </project>

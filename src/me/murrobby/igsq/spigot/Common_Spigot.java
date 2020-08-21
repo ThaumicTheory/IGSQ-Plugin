@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -76,6 +78,10 @@ public class Common_Spigot {
         addField("MESSAGE.illegalcommand","&cSorry! But &4<blocked> &cIs A Blocked Command.");
         addField("MESSAGE.illegalchat","&cSorry! But &4<blocked> &cIs A Blocked Word.");
         addField("GAMEPLAY.expert",false);
+        addField("MESSAGE.message","&6(&e<server>&6) &5| &6<prefix><player> &5| &d<message>");
+        addField("MESSAGE.server","Server");
+        addField("SUPPORT.luckperms",true);
+        addField("SUPPORT.nametagedit",true);
         plugin.getConfig().options().copyDefaults(true);
         plugin.saveConfig();
     }
@@ -199,7 +205,7 @@ public class Common_Spigot {
     public static void Default(Player player) 
     {
     	try {
-        	playerData.set(player.getUniqueId().toString() + ".2fa","off");
+        	playerData.set(player.getUniqueId().toString() + ".discord.2fa","");
 			internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());
 			playerData.save(playerDataFile);
 			internalData.save(internalDataFile);
@@ -220,10 +226,26 @@ public class Common_Spigot {
     	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with));
     }
     // TODO commenting
+    public static String GetMessage(String messageName)
+    {
+    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config"));
+    }
+    // TODO commenting
     public static String GetMessage(String messageName, String replace,String with, String replace2,String with2)
     {
     	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2));
     }
+    // TODO commenting
+    public static String GetMessage(String messageName, String replace,String with, String replace2,String with2, String replace3,String with3)
+    {
+    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2).replace(replace3, with3));
+    }
+    // TODO commenting
+    public static String GetMessage(String messageName, String replace,String with, String replace2,String with2, String replace3,String with3, String replace4,String with4)
+    {
+    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2).replace(replace3, with3).replace(replace4, with4));
+    }
+ // TODO commenting
     public static void GiveBlindness(Player player,int time) 
     {
     	if(!player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
@@ -231,6 +253,7 @@ public class Common_Spigot {
     		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,time,0,false));
     	}
     }
+ // TODO commenting
     public static boolean FilterChat(String message,Player player) 
     {
 		for(String illegalChat: illegalChats)
@@ -242,5 +265,24 @@ public class Common_Spigot {
 			}
 		}
     	return true;
+    }
+    /**
+     * gets the highest block From a Location.
+     * @apiNote Raycasts downwards until it hits a Block. Returns the block it hit. Ignores Passable.
+     * @see org.bukkit.block.Block#isPassable
+     * @return <b>Block</b>
+     * @throws java.lang.NullPointerException
+     */
+    public static Block GetHighestBlock(Location location) throws NullPointerException
+    {
+    	for(int i = 255;i > 0;i--) 
+    	{
+    		location.setY(i);
+    		if(!(location.getBlock().isEmpty() || location.getBlock().isPassable())) 
+    		{
+    			return location.getBlock();
+    		}
+    	}
+    	throw null;
     }
 }

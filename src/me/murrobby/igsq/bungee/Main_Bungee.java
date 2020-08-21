@@ -3,8 +3,11 @@ package me.murrobby.igsq.bungee;
 import java.sql.ResultSet;
 import java.util.concurrent.TimeUnit;
 
+import me.murrobby.igsq.bungee.commands.Link_Command;
+import me.murrobby.igsq.bungee.lp.Main_LP;
 import me.murrobby.igsq.bungee.main.ChatEvent_Bungee;
 import me.murrobby.igsq.bungee.main.PostLoginEvent_Bungee;
+import me.murrobby.igsq.bungee.main.ServerKickEvent_Bungee;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class Main_Bungee extends Plugin
@@ -48,8 +51,18 @@ public class Main_Bungee extends Plugin
     	
 		new Database_Bungee(this);
 		new PostLoginEvent_Bungee(this);
-		//new ServerConnectedEvent_Bungee(this);
 		new ChatEvent_Bungee(this);
+		new ServerKickEvent_Bungee(this);
+		getProxy().getPluginManager().registerCommand(this,new Link_Command());
+		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && Common_Bungee.getFieldString("SUPPORT.luckperms", "config.yml").equalsIgnoreCase("true")) 
+		{
+			System.out.println("Luckperms Module Enabled.");
+			new Main_LP(this);
+		}
+		else 
+		{
+			System.out.println("Luckperms Module Disabled.");
+		}
 	}
 
 	public void onLoad()

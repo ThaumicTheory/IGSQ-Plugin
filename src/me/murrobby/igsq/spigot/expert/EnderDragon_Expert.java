@@ -75,7 +75,7 @@ public class EnderDragon_Expert
 								{
 									if(nearbyEntity.getType() == EntityType.PLAYER) 
 									{
-										if(random.nextInt(5)== 1) 
+										if(random.nextInt(8)== 1) 
 										{
 											Player player = (Player) nearbyEntity;
 											Phantom phantom = (Phantom) selectedWorld.spawnEntity(enderDragon.getLocation(), EntityType.PHANTOM);
@@ -119,7 +119,7 @@ public class EnderDragon_Expert
 								{
 									if(nearbyEntity.getType() == EntityType.PLAYER) 
 									{
-										if(random.nextInt(2)== 1) 
+										if(random.nextInt(4)== 1) 
 										{
 											Player player = (Player) nearbyEntity;
 											Phantom phantom = (Phantom) selectedWorld.spawnEntity(enderDragon.getLocation(), EntityType.PHANTOM);
@@ -162,7 +162,7 @@ public class EnderDragon_Expert
 								{
 
 									Player player = (Player) nearbyEntity;
-									player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER,59,4,false));
+									player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,59,0,false));
 
 								}
 

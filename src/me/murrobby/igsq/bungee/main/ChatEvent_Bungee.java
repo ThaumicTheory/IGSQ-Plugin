@@ -36,14 +36,14 @@ public class ChatEvent_Bungee implements Listener
 				{
 					server = player.getServer().getInfo().getName().toUpperCase();
 				}
-				System.out.println(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server));
+				System.out.println(Common_Bungee.ChatColour(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server)));
 				if(!player.hasPermission("igsq.commandwatchbypass"))
 				{
 					for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
 					{
 						if(selectedPlayer.hasPermission("igsq.commandwatch") && selectedPlayer != player)
 						{
-							selectedPlayer.sendMessage(new TextComponent(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server)));
+							selectedPlayer.sendMessage(new TextComponent(Common_Bungee.ChatColour(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server))));
 						}
 					}
 				}
@@ -54,14 +54,14 @@ public class ChatEvent_Bungee implements Listener
 				for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
 				{
 					
-					if(event.getMessage().contains(selectedPlayer.getName()))
+					if(event.getMessage().contains("@" + selectedPlayer.getName()) && player != selectedPlayer)
 					{
 						try
 						{
 							Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1,arg2,arg3) VALUES(null,'sound','"+ selectedPlayer.getUniqueId().toString() +"','BLOCK_NOTE_BLOCK_PLING','1','1');");
 							if(selectedPlayer.getServer() != player.getServer()) 
 							{
-								Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1) VALUES(null,'message','"+ selectedPlayer.getUniqueId().toString() +"','" + event.getMessage() +"');");
+								Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1) VALUES(null,'mention','"+ event.getMessage() +"','" + selectedPlayer.getUniqueId().toString() +"','" + player.getServer().getInfo().getName().toUpperCase()  +"','" + player.getName() +"');");
 							}
 						}
 						catch(Exception exception) 

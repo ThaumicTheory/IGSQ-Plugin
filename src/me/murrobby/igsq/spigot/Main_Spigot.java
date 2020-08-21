@@ -7,10 +7,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import me.murrobby.igsq.spigot.expert.Main_Expert;
+import me.murrobby.igsq.spigot.lp.Main_LP;
 import me.murrobby.igsq.spigot.main.AsyncPlayerChatEvent_Main;
 import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
+import me.murrobby.igsq.spigot.main.ThunderChangeEvent_Main;
 import me.murrobby.igsq.spigot.security.Main_Security;
 import me.murrobby.igsq.spigot.commands.Main_Command;
 
@@ -54,8 +56,8 @@ public class Main_Spigot extends JavaPlugin{
 					    	  	case "sound":
 					    	  		player.playSound(player.getLocation(), Sound.valueOf(arg1), Float.parseFloat(arg2), Float.parseFloat(arg3));
 					    	  		break;
-					    	  	case "message":
-					    	  		player.sendMessage(arg1);
+					    	  	case "mention":
+					    	  		player.sendMessage(Common_Spigot.ChatColour("&9" + arg3 + "&bMentioned You In &6" + arg2 + "&bSaying &e" + arg1));
 					    	  		break;
 					    	  	default:
 					    	  		break;
@@ -76,13 +78,30 @@ public class Main_Spigot extends JavaPlugin{
 		
 		
 		new PlayerJoinEvent_Main(this);
-		new AsyncPlayerChatEvent_Main(this);
 		new InventoryClickEvent_Main(this);
 		new PlayerCommandPreprocessEvent_Main(this);
+		new ThunderChangeEvent_Main(this);
 		
 		new Main_Expert(this);
 		new Main_Security(this);
 		new Main_Command(this);
+		Boolean nametagEdit = false;
+		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Common_Spigot.getFieldBool("SUPPORT.nametagedit", "config")) 
+		{
+			System.out.println("NametagEdit Hook in Luckperms Module Enabled.");
+			nametagEdit = true;
+		}
+		else System.out.println("NametagEdit Hook in Luckperms Module Disabled.");
+		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && Common_Spigot.getFieldBool("SUPPORT.luckperms", "config")) 
+		{
+			System.out.println("Luckperms Module Enabled.");
+			new Main_LP(this,nametagEdit);
+		}
+		else 
+		{
+			System.out.println("Luckperms Module Disabled.");
+			new AsyncPlayerChatEvent_Main(this);
+		}
 	}
 
 	public void onLoad()
