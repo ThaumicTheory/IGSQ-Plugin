@@ -213,5 +213,21 @@ public class Common_Bungee {
     {
     	return rankPrefixes[rankID];
     }
+    
+    public static String[] Depend(String[] array, int location)
+    {
+        String[] arrayDepended = new String[array.length-1];
+        int hitRemove = 0;
+        for (int i = 0;i < array.length;i++)
+        {
+            if(location != i){
+                arrayDepended[i-hitRemove] = array[i];
+            }
+            else{
+                hitRemove++;
+            }
+        }
+        return arrayDepended;
+    }
 
 }

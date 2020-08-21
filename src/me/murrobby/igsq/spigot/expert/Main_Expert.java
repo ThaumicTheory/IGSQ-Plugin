@@ -18,7 +18,7 @@ public class Main_Expert
 		new EntityTargetEvent_Expert(plugin);
 		new PlayerBedEnterEvent_Expert(plugin);
 		new SlimeSplitEvent_Expert(plugin);
-		new ThunderChangeEvent_Expert(plugin);
+		//new ThunderChangeEvent_Expert(plugin);
 		//Tasks
 		Start_Expert();
 	}

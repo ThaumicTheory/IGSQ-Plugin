@@ -36,7 +36,7 @@ public class ChatEvent_Bungee implements Listener
 				{
 					server = player.getServer().getInfo().getName().toUpperCase();
 				}
-				System.out.println(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server));
+				System.out.println(Common_Bungee.ChatColour(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server)));
 				if(!player.hasPermission("igsq.commandwatchbypass"))
 				{
 					for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
