@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
 public class EntityAirChangeEvent_Expert implements Listener
@@ -21,7 +20,7 @@ public class EntityAirChangeEvent_Expert implements Listener
 	@EventHandler
 	public void EntityAirChange_Expert(org.bukkit.event.entity.EntityAirChangeEvent event) 
 	{
-		if(Common_Spigot.ExpertCheck() && (!event.isCancelled())) 
+		if(Common_Expert.ExpertCheck() && (!event.isCancelled())) 
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{
@@ -33,7 +32,7 @@ public class EntityAirChangeEvent_Expert implements Listener
 					player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,(300 - oxygen),1,false));
 					player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,(300 - oxygen),3,false));
 					player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,(300 - oxygen),2,false));
-					Common_Spigot.GiveBlindness(player,(300 - oxygen)+20);
+					Common_Expert.GiveBlindness(player,(300 - oxygen)+20);
 					player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,(300 - oxygen)*4,0,false));
 				}
 				else if(oxygen <= 50) 
@@ -43,7 +42,7 @@ public class EntityAirChangeEvent_Expert implements Listener
 					}
 					if(oxygen < 0) 
 					{
-						Common_Spigot.GiveBlindness(player,-oxygen);
+						Common_Expert.GiveBlindness(player,-oxygen);
 					}
 					//Level 5 You need to resurface now
 					player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,(300 - oxygen)/2,0,false));

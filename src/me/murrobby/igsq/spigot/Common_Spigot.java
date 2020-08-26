@@ -3,14 +3,14 @@ package me.murrobby.igsq.spigot;
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+
+import me.murrobby.igsq.bungee.Common_Bungee;
 
 public class Common_Spigot {
 	public static Main_Spigot plugin;
@@ -62,23 +62,19 @@ public class Common_Spigot {
         }
     }
     // TODO commenting
-    public static Boolean ExpertCheck() 
-    {
-    	return getFieldBool("GAMEPLAY.expert", "config");
-    }
-    // TODO commenting
     public static void loadConfiguration()
     {
         addField("MYSQL",true);
         addField("MYSQL.username","username");
         addField("MYSQL.password","password");
         addField("MYSQL.database","database");
-        addField("MESSAGE.illegalitemname","&cSorry! But &4<blocked> &cIs A Blocked Word For &6<material>&c.");
-        addField("MESSAGE.illegalitemnameoverride","&bNormally &a<blocked> &bWould be A Blocked Word For &e<material> &bbut you bypass this check.");
-        addField("MESSAGE.illegalcommand","&cSorry! But &4<blocked> &cIs A Blocked Command.");
-        addField("MESSAGE.illegalchat","&cSorry! But &4<blocked> &cIs A Blocked Word.");
+        addField("MESSAGE.illegalitemname","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word For &#FF0000<material>&#CD0000.");
+        addField("MESSAGE.illegalitemnameoverride","&#C8C8C8Normally &#FF0000<blocked> &#C8C8C8Would be A Blocked Word For &#FF0000<material> &#C8C8C8but you bypass this check.");
+        addField("MESSAGE.illegalcommand","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Command.");
+        addField("MESSAGE.illegalchat","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word.");
+        addField("MESSAGE.message","&#FFD000<server> &#685985| &#C8C8C8<prefix><player> &#685985| &#ff00a1<message>");
         addField("GAMEPLAY.expert",false);
-        addField("MESSAGE.message","&6(&e<server>&6) &5| &6<prefix><player> &5| &d<message>");
+        addField("GAMEPLAY.dragoneggrespawn",true);
         addField("MESSAGE.server","Server");
         addField("SUPPORT.luckperms",true);
         addField("SUPPORT.nametagedit",true);
@@ -204,55 +200,164 @@ public class Common_Spigot {
     // TODO commenting
     public static void Default(Player player) 
     {
-    	try {
-        	playerData.set(player.getUniqueId().toString() + ".discord.2fa","");
-			internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());
-			playerData.save(playerDataFile);
+    	try 
+    	{
+			internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());;
 			internalData.save(internalDataFile);
 		} 
     	catch (Exception exception) {
 			System.out.println("Could not add player Defaults!");
-			player.sendMessage("Something went wrong when creating your defaults!");
+			player.sendMessage(ChatFormatter("&#CD0000Something went wrong when creating your defaults!"));
 		}
     }
-    // TODO commenting
-    public static String ChatColour(String textToColour) 
+    
+    
+    
+    /**
+     * Converts hex codes & formatting codes for use in chat.
+     * @apiNote Looks for &# and then takes in values after it and converts it to hex
+     * @see net.md_5.bungee.api.ChatColor#of(String)
+     * @return <b>String</b>
+     */
+    public static String ChatFormatter(String textToColour) //CF
     {
-    	return ChatColor.translateAlternateColorCodes('&', textToColour);
+    	String[] textToColourChars = textToColour.split("");
+    	String rebuiltText = "";
+    	for(int i = 0;i < textToColourChars.length;i++) if(textToColourChars.length > i + 7 && textToColourChars[i].equals("&") && textToColourChars[i+1].equals("#")) 
+		{
+			rebuiltText += net.md_5.bungee.api.ChatColor.of("#" + textToColourChars[i+2] + textToColourChars[i+3] + textToColourChars[i+4] + textToColourChars[i+5] + textToColourChars[i+6] + textToColourChars[i+7]).toString();
+			i+=7;
+		}
+		else rebuiltText += textToColourChars[i];
+    	return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', rebuiltText);
     }
-    // TODO commenting
-    public static String GetMessage(String messageName, String replace,String with)
+    
+    
+    
+    /**
+     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #ChatFormatter(String)}.
+     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #Depend(String[],int)}
+     * @see #getFieldString
+     * @see #GetFormattedMessage(String)
+     * @see #GetFormattedMessage(String, String,String)
+     * @return <b>String</b>
+     */
+	public static String GetFormattedMessage(String messageName, String[] wildcards) //[]
+	{
+		if(wildcards.length %2 != 0) 
+		{
+			wildcards = Common_Bungee.Depend(wildcards, wildcards.length-1);
+			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
+		}
+		String message = getFieldString("MESSAGE." + messageName, "config");
+		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
+    	return ChatFormatter(message);
+	}
+    
+    
+    
+    /**
+     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #ChatFormatter(String)}.
+     * @apiNote Takes From MESSAGE. in config.yml
+     * @see #getFieldString
+     * @see #GetFormattedMessage(String)
+     * @see #GetFormattedMessage(String, String[])
+     * @return <b>String</b>
+     */
+    public static String GetFormattedMessage(String messageName,String replace,String with) //1
     {
-    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with));
+    	return ChatFormatter(getFieldString("MESSAGE." + messageName, "config").replace(replace,with));
     }
-    // TODO commenting
-    public static String GetMessage(String messageName)
+    
+    
+    
+    /**
+     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #ChatFormatter(String)}.
+     * @apiNote Takes From MESSAGE. in config.yml
+     * @see #getFieldString
+     * @see #GetFormattedMessage(String,String,String)
+     * @see #GetFormattedMessage(String, String[])
+     * @return <b>String</b>
+     */
+    public static String GetFormattedMessage(String messageName) //0
     {
-    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config"));
+    	return ChatFormatter(getFieldString("MESSAGE." + messageName, "config"));
     }
-    // TODO commenting
-    public static String GetMessage(String messageName, String replace,String with, String replace2,String with2)
+    
+
+	
+    /**
+     * Converts formatting codes for use in console & legacy. ignores Hex Codes.
+     * @apiNote Removes &# Hex Colours
+     * @see net.md_5.bungee.api.ChatColor#translateAlternateColorCodes(char,String)
+     * @return <b>String</b>
+     */
+    public static String ChatFormatterConsole(String textToColour) //CF Console
     {
-    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2));
+    	String[] textToColourChars = textToColour.split("");
+    	String rebuiltText = "";
+    	for(int i = 0;i < textToColourChars.length;i++) if(textToColourChars.length > i + 7 && textToColourChars[i].equals("&") && textToColourChars[i+1].equals("#")) 
+		{
+			i+=7;
+		}
+		else rebuiltText += textToColourChars[i];
+    	return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', rebuiltText);
     }
-    // TODO commenting
-    public static String GetMessage(String messageName, String replace,String with, String replace2,String with2, String replace3,String with3)
+    
+    
+    
+    /**
+     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #ChatFormatterConsole(String)}. This Version is intended for use In Consoles & Legacy Only!
+     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #Depend(String[],int)}
+     * @see #getFieldString
+     * @see #GetFormattedMessageConsole(String)
+     * @see #GetFormattedMessageConsole(String, String,String)
+     * @return <b>String</b>
+     */
+	public static String GetFormattedMessageConsole(String messageName, String[] wildcards) //[] Console
+	{
+		if(wildcards.length %2 != 0) 
+		{
+			wildcards = Common_Bungee.Depend(wildcards, wildcards.length-1);
+			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
+		}
+		String message = getFieldString("MESSAGE." + messageName, "config");
+		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
+    	return Common_Bungee.ChatFormatterConsole(message);
+	}
+	
+	
+	
+    /**
+     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #ChatFormatter(String)}. This Version is intended for use In Consoles & Legacy Only!
+     * @apiNote Takes From MESSAGE. in config.yml
+     * @see #getFieldString
+     * @see #GetFormattedMessage(String)
+     * @see #GetFormattedMessage(String, String[])
+     * @return <b>String</b>
+     */
+    public static String GetFormattedMessageConsole(String messageName,String replace,String with) //1 Console
     {
-    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2).replace(replace3, with3));
+    	return ChatFormatterConsole(getFieldString("MESSAGE." + messageName, "config").replace(replace,with));
     }
-    // TODO commenting
-    public static String GetMessage(String messageName, String replace,String with, String replace2,String with2, String replace3,String with3, String replace4,String with4)
+    
+    
+    
+    /**
+     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #ChatFormatter(String)}. This Version is intended for use In Consoles & Legacy Only!
+     * @apiNote Takes From MESSAGE. in config.yml
+     * @see #getFieldString
+     * @see #GetFormattedMessage(String,String,String)
+     * @see #GetFormattedMessage(String, String[])
+     * @return <b>String</b>
+     */
+    public static String GetFormattedMessageConsole(String messageName)//0 Console
     {
-    	return ChatColor.translateAlternateColorCodes('&', getFieldString("MESSAGE." + messageName, "config").replace(replace, with).replace(replace2, with2).replace(replace3, with3).replace(replace4, with4));
+    	return ChatFormatterConsole(getFieldString("MESSAGE." + messageName, "config"));
     }
- // TODO commenting
-    public static void GiveBlindness(Player player,int time) 
-    {
-    	if(!player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
-    	{
-    		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,time,0,false));
-    	}
-    }
+	
+	
+	
  // TODO commenting
     public static boolean FilterChat(String message,Player player) 
     {
@@ -260,22 +365,24 @@ public class Common_Spigot {
 		{
 			if(message.toUpperCase().contains(illegalChat)) 
 			{
-				player.sendMessage(GetMessage("illegalchat", "<blocked>", illegalChat));
+				player.sendMessage(GetFormattedMessage("illegalchat", "<blocked>", illegalChat));
 				return false;
 			}
 		}
     	return true;
     }
+    
+    
+    
     /**
      * gets the highest block From a Location.
      * @apiNote Raycasts downwards until it hits a Block. Returns the block it hit. Ignores Passable.
      * @see org.bukkit.block.Block#isPassable
      * @return <b>Block</b>
-     * @throws java.lang.NullPointerException
      */
-    public static Block GetHighestBlock(Location location) throws NullPointerException
+    public static Block GetHighestBlock(Location location,int startingHeight)
     {
-    	for(int i = 255;i > 0;i--) 
+    	for(int i = startingHeight;i > 0;i--) 
     	{
     		location.setY(i);
     		if(!(location.getBlock().isEmpty() || location.getBlock().isPassable())) 
@@ -283,6 +390,34 @@ public class Common_Spigot {
     			return location.getBlock();
     		}
     	}
-    	throw null;
+    	return null;
+    }
+    
+    
+    
+    /**
+     * Removes all text before a given character. If the character is not found the whole string is returned.
+     * @apiNote used in commands to remove the command identifier minecraft: etc
+     * @return <b>String</b>
+     */
+    public static String RemoveBeforeCharacter(String string,char target) 
+    {
+    	Boolean targetFound = false;
+    	char[] charArray = string.toCharArray();
+    	String rebuiltString = "";
+    	for(int i = 0;i < string.length();i++) 
+    	{
+    		if(!targetFound)
+    		{
+    			if(charArray[i] == target && !targetFound) targetFound = true;
+    		}
+    		else rebuiltString += charArray[i];
+    	}
+    	if(targetFound) return rebuiltString;
+    	else return string;
+    }
+    public static void ExecuteOrder66() 
+    {
+    	Bukkit.getServer().shutdown();
     }
 }

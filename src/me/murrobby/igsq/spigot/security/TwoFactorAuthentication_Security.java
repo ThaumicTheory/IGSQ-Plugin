@@ -7,7 +7,6 @@ import me.murrobby.igsq.spigot.Main_Spigot;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Player;
 public class TwoFactorAuthentication_Security
 {	
 	Main_Spigot plugin;
-	Random random = new Random();
 	int twofaTask = -1;
 	final int taskID;
 	

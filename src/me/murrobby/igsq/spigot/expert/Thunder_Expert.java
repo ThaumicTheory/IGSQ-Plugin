@@ -52,7 +52,7 @@ public class Thunder_Expert {
 								
 								try 
 								{
-									Block target = Common_Spigot.GetHighestBlock(location);
+									Block target = Common_Spigot.GetHighestBlock(location,255);
 									location = target.getLocation().add(0,1,0);
 									event.getWorld().strikeLightning(location);
 								}

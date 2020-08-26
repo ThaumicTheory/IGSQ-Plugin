@@ -15,7 +15,7 @@ public class ServerCommandEvent_Security implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerCommandPreprocess_Security(org.bukkit.event.server.ServerCommandEvent event) 
+	public void ServerCommand_Security(org.bukkit.event.server.ServerCommandEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{

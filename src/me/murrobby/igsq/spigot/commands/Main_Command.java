@@ -6,8 +6,6 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
@@ -18,7 +16,6 @@ public class Main_Command implements CommandExecutor{
 	private Player player;
 	private CommandSender sender;
 	private String[] args = new String[0];
-	private String display = "Yourself";
 	
 	private int realtimeTask = -1;
 	
@@ -34,7 +31,7 @@ public class Main_Command implements CommandExecutor{
 		this.sender = sender;
 		if(args.length == 0) 
 		{
-			sender.sendMessage(Common_Spigot.ChatColour("&cPlease Specify a command!"));
+			sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000Please Specify a command! Type &#FF0000/igsq Help &#CD0000to see available commands"));
 			return false;
 		}
 		//Detect which arguments are used in the /igsq command
@@ -54,7 +51,8 @@ public class Main_Command implements CommandExecutor{
   	  			Block_Command block = new Block_Command(plugin,this,sender,this.args);
   	  			return block.result;
   	  		case "entity":
-  	  			return EntityQuery();
+  	  		Entity_Command entity = new Entity_Command(plugin,this,sender,this.args);
+  	  			return entity.result;
   	  		case "realtime":
   	  			return RealTimeQuery();
   	  		case "expert":
@@ -103,13 +101,13 @@ public class Main_Command implements CommandExecutor{
 			}
 			else 
 			{
-				sender.sendMessage(Common_Spigot.ChatColour("&cSomething Went Wrong When Executing this Command!"));
+				sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000Something Went Wrong When Executing this Command!"));
 				return false;
 			}
 		}
 		else 
 		{
-			sender.sendMessage(Common_Spigot.ChatColour("&cYou cannot Execute this command!\nThis may be due to not having the required permission"));
+			sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to not having the required permission"));
   			return false;
 		}
 	}
@@ -134,7 +132,7 @@ public class Main_Command implements CommandExecutor{
 	    	}, 0, 20);
 			Common_Spigot.internalData.set("Modules.realtime", true);
 			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-			sender.sendMessage(Common_Spigot.ChatColour("&bRealtime mode Turned On!"));
+			sender.sendMessage(Common_Spigot.ChatFormatter("&#00FFFFRealtime mode Turned On!"));
 			return true;
 		}
 		else
@@ -142,77 +140,29 @@ public class Main_Command implements CommandExecutor{
 			Common_Spigot.internalData.set("Modules.realtime", false);
 			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,true);
 			plugin.scheduler.cancelTask(realtimeTask);
-			sender.sendMessage(Common_Spigot.ChatColour("&3Realtime mode Turned Off!"));
+			sender.sendMessage(Common_Spigot.ChatFormatter("&#0000FFRealtime mode Turned Off!"));
 			return true;
 		}
 		
 	}
 	private Boolean Help() 
 	{
-		sender.sendMessage(Common_Spigot.ChatColour("&c+&e----&6IGSQ HELP&e----&c+"));
-		sender.sendMessage(Common_Spigot.ChatColour("&eVersion &0- &6Returns current IGSQ plugin version."));
-		sender.sendMessage(Common_Spigot.ChatColour("&eBlock &0- &6Allows you to create blocks bellow you."));
-		sender.sendMessage(Common_Spigot.ChatColour("&eNightvision &0- &6Gives a player night vision."));
-		sender.sendMessage(Common_Spigot.ChatColour("&eEntity &0- &6Allows you to create entities bellow you."));
-		sender.sendMessage(Common_Spigot.ChatColour("&c+&e----&6COMMAND KEY HELP&e----&c+"));
-		sender.sendMessage(Common_Spigot.ChatColour("&e* &0- &6Default"));
-		sender.sendMessage(Common_Spigot.ChatColour("&e\" &0- &6Abreviation"));
-		sender.sendMessage(Common_Spigot.ChatColour("&e[ &0- &6Required"));
-		sender.sendMessage(Common_Spigot.ChatColour("&e{ &0- &6Optional"));
-		sender.sendMessage(Common_Spigot.ChatColour("&e... &0- &6Follows previous block"));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FF8A00+&#FFFF00----&#FFCA00IGSQ HELP&#FFFF00----&#FF8A00+"));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00Version &#C8C8C8- &#FFCA00Returns current IGSQ plugin version."));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00Block &#C8C8C8- &#FFCA00Allows you to create blocks bellow you."));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00Nightvision &#C8C8C8- &#FFCA00Gives a player night vision."));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00Entity &#C8C8C8- &#FFCA00Allows you to create entities bellow you."));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00Realtime &#C8C8C8- &#FFCA00Allows you to daylight cycle to real server time."));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00Expert &#C8C8C8- &#FFCA00Change the server between and from expert mode."));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FF8A00+&#FFFF00----&6COMMAND KEY HELP&e----&#FF8A00+"));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00* &#C8C8C8- &#FFCA00Default"));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00\" &#C8C8C8- &#FFCA00Abreviation"));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00[ &#C8C8C8- &#FFCA00Required"));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00{ &#C8C8C8- &#FFCA00Optional"));
+		sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00... &#C8C8C8- &#FFCA00Follows previous block"));
 		return true;
 	}
-	private boolean EntityQuery() 
-    {
-        if(IsPlayer() && RequirePermission("igsq.entity"))
-        {
-            if(Entity()) 
-            {
-                return true;
-            }
-            else 
-            {
-                sender.sendMessage(Common_Spigot.ChatColour("&9entity [entity_ID]"));
-                return false;
-            }
-        }
-        else 
-        {
-            sender.sendMessage(Common_Spigot.ChatColour("&cYou cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
-            return false;
-        }
-}
 
-    private boolean Entity() {
-        EntityType entitytype;
-        @SuppressWarnings("unused")
-        LivingEntity entity;
-        try
-        {
-            entitytype = EntityType.valueOf(args[0].toUpperCase());
-        }
-        catch(Exception exception)
-        {
-            sender.sendMessage(Common_Spigot.ChatColour("&cThis Entity could not be found!"));
-            return false;
-        }
-        if(args.length == 1 || args[1].equalsIgnoreCase("fake")) 
-		{
-        	return true;
-		}
-        else if(args[1].equalsIgnoreCase("real")) 
-        {
-            entity = (LivingEntity) plugin.getServer().getPlayer(player.getUniqueId()).getWorld().spawnEntity(player.getLocation(), entitytype);
-            sender.sendMessage(Common_Spigot.ChatColour("&bGave &a"+ args[0].toLowerCase() +" &bto " + display));
-            return true;
-        }
-        else 
-        {
-        	
-        	return false;
-        }
-
-    }
 	private boolean ExpertDifficultyQuery() 
     {
         if(RequirePermission("igsq.difficulty"))
@@ -223,16 +173,16 @@ public class Main_Command implements CommandExecutor{
             }
             else 
             {
-                sender.sendMessage(Common_Spigot.ChatColour("&9expert [true/false]"));
+                sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00expert [true/false]"));
                 return false;
             }
         }
         else 
         {
-            sender.sendMessage(Common_Spigot.ChatColour("&cYou cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+            sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
             return false;
         }
-}
+    }
 
     private boolean ExpertDifficulty() //turn expert mode on or off
     {
@@ -243,17 +193,17 @@ public class Main_Command implements CommandExecutor{
          	plugin.saveConfig();
          	if(enabled) 
          	{
-         		player.sendMessage(Common_Spigot.ChatColour("&bExpert Mode &aEnabled&b!"));
+         		player.sendMessage(Common_Spigot.ChatFormatter("&#84FF00Expert Mode &#00FF00Enabled&#84FF00!"));
          		Main_Expert.Start_Expert();
          	}
          	else 
          	{
-         		player.sendMessage(Common_Spigot.ChatColour("&bExpert Mode &cDisabled&b!"));
+         		player.sendMessage(Common_Spigot.ChatFormatter("&#84FF00Expert Mode &#C8C8C8Disabled&#84FF00!"));
          	}
          }
          catch(Exception exception)
          {
-             sender.sendMessage(Common_Spigot.ChatColour("&cThis Boolean is not valid!"));
+             sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000This Boolean is not valid!"));
              return false;
          }
          return true;

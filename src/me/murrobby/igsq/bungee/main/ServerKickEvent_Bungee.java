@@ -13,10 +13,11 @@ public class ServerKickEvent_Bungee implements Listener
 	}
 	
 	@EventHandler
-	public void PostLogin_Bungee(net.md_5.bungee.api.event.ServerKickEvent event) 
+	public void ServerKick_Bungee(net.md_5.bungee.api.event.ServerKickEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
+			System.out.println(event.getKickReasonComponent());
 			if (!event.getPlayer().getServer().getInfo().getName().equalsIgnoreCase("hub")) 
 			{
 				event.setCancelled(true);

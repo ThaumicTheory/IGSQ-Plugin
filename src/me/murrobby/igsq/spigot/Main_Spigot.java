@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import me.murrobby.igsq.spigot.expert.Main_Expert;
 import me.murrobby.igsq.spigot.lp.Main_LP;
 import me.murrobby.igsq.spigot.main.AsyncPlayerChatEvent_Main;
+import me.murrobby.igsq.spigot.main.EntityDeathEvent_Main;
 import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
@@ -25,7 +26,7 @@ public class Main_Spigot extends JavaPlugin{
 	Random random = new Random();
 	@Override
 	public void onEnable()
-	{
+	{ 
 		Common_Spigot.plugin = this;
 		Common_Spigot.loadConfiguration();
 		Common_Spigot.createPlayerData();
@@ -57,7 +58,7 @@ public class Main_Spigot extends JavaPlugin{
 					    	  		player.playSound(player.getLocation(), Sound.valueOf(arg1), Float.parseFloat(arg2), Float.parseFloat(arg3));
 					    	  		break;
 					    	  	case "mention":
-					    	  		player.sendMessage(Common_Spigot.ChatColour("&9" + arg3 + "&bMentioned You In &6" + arg2 + "&bSaying &e" + arg1));
+					    	  		player.sendMessage(Common_Spigot.ChatFormatter("&#FF00FF" + arg3 + "&#A900FFMentioned You In &#FF00FF" + arg2 + "&#A900FFSaying &#C8C8FF" + arg1));
 					    	  		break;
 					    	  	default:
 					    	  		break;
@@ -81,6 +82,7 @@ public class Main_Spigot extends JavaPlugin{
 		new InventoryClickEvent_Main(this);
 		new PlayerCommandPreprocessEvent_Main(this);
 		new ThunderChangeEvent_Main(this);
+		new EntityDeathEvent_Main(this);
 		
 		new Main_Expert(this);
 		new Main_Security(this);

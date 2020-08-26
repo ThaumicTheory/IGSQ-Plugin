@@ -1,6 +1,5 @@
 package me.murrobby.igsq.spigot.expert;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
 public class Main_Expert 
@@ -24,7 +23,7 @@ public class Main_Expert
 	}
 	public static void Start_Expert() //Tasks will close if expert is turned off therefor they will need to be rerun for enabling expert
 	{
-		if(Common_Spigot.ExpertCheck())
+		if(Common_Expert.ExpertCheck())
 		{
 			taskID++;
 			new BloodMoon_Expert(plugin,taskID);

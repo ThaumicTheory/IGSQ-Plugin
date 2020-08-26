@@ -45,7 +45,7 @@ public class BloodMoon_Expert {
 					}
 				}
 				LuckEffects();
-				if(Main_Expert.taskID != taskID || !Common_Spigot.ExpertCheck()) 
+				if(Main_Expert.taskID != taskID || !Common_Expert.ExpertCheck()) 
 				{
 					plugin.scheduler.cancelTask(bloodMoonTask);
 					System.out.println("Task: \"Blood Moon Expert\" Expired Closing Task To Save Resources.");
@@ -121,7 +121,7 @@ public class BloodMoon_Expert {
 		}
 		else 
 		{
-			if(random.nextInt(8) == 1 && world.getAllowMonsters()) 
+			if(random.nextInt(9) == 1 && world.getAllowMonsters()) 
 			{
 				try 
 				{
@@ -134,19 +134,19 @@ public class BloodMoon_Expert {
 				}
 				if(world.getEnvironment() == Environment.NORMAL) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.ChatColour("&2The Blood Moon is rising..."));
+					Bukkit.broadcastMessage(Common_Spigot.ChatFormatter("&#32FF82The Blood Moon is rising..."));
 				}
 				else if(world.getEnvironment() == Environment.NETHER) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.ChatColour("&2Screams echo from deep bellow..."));
+					Bukkit.broadcastMessage(Common_Spigot.ChatFormatter("&#FF6464Screams echo from deep bellow..."));
 				}
 				else if(world.getEnvironment() == Environment.THE_END) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.ChatColour("&2Some otherworldly place calls your name..."));
+					Bukkit.broadcastMessage(Common_Spigot.ChatFormatter("&#FFFFD0Some otherworldly place calls your name..."));
 				}
 				else 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.ChatColour("&2I wouldn't enter \""+ world.getName() + "\" tonight..."));
+					Bukkit.broadcastMessage(Common_Spigot.ChatFormatter("&#00FF00I wouldn't enter \""+ world.getName() + "\" tonight..."));
 				}
 				world.setMonsterSpawnLimit(world.getMonsterSpawnLimit()*3);
 				world.setTicksPerMonsterSpawns(10);
@@ -157,7 +157,7 @@ public class BloodMoon_Expert {
 	{
 		for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
 		{
-			if(Common_Spigot.ExpertCheck()) 
+			if(Common_Expert.ExpertCheck()) 
 			{
 				if(!selectedPlayer.hasPotionEffect(PotionEffectType.UNLUCK)) 
 				{

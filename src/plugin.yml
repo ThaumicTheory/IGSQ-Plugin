@@ -1,5 +1,5 @@
 name: IGSQ-Spigot
-version: 0.1.0
+version: 0.1.1
 softdepend: [LuckPerms,NametagEdit]
 author: Murrobby
 main: me.murrobby.igsq.spigot.Main_Spigot
