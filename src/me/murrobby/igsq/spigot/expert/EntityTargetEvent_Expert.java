@@ -20,11 +20,11 @@ public class EntityTargetEvent_Expert implements Listener
 	@EventHandler
 	public void EntityTarget_Expert(org.bukkit.event.entity.EntityTargetEvent event) 
 	{
-		if(Common_Spigot.ExpertCheck() && (!event.isCancelled()))
+		if(Common_Expert.ExpertCheck() && (!event.isCancelled()))
 		{
 			if(event.getEntity() instanceof Phantom) 
 			{
-				if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase("Expert Phantom Warrior")) 
+				if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"))) 
 				{
 					if(!(event.getTarget() instanceof Player)) 
 					{

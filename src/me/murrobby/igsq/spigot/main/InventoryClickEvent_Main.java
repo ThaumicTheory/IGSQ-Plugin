@@ -15,7 +15,7 @@ public class InventoryClickEvent_Main implements Listener
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
-	String[] illegalNameTagWords = {"EXPERT"};
+	String[] illegalNameTagWords = {};
 	String[] illegalWords;
 	@EventHandler
 	public void InventoryClick_Main(org.bukkit.event.inventory.InventoryClickEvent event) 
@@ -44,11 +44,11 @@ public class InventoryClickEvent_Main implements Listener
 				       {
 				    	   if(event.getWhoClicked().hasPermission("IGSQ.ItemNameOverride")) 
 				    	   {
-				    		   event.getWhoClicked().sendMessage(Common_Spigot.GetMessage("illegalitemnameoverride","<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()));
+				    		   event.getWhoClicked().sendMessage(Common_Spigot.GetFormattedMessage("illegalitemnameoverride",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
 				    	   }
 				    	   else 
 				    	   {
-				    		   event.getWhoClicked().sendMessage(Common_Spigot.GetMessage("illegalitemname","<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()));
+				    		   event.getWhoClicked().sendMessage(Common_Spigot.GetFormattedMessage("illegalitemname",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
 					    	   event.setCancelled(true);
 				    	   }
 				       }

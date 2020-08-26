@@ -19,11 +19,11 @@ public class SlimeSplitEvent_Expert implements Listener
 	@EventHandler
 	public void SlimeSplit_Expert(org.bukkit.event.entity.SlimeSplitEvent event) 
 	{
-		if(Common_Spigot.ExpertCheck() && (!event.isCancelled())) 
+		if(Common_Expert.ExpertCheck() && (!event.isCancelled())) 
 		{
 			if(event.getEntity().getType() == EntityType.SLIME) 
 			{
-				if(event.getEntity().getCustomName() != null && (event.getEntity().getCustomName().equalsIgnoreCase("Expert King Slime") || event.getEntity().getCustomName().equalsIgnoreCase("Expert Warrior Slime"))) 
+				if(event.getEntity().getCustomName() != null && (event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert King Slime")) || event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Warrior Slime")))) 
 				{
 					event.setCancelled(true);
 				}
@@ -34,7 +34,7 @@ public class SlimeSplitEvent_Expert implements Listener
 			}
 			else if(event.getEntity().getType() == EntityType.MAGMA_CUBE) 
 			{
-				if(event.getEntity().getCustomName() != null && (event.getEntity().getCustomName().equalsIgnoreCase("Expert King Magma Slime") || event.getEntity().getCustomName().equalsIgnoreCase("Expert Warrior Magma Slime"))) 
+				if(event.getEntity().getCustomName() != null && (event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert King Magma Slime")) || event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Warrior Magma Slime")))) 
 				{
 					event.setCancelled(true);
 				}

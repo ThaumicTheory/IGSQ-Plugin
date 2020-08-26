@@ -4,7 +4,6 @@ import me.murrobby.igsq.bungee.Common_Bungee;
 import me.murrobby.igsq.bungee.Database_Bungee;
 import me.murrobby.igsq.bungee.Main_Bungee;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -36,14 +35,14 @@ public class ChatEvent_Bungee implements Listener
 				{
 					server = player.getServer().getInfo().getName().toUpperCase();
 				}
-				System.out.println(Common_Bungee.ChatColour(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server)));
+				System.out.println(Common_Bungee.GetFormattedMessageConsole("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
 				if(!player.hasPermission("igsq.commandwatchbypass"))
 				{
 					for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
 					{
 						if(selectedPlayer.hasPermission("igsq.commandwatch") && selectedPlayer != player)
 						{
-							selectedPlayer.sendMessage(new TextComponent(Common_Bungee.ChatColour(Common_Bungee.GetMessage("commandwatch","<player>",player.getName(),"<command>",event.getMessage(),"<server>",server))));
+							selectedPlayer.sendMessage(Common_Bungee.GetFormattedMessage("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
 						}
 					}
 				}

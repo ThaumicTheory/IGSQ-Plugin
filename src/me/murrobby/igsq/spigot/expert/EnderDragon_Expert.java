@@ -40,7 +40,7 @@ public class EnderDragon_Expert
 			public void run() 
 			{
 				EnderDragon();
-				if(Main_Expert.taskID != taskID || !Common_Spigot.ExpertCheck()) 
+				if(Main_Expert.taskID != taskID || !Common_Expert.ExpertCheck()) 
 				{
 					plugin.scheduler.cancelTask(enderDragonTask);
 					System.out.println("Task: \"Ender Dragon Expert\" Expired Closing Task To Save Resources.");
@@ -79,7 +79,7 @@ public class EnderDragon_Expert
 										{
 											Player player = (Player) nearbyEntity;
 											Phantom phantom = (Phantom) selectedWorld.spawnEntity(enderDragon.getLocation(), EntityType.PHANTOM);
-											phantom.setCustomName("Expert Phantom Warrior");
+											phantom.setCustomName(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"));
 											phantom.setTarget(player);
 											phantom.setHealth(1);
 										}
@@ -88,7 +88,7 @@ public class EnderDragon_Expert
 								}
 							}
 						}
-						else if(enderDragon.getCustomName().equalsIgnoreCase("True Expert Ender Dragon"))
+						else if(enderDragon.getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#FF5300True Expert Ender Dragon")))
 						{
 							if(enderDragon.getPhase() == Phase.LAND_ON_PORTAL || enderDragon.getPhase() == Phase.SEARCH_FOR_BREATH_ATTACK_TARGET) 
 							for(Entity nearbyEntity : enderDragon.getNearbyEntities(20, 20, 20)) 
@@ -123,7 +123,7 @@ public class EnderDragon_Expert
 										{
 											Player player = (Player) nearbyEntity;
 											Phantom phantom = (Phantom) selectedWorld.spawnEntity(enderDragon.getLocation(), EntityType.PHANTOM);
-											phantom.setCustomName("Expert Phantom Warrior");
+											phantom.setCustomName(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"));
 											phantom.setTarget(player);
 											phantom.setHealth(3);
 										}
@@ -138,7 +138,7 @@ public class EnderDragon_Expert
 									if(nearbyEntity instanceof Phantom) 
 									{
 										Phantom phantom = (Phantom) nearbyEntity;
-										if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase("Expert Phantom Warrior")) 
+										if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"))) 
 										{
 											phantom.setHealth(0);
 										}
@@ -151,7 +151,7 @@ public class EnderDragon_Expert
 								{
 
 									Player player = (Player) nearbyEntity;
-									Common_Spigot.GiveBlindness(player,59);
+									Common_Expert.GiveBlindness(player,59);
 
 								}
 
@@ -175,7 +175,7 @@ public class EnderDragon_Expert
 									{
 
 										Player player = (Player) nearbyEntity;
-										Common_Spigot.GiveBlindness(player,59);
+										Common_Expert.GiveBlindness(player,59);
 										player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,39,0,false));
 
 									}

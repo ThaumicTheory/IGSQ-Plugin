@@ -29,7 +29,7 @@ public class EntityDamageEvent_Expert implements Listener
 	@EventHandler
 	public void EntityDamage_Expert(org.bukkit.event.entity.EntityDamageEvent event) 
 	{
-		if(Common_Spigot.ExpertCheck() && (!event.isCancelled()))
+		if(Common_Expert.ExpertCheck() && (!event.isCancelled()))
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{
@@ -101,7 +101,7 @@ public class EntityDamageEvent_Expert implements Listener
 				if(enderDragon.getHealth() - event.getDamage() <= 0 && enderDragon.getCustomName() == null) 
 				{
 					event.setCancelled(true);
-					enderDragon.setCustomName("True Expert Ender Dragon");
+					enderDragon.setCustomName(Common_Spigot.ChatFormatter("&#FF5300True Expert Ender Dragon"));
 					enderDragon.setHealth(enderDragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 					enderDragon.getBossBar().setColor(BarColor.RED);
 					enderDragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(enderDragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue()*2);
@@ -110,7 +110,7 @@ public class EntityDamageEvent_Expert implements Listener
 						selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 0);
 						if(selectedPlayer.getWorld().getEnvironment() == Environment.THE_END) 
 						{
-							selectedPlayer.sendTitle(Common_Spigot.ChatColour("&cEnder Dragon Phase 2"),Common_Spigot.ChatColour("&eThe True Expert Ender Dragon"),10,70,20);
+							selectedPlayer.sendTitle(Common_Spigot.ChatFormatter("&#7900FFEnder Dragon Phase 2"),Common_Spigot.ChatFormatter("&#A600FFThe True Expert Ender Dragon"),10,70,20);
 							selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.MUSIC_END, 10000, 2f);
 						}
 					}
@@ -119,7 +119,7 @@ public class EntityDamageEvent_Expert implements Listener
 				{
 					
 				}
-				else if(enderDragon.getCustomName().equalsIgnoreCase("True Expert Ender Dragon"))
+				else if(enderDragon.getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#FF5300True Expert Ender Dragon")))
 				{
 					if(event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION)
 					{

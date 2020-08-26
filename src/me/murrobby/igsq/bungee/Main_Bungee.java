@@ -1,13 +1,11 @@
 package me.murrobby.igsq.bungee;
 
-import java.sql.ResultSet;
-import java.util.concurrent.TimeUnit;
-
 import me.murrobby.igsq.bungee.commands.Link_Command;
 import me.murrobby.igsq.bungee.lp.Main_LP;
 import me.murrobby.igsq.bungee.main.ChatEvent_Bungee;
 import me.murrobby.igsq.bungee.main.PostLoginEvent_Bungee;
 import me.murrobby.igsq.bungee.main.ServerKickEvent_Bungee;
+import me.murrobby.igsq.bungee.security.Main_Security;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class Main_Bungee extends Plugin
@@ -20,6 +18,7 @@ public class Main_Bungee extends Plugin
 		Common_Bungee.LoadConfiguration();
 		Common_Bungee.CreateFile("playerData.yml");
 		Common_Bungee.CreateFile("internal.yml");
+    	/*
     	this.getProxy().getScheduler().schedule(this, new Runnable() 
     	{
 
@@ -48,11 +47,14 @@ public class Main_Bungee extends Plugin
 			
     		
     	}, 5, 10, TimeUnit.SECONDS);
+    	*/
     	
 		new Database_Bungee(this);
 		new PostLoginEvent_Bungee(this);
 		new ChatEvent_Bungee(this);
 		new ServerKickEvent_Bungee(this);
+		
+		new Main_Security(this);
 		getProxy().getPluginManager().registerCommand(this,new Link_Command());
 		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && Common_Bungee.getFieldString("SUPPORT.luckperms", "config.yml").equalsIgnoreCase("true")) 
 		{

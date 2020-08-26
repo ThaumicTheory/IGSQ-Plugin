@@ -19,6 +19,7 @@ public class PlayerCommandPreprocessEvent_Security implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
+			//if (Common_Security.SecurityProtection(event.getPlayer(),"Type Commands")) event.setCancelled(true);
 			if(!Common_Security.FilterCommand(event.getMessage(),event.getPlayer())) 
 			{
 				event.setCancelled(true);
