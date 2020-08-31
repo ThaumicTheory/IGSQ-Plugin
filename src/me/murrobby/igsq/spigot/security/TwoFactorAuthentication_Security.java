@@ -38,51 +38,20 @@ public class TwoFactorAuthentication_Security
 					System.out.println("Task: \"Two Factor Authentication Security\" Expired Closing Task To Save Resources.");
 				}
 			} 		
-    	}, 0, 100);
+    	}, 0, 20);
 	}
 	private void TwoFactorAuthentication() 
 	{
 		for (Player player : Bukkit.getOnlinePlayers())
 		{
-			if(Database_Spigot.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() + "' AND current_status = 'linked';") == 1) 
-			{
-				ResultSet discord_accounts = Database_Spigot.QueryCommand("SELECT * FROM discord_accounts WHERE id = (SELECT id FROM linked_accounts WHERE uuid = '" +  player.getUniqueId().toString() +"');");
-				try
-				{
-					discord_accounts.next();
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.id",discord_accounts.getString(1));
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.username",discord_accounts.getString(2));
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nickname",discord_accounts.getString(3));
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.role",discord_accounts.getString(4));
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.founder",discord_accounts.getBoolean(5));
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.birthday",discord_accounts.getBoolean(6));
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nitroboost",discord_accounts.getBoolean(7));
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.supporter",discord_accounts.getBoolean(8));
-				}
-				catch (SQLException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			else 
-			{
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.id","");
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.username","");
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nickname","");
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.role","");
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.founder","");
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.birthday","");
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nitroboost","");
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.supporter","");
-			}
 			if(Database_Spigot.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '" + player.getUniqueId().toString() + "';") == 1) 
 			{
-				ResultSet discord_2fa = Database_Spigot.QueryCommand("SELECT current_status FROM discord_2fa WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+				ResultSet discord_2fa = Database_Spigot.QueryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 				try
 				{
 					discord_2fa.next();
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa",discord_2fa.getString(1));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa.status",discord_2fa.getString(1));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa.code",discord_2fa.getString(2));
 				}
 				catch (SQLException e)
 				{
@@ -90,7 +59,11 @@ public class TwoFactorAuthentication_Security
 					e.printStackTrace();
 				}
 			}
-			else Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa","");
+			else
+			{
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa.status","");
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa.code","");
+			}
 		}
 		try 
 		{

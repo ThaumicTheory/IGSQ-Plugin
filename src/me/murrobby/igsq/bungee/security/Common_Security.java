@@ -46,9 +46,11 @@ public class Common_Security
     }
     public static boolean SecurityProtection(ProxiedPlayer player,String cancelName) //returning true means that twofa protection should be enabled false otherwise
     {
-		String player2FA = Common_Bungee.getFieldString(player.getUniqueId().toString() + ".discord.2fa", "playerData.yml");
+		String player2FA = Common_Bungee.GetFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "playerData");
 		Boolean enableProtection = true;
-    	if(player2FA == null) enableProtection = false;
+		String code2FA = Common_Bungee.GetFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "playerData");
+		if(player2FA == null) enableProtection = false;
+		else if((code2FA == null || code2FA.equalsIgnoreCase("")) && player2FA.equalsIgnoreCase("pending")) enableProtection = false;
     	else if(player2FA.equalsIgnoreCase("")) enableProtection = false;
     	else if(player2FA.equalsIgnoreCase("accepted")) enableProtection = false;
     	if(enableProtection) 
@@ -60,8 +62,10 @@ public class Common_Security
     }
     public static boolean SecurityProtectionQuery(ProxiedPlayer player) //returning true means that twofa protection should be enabled false otherwise
     {
-		String player2FA = Common_Bungee.getFieldString(player.getUniqueId().toString() + ".discord.2fa", "playerData.yml");
-    	if(player2FA == null) return false;
+		String player2FA = Common_Bungee.GetFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "playerData");
+		String code2FA = Common_Bungee.GetFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "playerData");
+		if(player2FA == null) return false;
+		else if((code2FA == null || code2FA.equalsIgnoreCase("")) && player2FA.equalsIgnoreCase("pending")) return false;
     	else if(player2FA.equalsIgnoreCase("")) return false;
     	else if(player2FA.equalsIgnoreCase("accepted")) return false;
     	else return true;

@@ -58,7 +58,7 @@ public class Main_Spigot extends JavaPlugin{
 					    	  		player.playSound(player.getLocation(), Sound.valueOf(arg1), Float.parseFloat(arg2), Float.parseFloat(arg3));
 					    	  		break;
 					    	  	case "mention":
-					    	  		player.sendMessage(Common_Spigot.ChatFormatter("&#FF00FF" + arg3 + "&#A900FFMentioned You In &#FF00FF" + arg2 + "&#A900FFSaying &#C8C8FF" + arg1));
+					    	  		player.sendMessage(Common_Spigot.ChatFormatter("&#FF00FF" + arg3 + " &#A900FFMentioned You In &#FF00FF" + arg2 + " &#A900FFSaying &#C8C8FF" + arg1));
 					    	  		break;
 					    	  	default:
 					    	  		break;

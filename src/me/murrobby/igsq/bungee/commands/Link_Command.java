@@ -3,6 +3,8 @@ package me.murrobby.igsq.bungee.commands;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.murrobby.igsq.bungee.Common_Bungee;
 import me.murrobby.igsq.bungee.Database_Bungee;
@@ -10,8 +12,9 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 
-public class Link_Command extends Command
+public class Link_Command extends Command implements TabExecutor
 {
 	public Link_Command() 
 	{
@@ -111,7 +114,7 @@ public class Link_Command extends Command
 		else //When No Link Is Present Create Request For Discord
 		{
 			Database_Bungee.UpdateCommand("INSERT INTO linked_accounts VALUES(null,'"+ player.getUniqueId().toString() +"','"+ id +"','dwait');"); //Create Record In Database To Show Discord Link Request
-			player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00E936Account Link Now Waiting For "+ username +"'s Discord to confirm! Make sure you havn't blocked IGSQbot.")));
+			player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00E936Account Link Now Waiting For "+ username +"'s Discord to confirm! &#FFFF00Type .mclink")));
 		}
 	}
 	private String[] GetDataForLink(String input) 
@@ -144,5 +147,60 @@ public class Link_Command extends Command
 			Database_Bungee.UpdateCommand("DELETE FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"';"); //Update Database to remove link
 			player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00FF00Deleted Link with "+ username)));
 		}
+	}
+
+	@Override
+	public Iterable<String> onTabComplete(CommandSender sender, String[] args) 
+	{
+		ProxiedPlayer player = null;
+		if(sender instanceof ProxiedPlayer) 
+		{
+			player = (ProxiedPlayer) sender;
+		}
+		List<String> options = new ArrayList<String>();
+		if(args.length == 1) 
+		{
+			String[] types = {"add","remove","help"};
+			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
+		}
+		else if(args.length == 2) 
+		{
+			if(args[0].equalsIgnoreCase("add")) 
+			{
+				if(Database_Bungee.ScalarCommand("SELECT Count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") == 0) 
+				{
+					ResultSet linkableAccounts = Database_Bungee.QueryCommand("SELECT id,username FROM discord_accounts WHERE id NOT IN(SELECT id FROM linked_accounts WHERE current_status = 'linked') AND NOT id IN(SELECT id FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() +"' AND current_status = 'dwait');");
+					try
+					{
+						while (linkableAccounts.next())
+						{
+							if(linkableAccounts.getString(1).contains(args[1])) options.add(linkableAccounts.getString(1));
+							if(linkableAccounts.getString(2).contains(args[1])) options.add(linkableAccounts.getString(2));
+						}
+					}
+					catch(Exception exception) 
+					{
+						exception.printStackTrace();
+					}
+				}
+			}
+			else if(args[0].equalsIgnoreCase("remove")) 
+			{
+				ResultSet linkableAccounts = Database_Bungee.QueryCommand("SELECT id,username FROM discord_accounts WHERE id IN(SELECT id FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() +"');");
+				try
+				{
+					while (linkableAccounts.next())
+					{
+						if(linkableAccounts.getString(1).contains(args[1])) options.add(linkableAccounts.getString(1));
+						if(linkableAccounts.getString(2).contains(args[1])) options.add(linkableAccounts.getString(2));
+					}
+				}
+				catch(Exception exception) 
+				{
+					exception.printStackTrace();
+				}
+			}
+		}
+		return options;
 	}
 }

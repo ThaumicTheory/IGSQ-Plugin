@@ -318,12 +318,12 @@ public class Common_Spigot {
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Bungee.Depend(wildcards, wildcards.length-1);
+			wildcards = Common_Spigot.Depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
 		String message = getFieldString("MESSAGE." + messageName, "config");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
-    	return Common_Bungee.ChatFormatterConsole(message);
+    	return Common_Spigot.ChatFormatterConsole(message);
 	}
 	
 	

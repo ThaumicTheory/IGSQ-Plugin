@@ -17,9 +17,9 @@ public class AccountProtection_Security
 	{
 		this.plugin = plugin;
 		this.taskID = taskID;
-		TwoFactorAuthenticationQuery();
+		AccountProtectionQuery();
 	}
-	private void TwoFactorAuthenticationQuery() 
+	private void AccountProtectionQuery() 
 	{
 		accountProtectionTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
     	{

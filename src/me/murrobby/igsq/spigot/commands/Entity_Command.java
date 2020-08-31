@@ -15,7 +15,6 @@ public class Entity_Command {
 	private CommandSender sender;
 	public Boolean result;
 	private String[] args;
-	private Player player;
 	private String display = "Yourself";
 	
 	public Entity_Command(Main_Spigot plugin,Main_Command commands,CommandSender sender,String[] args) 
@@ -23,11 +22,13 @@ public class Entity_Command {
 		this.commands = commands;
 		this.sender = sender;
 		this.args = args;
+		this.plugin = plugin;
 		result = EntityQuery();
 	}
 	
     private boolean Entity() {
         EntityType entitytype;
+        Player player = (Player) sender;
         try
         {
             entitytype = EntityType.valueOf(args[0].toUpperCase());
@@ -37,21 +38,9 @@ public class Entity_Command {
             sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000This Entity could not be found!"));
             return false;
         }
-        if(args.length == 1 || args[1].equalsIgnoreCase("fake")) 
-		{
-        	return true;
-		}
-        else if(args[1].equalsIgnoreCase("real")) 
-        {
-            plugin.getServer().getPlayer(player.getUniqueId()).getWorld().spawnEntity(player.getLocation(), entitytype);
-            sender.sendMessage(Common_Spigot.ChatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
-            return true;
-        }
-        else 
-        {
-        	
-        	return false;
-        }
+        plugin.getServer().getPlayer(player.getUniqueId()).getWorld().spawnEntity(player.getLocation(), entitytype);
+        sender.sendMessage(Common_Spigot.ChatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+        return true;
 
     }
 	

@@ -5,6 +5,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
 import net.luckperms.api.context.ContextManager;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
 import net.luckperms.api.query.QueryOptions;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -40,5 +41,19 @@ public class Common_LP {
     	User user = luckPerms.getUserManager().getUser(player.getUniqueId());
     	GetUserData(user);
     	return metaData.getPrimaryGroup();
+    }
+    /**
+     * sets the Players highest rank.
+     * @apiNote Sets the Primary Group the user is in to the rank specified.
+     * @see net.luckperms.api.cacheddata.CachedMetaData#setPrimaryGroup()
+     */
+    public static void SetRank(ProxiedPlayer player,String newRank,String oldRank)
+    {
+    	User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+    	user.data().add(Node.builder("group." + newRank).build());
+    	user.data().remove(Node.builder("group." + oldRank).build());
+    	luckPerms.getUserManager().saveUser(user);
+    	luckPerms.getMessagingService().get().pushUserUpdate(user);
+    	
     }
 }

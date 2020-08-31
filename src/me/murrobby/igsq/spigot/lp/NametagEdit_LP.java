@@ -38,7 +38,7 @@ public class NametagEdit_LP
 					System.out.println("Task: \"NametagEdit LuckPerms\" Expired Closing Task To Save Resources.");
 				}
 			} 		
-    	}, 0, 200);
+    	}, 0, 100);
 	}
 	private void NametagUpdater() 
 	{
@@ -47,12 +47,12 @@ public class NametagEdit_LP
 		nametagPrefixes.put("rising", "&3[&9R&3] &9");
 		nametagPrefixes.put("flying", "&3[&6F&3] &6");
 		nametagPrefixes.put("soaring", "&a[&2S&a] &2");
-		nametagPrefixes.put("epic", "&3[&aEp&1I&3] &a");
-		nametagPrefixes.put("epic2", "&3[&aEp&9II&3] &a");
-		nametagPrefixes.put("epic3", "&3[&aEp&bIII&3] &a");
-		nametagPrefixes.put("elite", "&3[&dEl&1I&3] &d");
-		nametagPrefixes.put("elite2", "&3[&dEl&9II&3] &d");
-		nametagPrefixes.put("elite3", "&3[&dEl&bIII&3] &d");
+		nametagPrefixes.put("epic", "&3[&aEp&11&3] &a");
+		nametagPrefixes.put("epic2", "&3[&aEp&92&3] &a");
+		nametagPrefixes.put("epic3", "&3[&aEp&b3&3] &a");
+		nametagPrefixes.put("elite", "&3[&dEl&11&3] &d");
+		nametagPrefixes.put("elite2", "&3[&dEl&92&3] &d");
+		nametagPrefixes.put("elite3", "&3[&dEl&b3&3] &d");
 		nametagPrefixes.put("mod", "&6[&5T&eS&6] &e");
 		nametagPrefixes.put("mod2", "&6[&bJ&eS&6] &e");
 		nametagPrefixes.put("mod3", "&6[&dS&eS&6] &e");
