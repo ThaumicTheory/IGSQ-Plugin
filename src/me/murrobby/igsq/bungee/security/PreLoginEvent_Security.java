@@ -17,8 +17,8 @@ public class PreLoginEvent_Security implements Listener
 	@EventHandler
 	public void PreLogin_Security(net.md_5.bungee.api.event.PreLoginEvent event) 
 	{
-		Integer highestProtocol = Integer.parseInt(Common_Bungee.getFieldString("SUPPORT.protocol.highest", "config.yml"));
-		Integer lowestProtocol = Integer.parseInt(Common_Bungee.getFieldString("SUPPORT.protocol.lowest", "config.yml"));
+		Integer highestProtocol = Integer.parseInt(Common_Bungee.GetFieldString("SUPPORT.protocol.highest", "config"));
+		Integer lowestProtocol = Integer.parseInt(Common_Bungee.GetFieldString("SUPPORT.protocol.lowest", "config"));
 		int playerProtocol = event.getConnection().getVersion();
 		if(playerProtocol < lowestProtocol && lowestProtocol != -1) 
 		{

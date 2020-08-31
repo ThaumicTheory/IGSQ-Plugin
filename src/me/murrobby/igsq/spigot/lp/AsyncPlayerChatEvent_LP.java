@@ -22,7 +22,7 @@ public class AsyncPlayerChatEvent_LP implements Listener
 		//Player Chat Capturing
 		if(!event.isCancelled()) 
 		{
-			if(!Common_Spigot.FilterChat(event.getMessage(), event.getPlayer())) 
+			if(!Common_Spigot.FilterChat(event.getMessage(), event.getPlayer()))
 			{
 				event.setCancelled(true);
 			}

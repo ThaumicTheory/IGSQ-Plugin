@@ -1,17 +1,24 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 import me.murrobby.igsq.spigot.expert.Main_Expert;
 
-public class Main_Command implements CommandExecutor{
+public class Main_Command implements CommandExecutor, TabCompleter{
 	private Main_Spigot plugin;
 	private Player player;
 	private CommandSender sender;
@@ -23,6 +30,7 @@ public class Main_Command implements CommandExecutor{
 	{
 		this.plugin = plugin;
 		plugin.getCommand("igsq").setExecutor(this);
+		plugin.getCommand("igsq").setTabCompleter(this);
 	}
 	@Override 
 	
@@ -208,4 +216,84 @@ public class Main_Command implements CommandExecutor{
          }
          return true;
     }
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) 
+	{
+		Player player= null;
+		if(sender instanceof Player) 
+		{
+			player = (Player) sender;
+		}
+		List<String> options = new ArrayList<String>();
+		if(args.length == 1) 
+		{
+			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version"};
+			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
+		}
+		else if(args.length == 2) 
+		{
+			if(args[0].equalsIgnoreCase("block")) 
+			{
+				for (Material material : Material.values()) 
+				{
+					if(material.isBlock() && material.name().contains(args[1].toUpperCase())) options.add(material.name().toLowerCase());
+				}
+			}
+			else if(args[0].equalsIgnoreCase("entity")) 
+			{
+				for (EntityType entityType : EntityType.values()) 
+				{
+					if(entityType.isSpawnable() && entityType.name().contains(args[1].toUpperCase())) options.add(entityType.name().toLowerCase());
+				}
+			}
+			else if(args[0].equalsIgnoreCase("version")) 
+			{
+				String[] types = {"build","version","description"};
+				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
+			}
+			else if(args[0].equalsIgnoreCase("expert")) 
+			{
+				String[] types = {"true","false"};
+				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
+			}
+			else if(args[0].equalsIgnoreCase("nightvision") || args[0].equalsIgnoreCase("nv")) for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[1])) options.add(selectedPlayer.getName());
+		}
+		else if(args.length == 3) 
+		{
+			if(args[0].equalsIgnoreCase("block")) 
+			{
+				String[] types = {"trap","fake","real"};
+				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
+			}
+		}
+		else if(args.length == 4) 
+		{
+			if(args[0].equalsIgnoreCase("block")) 
+			{
+				String[] types = {"@all"};
+				for (String commands : types) if(commands.contains(args[3].toLowerCase())) options.add(commands);
+				for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[3])) options.add(selectedPlayer.getName());
+			}
+		}
+		
+		
+		//Custom Tileable Block Option
+		if(args.length >= 5 && (!args[3].startsWith("@")) && args[0].equalsIgnoreCase("block")) 
+		{
+			for (Player selectedPlayer : Bukkit.getOnlinePlayers()) 
+			{
+				Boolean alreadySelected = false;
+				for(String arg : args) 
+				{
+					if(arg.equals(selectedPlayer.getName())) 
+					{
+						alreadySelected = true;
+						break;
+					}
+				}
+				if(player.canSee(selectedPlayer) && (!alreadySelected) && selectedPlayer.getName().contains(args[args.length-1])) options.add(selectedPlayer.getName());
+			}
+		}
+		return options;
+	}
 }

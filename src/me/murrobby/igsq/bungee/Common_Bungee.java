@@ -13,8 +13,14 @@ import net.md_5.bungee.config.YamlConfiguration;
 public class Common_Bungee {
 	static Main_Bungee bungee;
     public static File configFile;
+    public static File playerDataFile;
+    public static File internalFile;
     private static final ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
-    public static void CreateFile(String fileName) 
+    
+    private static Configuration config;
+    private static Configuration playerData;
+    private static Configuration internal;
+    public static void CreateFiles() 
     {
 		 try
          {
@@ -22,9 +28,12 @@ public class Common_Bungee {
 	    	{
 	            bungee.getDataFolder().mkdir();
 	    	}
-		    	
-		    configFile = new File(bungee.getDataFolder(),fileName);
+	    	configFile = new File(bungee.getDataFolder(),"config.yml");
+	    	playerDataFile = new File(bungee.getDataFolder(),"playerData.yml");
+	    	internalFile = new File(bungee.getDataFolder(),"internal.yml");
 			configFile.createNewFile();
+			playerDataFile.createNewFile();
+			internalFile.createNewFile();
          }
          catch (IOException e)
 		 {
@@ -35,30 +44,29 @@ public class Common_Bungee {
     public static void LoadConfiguration()
     {
         //addField("MYSQL",true);
-        addFieldDefault("MYSQL.username","username");
-        addFieldDefault("MYSQL.password","password");
-        addFieldDefault("MYSQL.database","database");
-        addFieldDefault("MESSAGE.join","&#00FFFFWelcome <player>!");
-        addFieldDefault("MESSAGE.joinvanilla","&#00FFFFNo extra data was found in handshake! Assuming vanilla.");
-        addFieldDefault("MESSAGE.joinforge","&#ffb900You are using a forge client with the following mods: <modlist>");
-        addFieldDefault("MESSAGE.commandwatch","&#ffb900<server> Command &#CD0000| &#ffb900<player> &#CD0000| &#FF0000<command>");
-        addFieldDefault("SUPPORT.luckperms","true");
-        addFieldDefault("SUPPORT.protocol.highest","-1");
-        addFieldDefault("SUPPORT.protocol.recommended","751");
-        addFieldDefault("SUPPORT.protocol.lowest","340");
+        AddFieldDefault("MYSQL.username","username");
+        AddFieldDefault("MYSQL.password","password");
+        AddFieldDefault("MYSQL.database","database");
+        AddFieldDefault("MESSAGE.join","&#00FFFFWelcome <player>!");
+        AddFieldDefault("MESSAGE.joinvanilla","&#00FFFFNo extra data was found in handshake! Assuming vanilla.");
+        AddFieldDefault("MESSAGE.joinforge","&#ffb900You are using a forge client with the following mods: <modlist>");
+        AddFieldDefault("MESSAGE.commandwatch","&#ffb900<server> Command &#CD0000| &#ffb900<player> &#CD0000| &#FF0000<command>");
+        AddFieldDefault("SUPPORT.luckperms","true");
+        AddFieldDefault("SUPPORT.protocol.highest","-1");
+        AddFieldDefault("SUPPORT.protocol.recommended","751");
+        AddFieldDefault("SUPPORT.protocol.lowest","340");
     }
-    public static void addFieldDefault(String path,String data) 
+    public static void AddFieldDefault(String path,String data) 
     {
-    	String fileName = "config.yml";
-    	String existingSetting = getFieldString(path,fileName);
+    	String existingSetting = GetFieldString(path,"config");
     	if(existingSetting.equals(""))
     	{
-    		SetField(path,fileName,data);
+    		UpdateField(path,"config",data);
     	}
     }
     
     
-    
+    @Deprecated
     public static Boolean getFieldBool(String path,String fileName) 
     {
     	try
@@ -73,7 +81,7 @@ public class Common_Bungee {
 
     }
     
-    
+    @Deprecated
     public static String getFieldString(String path,String fileName) 
     {
     	try
@@ -86,9 +94,7 @@ public class Common_Bungee {
 			return null;
 		}
     }
-    
-    
-    
+    @Deprecated
     public static int getFieldInt(String path,String fileName) 
     {
     	try
@@ -102,9 +108,47 @@ public class Common_Bungee {
 		}
 
     }
+    public static String GetFieldString(String path,String fileName) 
+    {
+    	switch(fileName) 
+    	{
+    	case "playerData":
+    		return playerData.getString(path);
+    	case "internal":
+    		return internal.getString(path);
+    	default:
+    		return config.getString(path);
+    	}
+    }
+    public static boolean GetFieldBool(String path,String fileName) 
+    {
+    	switch(fileName) 
+    	{
+    	case "playerData":
+    		return playerData.getBoolean(path);
+    	case "internal":
+    		return internal.getBoolean(path);
+    	default:
+    		return config.getBoolean(path);
+    	}
+    }
+    public static int GetFieldInt(String path,String fileName) 
+    {
+    	switch(fileName) 
+    	{
+    	case "playerData":
+    		return playerData.getInt(path);
+    	case "internal":
+    		return internal.getInt(path);
+    	default:
+    		return config.getInt(path);
+    	}
+    }
+    
+
     
     
-    
+    @Deprecated
     public static void SetField(String path,String fileName,String data) 
     {
     	Configuration configuration;
@@ -119,8 +163,86 @@ public class Common_Bungee {
 			exception.printStackTrace();
 		}
     }
-    
-    
+    public static void UpdateField(String path,String fileName,String data) 
+    {
+    	switch(fileName) 
+    	{
+    	case "playerData":
+    		playerData.set(path, data);
+    		break;
+    	case "internal":
+    		internal.set(path, data);
+    		break;
+    	default:
+    		config.set(path, data);
+    		break;
+    	}
+    }
+    public static void LoadFile(String fileName) 
+    {
+    	try 
+    	{
+        	switch(fileName) 
+        	{
+        	case "playerData":
+        		playerData = provider.load(playerDataFile);
+        		break;
+        	case "internal":
+        		internal = provider.load(internalFile);
+        		break;
+        	case "config":
+        		config = provider.load(configFile);
+        		break;
+        	default:
+        		config = provider.load(configFile);
+        		playerData = provider.load(playerDataFile);
+        		internal = provider.load(internalFile);
+        		break;
+        	}
+		}
+    	catch (IOException e)
+    	{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    public static void SaveFileChanges(String fileName) 
+    {
+    	try 
+    	{
+        	switch(fileName) 
+        	{
+        	case "playerData":
+        		provider.save(playerData, playerDataFile);
+        		break;
+        	case "internal":
+        		provider.save(internal, internalFile);
+        		break;
+        	case "config":
+        		provider.save(config, configFile);
+        		break;
+        	default:
+        		provider.save(config, configFile);
+        		provider.save(playerData, playerDataFile);
+        		provider.save(internal, internalFile);
+        		break;
+        	}
+		}
+    	catch (IOException e)
+    	{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    public static void DisgardAndCloseFile(String fileName) 
+    {
+    	config = null;
+    	playerData = null;
+    	internal = null;
+    	configFile = null;
+    	playerDataFile = null;
+    	internalFile = null;
+    }
     
     /**
      * Converts hex codes & formatting codes for use in chat.
@@ -292,6 +414,16 @@ public class Common_Bungee {
     		else rebuiltString += charArray[i];
     	}
     	if(targetFound) return rebuiltString;
+    	else return string;
+    }
+    /**
+     * Removes null and replaces it with an empty String
+     * @apiNote used for sensitive data queries
+     * @return <b>String</b>
+     */
+    public static String removeNull(String string) 
+    {
+    	if(string == null) return "";
     	else return string;
     }
 }

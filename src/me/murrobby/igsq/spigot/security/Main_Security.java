@@ -14,10 +14,8 @@ public class Main_Security
 		new ServerCommandEvent_Security(plugin);
 		
 		new PlayerDropItemEvent_Security(plugin);
-		new AsyncPlayerChatEvent_Security(plugin);
 		new PlayerInteractEvent_Security(plugin);
 		new PlayerBedEnterEvent_Security(plugin);
-		
 		new PlayerInteractEntityEvent_Security(plugin);
 		new PlayerItemDamageEvent_Security(plugin);
 		new PlayerEditBookEvent_Security(plugin);
@@ -35,6 +33,7 @@ public class Main_Security
 	{
 		taskID++;
 		new TwoFactorAuthentication_Security(plugin,taskID);
+		new DiscordLink_Security(plugin,taskID);
 		new AccountProtection_Security(plugin,taskID);
 	}
 }

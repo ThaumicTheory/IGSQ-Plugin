@@ -1,6 +1,9 @@
 package me.murrobby.igsq.bungee;
 
+import java.util.concurrent.TimeUnit;
+
 import me.murrobby.igsq.bungee.commands.Link_Command;
+import me.murrobby.igsq.bungee.commands.TwoFA_Command;
 import me.murrobby.igsq.bungee.lp.Main_LP;
 import me.murrobby.igsq.bungee.main.ChatEvent_Bungee;
 import me.murrobby.igsq.bungee.main.PostLoginEvent_Bungee;
@@ -14,40 +17,22 @@ public class Main_Bungee extends Plugin
 	public void onEnable()
 	{
 		Common_Bungee.bungee = this;
-		Common_Bungee.CreateFile("config.yml");
+		Common_Bungee.CreateFiles();
+		Common_Bungee.LoadFile("all");
 		Common_Bungee.LoadConfiguration();
-		Common_Bungee.CreateFile("playerData.yml");
-		Common_Bungee.CreateFile("internal.yml");
-    	/*
+    	
     	this.getProxy().getScheduler().schedule(this, new Runnable() 
     	{
 
 			@Override
-			public void run() {
-				ResultSet mc_accounts = Database_Bungee.QueryCommand("SELECT * FROM mc_accounts;");
-				try {
-					while(mc_accounts.next()) 
-					{
-						ResultSet discord_2fa = Database_Bungee.QueryCommand("SELECT * FROM discord_2fa WHERE uuid = '"+ mc_accounts.getString(1) +"';");
-						String uuid = mc_accounts.getString(1);
-						String twoFAStatus = "off";
-						if(discord_2fa.next()) 
-						{
-							twoFAStatus = discord_2fa.getString(2);
-						}
-						Common_Bungee.SetField(uuid + ".2fa","playerData.yml", twoFAStatus);
-					}
-				}
-				catch (Exception e)
-				{
-					System.out.println("DATABASE ERROR: " + e.toString());
-				}				
-				
+			public void run() 
+			{
+				Common_Bungee.SaveFileChanges("all");
+				Common_Bungee.LoadFile("all");
 			}
 			
     		
-    	}, 5, 10, TimeUnit.SECONDS);
-    	*/
+    	}, 5, 30, TimeUnit.SECONDS);
     	
 		new Database_Bungee(this);
 		new PostLoginEvent_Bungee(this);
@@ -56,7 +41,8 @@ public class Main_Bungee extends Plugin
 		
 		new Main_Security(this);
 		getProxy().getPluginManager().registerCommand(this,new Link_Command());
-		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && Common_Bungee.getFieldString("SUPPORT.luckperms", "config.yml").equalsIgnoreCase("true")) 
+		getProxy().getPluginManager().registerCommand(this,new TwoFA_Command());
+		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && Common_Bungee.GetFieldString("SUPPORT.luckperms", "config").equalsIgnoreCase("true")) 
 		{
 			System.out.println("Luckperms Module Enabled.");
 			new Main_LP(this);
@@ -76,6 +62,9 @@ public class Main_Bungee extends Plugin
 	{
 		this.getProxy().getScheduler().cancel(this);
 		this.getProxy().getPluginManager().unregisterListeners(this);
+		this.getProxy().getPluginManager().unregisterCommands(this);
+		Common_Bungee.SaveFileChanges("all");
+		Common_Bungee.DisgardAndCloseFile("all");
 	}
 	
 }

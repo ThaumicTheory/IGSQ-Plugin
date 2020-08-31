@@ -1,6 +1,5 @@
 package me.murrobby.igsq.bungee.main;
 
-import me.murrobby.igsq.bungee.Common_Bungee;
 import me.murrobby.igsq.bungee.Database_Bungee;
 import me.murrobby.igsq.bungee.Main_Bungee;
 import net.md_5.bungee.api.ProxyServer;
@@ -45,9 +44,9 @@ public class PostLoginEvent_Bungee implements Listener
 		}
 		else System.out.println("DATABASE ERROR ("+ usernameUpdate + "): Failed Update Check "+ playerUUID + " in minecraft accounts Database!");
 		//welcome message
-		player.sendMessage(Common_Bungee.GetFormattedMessage("join","<player>",username));
-		if(player.isForgeUser()) player.sendMessage(Common_Bungee.GetFormattedMessage("joinforge","<modlist>",player.getModList().toString()));
-		else player.sendMessage(Common_Bungee.GetFormattedMessage("joinvanilla"));
+		//player.sendMessage(Common_Bungee.GetFormattedMessage("join","<player>",username));
+		//if(player.isForgeUser()) player.sendMessage(Common_Bungee.GetFormattedMessage("joinforge","<modlist>",player.getModList().toString()));
+		//else player.sendMessage(Common_Bungee.GetFormattedMessage("joinvanilla"));
 	}
 	
 }

@@ -51,21 +51,27 @@ public class ChatEvent_Bungee implements Listener
 			{
 				
 				for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
-				{
-					
-					if(event.getMessage().contains("@" + selectedPlayer.getName()) && player != selectedPlayer)
+				{;
+					if(player == selectedPlayer) break;
+					String[] message = event.getMessage().split(" ");
+					for(String string : message) 
 					{
-						try
+						String discordUsername = Common_Bungee.GetFieldString(selectedPlayer.getUniqueId() + ".DISCORD.username", "playerData");
+						if(string.equalsIgnoreCase("@" + selectedPlayer.getName()) || (discordUsername != null && (!discordUsername.equalsIgnoreCase("")) && event.getMessage().contains("@" + discordUsername)))
 						{
-							Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1,arg2,arg3) VALUES(null,'sound','"+ selectedPlayer.getUniqueId().toString() +"','BLOCK_NOTE_BLOCK_PLING','1','1');");
-							if(selectedPlayer.getServer() != player.getServer()) 
+							try
 							{
-								Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1) VALUES(null,'mention','"+ event.getMessage() +"','" + selectedPlayer.getUniqueId().toString() +"','" + player.getServer().getInfo().getName().toUpperCase()  +"','" + player.getName() +"');");
+								Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1,arg2,arg3) VALUES(null,'sound','"+ selectedPlayer.getUniqueId().toString() +"','BLOCK_NOTE_BLOCK_PLING','1','1');");
+								if(selectedPlayer.getServer() != player.getServer()) 
+								{
+									Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1,arg2,arg3) VALUES(null,'mention','"+ selectedPlayer.getUniqueId().toString() +"','" + event.getMessage() +"','" + player.getServer().getInfo().getName().toUpperCase()  +"','" + player.getName() +"');");
+								}
 							}
-						}
-						catch(Exception exception) 
-						{
-							
+							catch(Exception exception) 
+							{
+								exception.printStackTrace();
+							}
+							break;
 						}
 					}
 				}
