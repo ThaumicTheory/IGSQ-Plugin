@@ -30,7 +30,7 @@ public class Common_Security
     {
 		String player2FA = Common_Spigot.getFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "playerdata");
 		Boolean enableProtection = true;
-		String code2FA = Common_Spigot.getFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "playerData");
+		String code2FA = Common_Spigot.getFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "playerdata");
 		if(player2FA == null) enableProtection = false;
 		else if((code2FA == null || code2FA.equalsIgnoreCase("")) && player2FA.equalsIgnoreCase("pending")) enableProtection = false;
     	else if(player2FA.equalsIgnoreCase("")) enableProtection = false;
@@ -45,7 +45,7 @@ public class Common_Security
     public static boolean SecurityProtectionQuery(Player player) //returning true means that twofa protection should be enabled false otherwise
     {
 		String player2FA = Common_Spigot.getFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "playerdata");
-		String code2FA = Common_Spigot.getFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "playerData");
+		String code2FA = Common_Spigot.getFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "playerdata");
 		if(player2FA == null) return false;
 		else if((code2FA == null || code2FA.equalsIgnoreCase("")) && player2FA.equalsIgnoreCase("pending")) return false;
     	else if(player2FA.equalsIgnoreCase("")) return false;

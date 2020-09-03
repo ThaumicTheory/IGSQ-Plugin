@@ -95,6 +95,11 @@ public class TwoFA_Command extends Command implements TabExecutor
 					}
 				} 
 			}
+			else if(args.length >= 1 && args[0].equalsIgnoreCase("logout")) 
+			{
+				Database_Bungee.UpdateCommand("UPDATE discord_2fa SET current_status = 'expired',ip = null,code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+				player.disconnect(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00FF00Logout Successful. Goodbye!")));
+			}
 			else
 			{
 				player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00FFFFCurrent 2fa Status")));
@@ -130,6 +135,7 @@ public class TwoFA_Command extends Command implements TabExecutor
 					if(player.hasPermission("igsq.require2fa")) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#C8C8C8As a staff member your account will always be protected by 2FA!")));
 					else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00FFFFUse &#FFFF00/2fa enabled [true/false] &#00FFFFto enable or disable 2fa.")));
 					player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00FFFFUse &#FFFF00/2fa confirm [code_from_IGSQbot] &#00FFFFto confirm a pending discord 2fa request.")));
+					player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00FFFFUse &#FFFF00/2fa logout &#00FFFFto logout completly and reset any \"rememberme\" options.")));
 					player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00FFFFType &#FFFF00/2fa &#00FFFFTo See This Summary Again.")));
 				}
 				else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#CD00002FA Disabled. You need to link your account to discord first before you can use 2FA.\nSee &#FFFF00/link &#CD0000for more details!")));
@@ -165,17 +171,14 @@ public class TwoFA_Command extends Command implements TabExecutor
 		if(args.length == 1) 
 		{
 			String[] types = null;
-			if(CanModify2FA(player,current_status)) types = new String[]{"enabled","help","confirm"};
-			else types = new String[]{"help","confirm"};
+			if(CanModify2FA(player,current_status)) types = new String[]{"enabled","help","confirm","logout"};
+			else types = new String[]{"help","confirm","logout"};
 			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
-		else if(args.length == 2) 
+		else if(args.length == 2 && args[0].equalsIgnoreCase("enabled") && CanModify2FA(player,current_status))
 		{
-			if(args[0].equalsIgnoreCase("enabled") && CanModify2FA(player,current_status)) 
-			{
-				String[] types = {"true","false"};
-				for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
-			}
+			String[] types = {"true","false"};
+			for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 
 		}
 		return options;

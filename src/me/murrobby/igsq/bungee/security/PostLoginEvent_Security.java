@@ -55,19 +55,15 @@ public class PostLoginEvent_Security implements Listener
 			LinkMessage(player);
 		}
 		
-		if(Database_Bungee.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ playerUUID + "';") == 0) 
-		{
-			Database_Bungee.UpdateCommand("INSERT INTO discord_2fa (uuid) VALUES ('"+ playerUUID +"');");
-		}
-		if(player.hasPermission("igsq.discord2FA")) 
-		{
-			player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#FF0000&lStaff Members Will Soon Be Required To Enable 2FA on their accounts.")));
-		}
+		
+		String currentStatus = Common_Bungee.GetFieldString(playerUUID + ".discord.2fa.status", "playerData");
+		String id = Common_Bungee.removeNull(Common_Bungee.GetFieldString(playerUUID + ".discord.id", "playerData"));
+		if((!id.equalsIgnoreCase(""))  && (currentStatus == null || currentStatus.equalsIgnoreCase(""))) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#a900ffYou can enable 2FA for increased account security! &#FFFF00 See /2fa for more details.")));
 	}
 	
 	private void LinkMessage(ProxiedPlayer player) 
 	{
-		player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00b7ffIf you want your rank portrayed on discord and not &#006e99[&#00b7ffSquirrel&#006e99] &#00b7ffyou will have to link your account.")));
+		player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#00b7ffIf you want your rank portrayed on discord and not &#006e99[&#00b7ffSquirrel&#006e99] &#00b7ffyou will have to link your account.\n&#C0C0C0Linking also unlocks the ability to use our 2FA security feature.")));
 	}
 	
 }

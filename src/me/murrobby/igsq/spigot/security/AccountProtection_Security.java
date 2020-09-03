@@ -1,16 +1,20 @@
 package me.murrobby.igsq.spigot.security;
 
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
 public class AccountProtection_Security
 {	
 	Main_Spigot plugin;
 	int accountProtectionTask = -1;
+	Random random = new Random();
 	final int taskID;
 	
 	public AccountProtection_Security(Main_Spigot plugin,int taskID) 
@@ -34,13 +38,21 @@ public class AccountProtection_Security
 					System.out.println("Task: \"Account Protection Security\" Expired Closing Task To Save Resources.");
 				}
 			} 		
-    	}, 0, 20);
+    	}, 0, 60);
 	}
 	private void AccountProtection() 
 	{
-		for (Player player : Bukkit.getOnlinePlayers()) if(Common_Security.SecurityProtectionQuery(player)) 
+		for (Player player : Bukkit.getOnlinePlayers())
 		{
-			player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,60,0,true));
+			if(Common_Security.SecurityProtectionQuery(player)) 
+			{
+				String header = "&#FF00002FA &#CD0000Enabled!";
+				if(player.hasPermission("igsq.require2fa")) header = "&#FFFF00Staff &#FF00002FA!";
+				player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,80,0,true));
+				if(random.nextInt(3) ==1) player.sendTitle(Common_Spigot.ChatFormatter(header),Common_Spigot.ChatFormatter("&#00FFFFYou Should be provided with a code from discord!"),10,40,10);
+				else if(random.nextInt(2) ==1) player.sendTitle(Common_Spigot.ChatFormatter(header),Common_Spigot.ChatFormatter("&#FFFF00Type /2fa confirm [code]"),10,40,10);
+				else player.sendTitle(Common_Spigot.ChatFormatter(header),Common_Spigot.ChatFormatter("&#ffb900Make Sure you havn't blocked IGSQbot."),10,40,10);
+			}
 		}
 	}
 }
