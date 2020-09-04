@@ -75,6 +75,7 @@ public class Common_Spigot {
 		 }
     	
     }
+    //TODO Java Docs
     public static void addFieldDefault(String path,String fileName,Object data) 
     {
     	for(int i = 0; i < fileNames.length;i++) 
@@ -180,7 +181,7 @@ public class Common_Spigot {
 		}
     	catch (Exception e)
     	{
-			e.printStackTrace();
+    		sendException(e,"Failed to load file","EMERALD_BLOCK",null);
 		}
     }
     public static void saveFileChanges(String fileName) 
@@ -202,7 +203,7 @@ public class Common_Spigot {
 		}
 		catch (IOException e) 
 		{
-			e.printStackTrace();
+    		sendException(e,"Failed to save file changes","HAY",null);
 		}
     }
     //TODO Java Docs

@@ -26,5 +26,4 @@ public class PlayerJoinEvent_Main implements Listener
 			Common_Spigot.applyDefault(player);
 		}
 	}
-	
 }

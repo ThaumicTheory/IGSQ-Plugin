@@ -45,5 +45,4 @@ public class SlimeSplitEvent_Expert implements Listener
 			}
 		}
 	}
-	
 }

@@ -31,5 +31,4 @@ public class AsyncPlayerChatEvent_LP implements Listener
 			event.setFormat((Common_Spigot.getFormattedMessage("message", new String[] {"<server>",Common_Spigot.getFormattedMessage("server"), "<prefix>",Common_LP.GetPrefix(event.getPlayer()) , "<player>", username, "<message>", event.getMessage()})));
 		}
 	}
-	
 }

@@ -67,7 +67,7 @@ public class Main_Spigot extends JavaPlugin{
 				}
 				catch (Exception e) 
 				{
-					e.printStackTrace();
+					Common_Spigot.sendException(e,"Command communicator error","OAK_LOG",null);
 				}
 			} 		
     	}, 0, 20);

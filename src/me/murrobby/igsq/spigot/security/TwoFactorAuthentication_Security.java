@@ -54,8 +54,7 @@ public class TwoFactorAuthentication_Security
 				}
 				catch (SQLException e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Common_Spigot.sendException(e, "2FA data not valid", "STONE", null);
 				}
 			}
 			else

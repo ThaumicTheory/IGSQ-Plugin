@@ -60,8 +60,7 @@ public class DiscordLink_Security
 				}
 				catch (SQLException e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Common_Spigot.sendException(e, "Discord link data not valid", "COAL_BLOCK",null);
 				}
 			}
 			else 

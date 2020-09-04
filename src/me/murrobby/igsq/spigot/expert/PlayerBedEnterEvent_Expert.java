@@ -28,5 +28,4 @@ public class PlayerBedEnterEvent_Expert implements Listener
 			}
 		}
 	}
-	
 }

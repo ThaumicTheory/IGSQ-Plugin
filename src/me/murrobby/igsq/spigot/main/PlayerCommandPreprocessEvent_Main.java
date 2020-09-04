@@ -16,7 +16,7 @@ public class PlayerCommandPreprocessEvent_Main implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerCommandPreprocess_Security(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
+	public void PlayerCommandPreprocess_Main(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
@@ -26,5 +26,4 @@ public class PlayerCommandPreprocessEvent_Main implements Listener
 			}
 		}
 	}
-	
 }

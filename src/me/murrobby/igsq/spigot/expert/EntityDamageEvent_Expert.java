@@ -130,5 +130,4 @@ public class EntityDamageEvent_Expert implements Listener
 			}
 		}
 	}
-	
 }

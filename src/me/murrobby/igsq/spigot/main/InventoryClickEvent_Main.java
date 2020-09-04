@@ -58,5 +58,4 @@ public class InventoryClickEvent_Main implements Listener
 			}
 		}
 	}
-	
 }

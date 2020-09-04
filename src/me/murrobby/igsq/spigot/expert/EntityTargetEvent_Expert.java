@@ -34,6 +34,5 @@ public class EntityTargetEvent_Expert implements Listener
 				}
 			}
 		}
-	}
-	
+	}	
 }
