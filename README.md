@@ -41,10 +41,11 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #00FF00 Green (enabled/success)
 - #CD0000 Red (Error/Deny)
 - #FF0000 Blood Red (Hard Error/Hard Deny)
+- #FF6161 Peach Red (Error Logging)
 - #FFFF00 Yellow (Instructions)
-- #ffb900 Orange (Attention)
+- #FFb900 Orange (Attention)
 - #00FFFF light blue (neutral)
-- #a900ff purple
+- #a900FF purple
 
 *Special*
 - #84FF00 Expert
@@ -72,3 +73,10 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #ffcbcb birthday
 - #ff61f4 nitroboost
 - #ff899f supporter
+
+- ##67fd67 Developer
+
+**Error Codes**
+
+- DIRT manually initated error in Error_Command.error()
+- REDSTONE failed to create a file in Common_Spigot.createFiles()

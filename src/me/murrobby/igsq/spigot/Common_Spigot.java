@@ -2,9 +2,13 @@ package me.murrobby.igsq.spigot;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,18 +16,41 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.shared.Common_Shared;
 
 public class Common_Spigot {
+    /**
+     * The universal reference to spigot which allows for {@link org.bukkit.plugin.java.JavaPlugin the plugin} to be referenced anywhere.
+     * @apiNote Used where calls to spigot are required such as {@link org.bukkit.scheduler.BukkitScheduler#scheduleSyncRepeatingTask tasks} and {@link org.bukkit.plugin.java.JavaPlugin#getCommand command creation}
+     * @see Main_Spigot
+     */
 	public static Main_Spigot spigot;
+    /**
+     * filenames is a String array of all of the fileNames to be created into {@link java.io.File}
+     * @apiNote Used in {@link #createFiles()} to instansiate the filesnames.
+     * @see java.io.File
+     */
     private static String[] fileNames = {"config","player","internal","message"};
+    /**
+     * files is a {@link java.io.File File} array of all of the files that can be used.
+     * @apiNote Used in {@link #loadFile(String)} to get data from file & in {@link #saveFileChanges(String)} to save data to file
+     */
     private static File[] files;
+    /**
+     * configurations is a {@link org.bukkit.configuration.file.FileConfiguration FileConfiguration} array of all of the cached file contents to be saved onto file {@link #files file}.
+     * @apiNote Used in {@link #getFieldString(String, String) getting} & {@link #updateField(String, String, String) setting} file contents aswell as {@link #loadFile(String) loading} & {@link #saveFileChanges(String) saving}.
+     * @see java.io.File
+     */
     private static FileConfiguration[] configurations;
-	@Deprecated public static File playerDataFile;
-    @Deprecated public static FileConfiguration playerData;
-    @Deprecated public static File internalDataFile;
-    @Deprecated public static FileConfiguration internalData;
+    /**
+     * illegalChats is a String array of all of the banned words for {@link #filterChat(String, Player) Filter Chat} to compare to.
+     * @see #filterChat(String, Player)
+     */
 	public static String[] illegalChats = {"NIGGER","NOGGER","COON","NIGGA"};
-    // TODO commenting
 	
-    //TODO Java Docs
+    /**
+     * Creates all the files if they dont already exist. Creates instance of all files in {@link #fileNames}
+     * @apiNote also creates default {@link #configurations}
+     * @see java.io.File
+     * @see org.bukkit.configuration.file.FileConfiguration
+     */
     public static void createFiles() 
     {
 		 try
@@ -42,9 +69,9 @@ public class Common_Spigot {
 	    	}
 	    	
          }
-         catch (Exception e)
+         catch (Exception exception)
 		 {
-			e.printStackTrace();
+			sendException(exception,"Failed to create Files.","REDSTONE",null);
 		 }
     	
     }
@@ -196,49 +223,7 @@ public class Common_Spigot {
     		}
     	}
     }
-	@Deprecated
-    public static void createPlayerData() {
-        playerDataFile = new File(spigot.getDataFolder(),"playerData.yml");
-        if (!playerDataFile.exists()) {
-            try {
-				playerDataFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-            spigot.saveResource("playerData.yml", false);
-         }
 
-        playerData= new YamlConfiguration();
-        try 
-        {
-            playerData.load(playerDataFile);
-        } catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
-    }
-    // TODO commenting
-	@Deprecated
-    public static void createInternalData() {
-    	internalDataFile = new File(spigot.getDataFolder(),"internalData.yml");
-        if (!internalDataFile.exists()) {
-            try {
-            	internalDataFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-            spigot.saveResource("internalData.yml", false);
-         }
-
-        internalData= new YamlConfiguration();
-        try 
-        {
-        	internalData.load(internalDataFile);
-        } catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
-    }
     // TODO commenting
     public static void applyDefaultConfiguration()
     {
@@ -255,65 +240,12 @@ public class Common_Spigot {
         
 
         addFieldDefault("server","message","Server");
-        addFieldDefault("message","message","&#FFD000<server> &#685985| &#C8C8C8<prefix><player> &#685985| &#ff00a1<message>");
+        addFieldDefault("message","message","&#FFD000<server> &#685985| &#C8C8C8<prefix><player> &#685985| &#d256ff<message>");
         addFieldDefault("illegalitemname","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word For &#FF0000<material>&#CD0000.");
         addFieldDefault("illegalitemnameoverride","message","&#C8C8C8Normally &#FF0000<blocked> &#C8C8C8Would be A Blocked Word For &#FF0000<material> &#C8C8C8but you bypass this check.");
         addFieldDefault("illegalcommand","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Command.");
         addFieldDefault("illegalchat","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word.");
         for(FileConfiguration configuration : configurations) configuration.options().copyDefaults(true);
-    }
-    // TODO commenting
-    @Deprecated
-    public static void addField(String path,String data) 
-    {
-    	spigot.getConfig().addDefault(path, data);
-    }
-    @Deprecated
-    public static void addField(String path,Boolean data) 
-    {
-    	spigot.getConfig().addDefault(path, data);
-    }
-    // TODO commenting
-    @Deprecated
-    public static Boolean GetFieldBool(String path,String tableName) 
-    {
-    	switch(tableName) {
-    	  	case "playerdata":
-    	  		return playerData.getBoolean(path);
-    	  	case "internal":
-    	  		return internalData.getBoolean(path);
-    	  	default:
-    	  		return spigot.getConfig().getBoolean(path);
-    	}
-
-    }
-    // TODO commenting
-    @Deprecated
-    public static String GetFieldString(String path,String tableName) 
-    {
-    	switch(tableName) {
-    	  	case "playerdata":
-    	  		return playerData.getString(path);
-    	  	case "internal":
-    	  		return internalData.getString(path);
-    	  	default:
-    	  		return spigot.getConfig().getString(path);
-    	}
-
-    }
-    // TODO commenting
-    @Deprecated
-    public static int GetFieldInt(String path,String tableName) 
-    {
-    	switch(tableName) {
-    	  	case "playerdata":
-    	  		return playerData.getInt(path);
-    	  	case "internal":
-    	  		return internalData.getInt(path);
-    	  	default:
-    	  		return spigot.getConfig().getInt(path);
-    	}
-
     }
     // TODO commenting
     public static Player[] append(Player[] array, Player value)
@@ -327,19 +259,6 @@ public class Common_Spigot {
     	return arrayAppended;
     }
     // TODO commenting
-    @Deprecated
-    public static void Default(Player player) 
-    {
-    	try 
-    	{
-			internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());;
-			internalData.save(internalDataFile);
-		} 
-    	catch (Exception exception) {
-			System.out.println("Could not add player Defaults!");
-			player.sendMessage(chatFormatter("&#CD0000Something went wrong when creating your defaults!"));
-		}
-    }
     public static void applyDefault(Player player) 
     {
     	addFieldDefault(player.getUniqueId().toString() + ".damage.last", "player", player.getTicksLived());
@@ -353,8 +272,10 @@ public class Common_Spigot {
      * @see net.md_5.bungee.api.ChatColor#of(String)
      * @return <b>String</b>
      */
-    public static String chatFormatter(String textToColour) //CF
+    public static String chatFormatter(String textToFormat) //CF
     {
+    	String textToColour = textToFormat.replaceAll("[(\\r]", ""); //Replaces Windows Enter Chars to what minecraft supports
+    	textToColour = textToColour.replaceAll("[(\\t]", "        "); //Replaces Windows tab Chars to what minecraft supports
     	String[] textToColourChars = textToColour.split("");
     	String rebuiltText = "";
     	for(int i = 0;i < textToColourChars.length;i++) if(textToColourChars.length > i + 7 && textToColourChars[i].equals("&") && textToColourChars[i+1].equals("#")) 
@@ -383,7 +304,7 @@ public class Common_Spigot {
 			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
-		String message = GetFieldString("MESSAGE." + messageName, "config");
+		String message = getFieldString(messageName, "message");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
     	return chatFormatter(message);
 	}
@@ -400,7 +321,7 @@ public class Common_Spigot {
      */
     public static String getFormattedMessage(String messageName,String replace,String with) //1
     {
-    	return chatFormatter(GetFieldString("MESSAGE." + messageName, "config").replace(replace,with));
+    	return chatFormatter(getFieldString(messageName, "message").replace(replace,with));
     }
     
     
@@ -415,7 +336,7 @@ public class Common_Spigot {
      */
     public static String getFormattedMessage(String messageName) //0
     {
-    	return chatFormatter(GetFieldString("MESSAGE." + messageName, "config"));
+    	return chatFormatter(getFieldString(messageName, "message"));
     }
     
 
@@ -455,7 +376,7 @@ public class Common_Spigot {
 			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
-		String message = GetFieldString("MESSAGE." + messageName, "config");
+		String message = getFieldString(messageName, "message");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
     	return Common_Spigot.chatFormatterConsole(message);
 	}
@@ -472,7 +393,7 @@ public class Common_Spigot {
      */
     public static String getFormattedMessageConsole(String messageName,String replace,String with) //1 Console
     {
-    	return chatFormatterConsole(GetFieldString("MESSAGE." + messageName, "config").replace(replace,with));
+    	return chatFormatterConsole(getFieldString(messageName, "message").replace(replace,with));
     }
     
     
@@ -487,7 +408,7 @@ public class Common_Spigot {
      */
     public static String getFormattedMessageConsole(String messageName)//0 Console
     {
-    	return chatFormatterConsole(GetFieldString("MESSAGE." + messageName, "config"));
+    	return chatFormatterConsole(getFieldString(messageName, "message"));
     }
 	
 	
@@ -525,5 +446,56 @@ public class Common_Spigot {
     		}
     	}
     	return null;
+    }
+    /**
+     * display any caught errors to developers online.
+     * @apiNote Raycasts downwards until it hits a Block. Returns the block it hit. Ignores Passable.
+     * @see org.bukkit.block.Block#isPassable
+     * @return <b>Block</b>
+     */
+    public static void sendException(Exception exception,String reason,String errorCode,CommandSender cause) 
+    {
+    	StringWriter sw = new StringWriter();
+    	PrintWriter pw = new PrintWriter(sw);
+    	exception.printStackTrace(pw);
+    	String stackTrace = sw.toString();
+    	for(Player player : Bukkit.getOnlinePlayers()) 
+    	{
+    		if(player.hasPermission("igsq.error")) 
+    		{
+    			String errorLogStatus = Common_Spigot.getFieldString(player.getUniqueId().toString()+".errorlog", "player");
+    			if(errorLogStatus != null && !errorLogStatus.equalsIgnoreCase("")) 
+    			{
+    	    		if(errorLogStatus.equalsIgnoreCase("verbose")) 
+    	    		{
+    	    			player.sendMessage(Common_Spigot.chatFormatter("&#FF6161Verbose: " + stackTrace));
+    	    		}
+    	    		player.sendMessage(Common_Spigot.chatFormatter("&#FF0000Spigot Error: " + reason));
+    	    		player.sendMessage(Common_Spigot.chatFormatter("&#ffb900Error Code: " + errorCode));
+    	    		if(cause != null) 
+    	    		{
+    	    			player.sendMessage(Common_Spigot.chatFormatter("&#FFFF00Caused by: " + cause.getName()));
+    	    		}
+    			}
+    		}
+    		else if(cause != null && cause instanceof Player) 
+    		{
+    			player.sendMessage(Common_Spigot.chatFormatter("&#FF0000Something went wrong. If you see a developer tell them this secret code &#ff00ff" + errorCode));
+    		}
+    	}
+    	String errorLogStatus = Common_Spigot.getFieldString("console.errorlog", "internal");
+		if(errorLogStatus != null && !errorLogStatus.equalsIgnoreCase("")) 
+		{
+    		if(errorLogStatus.equalsIgnoreCase("verbose")) 
+    		{
+    			System.out.println(Common_Spigot.chatFormatter("&cVerbose: " + stackTrace));
+    		}
+    		System.out.println(Common_Spigot.chatFormatterConsole("&4Spigot Error: " + reason));
+    		Common_Spigot.chatFormatterConsole("&6Error Code: " + errorCode);
+    		if(cause != null) 
+    		{
+    			System.out.println(Common_Spigot.chatFormatterConsole("&eCaused by: " + cause.getName()));
+    		}
+		}
     }
 }

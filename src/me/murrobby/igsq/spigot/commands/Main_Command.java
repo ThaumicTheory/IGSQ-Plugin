@@ -63,6 +63,9 @@ public class Main_Command implements CommandExecutor, TabCompleter{
   	  		case "entity":
   	  		Entity_Command entity = new Entity_Command(plugin,this,sender,this.args);
   	  			return entity.result;
+  	  		case "error":
+  	  		Error_Command error = new Error_Command(plugin,this,sender,this.args);
+  	  			return error.result;
   	  		case "realtime":
   	  			return RealTimeQuery();
   	  		case "expert":
@@ -229,7 +232,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		List<String> options = new ArrayList<String>();
 		if(args.length == 1) 
 		{
-			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version"};
+			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version","error"};
 			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		else if(args.length == 2) 
@@ -258,13 +261,26 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 				String[] types = {"true","false"};
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
-			else if(args[0].equalsIgnoreCase("nightvision") || args[0].equalsIgnoreCase("nv")) for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[1])) options.add(selectedPlayer.getName());
+			else if(args[0].equalsIgnoreCase("nightvision") || args[0].equalsIgnoreCase("nv")) 
+			{
+				for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[1])) options.add(selectedPlayer.getName());
+			}
+			else if(args[0].equalsIgnoreCase("error")) 
+			{
+				String[] types = {"test","log"};
+				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
+			}
 		}
 		else if(args.length == 3) 
 		{
 			if(args[0].equalsIgnoreCase("block")) 
 			{
 				String[] types = {"trap","fake","real"};
+				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
+			}
+			else if(args[0].equalsIgnoreCase("error") && args[1].equalsIgnoreCase("log")) 
+			{
+				String[] types = {"enabled","disabled","verbose"};
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 		}
