@@ -35,15 +35,7 @@ public class EntityDamageEvent_Expert implements Listener
 			{
 				Player player = (Player)event.getEntity();
 				player.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK,(int) (200*event.getDamage()*((1+player.getHealthScale())-player.getHealth())),0,true));
-				try 
-				{
-					Common_Spigot.internalData.set(player.getUniqueId().toString() + ".damage.last",player.getTicksLived());
-					Common_Spigot.internalData.save(Common_Spigot.internalDataFile);
-				} 
-				catch (Exception exception) 
-				{
-					exception.printStackTrace();
-				}
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".damage.last","player" ,player.getTicksLived() );
 				if(player.hasPotionEffect(PotionEffectType.LUCK)) 
 				{
 					player.removePotionEffect(PotionEffectType.LUCK);
@@ -101,7 +93,7 @@ public class EntityDamageEvent_Expert implements Listener
 				if(enderDragon.getHealth() - event.getDamage() <= 0 && enderDragon.getCustomName() == null) 
 				{
 					event.setCancelled(true);
-					enderDragon.setCustomName(Common_Spigot.ChatFormatter("&#FF5300True Expert Ender Dragon"));
+					enderDragon.setCustomName(Common_Spigot.chatFormatter("&#FF5300True Expert Ender Dragon"));
 					enderDragon.setHealth(enderDragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 					enderDragon.getBossBar().setColor(BarColor.RED);
 					enderDragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(enderDragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue()*2);
@@ -110,7 +102,7 @@ public class EntityDamageEvent_Expert implements Listener
 						selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 0);
 						if(selectedPlayer.getWorld().getEnvironment() == Environment.THE_END) 
 						{
-							selectedPlayer.sendTitle(Common_Spigot.ChatFormatter("&#7900FFEnder Dragon Phase 2"),Common_Spigot.ChatFormatter("&#A600FFThe True Expert Ender Dragon"),10,70,20);
+							selectedPlayer.sendTitle(Common_Spigot.chatFormatter("&#7900FFEnder Dragon Phase 2"),Common_Spigot.chatFormatter("&#A600FFThe True Expert Ender Dragon"),10,70,20);
 							selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.MUSIC_END, 10000, 2f);
 						}
 					}
@@ -119,7 +111,7 @@ public class EntityDamageEvent_Expert implements Listener
 				{
 					
 				}
-				else if(enderDragon.getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#FF5300True Expert Ender Dragon")))
+				else if(enderDragon.getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#FF5300True Expert Ender Dragon")))
 				{
 					if(event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION)
 					{

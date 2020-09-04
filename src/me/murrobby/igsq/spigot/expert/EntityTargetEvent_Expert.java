@@ -24,7 +24,7 @@ public class EntityTargetEvent_Expert implements Listener
 		{
 			if(event.getEntity() instanceof Phantom) 
 			{
-				if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"))) 
+				if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"))) 
 				{
 					if(!(event.getTarget() instanceof Player)) 
 					{

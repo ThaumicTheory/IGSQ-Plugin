@@ -3,32 +3,209 @@ package me.murrobby.igsq.spigot;
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import me.murrobby.igsq.bungee.Common_Bungee;
+import me.murrobby.igsq.shared.Common_Shared;
 
 public class Common_Spigot {
-	public static Main_Spigot plugin;
-    public static File playerDataFile;
-    public static FileConfiguration playerData;
-    public static File internalDataFile;
-    public static FileConfiguration internalData;
+	public static Main_Spigot spigot;
+    private static String[] fileNames = {"config","player","internal","message"};
+    private static File[] files;
+    private static FileConfiguration[] configurations;
+	@Deprecated public static File playerDataFile;
+    @Deprecated public static FileConfiguration playerData;
+    @Deprecated public static File internalDataFile;
+    @Deprecated public static FileConfiguration internalData;
 	public static String[] illegalChats = {"NIGGER","NOGGER","COON","NIGGA"};
     // TODO commenting
+	
+    //TODO Java Docs
+    public static void createFiles() 
+    {
+		 try
+         {
+	    	if (!spigot.getDataFolder().exists()) 
+	    	{
+	    		spigot.getDataFolder().mkdir();
+	    	}
+	    	files = new File[fileNames.length];
+	    	configurations = new YamlConfiguration[fileNames.length];
+	    	for (int i = 0; i < fileNames.length;i++) 
+	    	{
+	    		files[i] = new File(spigot.getDataFolder(),fileNames[i] + ".yml");
+	    		files[i].createNewFile();
+	    		
+	    	}
+	    	
+         }
+         catch (Exception e)
+		 {
+			e.printStackTrace();
+		 }
+    	
+    }
+    public static void addFieldDefault(String path,String fileName,Object data) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName)) 
+    		{
+    			configurations[i].addDefault(path, data);
+    			break;
+    		}
+    	}
+    }
+    //TODO Java Docs
+    public static String getFieldString(String path,String fileName) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName)) 
+    		{
+    			return configurations[i].getString(path);
+    		}
+    	}
+    	return null;
+    }
+    //TODO Java Docs
+    public static Boolean getFieldBool(String path,String fileName) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName)) 
+    		{
+    			return configurations[i].getBoolean(path);
+    		}
+    	}
+    	return false;
+    }
+    //TODO Java Docs
+    public static int getFieldInt(String path,String fileName) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName)) 
+    		{
+    			return configurations[i].getInt(path);
+    		}
+    	}
+    	return -1;
+    }
+    
+    //TODO Java Docs
+    public static void updateField(String path,String fileName,String data) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName))
+    		{
+    			configurations[i].set(path, data);
+    			break;
+    		}
+    	}
+    }
+    public static void updateField(String path,String fileName,Boolean data) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName))
+    		{
+    			configurations[i].set(path, data);
+    			break;
+    		}
+    	}
+    }
+    //TODO Java Docs
+    public static void updateField(String path,String fileName,int data) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName))
+    		{
+    			configurations[i].set(path, data);
+    			break;
+    		}
+    	}
+    }
+  //TODO Java Docs
+    public static void loadFile(String fileName) 
+    {
+    	try 
+    	{
+        	for(int i = 0; i < fileNames.length;i++) 
+        	{
+        		if(fileName.equalsIgnoreCase("@all")) 
+        		{
+        			configurations[i] = new YamlConfiguration();
+        			configurations[i].load(files[i]);
+        		}
+        		else if(fileNames[i].equalsIgnoreCase(fileName))
+        		{
+        			configurations[i] = new YamlConfiguration();
+        			configurations[i].load(files[i]);
+        			break;
+        		}
+        	}
+		}
+    	catch (Exception e)
+    	{
+			e.printStackTrace();
+		}
+    }
+    public static void saveFileChanges(String fileName) 
+    {
+		try 
+		{
+	    	for(int i = 0; i < fileNames.length;i++) 
+			{
+				if(fileName.equalsIgnoreCase("@all")) 
+				{
+					configurations[i].save(files[i]);
+				}
+				else if(fileNames[i].equalsIgnoreCase(fileName))
+				{
+					configurations[i].save(files[i]);
+					break;
+				}
+			}
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+    }
+    //TODO Java Docs
+    public static void disgardAndCloseFile(String fileName) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileName.equalsIgnoreCase("@all")) 
+    		{
+    			configurations[i] = null;
+    			files[i] = null;
+    		}
+    		else if(fileNames[i].equalsIgnoreCase(fileName))
+    		{
+    			configurations[i] = null;
+    			files[i] = null;
+    			break;
+    		}
+    	}
+    }
+	@Deprecated
     public static void createPlayerData() {
-        playerDataFile = new File(plugin.getDataFolder(),"playerData.yml");
+        playerDataFile = new File(spigot.getDataFolder(),"playerData.yml");
         if (!playerDataFile.exists()) {
             try {
 				playerDataFile.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-            plugin.saveResource("playerData.yml", false);
+            spigot.saveResource("playerData.yml", false);
          }
 
         playerData= new YamlConfiguration();
@@ -41,15 +218,16 @@ public class Common_Spigot {
         }
     }
     // TODO commenting
+	@Deprecated
     public static void createInternalData() {
-    	internalDataFile = new File(plugin.getDataFolder(),"internalData.yml");
+    	internalDataFile = new File(spigot.getDataFolder(),"internalData.yml");
         if (!internalDataFile.exists()) {
             try {
             	internalDataFile.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-            plugin.saveResource("internalData.yml", false);
+            spigot.saveResource("internalData.yml", false);
          }
 
         internalData= new YamlConfiguration();
@@ -62,37 +240,42 @@ public class Common_Spigot {
         }
     }
     // TODO commenting
-    public static void loadConfiguration()
+    public static void applyDefaultConfiguration()
     {
-        addField("MYSQL",true);
-        addField("MYSQL.username","username");
-        addField("MYSQL.password","password");
-        addField("MYSQL.database","database");
-        addField("MESSAGE.illegalitemname","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word For &#FF0000<material>&#CD0000.");
-        addField("MESSAGE.illegalitemnameoverride","&#C8C8C8Normally &#FF0000<blocked> &#C8C8C8Would be A Blocked Word For &#FF0000<material> &#C8C8C8but you bypass this check.");
-        addField("MESSAGE.illegalcommand","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Command.");
-        addField("MESSAGE.illegalchat","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word.");
-        addField("MESSAGE.message","&#FFD000<server> &#685985| &#C8C8C8<prefix><player> &#685985| &#ff00a1<message>");
-        addField("GAMEPLAY.expert",false);
-        addField("GAMEPLAY.dragoneggrespawn",true);
-        addField("MESSAGE.server","Server");
-        addField("SUPPORT.luckperms",true);
-        addField("SUPPORT.nametagedit",true);
-        plugin.getConfig().options().copyDefaults(true);
-        plugin.saveConfig();
+        addFieldDefault("MYSQL","config",true);
+        addFieldDefault("MYSQL.username","config","username");
+        addFieldDefault("MYSQL.password","config","password");
+        addFieldDefault("MYSQL.database","config","jdbc:mysql://localhost:3306/database?useSSL=false");
+        
+        addFieldDefault("GAMEPLAY.expert","config",false);
+        addFieldDefault("GAMEPLAY.dragoneggrespawn","config",true);
+        
+        addFieldDefault("SUPPORT.luckperms","config",true);
+        addFieldDefault("SUPPORT.nametagedit","config",true);
+        
+
+        addFieldDefault("server","message","Server");
+        addFieldDefault("message","message","&#FFD000<server> &#685985| &#C8C8C8<prefix><player> &#685985| &#ff00a1<message>");
+        addFieldDefault("illegalitemname","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word For &#FF0000<material>&#CD0000.");
+        addFieldDefault("illegalitemnameoverride","message","&#C8C8C8Normally &#FF0000<blocked> &#C8C8C8Would be A Blocked Word For &#FF0000<material> &#C8C8C8but you bypass this check.");
+        addFieldDefault("illegalcommand","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Command.");
+        addFieldDefault("illegalchat","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word.");
+        for(FileConfiguration configuration : configurations) configuration.options().copyDefaults(true);
     }
     // TODO commenting
+    @Deprecated
     public static void addField(String path,String data) 
     {
-    	plugin.getConfig().addDefault(path, data);
+    	spigot.getConfig().addDefault(path, data);
     }
-    // TODO commenting
+    @Deprecated
     public static void addField(String path,Boolean data) 
     {
-    	plugin.getConfig().addDefault(path, data);
+    	spigot.getConfig().addDefault(path, data);
     }
     // TODO commenting
-    public static Boolean getFieldBool(String path,String tableName) 
+    @Deprecated
+    public static Boolean GetFieldBool(String path,String tableName) 
     {
     	switch(tableName) {
     	  	case "playerdata":
@@ -100,12 +283,13 @@ public class Common_Spigot {
     	  	case "internal":
     	  		return internalData.getBoolean(path);
     	  	default:
-    	  		return plugin.getConfig().getBoolean(path);
+    	  		return spigot.getConfig().getBoolean(path);
     	}
 
     }
     // TODO commenting
-    public static String getFieldString(String path,String tableName) 
+    @Deprecated
+    public static String GetFieldString(String path,String tableName) 
     {
     	switch(tableName) {
     	  	case "playerdata":
@@ -113,12 +297,13 @@ public class Common_Spigot {
     	  	case "internal":
     	  		return internalData.getString(path);
     	  	default:
-    	  		return plugin.getConfig().getString(path);
+    	  		return spigot.getConfig().getString(path);
     	}
 
     }
     // TODO commenting
-    public static int getFieldInt(String path,String tableName) 
+    @Deprecated
+    public static int GetFieldInt(String path,String tableName) 
     {
     	switch(tableName) {
     	  	case "playerdata":
@@ -126,32 +311,12 @@ public class Common_Spigot {
     	  	case "internal":
     	  		return internalData.getInt(path);
     	  	default:
-    	  		return plugin.getConfig().getInt(path);
+    	  		return spigot.getConfig().getInt(path);
     	}
 
     }
-    //Appends a value to the end of array
-    public static String[] Append(String[] array, String value)
-    {
-    	String[] arrayAppended = new String[array.length+1];
-    	for (int i = 0;i < array.length;i++)
-    	{
-    		arrayAppended[i] = array[i];
-    	}
-    	arrayAppended[array.length] = value;
-    	return arrayAppended;
-    }
-    public static String[] ArrayAppend(String[] array, String[] array2) 
-    {
-    	String[] appendedArray = array;
-    	for (String string : array2) 
-    	{
-    		appendedArray = Append(appendedArray,string);
-    	}
-    	return appendedArray;
-    }
     // TODO commenting
-    public static Player[] Append(Player[] array, Player value)
+    public static Player[] append(Player[] array, Player value)
     {
     	Player[] arrayAppended = new Player[array.length+1];
     	for (int i = 0;i < array.length;i++)
@@ -162,42 +327,7 @@ public class Common_Spigot {
     	return arrayAppended;
     }
     // TODO commenting
-    public static String[] Depend(String[] array, int location)
-    {
-        String[] arrayDepended = new String[array.length-1];
-        int hitRemove = 0;
-        for (int i = 0;i < array.length;i++)
-        {
-            if(location != i){
-                arrayDepended[i-hitRemove] = array[i];
-            }
-            else{
-                hitRemove++;
-            }
-        }
-        return arrayDepended;
-    }
-    // TODO commenting
-    public static String[] GetBetween(String[] array, int leftSide,int rightSide)
-    {
-        String[] arrayBetween = new String[0];
-        if(rightSide == -1) 
-        {
-        	rightSide = array.length;
-        }
-        for (int i = 0;i < array.length;i++)
-        {
-            if(i >= leftSide && i <= rightSide){
-            	arrayBetween = Append(arrayBetween, array[i]);
-            }
-            else if(i > rightSide)
-            {
-            	break;
-            }
-        }
-        return arrayBetween;
-    }
-    // TODO commenting
+    @Deprecated
     public static void Default(Player player) 
     {
     	try 
@@ -207,8 +337,12 @@ public class Common_Spigot {
 		} 
     	catch (Exception exception) {
 			System.out.println("Could not add player Defaults!");
-			player.sendMessage(ChatFormatter("&#CD0000Something went wrong when creating your defaults!"));
+			player.sendMessage(chatFormatter("&#CD0000Something went wrong when creating your defaults!"));
 		}
+    }
+    public static void applyDefault(Player player) 
+    {
+    	addFieldDefault(player.getUniqueId().toString() + ".damage.last", "player", player.getTicksLived());
     }
     
     
@@ -219,7 +353,7 @@ public class Common_Spigot {
      * @see net.md_5.bungee.api.ChatColor#of(String)
      * @return <b>String</b>
      */
-    public static String ChatFormatter(String textToColour) //CF
+    public static String chatFormatter(String textToColour) //CF
     {
     	String[] textToColourChars = textToColour.split("");
     	String rebuiltText = "";
@@ -235,53 +369,53 @@ public class Common_Spigot {
     
     
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #ChatFormatter(String)}.
-     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #Depend(String[],int)}
+     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #chatFormatter(String)}.
+     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #depend(String[],int)}
      * @see #getFieldString
-     * @see #GetFormattedMessage(String)
-     * @see #GetFormattedMessage(String, String,String)
+     * @see #getFormattedMessage(String)
+     * @see #getFormattedMessage(String, String,String)
      * @return <b>String</b>
      */
-	public static String GetFormattedMessage(String messageName, String[] wildcards) //[]
+	public static String getFormattedMessage(String messageName, String[] wildcards) //[]
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Bungee.Depend(wildcards, wildcards.length-1);
+			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
-		String message = getFieldString("MESSAGE." + messageName, "config");
+		String message = GetFieldString("MESSAGE." + messageName, "config");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
-    	return ChatFormatter(message);
+    	return chatFormatter(message);
 	}
     
     
     
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #ChatFormatter(String)}.
+     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #chatFormatter(String)}.
      * @apiNote Takes From MESSAGE. in config.yml
      * @see #getFieldString
-     * @see #GetFormattedMessage(String)
-     * @see #GetFormattedMessage(String, String[])
+     * @see #getFormattedMessage(String)
+     * @see #getFormattedMessage(String, String[])
      * @return <b>String</b>
      */
-    public static String GetFormattedMessage(String messageName,String replace,String with) //1
+    public static String getFormattedMessage(String messageName,String replace,String with) //1
     {
-    	return ChatFormatter(getFieldString("MESSAGE." + messageName, "config").replace(replace,with));
+    	return chatFormatter(GetFieldString("MESSAGE." + messageName, "config").replace(replace,with));
     }
     
     
     
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #ChatFormatter(String)}.
+     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #chatFormatter(String)}.
      * @apiNote Takes From MESSAGE. in config.yml
      * @see #getFieldString
-     * @see #GetFormattedMessage(String,String,String)
-     * @see #GetFormattedMessage(String, String[])
+     * @see #getFormattedMessage(String,String,String)
+     * @see #getFormattedMessage(String, String[])
      * @return <b>String</b>
      */
-    public static String GetFormattedMessage(String messageName) //0
+    public static String getFormattedMessage(String messageName) //0
     {
-    	return ChatFormatter(getFieldString("MESSAGE." + messageName, "config"));
+    	return chatFormatter(GetFieldString("MESSAGE." + messageName, "config"));
     }
     
 
@@ -292,7 +426,7 @@ public class Common_Spigot {
      * @see net.md_5.bungee.api.ChatColor#translateAlternateColorCodes(char,String)
      * @return <b>String</b>
      */
-    public static String ChatFormatterConsole(String textToColour) //CF Console
+    public static String chatFormatterConsole(String textToColour) //CF Console
     {
     	String[] textToColourChars = textToColour.split("");
     	String rebuiltText = "";
@@ -307,65 +441,65 @@ public class Common_Spigot {
     
     
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #ChatFormatterConsole(String)}. This Version is intended for use In Consoles & Legacy Only!
-     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #Depend(String[],int)}
+     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #chatFormatterConsole(String)}. This Version is intended for use In Consoles & Legacy Only!
+     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #depend(String[],int)}
      * @see #getFieldString
-     * @see #GetFormattedMessageConsole(String)
-     * @see #GetFormattedMessageConsole(String, String,String)
+     * @see #getFormattedMessageConsole(String)
+     * @see #getFormattedMessageConsole(String, String,String)
      * @return <b>String</b>
      */
-	public static String GetFormattedMessageConsole(String messageName, String[] wildcards) //[] Console
+	public static String getFormattedMessageConsole(String messageName, String[] wildcards) //[] Console
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Spigot.Depend(wildcards, wildcards.length-1);
+			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
-		String message = getFieldString("MESSAGE." + messageName, "config");
+		String message = GetFieldString("MESSAGE." + messageName, "config");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
-    	return Common_Spigot.ChatFormatterConsole(message);
+    	return Common_Spigot.chatFormatterConsole(message);
 	}
 	
 	
 	
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #ChatFormatter(String)}. This Version is intended for use In Consoles & Legacy Only!
+     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #chatFormatter(String)}. This Version is intended for use In Consoles & Legacy Only!
      * @apiNote Takes From MESSAGE. in config.yml
      * @see #getFieldString
-     * @see #GetFormattedMessage(String)
-     * @see #GetFormattedMessage(String, String[])
+     * @see #getFormattedMessage(String)
+     * @see #getFormattedMessage(String, String[])
      * @return <b>String</b>
      */
-    public static String GetFormattedMessageConsole(String messageName,String replace,String with) //1 Console
+    public static String getFormattedMessageConsole(String messageName,String replace,String with) //1 Console
     {
-    	return ChatFormatterConsole(getFieldString("MESSAGE." + messageName, "config").replace(replace,with));
+    	return chatFormatterConsole(GetFieldString("MESSAGE." + messageName, "config").replace(replace,with));
     }
     
     
     
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #ChatFormatter(String)}. This Version is intended for use In Consoles & Legacy Only!
+     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #chatFormatter(String)}. This Version is intended for use In Consoles & Legacy Only!
      * @apiNote Takes From MESSAGE. in config.yml
      * @see #getFieldString
-     * @see #GetFormattedMessage(String,String,String)
-     * @see #GetFormattedMessage(String, String[])
+     * @see #getFormattedMessage(String,String,String)
+     * @see #getFormattedMessage(String, String[])
      * @return <b>String</b>
      */
-    public static String GetFormattedMessageConsole(String messageName)//0 Console
+    public static String getFormattedMessageConsole(String messageName)//0 Console
     {
-    	return ChatFormatterConsole(getFieldString("MESSAGE." + messageName, "config"));
+    	return chatFormatterConsole(GetFieldString("MESSAGE." + messageName, "config"));
     }
 	
 	
 	
  // TODO commenting
-    public static boolean FilterChat(String message,Player player) 
+    public static boolean filterChat(String message,Player player) 
     {
 		for(String illegalChat: illegalChats)
 		{
 			if(message.toUpperCase().contains(illegalChat)) 
 			{
-				player.sendMessage(GetFormattedMessage("illegalchat", "<blocked>", illegalChat));
+				player.sendMessage(getFormattedMessage("illegalchat", "<blocked>", illegalChat));
 				return false;
 			}
 		}
@@ -380,7 +514,7 @@ public class Common_Spigot {
      * @see org.bukkit.block.Block#isPassable
      * @return <b>Block</b>
      */
-    public static Block GetHighestBlock(Location location,int startingHeight)
+    public static Block getHighestBlock(Location location,int startingHeight)
     {
     	for(int i = startingHeight;i > 0;i--) 
     	{
@@ -391,33 +525,5 @@ public class Common_Spigot {
     		}
     	}
     	return null;
-    }
-    
-    
-    
-    /**
-     * Removes all text before a given character. If the character is not found the whole string is returned.
-     * @apiNote used in commands to remove the command identifier minecraft: etc
-     * @return <b>String</b>
-     */
-    public static String RemoveBeforeCharacter(String string,char target) 
-    {
-    	Boolean targetFound = false;
-    	char[] charArray = string.toCharArray();
-    	String rebuiltString = "";
-    	for(int i = 0;i < string.length();i++) 
-    	{
-    		if(!targetFound)
-    		{
-    			if(charArray[i] == target && !targetFound) targetFound = true;
-    		}
-    		else rebuiltString += charArray[i];
-    	}
-    	if(targetFound) return rebuiltString;
-    	else return string;
-    }
-    public static void ExecuteOrder66() 
-    {
-    	Bukkit.getServer().shutdown();
     }
 }

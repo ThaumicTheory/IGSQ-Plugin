@@ -20,7 +20,7 @@ public class PlayerCommandPreprocessEvent_Main implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if(!Common_Spigot.FilterChat(event.getMessage(), event.getPlayer())) 
+			if(!Common_Spigot.filterChat(event.getMessage(), event.getPlayer())) 
 			{
 				event.setCancelled(true);
 			}

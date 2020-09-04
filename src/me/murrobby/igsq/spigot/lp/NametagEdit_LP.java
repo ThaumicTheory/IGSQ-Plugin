@@ -60,7 +60,7 @@ public class NametagEdit_LP
 		for (Player player : Bukkit.getOnlinePlayers())
 		{
 			Common_LP.GetRank(player);
-			NametagEdit.getApi().setNametag(player,Common_Spigot.ChatFormatter(nametagPrefixes.get(Common_LP.GetRank(player))),"");
+			NametagEdit.getApi().setNametag(player,Common_Spigot.chatFormatter(nametagPrefixes.get(Common_LP.GetRank(player))),"");
 		}
 	}
 }

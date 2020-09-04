@@ -79,7 +79,7 @@ public class EnderDragon_Expert
 										{
 											Player player = (Player) nearbyEntity;
 											Phantom phantom = (Phantom) selectedWorld.spawnEntity(enderDragon.getLocation(), EntityType.PHANTOM);
-											phantom.setCustomName(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"));
+											phantom.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"));
 											phantom.setTarget(player);
 											phantom.setHealth(1);
 										}
@@ -88,7 +88,7 @@ public class EnderDragon_Expert
 								}
 							}
 						}
-						else if(enderDragon.getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#FF5300True Expert Ender Dragon")))
+						else if(enderDragon.getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#FF5300True Expert Ender Dragon")))
 						{
 							if(enderDragon.getPhase() == Phase.LAND_ON_PORTAL || enderDragon.getPhase() == Phase.SEARCH_FOR_BREATH_ATTACK_TARGET) 
 							for(Entity nearbyEntity : enderDragon.getNearbyEntities(20, 20, 20)) 
@@ -123,7 +123,7 @@ public class EnderDragon_Expert
 										{
 											Player player = (Player) nearbyEntity;
 											Phantom phantom = (Phantom) selectedWorld.spawnEntity(enderDragon.getLocation(), EntityType.PHANTOM);
-											phantom.setCustomName(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"));
+											phantom.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"));
 											phantom.setTarget(player);
 											phantom.setHealth(3);
 										}
@@ -138,7 +138,7 @@ public class EnderDragon_Expert
 									if(nearbyEntity instanceof Phantom) 
 									{
 										Phantom phantom = (Phantom) nearbyEntity;
-										if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"))) 
+										if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"))) 
 										{
 											phantom.setHealth(0);
 										}

@@ -44,7 +44,7 @@ public class Rank_LP
 		for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers())
 		{
 			String originalRank = Common_LP.GetRank(player);
-			String serverRank = Common_Bungee.GetFieldString(player.getUniqueId() + ".discord.role", "playerData");
+			String serverRank = Common_Bungee.getFieldString(player.getUniqueId() + ".discord.role", "player");
 			if(serverRank != null && (!serverRank.equalsIgnoreCase("")) && (!originalRank.equalsIgnoreCase(serverRank))) Common_LP.SetRank(player, serverRank,originalRank);	
 		}
 	}

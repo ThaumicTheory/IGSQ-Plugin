@@ -49,9 +49,9 @@ public class AccountProtection_Security
 				String header = "&#FF00002FA &#CD0000Enabled!";
 				if(player.hasPermission("igsq.require2fa")) header = "&#FFFF00Staff &#FF00002FA!";
 				player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,80,0,true));
-				if(random.nextInt(3) ==1) player.sendTitle(Common_Spigot.ChatFormatter(header),Common_Spigot.ChatFormatter("&#00FFFFYou Should be provided with a code from discord!"),10,40,10);
-				else if(random.nextInt(2) ==1) player.sendTitle(Common_Spigot.ChatFormatter(header),Common_Spigot.ChatFormatter("&#FFFF00Type /2fa confirm [code]"),10,40,10);
-				else player.sendTitle(Common_Spigot.ChatFormatter(header),Common_Spigot.ChatFormatter("&#ffb900Make Sure you havn't blocked IGSQbot."),10,40,10);
+				if(random.nextInt(3) ==1) player.sendTitle(Common_Spigot.chatFormatter(header),Common_Spigot.chatFormatter("&#00FFFFYou Should be provided with a code from discord!"),10,40,10);
+				else if(random.nextInt(2) ==1) player.sendTitle(Common_Spigot.chatFormatter(header),Common_Spigot.chatFormatter("&#FFFF00Type /2fa confirm [code]"),10,40,10);
+				else player.sendTitle(Common_Spigot.chatFormatter(header),Common_Spigot.chatFormatter("&#ffb900Make Sure you havn't blocked IGSQbot."),10,40,10);
 			}
 		}
 	}

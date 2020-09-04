@@ -4,7 +4,6 @@ import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Database_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -50,8 +49,8 @@ public class TwoFactorAuthentication_Security
 				try
 				{
 					discord_2fa.next();
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa.status",discord_2fa.getString(1));
-					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa.code",discord_2fa.getString(2));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.2fa.status","player",discord_2fa.getString(1));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.2fa.code","player",discord_2fa.getString(2));
 				}
 				catch (SQLException e)
 				{
@@ -61,18 +60,9 @@ public class TwoFactorAuthentication_Security
 			}
 			else
 			{
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa.status","");
-				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.2fa.code","");
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.2fa.status","player","");
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.2fa.code","player","");
 			}
-		}
-		try 
-		{
-			Common_Spigot.playerData.save(Common_Spigot.playerDataFile);
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }
