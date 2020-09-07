@@ -30,6 +30,12 @@ public class Common_LP {
 		GetUserData(user);
 		return metaData.getPrefix();
 	}
+	public static String GetSuffix(Player player) 
+	{
+		User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+		GetUserData(user);
+		return metaData.getSuffix();
+	}
     /**
      * gets the name of the Players highest rank.
      * @apiNote Shows the Primary Group the user is in.

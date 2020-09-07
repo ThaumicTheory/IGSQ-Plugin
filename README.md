@@ -71,4 +71,26 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #bdfff3 founder
 - #ffcbcb birthday
 - #ff61f4 nitroboost
+<<<<<<< Updated upstream
 - #ff899f supporter
+=======
+- #ff899f supporter
+
+- #67fd67 Developer
+
+**Error Codes**
+
+- ACACIA_LOG database update query failed in Database_Spigot.UpdateCommand()
+- BIRCH_LOG database query failed in Database_Spigot.QueryCommand()
+- BIRCH_PLANK database query failed to expire in Database_Spigot.QueryCommand()
+- COAL_BLOCK data in Discord link didnt exist or was corrupt upon reciept in DiscordLink_Security.DiscordLink()
+- DIRT manually initated error in Error_Command.error()
+- EMERALD_BLOCK failed to load file in Common_Spigot.loadFile()
+- HAY failed to save file changes in Common_Spigot.saveFileChanges()
+- OAK_LOG command communicator failed in Main_Spigot.run() 
+- OAK_PLANK database scalar query failed in Database_Spigot.ScalarCommand()
+- REDSTONE failed to create a file in Common_Spigot.createFiles()
+- STONE data in 2FA didnt exist or was corrupt upon reciept in TwoFactorAuthentication_Security.TwoFactorAuthentication()
+
+
+>>>>>>> Stashed changes

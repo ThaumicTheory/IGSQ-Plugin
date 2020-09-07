@@ -30,6 +30,12 @@ public class Common_LP {
 		GetUserData(user);
 		return metaData.getPrefix();
 	}
+	public static String GetSuffix(ProxiedPlayer player) 
+	{
+		User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+		GetUserData(user);
+		return metaData.getSuffix();
+	}
     /**
      * gets the name of the Players highest rank.
      * @apiNote Shows the Primary Group the user is in.
@@ -45,7 +51,7 @@ public class Common_LP {
     /**
      * sets the Players highest rank.
      * @apiNote Sets the Primary Group the user is in to the rank specified.
-     * @see net.luckperms.api.cacheddata.CachedMetaData#setPrimaryGroup()
+     * @see net.luckperms.api.node.Node
      */
     public static void SetRank(ProxiedPlayer player,String newRank,String oldRank)
     {
@@ -55,5 +61,31 @@ public class Common_LP {
     	luckPerms.getUserManager().saveUser(user);
     	luckPerms.getMessagingService().get().pushUserUpdate(user);
     	
+    	
+    }
+    /**
+     * adds the rank to the designated Player
+     * @apiNote Sets the Primary Group the user is in to the rank specified.
+     * @see net.luckperms.api.node.Node
+     */
+    public static void GiveRank(ProxiedPlayer player,String rank)
+    {
+    	User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+    	user.data().add(Node.builder("group." + rank).build());
+    	luckPerms.getUserManager().saveUser(user);
+    	luckPerms.getMessagingService().get().pushUserUpdate(user);
+    }
+    
+    /**
+     * removes the rank to the designated Player
+     * @apiNote Sets the Primary Group the user is in to the rank specified.
+     * @see net.luckperms.api.node.Node
+     */
+    public static void RemoveRank(ProxiedPlayer player,String rank)
+    {
+    	User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+    	user.data().remove(Node.builder("group." + rank).build());
+    	luckPerms.getUserManager().saveUser(user);
+    	luckPerms.getMessagingService().get().pushUserUpdate(user);
     }
 }

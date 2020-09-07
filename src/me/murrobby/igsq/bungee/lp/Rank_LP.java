@@ -44,8 +44,23 @@ public class Rank_LP
 		for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers())
 		{
 			String originalRank = Common_LP.GetRank(player);
+<<<<<<< Updated upstream
 			String serverRank = Common_Bungee.GetFieldString(player.getUniqueId() + ".discord.role", "playerData");
 			if(serverRank != null && (!serverRank.equalsIgnoreCase("")) && (!originalRank.equalsIgnoreCase(serverRank))) Common_LP.SetRank(player, serverRank,originalRank);	
+=======
+			String serverRank = Common_Bungee.getFieldString(player.getUniqueId() + ".discord.role", "player");
+			if(serverRank != null && (!serverRank.equalsIgnoreCase("")) && (!originalRank.equalsIgnoreCase(serverRank))) Common_LP.SetRank(player, serverRank,originalRank);
+			CheckSecondary(player,"developer", Boolean.valueOf(Common_Bungee.getFieldString(player.getUniqueId() + ".discord.developer", "player")));
+			CheckSecondary(player,"founder", Boolean.valueOf(Common_Bungee.getFieldString(player.getUniqueId() + ".discord.founder", "player")));
+			CheckSecondary(player,"supporter", Boolean.valueOf(Common_Bungee.getFieldString(player.getUniqueId() + ".discord.supporter", "player")));
+			CheckSecondary(player,"nitroboost", Boolean.valueOf(Common_Bungee.getFieldString(player.getUniqueId() + ".discord.nitroboost", "player")));
+			CheckSecondary(player,"birthday", Boolean.valueOf(Common_Bungee.getFieldString(player.getUniqueId() + ".discord.birthday", "player")));
+>>>>>>> Stashed changes
 		}
+	}
+	private void CheckSecondary(ProxiedPlayer player,String secondaryRole,Boolean hasRole) 
+	{
+		if(player.hasPermission("group." + secondaryRole) && (!hasRole)) Common_LP.RemoveRank(player, secondaryRole);
+		else if((!player.hasPermission("group." + secondaryRole)) && hasRole) Common_LP.GiveRank(player, secondaryRole);
 	}
 }

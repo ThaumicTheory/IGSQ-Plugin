@@ -50,6 +50,7 @@ public class DiscordLink_Security
 				try
 				{
 					discord_accounts.next();
+<<<<<<< Updated upstream
 					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.id",discord_accounts.getString(1));
 					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.username",discord_accounts.getString(2));
 					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nickname",discord_accounts.getString(3));
@@ -58,6 +59,17 @@ public class DiscordLink_Security
 					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.birthday",discord_accounts.getBoolean(6));
 					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nitroboost",discord_accounts.getBoolean(7));
 					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.supporter",discord_accounts.getBoolean(8));
+=======
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.id", "player", discord_accounts.getString(1));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.username","player",discord_accounts.getString(2));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.nickname","player",discord_accounts.getString(3));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.role","player",discord_accounts.getString(4));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.founder","player",discord_accounts.getBoolean(5));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.birthday","player",discord_accounts.getBoolean(6));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.nitroboost","player",discord_accounts.getBoolean(7));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.supporter","player",discord_accounts.getBoolean(8));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.developer","player",discord_accounts.getBoolean(9));
+>>>>>>> Stashed changes
 				}
 				catch (SQLException e)
 				{
@@ -67,6 +79,7 @@ public class DiscordLink_Security
 			}
 			else 
 			{
+<<<<<<< Updated upstream
 				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.id","");
 				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.username","");
 				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nickname","");
@@ -75,6 +88,17 @@ public class DiscordLink_Security
 				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.birthday",false);
 				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nitroboost",false);
 				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.supporter",false);
+=======
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.id","player","");
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.username","player","");
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.nickname","player","");
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.role","player","default");
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.founder","player",false);
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.birthday","player",false);
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.nitroboost","player",false);
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.supporter","player",false);
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.developer","player",false);
+>>>>>>> Stashed changes
 			}
 		}
 		try 

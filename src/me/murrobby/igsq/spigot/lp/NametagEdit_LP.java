@@ -57,6 +57,17 @@ public class NametagEdit_LP
 		nametagPrefixes.put("mod2", "&6[&bJ&eS&6] &e");
 		nametagPrefixes.put("mod3", "&6[&dS&eS&6] &e");
 		nametagPrefixes.put("council", "&5[&dC&5] &d");
+<<<<<<< Updated upstream
+=======
+		
+		Dictionary<String, String> nametagSuffixes = new Hashtable<String, String>();
+		nametagSuffixes.put("developer", "&2 [&aD&2]");
+		nametagSuffixes.put("founder", "&3 [&bF&3]");
+		nametagSuffixes.put("birthday", "&d [&fB&d]");
+		nametagSuffixes.put("nitroboost", "&5 [&dN&5]");
+		nametagSuffixes.put("supporter", "&d [&cS&d]");
+		nametagSuffixes.put("none", "");
+>>>>>>> Stashed changes
 		for (Player player : Bukkit.getOnlinePlayers())
 		{
 			Common_LP.GetRank(player);

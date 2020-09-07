@@ -63,7 +63,13 @@ public class DiscordLink_Security
 					data = discord_accounts.getBoolean(7);
 					Common_Bungee.UpdateField(player.getUniqueId().toString() + ".discord.nitroboost", "playerData", data.toString());
 					data = discord_accounts.getBoolean(8);
+<<<<<<< Updated upstream
 					Common_Bungee.UpdateField(player.getUniqueId().toString() + ".discord.supporter", "playerData", data.toString());
+=======
+					Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.supporter", "player", data.toString());
+					data = discord_accounts.getBoolean(9);
+					Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.developer", "player", data.toString());
+>>>>>>> Stashed changes
 				}
 				catch (SQLException e)
 				{
@@ -73,6 +79,7 @@ public class DiscordLink_Security
 			}
 			else 
 			{
+<<<<<<< Updated upstream
 				Common_Bungee.UpdateField(player.getUniqueId().toString() + ".discord.id", "playerData", "");
 				Common_Bungee.UpdateField(player.getUniqueId().toString() + ".discord.username", "playerData","");
 				Common_Bungee.UpdateField(player.getUniqueId().toString() + ".discord.nickname", "playerData", "");
@@ -81,6 +88,17 @@ public class DiscordLink_Security
 				Common_Bungee.UpdateField(player.getUniqueId().toString() + ".discord.birthday", "playerData", "false");
 				Common_Bungee.UpdateField(player.getUniqueId().toString() + ".discord.nitroboost", "playerData", "false");
 				Common_Bungee.UpdateField(player.getUniqueId().toString() + ".discord.supporter", "playerData", "false");
+=======
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.id", "player", "");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.username", "player","");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.nickname", "player", "");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.role", "player", "default");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.founder", "player", "false");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.birthday", "player", "false");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.nitroboost", "player", "false");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.supporter", "player", "false");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.developer", "player", "false");
+>>>>>>> Stashed changes
 			}
 		}
 	}
