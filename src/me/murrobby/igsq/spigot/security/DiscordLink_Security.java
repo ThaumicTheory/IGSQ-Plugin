@@ -57,6 +57,7 @@ public class DiscordLink_Security
 					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.birthday","player",discord_accounts.getBoolean(6));
 					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.nitroboost","player",discord_accounts.getBoolean(7));
 					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.supporter","player",discord_accounts.getBoolean(8));
+					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.developer","player",discord_accounts.getBoolean(9));
 				}
 				catch (SQLException e)
 				{
@@ -73,6 +74,7 @@ public class DiscordLink_Security
 				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.birthday","player",false);
 				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.nitroboost","player",false);
 				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.supporter","player",false);
+				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.developer","player",false);
 			}
 		}
 	}

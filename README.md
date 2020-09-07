@@ -74,7 +74,7 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #ff61f4 nitroboost
 - #ff899f supporter
 
-- ##67fd67 Developer
+- #67fd67 Developer
 
 **Error Codes**
 

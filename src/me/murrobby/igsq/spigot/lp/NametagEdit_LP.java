@@ -59,11 +59,11 @@ public class NametagEdit_LP
 		nametagPrefixes.put("council", "&5[&dC&5] &d");
 		
 		Dictionary<String, String> nametagSuffixes = new Hashtable<String, String>();
-		nametagSuffixes.put("developer", "&2[&aD&2]");
-		nametagSuffixes.put("founder", "&3[&bF&3]");
-		nametagSuffixes.put("birthday", "&d[&fB&d]");
-		nametagSuffixes.put("nitro", "&5[&dN&5]");
-		nametagSuffixes.put("supporter", "&d[&cS&d]");
+		nametagSuffixes.put("developer", "&2 [&aD&2]");
+		nametagSuffixes.put("founder", "&3 [&bF&3]");
+		nametagSuffixes.put("birthday", "&d [&fB&d]");
+		nametagSuffixes.put("nitroboost", "&5 [&dN&5]");
+		nametagSuffixes.put("supporter", "&d [&cS&d]");
 		nametagSuffixes.put("none", "");
 		for (Player player : Bukkit.getOnlinePlayers())
 		{

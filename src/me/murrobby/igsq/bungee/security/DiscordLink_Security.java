@@ -64,6 +64,8 @@ public class DiscordLink_Security
 					Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.nitroboost", "player", data.toString());
 					data = discord_accounts.getBoolean(8);
 					Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.supporter", "player", data.toString());
+					data = discord_accounts.getBoolean(9);
+					Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.developer", "player", data.toString());
 				}
 				catch (SQLException e)
 				{
@@ -81,6 +83,7 @@ public class DiscordLink_Security
 				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.birthday", "player", "false");
 				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.nitroboost", "player", "false");
 				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.supporter", "player", "false");
+				Common_Bungee.updateField(player.getUniqueId().toString() + ".discord.developer", "player", "false");
 			}
 		}
 	}
