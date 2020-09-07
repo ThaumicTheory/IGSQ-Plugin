@@ -51,7 +51,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 					{
 						
 					}
-					else if(event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#FF5300True Expert Ender Dragon"))) 
+					else if(event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#FF5300True Expert Ender Dragon"))) 
 					{
 						if(random.nextInt(200) < event.getDamage()*10) 
 						{
@@ -61,7 +61,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				}
 				else if(event.getDamager().getType() == EntityType.SLIME) 
 				{
-					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Slimey Slime"))) 
+					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Slimey Slime"))) 
 					{
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,(int) ((event.getDamage()*5 * random.nextInt(3))+20),(int) (event.getDamage()*2* random.nextInt(3))));
 					}
@@ -72,7 +72,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				}
 				else if(event.getDamager().getType() == EntityType.MAGMA_CUBE) 
 				{
-					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Flamey Magma Slime"))) 
+					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Flamey Magma Slime"))) 
 					{
 						player.setFireTicks((int) (player.getFireTicks()+((event.getDamage()*25 * random.nextInt(5))))+20);
 					}
@@ -84,7 +84,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				else if(event.getDamager() instanceof Phantom) 
 				{
 					Phantom phantom = (Phantom) event.getDamager();
-					if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Phantom Warrior"))) 
+					if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"))) 
 					{
 						Common_Expert.GiveBlindness(player,(int) ((event.getDamage()*10 * random.nextInt(5))+20));
 						for(Entity nearbyEntity : phantom.getNearbyEntities(32, 32, 32)) 
@@ -109,10 +109,10 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				Slime slime = (Slime) event.getEntity();
 				if(event.getDamager().getType() == EntityType.PLAYER) 
 				{
-					if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert King Slime"))) 
+					if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert King Slime"))) 
 					{
 						Slime spawnSlime = (Slime) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.SLIME);
-						spawnSlime.setCustomName(Common_Spigot.ChatFormatter("&#84FF00Expert Warrior Slime"));
+						spawnSlime.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Warrior Slime"));
 						spawnSlime.setSize(slime.getSize()/2);
 					}
 				}
@@ -122,13 +122,13 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				MagmaCube slime = (MagmaCube) event.getEntity();
 				if(event.getDamager().getType() == EntityType.PLAYER) 
 				{
-					if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert King Magma Slime"))) 
+					if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert King Magma Slime"))) 
 					{
 						int randomNum = random.nextInt(4);
 						for(int i = 0;i < randomNum;i++) 
 						{
 							MagmaCube spawnSlime = (MagmaCube) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.MAGMA_CUBE);
-							spawnSlime.setCustomName(Common_Spigot.ChatFormatter("&#84FF00Expert Warrior Magma Slime"));
+							spawnSlime.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Warrior Magma Slime"));
 							spawnSlime.setSize(slime.getSize()/2);
 						}
 						

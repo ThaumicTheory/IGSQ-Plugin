@@ -107,46 +107,30 @@ public class BloodMoon_Expert {
 	{
 		if(!enabled) 
 		{
-			try 
-			{
-				Common_Spigot.internalData.set(world.getUID() + ".event.bloodmoon",false);
-				Common_Spigot.internalData.save(Common_Spigot.internalDataFile);
-				world.setMonsterSpawnLimit(-1);
-				world.setTicksPerMonsterSpawns(-1);
-			}
-			catch (Exception exception) 
-			{
-				exception.printStackTrace();
-			}
+			Common_Spigot.updateField(world.getUID() + ".event.bloodmoon","internal",false);
+			world.setMonsterSpawnLimit(-1);
+			world.setTicksPerMonsterSpawns(-1);
 		}
 		else 
 		{
 			if(random.nextInt(9) == 1 && world.getAllowMonsters()) 
 			{
-				try 
-				{
-					Common_Spigot.internalData.set(world.getUID() + ".event.bloodmoon",true);
-					Common_Spigot.internalData.save(Common_Spigot.internalDataFile);
-				}
-				catch (Exception exception) 
-				{
-					exception.printStackTrace();
-				}
+				Common_Spigot.updateField(world.getUID() + ".event.bloodmoon","internal",true);
 				if(world.getEnvironment() == Environment.NORMAL) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.ChatFormatter("&#32FF82The Blood Moon is rising..."));
+					Bukkit.broadcastMessage(Common_Spigot.chatFormatter("&#32FF82The Blood Moon is rising..."));
 				}
 				else if(world.getEnvironment() == Environment.NETHER) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.ChatFormatter("&#FF6464Screams echo from deep bellow..."));
+					Bukkit.broadcastMessage(Common_Spigot.chatFormatter("&#FF6464Screams echo from deep bellow..."));
 				}
 				else if(world.getEnvironment() == Environment.THE_END) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.ChatFormatter("&#FFFFD0Some otherworldly place calls your name..."));
+					Bukkit.broadcastMessage(Common_Spigot.chatFormatter("&#FFFFD0Some otherworldly place calls your name..."));
 				}
 				else 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.ChatFormatter("&#00FF00I wouldn't enter \""+ world.getName() + "\" tonight..."));
+					Bukkit.broadcastMessage(Common_Spigot.chatFormatter("&#00FF00I wouldn't enter \""+ world.getName() + "\" tonight..."));
 				}
 				world.setMonsterSpawnLimit(world.getMonsterSpawnLimit()*3);
 				world.setTicksPerMonsterSpawns(10);

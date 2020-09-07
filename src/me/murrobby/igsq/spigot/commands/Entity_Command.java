@@ -35,11 +35,11 @@ public class Entity_Command {
         }
         catch(Exception exception)
         {
-            sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000This Entity could not be found!"));
+            sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000This Entity could not be found!"));
             return false;
         }
         plugin.getServer().getPlayer(player.getUniqueId()).getWorld().spawnEntity(player.getLocation(), entitytype);
-        sender.sendMessage(Common_Spigot.ChatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+        sender.sendMessage(Common_Spigot.chatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
         return true;
 
     }
@@ -55,13 +55,13 @@ public class Entity_Command {
             }
             else 
             {
-                sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00entity [entity_ID]"));
+                sender.sendMessage(Common_Spigot.chatFormatter("&#FFFF00entity [entity_ID]"));
                 return false;
             }
         }
         else 
         {
-            sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+            sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
             return false;
         }
 }

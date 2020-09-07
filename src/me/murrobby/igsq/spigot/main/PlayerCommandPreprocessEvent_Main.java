@@ -16,15 +16,14 @@ public class PlayerCommandPreprocessEvent_Main implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerCommandPreprocess_Security(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
+	public void PlayerCommandPreprocess_Main(org.bukkit.event.player.PlayerCommandPreprocessEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
-			if(!Common_Spigot.FilterChat(event.getMessage(), event.getPlayer())) 
+			if(!Common_Spigot.filterChat(event.getMessage(), event.getPlayer())) 
 			{
 				event.setCancelled(true);
 			}
 		}
 	}
-	
 }

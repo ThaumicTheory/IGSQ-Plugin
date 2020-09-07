@@ -37,7 +37,7 @@ public class EntityDeathEvent_Main implements Listener
 						Location location = enderDragon.getLocation();
 						location.setX(0);
 						location.setZ(0);
-						Common_Spigot.GetHighestBlock(location,255).getLocation().add(0, 1, 0).getBlock().setType(Material.DRAGON_EGG);
+						Common_Spigot.getHighestBlock(location,255).getLocation().add(0, 1, 0).getBlock().setType(Material.DRAGON_EGG);
 					}
 		    	},200);
 			}

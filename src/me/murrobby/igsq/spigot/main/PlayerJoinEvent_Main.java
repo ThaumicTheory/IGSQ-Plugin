@@ -23,8 +23,7 @@ public class PlayerJoinEvent_Main implements Listener
 		
 		if(Common_Spigot.getFieldInt(player.getUniqueId().toString() + ".damage.last", "internal") == 0) 
 		{
-			Common_Spigot.Default(player);
+			Common_Spigot.applyDefault(player);
 		}
 	}
-	
 }

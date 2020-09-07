@@ -7,7 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-
+import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
@@ -41,7 +41,7 @@ public class Block_Command {
 		try 
 		{
 			material = Material.valueOf(args[0].toUpperCase());
-			playerArgs = Common_Spigot.GetBetween(args, 2, -1);
+			playerArgs = Common_Shared.getBetween(args, 2, -1);
 			if(args.length >=3) 
 			{
 				if(args[2].equalsIgnoreCase("@all")) 
@@ -49,7 +49,7 @@ public class Block_Command {
 					display = "Everyone";
 					for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
 					{
-						players = Common_Spigot.Append(players,selectedPlayer);
+						players = Common_Spigot.append(players,selectedPlayer);
 					}
 				}
 //				depracated code
@@ -70,7 +70,7 @@ public class Block_Command {
 					display = "";
 					for (String selectedPlayer : playerArgs) 
 					{ 
-						players = Common_Spigot.Append(players,Bukkit.getPlayer(selectedPlayer));
+						players = Common_Spigot.append(players,Bukkit.getPlayer(selectedPlayer));
 						display += players[players.length-1].getName() + " ";
 					}
 				}
@@ -78,7 +78,7 @@ public class Block_Command {
 		}
 		catch(Exception exception) 
 		{
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000This Block, or a Player cound not be found!"));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000This Block, or a Player cound not be found!"));
 			return false;
 		}
 		Block block = location.getBlock();
@@ -88,13 +88,13 @@ public class Block_Command {
 			{ 
 				selectedPlayer.sendBlockChange(location, material.createBlockData());
 			}
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#58FFFFGave &#C8C8C8FAKE &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#58FFFFGave &#C8C8C8FAKE &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
 			return true;
 		}
 		else if(args[1].equalsIgnoreCase("real"))
 		{
 			block.setType(Material.valueOf(args[0].toUpperCase()));
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
 			return true;
 		}
 		else if(args[1].equalsIgnoreCase("trap")) 
@@ -105,7 +105,7 @@ public class Block_Command {
 				{ 
 					selectedPlayer.sendBlockChange(location, material.createBlockData());
 				}
-				sender.sendMessage(Common_Spigot.ChatFormatter("&#58FFFFGave &#FFD700TRAP &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+				sender.sendMessage(Common_Spigot.chatFormatter("&#58FFFFGave &#FFD700TRAP &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
 			}, 2);
 			return true;
 		}
@@ -125,13 +125,13 @@ public class Block_Command {
 			}
 			else 
 			{
-				sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00block [block_ID] [*fake*/real/trap] {@all/username/*\"you\"*} {\"another user\"} ..."));
+				sender.sendMessage(Common_Spigot.chatFormatter("&#FFFF00block [block_ID] [*fake*/real/trap] {@all/username/*\"you\"*} {\"another user\"} ..."));
 				return false;
 			}
 		}
 		else
 		{
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
   			return false;
 		}
 	}

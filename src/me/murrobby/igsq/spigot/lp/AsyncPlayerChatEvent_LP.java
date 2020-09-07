@@ -22,14 +22,13 @@ public class AsyncPlayerChatEvent_LP implements Listener
 		//Player Chat Capturing
 		if(!event.isCancelled()) 
 		{
-			if(!Common_Spigot.FilterChat(event.getMessage(), event.getPlayer()))
+			if(!Common_Spigot.filterChat(event.getMessage(), event.getPlayer()))
 			{
 				event.setCancelled(true);
 			}
-			String username = Common_Spigot.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "playerdata");
+			String username = Common_Spigot.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "player");
 			if (username.equals("")) username = event.getPlayer().getName();
-			event.setFormat((Common_Spigot.GetFormattedMessage("message", new String[] {"<server>",Common_Spigot.GetFormattedMessage("server"), "<prefix>",Common_LP.GetPrefix(event.getPlayer()) , "<player>", username, "<message>", event.getMessage()})));
+			event.setFormat((Common_Spigot.getFormattedMessage("message", new String[] {"<server>",Common_Spigot.getFormattedMessage("server"), "<prefix>",Common_LP.GetPrefix(event.getPlayer()) , "<player>", username,"<suffix>",Common_LP.GetSuffix(event.getPlayer()), "<message>", event.getMessage()})));
 		}
 	}
-	
 }

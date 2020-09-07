@@ -28,22 +28,22 @@ public class Version_Command {
 		String description = plugin.getDescription().getDescription();
 		if(args.length == 0) 
 		{
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#00FFFFIGSQ Version " + version + " for " + forBuild + "!"));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#00FFFFIGSQ Version " + version + " for " + forBuild + "!"));
 			return true;
 		}
 		else if(args[0].equalsIgnoreCase("version")) 
 		{
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#00FFFFIGSQ Version " + version + "!"));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#00FFFFIGSQ Version " + version + "!"));
 			return true;
 		}
 		else if(args[0].equalsIgnoreCase("build"))
 		{
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#00FFFFIGSQ for " + forBuild + "!"));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#00FFFFIGSQ for " + forBuild + "!"));
 			return true;
 		}
 		else if(args[0].equalsIgnoreCase("description"))
 		{
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#00FFFF" + description + "!"));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#00FFFF" + description + "!"));
 			return true;
 		}
 		
@@ -61,13 +61,13 @@ public class Version_Command {
 				}
 				else 
 				{
-					sender.sendMessage(Common_Spigot.ChatFormatter("&#FFFF00version [build/version/description]"));
+					sender.sendMessage(Common_Spigot.chatFormatter("&#FFFF00version [build/version/description]"));
 					return false;
 				}
 			}
 			else 
 			{
-				sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+				sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
 	  			return false;
 			}
 	}
