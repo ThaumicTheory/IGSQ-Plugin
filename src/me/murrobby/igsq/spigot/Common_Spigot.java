@@ -226,6 +226,7 @@ public class Common_Spigot {
     }
 
     // TODO commenting
+    public static Player[] Append(Player[] array, Player value)
     public static void applyDefaultConfiguration()
     {
         addFieldDefault("MYSQL","config",true);
@@ -250,7 +251,6 @@ public class Common_Spigot {
     }
     // TODO commenting
     public static Player[] append(Player[] array, Player value)
-    {
     	Player[] arrayAppended = new Player[array.length+1];
     	for (int i = 0;i < array.length;i++)
     	{

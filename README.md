@@ -73,6 +73,7 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #ffcbcb birthday
 - #ff61f4 nitroboost
 - #ff899f supporter
+- #ff899f supporter
 
 - #67fd67 Developer
 
@@ -89,5 +90,4 @@ Official Repo of the IGSQ Minecraft server plugin.
 - OAK_PLANK database scalar query failed in Database_Spigot.ScalarCommand()
 - REDSTONE failed to create a file in Common_Spigot.createFiles()
 - STONE data in 2FA didnt exist or was corrupt upon reciept in TwoFactorAuthentication_Security.TwoFactorAuthentication()
-
 

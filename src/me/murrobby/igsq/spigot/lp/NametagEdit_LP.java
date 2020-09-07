@@ -57,7 +57,6 @@ public class NametagEdit_LP
 		nametagPrefixes.put("mod2", "&6[&bJ&eS&6] &e");
 		nametagPrefixes.put("mod3", "&6[&dS&eS&6] &e");
 		nametagPrefixes.put("council", "&5[&dC&5] &d");
-		
 		Dictionary<String, String> nametagSuffixes = new Hashtable<String, String>();
 		nametagSuffixes.put("developer", "&2 [&aD&2]");
 		nametagSuffixes.put("founder", "&3 [&bF&3]");

@@ -49,6 +49,14 @@ public class DiscordLink_Security
 				try
 				{
 					discord_accounts.next();
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.id",discord_accounts.getString(1));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.username",discord_accounts.getString(2));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nickname",discord_accounts.getString(3));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.role",discord_accounts.getString(4));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.founder",discord_accounts.getBoolean(5));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.birthday",discord_accounts.getBoolean(6));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nitroboost",discord_accounts.getBoolean(7));
+					Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.supporter",discord_accounts.getBoolean(8));
 					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.id", "player", discord_accounts.getString(1));
 					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.username","player",discord_accounts.getString(2));
 					Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.nickname","player",discord_accounts.getString(3));
@@ -66,6 +74,14 @@ public class DiscordLink_Security
 			}
 			else 
 			{
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.id","");
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.username","");
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nickname","");
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.role","default");
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.founder",false);
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.birthday",false);
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.nitroboost",false);
+				Common_Spigot.playerData.set(player.getUniqueId().toString() + ".discord.supporter",false);
 				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.id","player","");
 				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.username","player","");
 				Common_Spigot.updateField(player.getUniqueId().toString() + ".discord.nickname","player","");
