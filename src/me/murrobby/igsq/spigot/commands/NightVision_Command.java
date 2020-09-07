@@ -42,19 +42,19 @@ public class NightVision_Command {
 		}
 		catch(Exception exception) 
 		{
-			sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000Player Could not be found!"));
+			sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000Player Could not be found!"));
 			return false;
 		}
 	}
 	if(player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
 	{
 		player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-		sender.sendMessage(Common_Spigot.ChatFormatter("&#0000FFRemoved nightvision from " + display + "!"));
+		sender.sendMessage(Common_Spigot.chatFormatter("&#0000FFRemoved nightvision from " + display + "!"));
 	}
 	else 
 	{
 		player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000,255,true));
-		sender.sendMessage(Common_Spigot.ChatFormatter("&#00FFFFGave nightvision too " + display + "!"));
+		sender.sendMessage(Common_Spigot.chatFormatter("&#00FFFFGave nightvision too " + display + "!"));
 	}
 	return true;
 		
@@ -71,14 +71,14 @@ public class NightVision_Command {
 				}
 				else 
 				{
-					sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000Something Went Wrong When Executing this Command!"));
+					sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000Something Went Wrong When Executing this Command!"));
 					return false;
 				}
 				
 				}
 				else 
 				{
-					sender.sendMessage(Common_Spigot.ChatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+					sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
 		  			return false;
 				}
 		}

@@ -24,9 +24,8 @@ public class PlayerBedEnterEvent_Expert implements Listener
 			if(Common_Spigot.getFieldBool(event.getPlayer().getWorld().getUID() + ".event.bloodmoon", "internal") && event.getPlayer().getWorld().getEnvironment() != Environment.NETHER && event.getPlayer().getWorld().getEnvironment() != Environment.THE_END)	
 			{
 				event.setCancelled(true);
-				event.getPlayer().sendTitle(Common_Spigot.ChatFormatter("&#84FF00Expert Mode &#A600FFEvent Present!"),Common_Spigot.ChatFormatter("&#A600FFYou Cant Sleep Through a &#32FF82Blood Moon!"),10,70,20);
+				event.getPlayer().sendTitle(Common_Spigot.chatFormatter("&#84FF00Expert Mode &#A600FFEvent Present!"),Common_Spigot.chatFormatter("&#A600FFYou Cant Sleep Through a &#32FF82Blood Moon!"),10,70,20);
 			}
 		}
 	}
-	
 }

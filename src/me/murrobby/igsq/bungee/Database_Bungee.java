@@ -17,9 +17,9 @@ public class Database_Bungee
 	public Database_Bungee(Main_Bungee plugin)
 	{
 		Database_Bungee.plugin = plugin;
-		url = Common_Bungee.GetFieldString("MYSQL.database", "config");
-		user = Common_Bungee.GetFieldString("MYSQL.username", "config");
-		password = Common_Bungee.GetFieldString("MYSQL.password", "config");
+		url = Common_Bungee.getFieldString("MYSQL.database", "config");
+		user = Common_Bungee.getFieldString("MYSQL.username", "config");
+		password = Common_Bungee.getFieldString("MYSQL.password", "config");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(link_number int PRIMARY KEY AUTO_INCREMENT,uuid VARCHAR(36),id VARCHAR(18),current_status VARCHAR(16));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16),code VARCHAR(6),ip VARCHAR(15));");
 		UpdateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");

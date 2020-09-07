@@ -23,7 +23,7 @@ public class SlimeSplitEvent_Expert implements Listener
 		{
 			if(event.getEntity().getType() == EntityType.SLIME) 
 			{
-				if(event.getEntity().getCustomName() != null && (event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert King Slime")) || event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Warrior Slime")))) 
+				if(event.getEntity().getCustomName() != null && (event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert King Slime")) || event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Warrior Slime")))) 
 				{
 					event.setCancelled(true);
 				}
@@ -34,7 +34,7 @@ public class SlimeSplitEvent_Expert implements Listener
 			}
 			else if(event.getEntity().getType() == EntityType.MAGMA_CUBE) 
 			{
-				if(event.getEntity().getCustomName() != null && (event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert King Magma Slime")) || event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.ChatFormatter("&#84FF00Expert Warrior Magma Slime")))) 
+				if(event.getEntity().getCustomName() != null && (event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert King Magma Slime")) || event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Warrior Magma Slime")))) 
 				{
 					event.setCancelled(true);
 				}
@@ -45,5 +45,4 @@ public class SlimeSplitEvent_Expert implements Listener
 			}
 		}
 	}
-	
 }

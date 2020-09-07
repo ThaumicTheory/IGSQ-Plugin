@@ -45,7 +45,7 @@ public class Database_Spigot
 					}
 					catch (Exception exception)
 					{
-						System.out.println("Database Query Close: " + exception.toString());
+						Common_Spigot.sendException(exception, "Failed to expire Database Query.", "BIRCH_PLANK", null);
 					}
 				} 		
 	    	},60);
@@ -53,8 +53,7 @@ public class Database_Spigot
         }
         catch (SQLException exception) 
         {
-        	System.out.println("Database Query:" + exception.toString());
-        	exception.printStackTrace();
+        	Common_Spigot.sendException(exception, "Database Query: " + sql + " failed", "BIRCH_LOG", null);
         	return null;
         } 
     }
@@ -69,8 +68,7 @@ public class Database_Spigot
         }
         catch (SQLException exception) 
         {
-        	System.out.println("Database Update:" + exception.toString());
-        	exception.printStackTrace();
+        	Common_Spigot.sendException(exception, "Database Update: " + sql + " failed", "ACACIA_LOG", null);
         }
     }
 	public static int ScalarCommand(String sql) 
@@ -87,8 +85,7 @@ public class Database_Spigot
         } 
         catch (SQLException exception) 
         {
-        	System.out.println("Database Scalar:" + exception.toString());
-        	exception.printStackTrace();
+        	Common_Spigot.sendException(exception, "Database Scalar Query: " + sql + " failed", "OAK_PLANK", null);
         	return -1;
         } 
     }

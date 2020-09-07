@@ -35,14 +35,14 @@ public class ChatEvent_Bungee implements Listener
 				{
 					server = player.getServer().getInfo().getName().toUpperCase();
 				}
-				System.out.println(Common_Bungee.GetFormattedMessageConsole("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
+				System.out.println(Common_Bungee.getFormattedMessageConsole("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
 				if(!player.hasPermission("igsq.commandwatchbypass"))
 				{
 					for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
 					{
 						if(selectedPlayer.hasPermission("igsq.commandwatch") && selectedPlayer != player)
 						{
-							selectedPlayer.sendMessage(Common_Bungee.GetFormattedMessage("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
+							selectedPlayer.sendMessage(Common_Bungee.getFormattedMessage("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
 						}
 					}
 				}
@@ -56,7 +56,7 @@ public class ChatEvent_Bungee implements Listener
 					String[] message = event.getMessage().split(" ");
 					for(String string : message) 
 					{
-						String discordUsername = Common_Bungee.GetFieldString(selectedPlayer.getUniqueId() + ".DISCORD.username", "playerData");
+						String discordUsername = Common_Bungee.getFieldString(selectedPlayer.getUniqueId() + ".discord.username", "player");
 						if(string.equalsIgnoreCase("@" + selectedPlayer.getName()) || (discordUsername != null && (!discordUsername.equalsIgnoreCase("")) && event.getMessage().contains("@" + discordUsername)))
 						{
 							try

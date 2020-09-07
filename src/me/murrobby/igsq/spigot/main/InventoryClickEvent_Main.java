@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 
+import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
 
@@ -32,7 +33,7 @@ public class InventoryClickEvent_Main implements Listener
 				{
 					if(event.getCurrentItem().getType() == Material.NAME_TAG) 
 					{
-						illegalWords = Common_Spigot.ArrayAppend(illegalNameTagWords, Common_Spigot.illegalChats);
+						illegalWords = Common_Shared.arrayAppend(illegalNameTagWords, Common_Spigot.illegalChats);
 					}
 					else 
 					{
@@ -44,11 +45,11 @@ public class InventoryClickEvent_Main implements Listener
 				       {
 				    	   if(event.getWhoClicked().hasPermission("IGSQ.ItemNameOverride")) 
 				    	   {
-				    		   event.getWhoClicked().sendMessage(Common_Spigot.GetFormattedMessage("illegalitemnameoverride",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
+				    		   event.getWhoClicked().sendMessage(Common_Spigot.getFormattedMessage("illegalitemnameoverride",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
 				    	   }
 				    	   else 
 				    	   {
-				    		   event.getWhoClicked().sendMessage(Common_Spigot.GetFormattedMessage("illegalitemname",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
+				    		   event.getWhoClicked().sendMessage(Common_Spigot.getFormattedMessage("illegalitemname",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
 					    	   event.setCancelled(true);
 				    	   }
 				       }
@@ -57,5 +58,4 @@ public class InventoryClickEvent_Main implements Listener
 			}
 		}
 	}
-	
 }

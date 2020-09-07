@@ -17,17 +17,17 @@ public class PreLoginEvent_Security implements Listener
 	@EventHandler
 	public void PreLogin_Security(net.md_5.bungee.api.event.PreLoginEvent event) 
 	{
-		Integer highestProtocol = Integer.parseInt(Common_Bungee.GetFieldString("SUPPORT.protocol.highest", "config"));
-		Integer lowestProtocol = Integer.parseInt(Common_Bungee.GetFieldString("SUPPORT.protocol.lowest", "config"));
+		Integer highestProtocol = Integer.parseInt(Common_Bungee.getFieldString("SUPPORT.protocol.highest", "config"));
+		Integer lowestProtocol = Integer.parseInt(Common_Bungee.getFieldString("SUPPORT.protocol.lowest", "config"));
 		int playerProtocol = event.getConnection().getVersion();
 		if(playerProtocol < lowestProtocol && lowestProtocol != -1) 
 		{
-			event.setCancelReason(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&cYour Client running protocol "+ playerProtocol + ", is lower than the lowest supported protocol "+ lowestProtocol +".")));
+			event.setCancelReason(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&cYour Client running protocol "+ playerProtocol + ", is lower than the lowest supported protocol "+ lowestProtocol +".")));
 			event.setCancelled(true);
 		}
 		else if(playerProtocol > highestProtocol && highestProtocol != -1) 
 		{
-			event.setCancelReason(TextComponent.fromLegacyText(Common_Bungee.ChatFormatter("&#CD0000Your Client running protocol "+ playerProtocol + ", is higher than the highest supported protocol "+ highestProtocol +".")));
+			event.setCancelReason(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000Your Client running protocol "+ playerProtocol + ", is higher than the highest supported protocol "+ highestProtocol +".")));
 			event.setCancelled(true);
 		}
 	}

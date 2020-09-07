@@ -3,6 +3,7 @@ package me.murrobby.igsq.bungee;
 import java.io.File;
 import java.io.IOException;
 
+import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.config.Configuration;
@@ -12,15 +13,15 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 public class Common_Bungee {
 	static Main_Bungee bungee;
-    public static File configFile;
-    public static File playerDataFile;
-    public static File internalFile;
+
+    private static String[] fileNames = {"config","player","internal","message"};
+    private static File[] files;
+    private static Configuration[] configurations;
     private static final ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
     
-    private static Configuration config;
-    private static Configuration playerData;
-    private static Configuration internal;
-    public static void CreateFiles() 
+    
+    //TODO Java Docs
+    public static void createFiles() 
     {
 		 try
          {
@@ -28,220 +29,160 @@ public class Common_Bungee {
 	    	{
 	            bungee.getDataFolder().mkdir();
 	    	}
-	    	configFile = new File(bungee.getDataFolder(),"config.yml");
-	    	playerDataFile = new File(bungee.getDataFolder(),"playerData.yml");
-	    	internalFile = new File(bungee.getDataFolder(),"internal.yml");
-			configFile.createNewFile();
-			playerDataFile.createNewFile();
-			internalFile.createNewFile();
+	    	files = new File[fileNames.length];
+	    	configurations = new Configuration[fileNames.length];
+	    	for (int i = 0; i < fileNames.length;i++) 
+	    	{
+	    		files[i] = new File(bungee.getDataFolder(),fileNames[i] + ".yml");
+	    		files[i].createNewFile();
+	    	}
+	    	
          }
-         catch (IOException e)
+         catch (Exception e)
 		 {
 			e.printStackTrace();
 		 }
     	
     }
-    public static void LoadConfiguration()
+    //TODO Java Docs
+    public static void applyDefaultConfiguration()
     {
-        //addField("MYSQL",true);
-        AddFieldDefault("MYSQL.username","username");
-        AddFieldDefault("MYSQL.password","password");
-        AddFieldDefault("MYSQL.database","database");
-        AddFieldDefault("MESSAGE.join","&#00FFFFWelcome <player>!");
-        AddFieldDefault("MESSAGE.joinvanilla","&#00FFFFNo extra data was found in handshake! Assuming vanilla.");
-        AddFieldDefault("MESSAGE.joinforge","&#ffb900You are using a forge client with the following mods: <modlist>");
-        AddFieldDefault("MESSAGE.commandwatch","&#ffb900<server> Command &#CD0000| &#ffb900<player> &#CD0000| &#FF0000<command>");
-        AddFieldDefault("SUPPORT.luckperms","true");
-        AddFieldDefault("SUPPORT.protocol.highest","-1");
-        AddFieldDefault("SUPPORT.protocol.recommended","751");
-        AddFieldDefault("SUPPORT.protocol.lowest","340");
+        addFieldDefault("MYSQL.username","config","username");
+        addFieldDefault("MYSQL.password","config","password");
+        addFieldDefault("MYSQL.database","config","jdbc:mysql://localhost:3306/database?useSSL=false");
+        
+        addFieldDefault("SUPPORT.luckperms","config","true");
+        addFieldDefault("SUPPORT.protocol.highest","config","-1");
+        addFieldDefault("SUPPORT.protocol.recommended","config","751");
+        addFieldDefault("SUPPORT.protocol.lowest","config","340");
+        
+        
+        
+        addFieldDefault("join","message","&#00FFFFWelcome <player>!");
+        addFieldDefault("joinvanilla","message","&#00FFFFNo extra data was found in handshake! Assuming vanilla.");
+        addFieldDefault("joinforge","message","&#ffb900You are using a forge client with the following mods: <modlist>");
+        addFieldDefault("commandwatch","message","&#ffb900<server> Command &#CD0000| &#ffb900<player> &#CD0000| &#FF0000<command>");
     }
-    public static void AddFieldDefault(String path,String data) 
+    //TODO Java Docs
+    public static void addFieldDefault(String path,String fileName,String data) 
     {
-    	String existingSetting = GetFieldString(path,"config");
+    	String existingSetting = getFieldString(path,fileName);
     	if(existingSetting.equals(""))
     	{
-    		UpdateField(path,"config",data);
+    		updateField(path,fileName,data);
     	}
     }
-    
-    
-    @Deprecated
-    public static Boolean getFieldBool(String path,String fileName) 
-    {
-    	try
-    	{
-			return provider.load(new File(bungee.getDataFolder(), fileName)).getBoolean(path);
-		}
-    	catch (Exception exception)
-    	{
-			exception.printStackTrace();
-			return null;
-		}
-
-    }
-    
-    @Deprecated
+    //TODO Java Docs
     public static String getFieldString(String path,String fileName) 
     {
-    	try
+    	for(int i = 0; i < fileNames.length;i++) 
     	{
-			return provider.load(new File(bungee.getDataFolder(), fileName)).getString(path);
-		}
-    	catch (Exception exception)
-    	{
-			exception.printStackTrace();
-			return null;
-		}
+    		if(fileNames[i].equalsIgnoreCase(fileName)) 
+    		{
+    			return configurations[i].getString(path);
+    		}
+    	}
+    	return null;
     }
-    @Deprecated
+    //TODO Java Docs
+    public static boolean getFieldBool(String path,String fileName) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName)) 
+    		{
+    			return configurations[i].getBoolean(path);
+    		}
+    	}
+    	return false;
+    }
+    //TODO Java Docs
     public static int getFieldInt(String path,String fileName) 
     {
-    	try
+    	for(int i = 0; i < fileNames.length;i++) 
     	{
-			return provider.load(new File(bungee.getDataFolder(), fileName)).getInt(path);
-		}
-    	catch (Exception exception)
-    	{
-			exception.printStackTrace();
-			return -1;
-		}
-
-    }
-    public static String GetFieldString(String path,String fileName) 
-    {
-    	switch(fileName) 
-    	{
-    	case "playerData":
-    		return playerData.getString(path);
-    	case "internal":
-    		return internal.getString(path);
-    	default:
-    		return config.getString(path);
+    		if(fileNames[i].equalsIgnoreCase(fileName)) 
+    		{
+    			return configurations[i].getInt(path);
+    		}
     	}
-    }
-    public static boolean GetFieldBool(String path,String fileName) 
-    {
-    	switch(fileName) 
-    	{
-    	case "playerData":
-    		return playerData.getBoolean(path);
-    	case "internal":
-    		return internal.getBoolean(path);
-    	default:
-    		return config.getBoolean(path);
-    	}
-    }
-    public static int GetFieldInt(String path,String fileName) 
-    {
-    	switch(fileName) 
-    	{
-    	case "playerData":
-    		return playerData.getInt(path);
-    	case "internal":
-    		return internal.getInt(path);
-    	default:
-    		return config.getInt(path);
-    	}
+    	return -1;
     }
     
-
-    
-    
-    @Deprecated
-    public static void SetField(String path,String fileName,String data) 
+    //TODO Java Docs
+    public static void updateField(String path,String fileName,String data) 
     {
-    	Configuration configuration;
-    	try
+    	for(int i = 0; i < fileNames.length;i++) 
     	{
-			configuration = provider.load(new File(bungee.getDataFolder(), fileName));
-			configuration.set(path, data);
-    		provider.save(configuration, new File(bungee.getDataFolder(),fileName));
-		}
-    	catch (Exception exception)
-    	{
-			exception.printStackTrace();
-		}
-    }
-    public static void UpdateField(String path,String fileName,String data) 
-    {
-    	switch(fileName) 
-    	{
-    	case "playerData":
-    		playerData.set(path, data);
-    		break;
-    	case "internal":
-    		internal.set(path, data);
-    		break;
-    	default:
-    		config.set(path, data);
-    		break;
+    		if(fileNames[i].equalsIgnoreCase(fileName))
+    		{
+    			configurations[i].set(path, data);
+    			break;
+    		}
     	}
     }
-    public static void LoadFile(String fileName) 
+    //TODO Java Docs
+    public static void loadFile(String fileName) 
     {
     	try 
     	{
-        	switch(fileName) 
+        	for(int i = 0; i < fileNames.length;i++) 
         	{
-        	case "playerData":
-        		playerData = provider.load(playerDataFile);
-        		break;
-        	case "internal":
-        		internal = provider.load(internalFile);
-        		break;
-        	case "config":
-        		config = provider.load(configFile);
-        		break;
-        	default:
-        		config = provider.load(configFile);
-        		playerData = provider.load(playerDataFile);
-        		internal = provider.load(internalFile);
-        		break;
+        		if(fileName.equalsIgnoreCase("@all")) 
+        		{
+        			configurations[i] = provider.load(files[i]);
+        		}
+        		else if(fileNames[i].equalsIgnoreCase(fileName))
+        		{
+        			configurations[i] = provider.load(files[i]);
+        			break;
+        		}
         	}
 		}
     	catch (IOException e)
     	{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
-    public static void SaveFileChanges(String fileName) 
+    public static void saveFileChanges(String fileName) 
     {
     	try 
     	{
-        	switch(fileName) 
+        	for(int i = 0; i < fileNames.length;i++) 
         	{
-        	case "playerData":
-        		provider.save(playerData, playerDataFile);
-        		break;
-        	case "internal":
-        		provider.save(internal, internalFile);
-        		break;
-        	case "config":
-        		provider.save(config, configFile);
-        		break;
-        	default:
-        		provider.save(config, configFile);
-        		provider.save(playerData, playerDataFile);
-        		provider.save(internal, internalFile);
-        		break;
+        		if(fileName.equalsIgnoreCase("@all")) 
+        		{
+        			provider.save(configurations[i], files[i]);
+        		}
+        		else if(fileNames[i].equalsIgnoreCase(fileName))
+        		{
+        			provider.save(configurations[i], files[i]);
+        			break;
+        		}
         	}
 		}
     	catch (IOException e)
     	{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
-    public static void DisgardAndCloseFile(String fileName) 
+    //TODO Java Docs
+    public static void disgardAndCloseFile(String fileName) 
     {
-    	config = null;
-    	playerData = null;
-    	internal = null;
-    	configFile = null;
-    	playerDataFile = null;
-    	internalFile = null;
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileName.equalsIgnoreCase("@all")) 
+    		{
+    			configurations[i] = null;
+    			files[i] = null;
+    		}
+    		else if(fileNames[i].equalsIgnoreCase(fileName))
+    		{
+    			configurations[i] = null;
+    			files[i] = null;
+    			break;
+    		}
+    	}
     }
     
     /**
@@ -250,7 +191,7 @@ public class Common_Bungee {
      * @see net.md_5.bungee.api.ChatColor#of(String)
      * @return <b>String</b>
      */
-    public static String ChatFormatter(String textToColour) 
+    public static String chatFormatter(String textToColour) 
     {
     	String[] textToColourChars = textToColour.split("");
     	String rebuiltText = "";
@@ -268,7 +209,7 @@ public class Common_Bungee {
      * @see net.md_5.bungee.api.ChatColor#translateAlternateColorCodes(char,String)
      * @return <b>String</b>
      */
-    public static String ChatFormatterConsole(String textToColour) 
+    public static String chatFormatterConsole(String textToColour) 
     {
     	String[] textToColourChars = textToColour.split("");
     	String rebuiltText = "";
@@ -283,147 +224,95 @@ public class Common_Bungee {
     
     
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #ChatFormatter(String)}.
-     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #Depend(String[],int)}
+     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #chatFormatter(String)}.
+     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #depend(String[],int)}
      * @see #getFieldString
-     * @see #GetFormattedMessage(String)
-     * @see #GetFormattedMessage(String, String,String)
+     * @see #getFormattedMessage(String)
+     * @see #getFormattedMessage(String, String,String)
      * @return <b>BaseComponent[]</b>
      */
-	public static BaseComponent[] GetFormattedMessage(String messageName, String[] wildcards)
+	public static BaseComponent[] getFormattedMessage(String messageName, String[] wildcards)
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Bungee.Depend(wildcards, wildcards.length-1);
+			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
-		String message = getFieldString("MESSAGE." + messageName, "config.yml");
+		String message = getFieldString(messageName, "message");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
-    	return TextComponent.fromLegacyText(Common_Bungee.ChatFormatter(message));
+    	return TextComponent.fromLegacyText(Common_Bungee.chatFormatter(message));
 	}
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #ChatFormatterConsole(String)}. This Version is intended for use In Consoles & Legacy Only!
-     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #Depend(String[],int)}
+     * Gets a message & replaces wildcards with values defined. this override accepts an array of wildcards and their replacements. Implements {@link #chatFormatterConsole(String)}. This Version is intended for use In Consoles & Legacy Only!
+     * @apiNote Takes From MESSAGE. in config.yml. if array is odd last record will be cut {@link #depend(String[],int)}
      * @see #getFieldString
-     * @see #GetFormattedMessageConsole(String)
-     * @see #GetFormattedMessageConsole(String, String,String)
+     * @see #getFormattedMessageConsole(String)
+     * @see #getFormattedMessageConsole(String, String,String)
      * @return <b>String</b>
      */
-	public static String GetFormattedMessageConsole(String messageName, String[] wildcards)
+	public static String getFormattedMessageConsole(String messageName, String[] wildcards)
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Bungee.Depend(wildcards, wildcards.length-1);
+			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
-		String message = getFieldString("MESSAGE." + messageName, "config.yml");
+		String message = getFieldString(messageName, "message");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
-    	return Common_Bungee.ChatFormatterConsole(message);
+    	return Common_Bungee.chatFormatterConsole(message);
 	}
 	
 	
 	
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #ChatFormatter(String)}.
+     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #chatFormatter(String)}.
      * @apiNote Takes From MESSAGE. in config.yml
      * @see #getFieldString
-     * @see #GetFormattedMessage(String)
-     * @see #GetFormattedMessage(String, String[])
+     * @see #getFormattedMessage(String)
+     * @see #getFormattedMessage(String, String[])
      * @return <b>BaseComponent[]</b>
      */
-	public static BaseComponent[] GetFormattedMessage(String messageName, String replace,String with)
+	public static BaseComponent[] getFormattedMessage(String messageName, String replace,String with)
 	{
-    	return TextComponent.fromLegacyText(Common_Bungee.ChatFormatter(getFieldString("MESSAGE." + messageName, "config.yml").replace(replace, with)));
+    	return TextComponent.fromLegacyText(Common_Bungee.chatFormatter(getFieldString(messageName, "message").replace(replace, with)));
 	}
 	 /**
-     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #ChatFormatterConsole(String)}.This Version is intended for use In Consoles & Legacy Only!
+     * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #chatFormatterConsole(String)}.This Version is intended for use In Consoles & Legacy Only!
      * @apiNote Takes From MESSAGE. in config.yml
      * @see #getFieldString
-     * @see #GetFormattedMessageConsole(String)
-     * @see #GetFormattedMessageConsole(String, String[])
+     * @see #getFormattedMessageConsole(String)
+     * @see #getFormattedMessageConsole(String, String[])
      * @return <b>String</b>
      */
-	public static String GetFormattedMessageConsole(String messageName, String replace,String with)
+	public static String getFormattedMessageConsole(String messageName, String replace,String with)
 	{
-    	return Common_Bungee.ChatFormatterConsole(getFieldString("MESSAGE." + messageName, "config.yml").replace(replace, with));
+    	return Common_Bungee.chatFormatterConsole(getFieldString(messageName, "message").replace(replace, with));
 	}
 	
 	
 	
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #ChatFormatter(String)}.
+     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #chatFormatter(String)}.
      * @apiNote Takes From MESSAGE. in config.yml
      * @see #getFieldString
-     * @see #GetFormattedMessage(String,String,String)
-     * @see #GetFormattedMessage(String, String[])
+     * @see #getFormattedMessage(String,String,String)
+     * @see #getFormattedMessage(String, String[])
      * @return <b>BaseComponent[]</b>
      */
-	public static BaseComponent[] GetFormattedMessage(String messageName)
+	public static BaseComponent[] getFormattedMessage(String messageName)
 	{
-    	return TextComponent.fromLegacyText(Common_Bungee.ChatFormatter(getFieldString("MESSAGE." + messageName, "config.yml")));
+    	return TextComponent.fromLegacyText(Common_Bungee.chatFormatter(getFieldString(messageName, "message")));
 	}
     /**
-     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #ChatFormatterConsole(String)}.This Version is intended for use In Consoles & Legacy Only!
+     * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #chatFormatterConsole(String)}.This Version is intended for use In Consoles & Legacy Only!
      * @apiNote Takes From MESSAGE. in config.yml
      * @see #getFieldString
-     * @see #GetFormattedMessageConsole(String,String,String)
-     * @see #GetFormattedMessageConsole(String, String[])
+     * @see #getFormattedMessageConsole(String,String,String)
+     * @see #getFormattedMessageConsole(String, String[])
      * @return <b>String</b>
      */
-	public static String GetFormattedMessageConsole(String messageName)
+	public static String getFormattedMessageConsole(String messageName)
 	{
-    	return Common_Bungee.ChatFormatterConsole(getFieldString("MESSAGE." + messageName, "config.yml"));
+    	return Common_Bungee.chatFormatterConsole(getFieldString(messageName, "message"));
 	}
-	
-	
-	
-	
-	
-	
-    public static String[] Depend(String[] array, int location)
-    {
-        String[] arrayDepended = new String[array.length-1];
-        int hitRemove = 0;
-        for (int i = 0;i < array.length;i++)
-        {
-            if(location != i){
-                arrayDepended[i-hitRemove] = array[i];
-            }
-            else{
-                hitRemove++;
-            }
-        }
-        return arrayDepended;
-    }
-    /**
-     * Removes all text before a given character. If the character is not found the whole string is returned.
-     * @apiNote used in commands to remove the command identifier minecraft: etc
-     * @return <b>String</b>
-     */
-    public static String RemoveBeforeCharacter(String string,char target) 
-    {
-    	Boolean targetFound = false;
-    	char[] charArray = string.toCharArray();
-    	String rebuiltString = "";
-    	for(int i = 0;i < string.length();i++) 
-    	{
-    		if(!targetFound)
-    		{
-    			if(charArray[i] == target && !targetFound) targetFound = true;
-    		}
-    		else rebuiltString += charArray[i];
-    	}
-    	if(targetFound) return rebuiltString;
-    	else return string;
-    }
-    /**
-     * Removes null and replaces it with an empty String
-     * @apiNote used for sensitive data queries
-     * @return <b>String</b>
-     */
-    public static String removeNull(String string) 
-    {
-    	if(string == null) return "";
-    	else return string;
-    }
 }

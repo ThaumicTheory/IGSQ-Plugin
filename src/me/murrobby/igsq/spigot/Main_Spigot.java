@@ -13,7 +13,6 @@ import me.murrobby.igsq.spigot.main.EntityDeathEvent_Main;
 import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
-import me.murrobby.igsq.spigot.main.ThunderChangeEvent_Main;
 import me.murrobby.igsq.spigot.security.Main_Security;
 import me.murrobby.igsq.spigot.commands.Main_Command;
 
@@ -27,10 +26,10 @@ public class Main_Spigot extends JavaPlugin{
 	@Override
 	public void onEnable()
 	{ 
-		Common_Spigot.plugin = this;
-		Common_Spigot.loadConfiguration();
-		Common_Spigot.createPlayerData();
-		Common_Spigot.createInternalData();
+		Common_Spigot.spigot = this;
+		Common_Spigot.createFiles();
+		Common_Spigot.loadFile("@all");
+		Common_Spigot.applyDefaultConfiguration();
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
     	{
 
@@ -58,7 +57,7 @@ public class Main_Spigot extends JavaPlugin{
 					    	  		player.playSound(player.getLocation(), Sound.valueOf(arg1), Float.parseFloat(arg2), Float.parseFloat(arg3));
 					    	  		break;
 					    	  	case "mention":
-					    	  		player.sendMessage(Common_Spigot.ChatFormatter("&#FF00FF" + arg3 + " &#A900FFMentioned You In &#FF00FF" + arg2 + " &#A900FFSaying &#C8C8FF" + arg1));
+					    	  		player.sendMessage(Common_Spigot.chatFormatter("&#FF00FF" + arg3 + " &#A900FFMentioned You In &#FF00FF" + arg2 + " &#A900FFSaying &#C8C8FF" + arg1));
 					    	  		break;
 					    	  	default:
 					    	  		break;
@@ -68,10 +67,20 @@ public class Main_Spigot extends JavaPlugin{
 				}
 				catch (Exception e) 
 				{
-					e.printStackTrace();
+					Common_Spigot.sendException(e,"Command communicator error","OAK_LOG",null);
 				}
 			} 		
     	}, 0, 20);
+		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
+    	{
+
+			@Override
+			public void run() 
+			{
+				Common_Spigot.saveFileChanges("@all");
+				Common_Spigot.loadFile("@all");
+			} 		
+    	}, 20, 600);
 		
 		
 		new Database_Spigot(this);
@@ -81,7 +90,6 @@ public class Main_Spigot extends JavaPlugin{
 		new PlayerJoinEvent_Main(this);
 		new InventoryClickEvent_Main(this);
 		new PlayerCommandPreprocessEvent_Main(this);
-		new ThunderChangeEvent_Main(this);
 		new EntityDeathEvent_Main(this);
 		
 		new Main_Expert(this);
@@ -114,6 +122,8 @@ public class Main_Spigot extends JavaPlugin{
 	{
 		this.getServer().getScheduler().cancelTasks(this);
 		this.getServer().getPluginManager().disablePlugin(this);
+		Common_Spigot.saveFileChanges("@all");
+		Common_Spigot.disgardAndCloseFile("@all");
 	}
 	
 }
