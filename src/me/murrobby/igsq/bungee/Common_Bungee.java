@@ -1,11 +1,14 @@
 package me.murrobby.igsq.bungee;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-
 import me.murrobby.igsq.shared.Common_Shared;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -14,12 +17,49 @@ import net.md_5.bungee.config.YamlConfiguration;
 public class Common_Bungee {
 	static Main_Bungee bungee;
 
-    private static String[] fileNames = {"config","player","internal","message"};
+    public static String[] fileNames = {"config","player","internal","message"};
     private static File[] files;
     private static Configuration[] configurations;
     private static final ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
     
     
+    
+    
+    
+    public static void SendConfigUpdate(String path,String fileName,String data) 
+    {
+    	String[] servers = new String[0];
+    	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
+    	{
+    		Boolean serverChecked = false;
+    		for (String serversDone : servers) 
+    		{
+    			if(serversDone.equals(player.getServer().getInfo().getName())) 
+    			{
+    				serverChecked = true;
+    				break;
+    			}
+    		}
+    		if((!serverChecked) && player.getServer() != null) 
+    		{
+				servers = Common_Shared.append(servers, player.getServer().getInfo().getName());
+    			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        		DataOutputStream out = new DataOutputStream(stream);
+        		try
+        		{
+        			out.writeUTF(Common_Shared.removeNull(fileName));
+        			out.writeUTF(Common_Shared.removeNull(path));
+        			out.writeUTF(Common_Shared.removeNull(data));
+        			player.getServer().getInfo().sendData("igsq:yml", stream.toByteArray());
+        		}
+        		catch (IOException e)
+        		{
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+    		}
+    	}
+    }
     //TODO Java Docs
     public static void createFiles() 
     {
@@ -79,7 +119,9 @@ public class Common_Bungee {
     	{
     		if(fileNames[i].equalsIgnoreCase(fileName)) 
     		{
-    			return configurations[i].getString(path);
+    			String data = configurations[i].getString(path);
+    			SendConfigUpdate(path,fileName,data);
+    			return data;
     		}
     	}
     	return null;
@@ -116,7 +158,10 @@ public class Common_Bungee {
     	{
     		if(fileNames[i].equalsIgnoreCase(fileName))
     		{
+    			
     			configurations[i].set(path, data);
+    			SendConfigUpdate(path,fileName,data);
+    			
     			break;
     		}
     	}

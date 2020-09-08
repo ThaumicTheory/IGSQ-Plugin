@@ -32,8 +32,6 @@ public class Main_Security
 	public static void Start_Security() //Tasks will need to be closed if security is turned off therefor they will need to be rerun for enabling security
 	{
 		taskID++;
-		new TwoFactorAuthentication_Security(plugin,taskID);
-		new DiscordLink_Security(plugin,taskID);
 		new AccountProtection_Security(plugin,taskID);
 	}
 }

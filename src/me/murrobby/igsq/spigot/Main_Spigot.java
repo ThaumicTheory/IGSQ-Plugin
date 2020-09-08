@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import me.murrobby.igsq.spigot.expert.Main_Expert;
@@ -16,16 +17,20 @@ import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
 import me.murrobby.igsq.spigot.security.Main_Security;
 import me.murrobby.igsq.spigot.commands.Main_Command;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.Random;
 import java.util.UUID;
 
-public class Main_Spigot extends JavaPlugin{
+public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 	public BukkitScheduler scheduler = getServer().getScheduler();
 	Random random = new Random();
 	@Override
 	public void onEnable()
 	{ 
+		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:yml", this);
 		Common_Spigot.spigot = this;
 		Common_Spigot.createFiles();
 		Common_Spigot.loadFile("@all");
@@ -124,6 +129,28 @@ public class Main_Spigot extends JavaPlugin{
 		this.getServer().getPluginManager().disablePlugin(this);
 		Common_Spigot.saveFileChanges("@all");
 		Common_Spigot.disgardAndCloseFile("@all");
+	}
+
+	@Override
+	public void onPluginMessageReceived(String channel, Player player, byte[] message)
+	{
+		if(channel.equals("igsq:yml")) 
+		{
+	        DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
+			try
+			{
+				String fileName = in.readUTF();
+				String path = in.readUTF();
+				String data = in.readUTF();
+				if(data.equalsIgnoreCase("false") || data.equalsIgnoreCase("true")) Common_Spigot.updateField(path, fileName, Boolean.valueOf(data));
+				else if(Integer.getInteger(data) != null) Common_Spigot.updateField(path, fileName, Integer.getInteger(data));
+				else Common_Spigot.updateField(path, fileName, data);
+			}
+			catch (IOException e)
+			{
+				Common_Spigot.sendException(e,"Plugin Messaging Channel "+ channel +" Failed.","REDSTONE_LAMP", player);
+			}
+		}
 	}
 	
 }

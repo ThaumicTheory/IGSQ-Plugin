@@ -27,6 +27,7 @@ public class Common_Security
 		}
     	return true;
     }
+    @Deprecated
     public static boolean SecurityProtection(Player player,String cancelName) //returning true means that twofa protection should be enabled false otherwise
     {
 		String player2FA = Common_Spigot.getFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "player");
