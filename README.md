@@ -88,6 +88,7 @@ Official Repo of the IGSQ Minecraft server plugin.
 - OAK_LOG command communicator failed in Main_Spigot.run() 
 - OAK_PLANK database scalar query failed in Database_Spigot.ScalarCommand()
 - REDSTONE failed to create a file in Common_Spigot.createFiles()
+- REDSTONE_LAMP plugin Messaging Channel Failed Main_Spigot.onPluginMessageReceived()
 - STONE data in 2FA didnt exist or was corrupt upon reciept in TwoFactorAuthentication_Security.TwoFactorAuthentication()
 
 

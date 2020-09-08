@@ -27,7 +27,7 @@ public class Common_Spigot {
      * @apiNote Used in {@link #createFiles()} to instansiate the filesnames.
      * @see java.io.File
      */
-    private static String[] fileNames = {"config","player","internal","message"};
+    public static String[] fileNames = {"config","player","internal","message"};
     /**
      * files is a {@link java.io.File File} array of all of the files that can be used.
      * @apiNote Used in {@link #loadFile(String)} to get data from file & in {@link #saveFileChanges(String)} to save data to file
@@ -499,4 +499,17 @@ public class Common_Spigot {
     		}
 		}
     }
+	public static void InterpretMessage(String message, Player player)
+	{
+		System.out.println("Message: " + message);
+		String[] args = message.split(".");
+		if(args.length == 3)
+		{
+    		if(args[0].equalsIgnoreCase(fileNames[1])) 
+    		{
+    			updateField(player.getUniqueId() +"." +args[1], args[0], args[2]);
+    		}
+		}
+		else System.out.println("Length was not the right size was " + args.length + " needed 3.");
+	}
 }

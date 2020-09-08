@@ -3,6 +3,7 @@ package me.murrobby.igsq.bungee;
 import java.util.concurrent.TimeUnit;
 
 import me.murrobby.igsq.bungee.commands.Link_Command;
+import me.murrobby.igsq.bungee.commands.Test_Command;
 import me.murrobby.igsq.bungee.commands.TwoFA_Command;
 import me.murrobby.igsq.bungee.lp.Main_LP;
 import me.murrobby.igsq.bungee.main.ChatEvent_Bungee;
@@ -16,6 +17,7 @@ public class Main_Bungee extends Plugin
 	@Override
 	public void onEnable()
 	{
+		this.getProxy().registerChannel("igsq:yml");
 		Common_Bungee.bungee = this;
 		Common_Bungee.createFiles();
 		Common_Bungee.loadFile("@all");
@@ -42,6 +44,7 @@ public class Main_Bungee extends Plugin
 		new Main_Security(this);
 		getProxy().getPluginManager().registerCommand(this,new Link_Command());
 		getProxy().getPluginManager().registerCommand(this,new TwoFA_Command());
+		getProxy().getPluginManager().registerCommand(this,new Test_Command());
 		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && Common_Bungee.getFieldString("SUPPORT.luckperms", "config").equalsIgnoreCase("true")) 
 		{
 			System.out.println("Luckperms Module Enabled.");

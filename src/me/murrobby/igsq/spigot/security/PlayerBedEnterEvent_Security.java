@@ -18,7 +18,7 @@ public class PlayerBedEnterEvent_Security implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if (Common_Security.SecurityProtection(event.getPlayer(),"Enter Beds")) event.setCancelled(true);
+			if (Common_Security.SecurityProtectionQuery(event.getPlayer())) event.setCancelled(true);
 		}
 	}
 	

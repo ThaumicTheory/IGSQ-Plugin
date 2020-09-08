@@ -16,10 +16,7 @@ public class PlayerInteractEvent_Security implements Listener
 	@EventHandler
 	public void PlayerInteract_Security(org.bukkit.event.player.PlayerInteractEvent event) 
 	{
-		String message = "Interact";
-		if(!event.getMaterial().isAir()) message += " With " + event.getMaterial();
-		if(event.getClickedBlock() != null) message += " On " + event.getClickedBlock().getType();
-		if (Common_Security.SecurityProtection(event.getPlayer(),message)) event.setCancelled(true);
+		if (Common_Security.SecurityProtectionQuery(event.getPlayer())) event.setCancelled(true);
 	}
 	
 }

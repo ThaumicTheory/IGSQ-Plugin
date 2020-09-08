@@ -19,7 +19,6 @@ public class Common_Security
     	command = Common_Shared.removeBeforeCharacter(command,'/');
     	command = Common_Shared.removeBeforeCharacter(command,'/');//If Player Uses Worldedit a // will be present in command
     	command = Common_Shared.removeBeforeCharacter(command,':');
-    	System.out.println(command);
 		if (command != null && sender != null) for(String illegalCommand: illegalCommands)
 		{
 			if(command.equalsIgnoreCase(illegalCommand)) 
@@ -45,6 +44,7 @@ public class Common_Security
 		}
     	return false;
     }
+    @Deprecated
     public static boolean SecurityProtection(ProxiedPlayer player,String cancelName) //returning true means that twofa protection should be enabled false otherwise
     {
 		String player2FA = Common_Bungee.getFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "player");

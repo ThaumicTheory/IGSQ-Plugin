@@ -18,7 +18,7 @@ public class PlayerDropItemEvent_Security implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if (Common_Security.SecurityProtection(event.getPlayer(),"Drop " + event.getItemDrop().getItemStack().getType())) event.setCancelled(true);
+			if (Common_Security.SecurityProtectionQuery(event.getPlayer())) event.setCancelled(true);
 		}
 	}
 	

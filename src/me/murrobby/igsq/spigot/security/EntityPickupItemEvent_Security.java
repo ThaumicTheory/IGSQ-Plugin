@@ -22,7 +22,7 @@ public class EntityPickupItemEvent_Security implements Listener
 			if(event.getEntity() instanceof Player) 
 			{
 				Player player = (Player) event.getEntity();
-				if (Common_Security.SecurityProtection(player,"Pickup " + event.getItem().getItemStack().getType())) event.setCancelled(true);
+				if (Common_Security.SecurityProtectionQuery(player)) event.setCancelled(true);
 			}
 		}
 	}
