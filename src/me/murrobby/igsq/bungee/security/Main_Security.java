@@ -14,6 +14,8 @@ public class Main_Security
 		new PreLoginEvent_Security(plugin);
 		new ChatEvent_Security(plugin);
 		new TabCompleteEvent_Security(plugin);
+		new PluginMessageEvent_Security(plugin);
+		new ServerConnectEvent_Security(plugin);
 		Start_Security();
 	}
 	public static void Start_Security() //Tasks will need to be closed if security is turned off therefor they will need to be rerun for enabling security

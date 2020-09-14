@@ -1,7 +1,6 @@
 package me.murrobby.igsq.bungee.main;
 
 import me.murrobby.igsq.bungee.Common_Bungee;
-import me.murrobby.igsq.bungee.Database_Bungee;
 import me.murrobby.igsq.bungee.Main_Bungee;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -51,28 +50,34 @@ public class ChatEvent_Bungee implements Listener
 			{
 				
 				for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
-				{;
-					if(player == selectedPlayer) break;
+				{
+					if(player == selectedPlayer) continue;
+					Boolean sendmessage = false;
 					String[] message = event.getMessage().split(" ");
+					String discordUsername = Common_Bungee.getFieldString(selectedPlayer.getUniqueId() + ".discord.username", "player");
 					for(String string : message) 
 					{
-						String discordUsername = Common_Bungee.getFieldString(selectedPlayer.getUniqueId() + ".discord.username", "player");
-						if(string.equalsIgnoreCase("@" + selectedPlayer.getName()) || (discordUsername != null && (!discordUsername.equalsIgnoreCase("")) && event.getMessage().contains("@" + discordUsername)))
+
+						if(string.equalsIgnoreCase("@" + selectedPlayer.getName()))
 						{
-							try
-							{
-								Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1,arg2,arg3) VALUES(null,'sound','"+ selectedPlayer.getUniqueId().toString() +"','BLOCK_NOTE_BLOCK_PLING','1','1');");
-								if(selectedPlayer.getServer() != player.getServer()) 
-								{
-									Database_Bungee.UpdateCommand("INSERT INTO player_command_communicator(command_number,command,uuid,arg1,arg2,arg3) VALUES(null,'mention','"+ selectedPlayer.getUniqueId().toString() +"','" + event.getMessage() +"','" + player.getServer().getInfo().getName().toUpperCase()  +"','" + player.getName() +"');");
-								}
-							}
-							catch(Exception exception) 
-							{
-								exception.printStackTrace();
-							}
-							break;
+							sendmessage = true;
 						}
+					}
+					if(sendmessage || ((discordUsername != null && (!discordUsername.equalsIgnoreCase("")) && event.getMessage().contains("@" + discordUsername)))) 
+					{
+						try
+						{
+							Common_Bungee.sendSound(selectedPlayer, "BLOCK_NOTE_BLOCK_PLING", 1, 1);
+							if(!selectedPlayer.getServer().getInfo().getName().equals(player.getServer().getInfo().getName())) 
+							{
+								selectedPlayer.sendMessage(Common_Bungee.getFormattedMessage("mention", new String[] {"<mentioner>",player.getName(),"<mentionerserver>",player.getServer().getInfo().getName().toUpperCase(),"<message>",event.getMessage()}));
+							}
+						}
+						catch(Exception exception) 
+						{
+							exception.printStackTrace();
+						}
+						break;
 					}
 				}
 			}

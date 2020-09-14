@@ -28,7 +28,7 @@ public class AsyncPlayerChatEvent_Main implements Listener
 			}
 			String username = Common_Spigot.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "player");
 			if (username.equals("")) username = event.getPlayer().getName();
-			event.setFormat((Common_Spigot.chatFormatter(Common_Spigot.getFormattedMessage("message", new String[] {"<server>",Common_Spigot.getFormattedMessage("server"), "<prefix>","", "<player>", username,"<suffix>","", "<message>", event.getMessage()}))));
+			event.setFormat((Common_Spigot.chatFormatter(Common_Spigot.getFormattedMessage("message", new String[] {"<server>",Common_Spigot.getFieldString("server","internal"), "<prefix>","", "<player>", username,"<suffix>","", "<message>", event.getMessage()}))));
 		}
 	}
 	

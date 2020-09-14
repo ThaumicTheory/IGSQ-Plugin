@@ -10,6 +10,8 @@ import me.murrobby.igsq.bungee.main.ChatEvent_Bungee;
 import me.murrobby.igsq.bungee.main.PostLoginEvent_Bungee;
 import me.murrobby.igsq.bungee.main.ServerKickEvent_Bungee;
 import me.murrobby.igsq.bungee.security.Main_Security;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class Main_Bungee extends Plugin
@@ -18,6 +20,17 @@ public class Main_Bungee extends Plugin
 	public void onEnable()
 	{
 		this.getProxy().registerChannel("igsq:yml");
+		this.getProxy().registerChannel("igsq:sound");
+		
+		this.getProxy().registerChannel("FML|HS");
+		this.getProxy().registerChannel("FML");
+		this.getProxy().registerChannel("FML|MP");
+		this.getProxy().registerChannel("FML"); //Yes Forge does this
+		this.getProxy().registerChannel("FORGE");
+		
+		this.getProxy().registerChannel("REGISTER");
+		
+		this.getProxy().registerChannel("fml:handshake");
 		Common_Bungee.bungee = this;
 		Common_Bungee.createFiles();
 		Common_Bungee.loadFile("@all");
@@ -31,6 +44,23 @@ public class Main_Bungee extends Plugin
 			{
 				Common_Bungee.saveFileChanges("@all");
 				Common_Bungee.loadFile("@all");
+				String[] servers = new String[0];
+		    	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
+		    	{
+		    		Boolean serverChecked = false;
+		    		for (String serversDone : servers) 
+		    		{
+		    			if(serversDone.equals(player.getServer().getInfo().getName())) 
+		    			{
+		    				serverChecked = true;
+		    				break;
+		    			}
+		    		}
+		    		if((!serverChecked) && player.getServer() != null) 
+		    		{
+		    			Common_Bungee.sendConfigUpdate("server","internal", player.getServer().getInfo().getName(),player);
+		    		}
+		    	}
 			}
 			
     		

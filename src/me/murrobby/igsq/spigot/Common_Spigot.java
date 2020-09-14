@@ -240,12 +240,13 @@ public class Common_Spigot {
         addFieldDefault("SUPPORT.nametagedit","config",true);
         
 
-        addFieldDefault("server","message","Server");
         addFieldDefault("message","message","&#FFD000<server> &#685985| &#C8C8C8<prefix><player><suffix> &#685985| &#d256ff<message>");
         addFieldDefault("illegalitemname","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word For &#FF0000<material>&#CD0000.");
         addFieldDefault("illegalitemnameoverride","message","&#C8C8C8Normally &#FF0000<blocked> &#C8C8C8Would be A Blocked Word For &#FF0000<material> &#C8C8C8but you bypass this check.");
         addFieldDefault("illegalcommand","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Command.");
         addFieldDefault("illegalchat","message","&#CD0000Sorry! But &#FF0000<blocked> &#CD0000Is A Blocked Word.");
+        
+        addFieldDefault("server","internal","unknown");
         for(FileConfiguration configuration : configurations) configuration.options().copyDefaults(true);
     }
     // TODO commenting

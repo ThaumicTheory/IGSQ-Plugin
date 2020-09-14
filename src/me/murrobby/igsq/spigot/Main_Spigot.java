@@ -1,6 +1,5 @@
 package me.murrobby.igsq.spigot;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,21 +19,19 @@ import me.murrobby.igsq.spigot.commands.Main_Command;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.util.Random;
-import java.util.UUID;
 
 public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 	public BukkitScheduler scheduler = getServer().getScheduler();
-	Random random = new Random();
 	@Override
 	public void onEnable()
 	{ 
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:yml", this);
+		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:sound", this);
 		Common_Spigot.spigot = this;
 		Common_Spigot.createFiles();
 		Common_Spigot.loadFile("@all");
 		Common_Spigot.applyDefaultConfiguration();
+		/*
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
     	{
 
@@ -76,6 +73,7 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 				}
 			} 		
     	}, 0, 20);
+    	*/
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
     	{
 
@@ -148,7 +146,22 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 			}
 			catch (IOException e)
 			{
-				Common_Spigot.sendException(e,"Plugin Messaging Channel "+ channel +" Failed.","REDSTONE_LAMP", player);
+				Common_Spigot.sendException(e,"Plugin Messaging Channel For Configuration Failed.","REDSTONE_LAMP", player);
+			}
+		}
+		else if(channel.equals("igsq:sound")) 
+		{
+	        DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
+			try
+			{
+				String sound = in.readUTF();
+				float volume = in.readFloat();
+				float pitch = in.readFloat();
+				player.playSound(player.getLocation(), Sound.valueOf(sound.toUpperCase()), volume, pitch);
+			}
+			catch (IOException e)
+			{
+				Common_Spigot.sendException(e,"Plugin Messaging Channel For Sound Failed.","GLOWSTONE", player);
 			}
 		}
 	}

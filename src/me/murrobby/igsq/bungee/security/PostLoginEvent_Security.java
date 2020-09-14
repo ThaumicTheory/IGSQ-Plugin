@@ -25,7 +25,7 @@ public class PostLoginEvent_Security implements Listener
 		String playerUUID = player.getUniqueId().toString();
 		int playerProtocol = player.getPendingConnection().getVersion();
 		Integer recomendedProtocol = Integer.parseInt(Common_Bungee.getFieldString("SUPPORT.protocol.recommended", "config"));
-		if( playerProtocol == recomendedProtocol) 
+		if(playerProtocol == recomendedProtocol) 
 		{
 			player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FF00Your Minecraft is running the recommended version! :)")));
 		}

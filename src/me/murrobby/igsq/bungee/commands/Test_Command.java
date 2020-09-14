@@ -46,23 +46,27 @@ public class Test_Command  extends Command implements TabExecutor
 		if(sender instanceof ProxiedPlayer && args.length == 3) 
 		{
 			ProxiedPlayer player = (ProxiedPlayer) sender;
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			DataOutputStream out = new DataOutputStream(stream);
-			try
+			if(player.hasPermission("igsq.test")) 
 			{
-				out.writeUTF(args[0]);
-				if(args[0].equalsIgnoreCase("player")) out.writeUTF((player.getUniqueId().toString() + "." +args[1]));
-				else out.writeUTF(args[1]);
-				out.writeUTF(args[2]);
-				player.getServer().getInfo().sendData( "igsq:yml", stream.toByteArray());
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				DataOutputStream out = new DataOutputStream(stream);
+				try
+				{
+					out.writeUTF(args[0]);
+					if(args[0].equalsIgnoreCase("player")) out.writeUTF((player.getUniqueId().toString() + "." +args[1]));
+					else out.writeUTF(args[1]);
+					out.writeUTF(args[2]);
+					player.getServer().getInfo().sendData( "igsq:yml", stream.toByteArray());
+				}
+				catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			else sender.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission")));
 		}
-		else sender.sendMessage(new TextComponent(Common_Bungee.chatFormatter("&#FF0000This is an invalid arg length!")));
+		else sender.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FF0000This is an invalid arg length!")));
 		
 	}
 }

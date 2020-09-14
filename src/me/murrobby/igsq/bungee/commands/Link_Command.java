@@ -30,7 +30,7 @@ public class Link_Command extends Command implements TabExecutor
 			
 			if(args.length >= 1 && args[0].equalsIgnoreCase("add")) 
 			{
-				String input = ConvertArgs(args);
+				String input = Common_Shared.convertArgs(Common_Shared.depend(args, 0));
 				if(Database_Bungee.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") >= 1) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000Your Account Is Already Linked!"))); //Checks If Mc Account Is Linked First (linked accounts cannot attempt link)
 				else if(input.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FFFF00Use /link add [discord_username]"))); //If input was empty
 				else //Valid input
@@ -42,7 +42,7 @@ public class Link_Command extends Command implements TabExecutor
 			}
 			else if(args.length >= 1 && args[0].equalsIgnoreCase("remove")) 
 			{
-				String input = ConvertArgs(args);
+				String input = Common_Shared.convertArgs(Common_Shared.depend(args, 0));
 				if(Database_Bungee.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"'") == 0) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000You Have No Accounts To Remove!")));
 				else if(input.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FFFF00Use /link remove [discord_username]"))); //If input was empty
 				else //Valid input
@@ -85,21 +85,6 @@ public class Link_Command extends Command implements TabExecutor
 			}
 		}
 		else sender.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000Sorry, but only Players can link accounts!")));
-	}
-	
-	private String ConvertArgs(String[] args) 
-	{
-		String input = "";
-		String[] arrayConverted = Common_Shared.depend(args, 0);
-		for (int i = 0;arrayConverted.length > i;i++) 
-		{
-			input += arrayConverted[i];
-			if(arrayConverted.length > i+1) 
-			{
-				input += " ";
-			}
-		}
-		return input;
 	}
 	private void AddLink(String id, String username, ProxiedPlayer player) 
 	{

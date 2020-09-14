@@ -88,4 +88,18 @@ public class Common_Shared
     	if(string == null) return "";
     	else return string;
     }
+    
+	public static String convertArgs(String[] args) 
+	{
+		String input = "";
+		for (int i = 0;args.length > i;i++) 
+		{
+			input += args[i];
+			if(args.length > i+1) 
+			{
+				input += " ";
+			}
+		}
+		return input;
+	}
 }

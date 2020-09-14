@@ -12,6 +12,7 @@ public class Common_Security
 {
 	public static String[] illegalCommands = {};
 	private static String[] whitelistedCommands2FA = {"2FA"};
+	public static String[] protectedChannels = {"igsq:yml","igsq:sound"};
 	
     public static boolean FilterCommand(String command,CommandSender sender) 
     {
