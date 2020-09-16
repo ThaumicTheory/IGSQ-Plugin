@@ -14,6 +14,7 @@ public class Main_Security
 		new PreLoginEvent_Security(plugin);
 		new ChatEvent_Security(plugin);
 		new TabCompleteEvent_Security(plugin);
+		
 		new PluginMessageEvent_Security(plugin);
 		new ServerConnectEvent_Security(plugin);
 		Start_Security();

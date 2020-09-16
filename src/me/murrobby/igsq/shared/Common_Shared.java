@@ -89,7 +89,7 @@ public class Common_Shared
     	else return string;
     }
     
-	public static String convertArgs(String[] args) 
+	public static String convertArgs(String[] args,String seperator) 
 	{
 		String input = "";
 		for (int i = 0;args.length > i;i++) 
@@ -97,7 +97,7 @@ public class Common_Shared
 			input += args[i];
 			if(args.length > i+1) 
 			{
-				input += " ";
+				input +=seperator;
 			}
 		}
 		return input;

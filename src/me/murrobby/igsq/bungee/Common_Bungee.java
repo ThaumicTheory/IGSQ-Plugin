@@ -409,4 +409,5 @@ public class Common_Bungee {
 	{
     	return Common_Bungee.chatFormatterConsole(getFieldString(messageName, "message"));
 	}
+	
 }

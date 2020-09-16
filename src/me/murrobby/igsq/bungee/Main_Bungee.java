@@ -22,19 +22,11 @@ public class Main_Bungee extends Plugin
 		this.getProxy().registerChannel("igsq:yml");
 		this.getProxy().registerChannel("igsq:sound");
 		
-		this.getProxy().registerChannel("FML|HS");
-		this.getProxy().registerChannel("FML");
-		this.getProxy().registerChannel("FML|MP");
-		this.getProxy().registerChannel("FML"); //Yes Forge does this
-		this.getProxy().registerChannel("FORGE");
 		
-		this.getProxy().registerChannel("REGISTER");
-		
-		this.getProxy().registerChannel("fml:handshake");
 		Common_Bungee.bungee = this;
 		Common_Bungee.createFiles();
 		Common_Bungee.loadFile("@all");
-		Common_Bungee.applyDefaultConfiguration();
+		Common_Bungee.applyDefaultConfiguration();	
     	
     	this.getProxy().getScheduler().schedule(this, new Runnable() 
     	{
@@ -60,9 +52,10 @@ public class Main_Bungee extends Plugin
 		    		{
 		    			Common_Bungee.sendConfigUpdate("server","internal", player.getServer().getInfo().getName(),player);
 		    		}
+		    		
 		    	}
+		    	
 			}
-			
     		
     	}, 5, 30, TimeUnit.SECONDS);
     	
