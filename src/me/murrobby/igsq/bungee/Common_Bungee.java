@@ -131,6 +131,8 @@ public class Common_Bungee {
         addFieldDefault("SUPPORT.protocol.recommended","config","753");
         addFieldDefault("SUPPORT.protocol.lowest","config","340");
         
+        addFieldDefault("SERVER.backupredirect","config","hub");
+        
         
         
         addFieldDefault("join","message","&#00FFFFWelcome <player>!");

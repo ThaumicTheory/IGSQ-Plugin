@@ -1,5 +1,6 @@
 package me.murrobby.igsq.bungee.main;
 
+import me.murrobby.igsq.bungee.Common_Bungee;
 import me.murrobby.igsq.bungee.Main_Bungee;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -17,11 +18,13 @@ public class ServerKickEvent_Bungee implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			System.out.println(event.getKickReasonComponent().toString());
-			if (!event.getPlayer().getServer().getInfo().getName().equalsIgnoreCase("hub")) 
+			if(event.getPlayer().isConnected()) 
 			{
-				event.setCancelled(true);
-				event.getPlayer().connect(ProxyServer.getInstance().getServerInfo("hub"));
+				if (!event.getPlayer().getServer().getInfo().getName().equalsIgnoreCase(Common_Bungee.getFieldString("SERVER.backupredirect", "config"))) 
+				{
+					event.setCancelled(true);
+					event.getPlayer().connect(ProxyServer.getInstance().getServerInfo(Common_Bungee.getFieldString("SERVER.backupredirect", "config")));
+				}
 			}
 		}
 	}
