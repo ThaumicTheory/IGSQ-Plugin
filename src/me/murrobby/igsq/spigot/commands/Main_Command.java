@@ -66,6 +66,9 @@ public class Main_Command implements CommandExecutor, TabCompleter{
   	  		case "error":
   	  		Error_Command error = new Error_Command(plugin,this,sender,this.args);
   	  			return error.result;
+  	  		case "game":
+  	  		Game_Command game = new Game_Command(plugin,this,sender,this.args);
+  	  			return game.result;
   	  		case "realtime":
   	  			return RealTimeQuery();
   	  		case "expert":
@@ -232,7 +235,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		List<String> options = new ArrayList<String>();
 		if(args.length == 1) 
 		{
-			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version","error"};
+			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version","error","game"};
 			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		else if(args.length == 2) 
