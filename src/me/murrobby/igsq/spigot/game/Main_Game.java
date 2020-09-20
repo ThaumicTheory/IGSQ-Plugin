@@ -14,7 +14,6 @@ public class Main_Game
 	}
 	public static void Start_Game() //Tasks will close if the game is turned off therefor they will need to be rerun for enabling the game
 	{
-		new OnGameStart_Game();
 		taskID++;
 	}
 }

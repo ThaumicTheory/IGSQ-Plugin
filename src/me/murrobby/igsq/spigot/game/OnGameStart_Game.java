@@ -78,7 +78,7 @@ public class OnGameStart_Game
 			player.setHealth(20);
 			player.setMaximumAir(40);
 			player.setSaturation(0);
-			player.setWalkSpeed(1);
+			player.setWalkSpeed(0);
 			player.setSprinting(false);
 			
 			ItemStack[] armors = new ItemStack[4];

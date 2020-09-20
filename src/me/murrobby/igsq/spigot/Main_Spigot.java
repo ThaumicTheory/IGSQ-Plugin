@@ -1,7 +1,5 @@
 package me.murrobby.igsq.spigot;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -21,9 +19,7 @@ import me.murrobby.igsq.spigot.commands.Main_Command;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.util.Random;
-import java.util.UUID;
 
 public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 	public BukkitScheduler scheduler = getServer().getScheduler();
@@ -36,47 +32,6 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 		Common_Spigot.createFiles();
 		Common_Spigot.loadFile("@all");
 		Common_Spigot.applyDefaultConfiguration();
-		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
-    	{
-
-			@Override
-			public void run() 
-			{
-				ResultSet player_command_communicator = Database_Spigot.QueryCommand("SELECT * FROM player_command_communicator;");
-				try 
-				{
-					while(player_command_communicator.next()) 
-					{
-						int command_number = player_command_communicator.getInt(1);
-						String command = player_command_communicator.getString(2);
-						Player player = Bukkit.getPlayer(UUID.fromString(player_command_communicator.getString(3)));
-						String arg1 = player_command_communicator.getString(4);
-						String arg2 = player_command_communicator.getString(5);
-						String arg3 = player_command_communicator.getString(6);
-
-						if(player != null) //Player is Online
-						{
-							Database_Spigot.UpdateCommand("DELETE FROM player_command_communicator WHERE command_number = " + command_number + ";");
-					    	switch(command.toLowerCase())
-					    	{
-					    	  	case "sound":
-					    	  		player.playSound(player.getLocation(), Sound.valueOf(arg1), Float.parseFloat(arg2), Float.parseFloat(arg3));
-					    	  		break;
-					    	  	case "mention":
-					    	  		player.sendMessage(Common_Spigot.chatFormatter("&#FF00FF" + arg3 + " &#A900FFMentioned You In &#FF00FF" + arg2 + " &#A900FFSaying &#C8C8FF" + arg1));
-					    	  		break;
-					    	  	default:
-					    	  		break;
-					    	}
-						}
-					}
-				}
-				catch (Exception e) 
-				{
-					Common_Spigot.sendException(e,"Command communicator error","OAK_LOG",null);
-				}
-			} 		
-    	}, 0, 20);
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
     	{
 
