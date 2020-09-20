@@ -24,29 +24,20 @@ public class PostLoginEvent_Bungee implements Listener
 		
 		//Update mc_accounts database if required
 		int usernameUpdate = Database_Bungee.ScalarCommand("SELECT count(*) FROM mc_accounts WHERE uuid = '"+ playerUUID +"' AND username = '"+ username +"';");
-		if(usernameUpdate == 1) System.out.println("DATABASE LOG ("+ usernameUpdate + "): No action needed for "+ playerUUID + ", already updated and in minecraft accounts Database!");
-		else if(usernameUpdate == 0) 
+		if(usernameUpdate == 0) 
 		{
-			System.out.println("DATABASE LOG ("+ usernameUpdate + "): Action queued for "+ playerUUID + "!");
 			usernameUpdate = Database_Bungee.ScalarCommand("SELECT count(*) FROM mc_accounts WHERE uuid = '"+ playerUUID +"';");
 			if(usernameUpdate == 1) 
 			{
-				System.out.println("DATABASE LOG ("+ usernameUpdate + "): Action completed "+ playerUUID + " has been updated in the database!");
+			
 				Database_Bungee.UpdateCommand("UPDATE mc_accounts SET username = '"+ username +"' WHERE uuid = '"+ playerUUID +"';");
 			}
 			else if(usernameUpdate == 0) 
 			{
-				System.out.println("DATABASE LOG ("+ usernameUpdate + "): Action completed "+ playerUUID + " has been added to the database!");
 				Database_Bungee.UpdateCommand("INSERT INTO mc_accounts VALUES ('"+ playerUUID +"','" + username +"');");
 				Database_Bungee.UpdateCommand("INSERT INTO discord_2fa VALUES ('"+ playerUUID +"','kick');");
 			}
-			else System.out.println("DATABASE ERROR ("+ usernameUpdate + "): Failed Update Check "+ playerUUID + " in minecraft accounts Database!");
 		}
-		else System.out.println("DATABASE ERROR ("+ usernameUpdate + "): Failed Update Check "+ playerUUID + " in minecraft accounts Database!");
-		//welcome message
-		//player.sendMessage(Common_Bungee.GetFormattedMessage("join","<player>",username));
-		//if(player.isForgeUser()) player.sendMessage(Common_Bungee.GetFormattedMessage("joinforge","<modlist>",player.getModList().toString()));
-		//else player.sendMessage(Common_Bungee.GetFormattedMessage("joinvanilla"));
 	}
 	
 }

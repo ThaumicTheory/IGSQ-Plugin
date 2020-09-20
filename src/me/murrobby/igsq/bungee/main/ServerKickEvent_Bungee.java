@@ -17,7 +17,7 @@ public class ServerKickEvent_Bungee implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			System.out.println(event.getKickReasonComponent());
+			System.out.println(event.getKickReasonComponent().toString());
 			if (!event.getPlayer().getServer().getInfo().getName().equalsIgnoreCase("hub")) 
 			{
 				event.setCancelled(true);

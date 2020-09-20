@@ -18,6 +18,7 @@ public class Common_Bungee {
 	static Main_Bungee bungee;
 
     public static String[] fileNames = {"config","player","internal","message"};
+    private static String[] syncedFiles = {"player"};
     private static File[] files;
     private static Configuration[] configurations;
     private static final ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
@@ -26,7 +27,41 @@ public class Common_Bungee {
     
     
     
-    public static void SendConfigUpdate(String path,String fileName,String data) 
+    public static void sendSound(ProxiedPlayer player,String sound,float volume,float pitch) 
+    {
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    		DataOutputStream out = new DataOutputStream(stream);
+    		try
+    		{
+    			out.writeUTF(Common_Shared.removeNull(sound));
+    			out.writeFloat(volume);
+    			out.writeFloat(pitch);
+    			player.getServer().getInfo().sendData("igsq:sound", stream.toByteArray());
+    		}
+    		catch (IOException e)
+    		{
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    }
+    public static void sendConfigUpdate(String path,String fileName,String data,ProxiedPlayer player) 
+    {
+    			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        		DataOutputStream out = new DataOutputStream(stream);
+        		try
+        		{
+        			out.writeUTF(Common_Shared.removeNull(fileName));
+        			out.writeUTF(Common_Shared.removeNull(path));
+        			out.writeUTF(Common_Shared.removeNull(data));
+        			player.getServer().getInfo().sendData("igsq:yml", stream.toByteArray());
+        		}
+        		catch (IOException e)
+        		{
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+    	}
+    public static void sendConfigUpdate(String path,String fileName,String data) 
     {
     	String[] servers = new String[0];
     	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
@@ -34,7 +69,7 @@ public class Common_Bungee {
     		Boolean serverChecked = false;
     		for (String serversDone : servers) 
     		{
-    			if(serversDone.equals(player.getServer().getInfo().getName())) 
+    			if(player.getServer() != null && serversDone.equals(player.getServer().getInfo().getName())) 
     			{
     				serverChecked = true;
     				break;
@@ -93,7 +128,7 @@ public class Common_Bungee {
         
         addFieldDefault("SUPPORT.luckperms","config","true");
         addFieldDefault("SUPPORT.protocol.highest","config","-1");
-        addFieldDefault("SUPPORT.protocol.recommended","config","751");
+        addFieldDefault("SUPPORT.protocol.recommended","config","753");
         addFieldDefault("SUPPORT.protocol.lowest","config","340");
         
         
@@ -102,6 +137,7 @@ public class Common_Bungee {
         addFieldDefault("joinvanilla","message","&#00FFFFNo extra data was found in handshake! Assuming vanilla.");
         addFieldDefault("joinforge","message","&#ffb900You are using a forge client with the following mods: <modlist>");
         addFieldDefault("commandwatch","message","&#ffb900<server> Command &#CD0000| &#ffb900<player> &#CD0000| &#FF0000<command>");
+        addFieldDefault("mention","message","&#FF00FF<mentioner> &#A900FFMentioned You In &#FF00FF<mentionerserver> &#A900FFSaying &#C8C8FF<message>");
     }
     //TODO Java Docs
     public static void addFieldDefault(String path,String fileName,String data) 
@@ -120,7 +156,14 @@ public class Common_Bungee {
     		if(fileNames[i].equalsIgnoreCase(fileName)) 
     		{
     			String data = configurations[i].getString(path);
-    			SendConfigUpdate(path,fileName,data);
+    			for (String string : syncedFiles) 
+    			{
+    				if(string.equalsIgnoreCase(fileName)) 
+    				{
+            			sendConfigUpdate(path,fileName,data);
+            			break;
+    				}
+    			}
     			return data;
     		}
     	}
@@ -160,8 +203,14 @@ public class Common_Bungee {
     		{
     			
     			configurations[i].set(path, data);
-    			SendConfigUpdate(path,fileName,data);
-    			
+    			for (String string : syncedFiles) 
+    			{
+    				if(string.equalsIgnoreCase(fileName)) 
+    				{
+            			sendConfigUpdate(path,fileName,data);
+            			break;
+    				}
+    			}
     			break;
     		}
     	}
@@ -360,4 +409,5 @@ public class Common_Bungee {
 	{
     	return Common_Bungee.chatFormatterConsole(getFieldString(messageName, "message"));
 	}
+	
 }
