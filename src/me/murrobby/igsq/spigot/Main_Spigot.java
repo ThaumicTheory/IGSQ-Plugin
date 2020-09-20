@@ -8,6 +8,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import me.murrobby.igsq.spigot.expert.Main_Expert;
+import me.murrobby.igsq.spigot.game.Main_Game;
 import me.murrobby.igsq.spigot.lp.Main_LP;
 import me.murrobby.igsq.spigot.main.AsyncPlayerChatEvent_Main;
 import me.murrobby.igsq.spigot.main.EntityDeathEvent_Main;
@@ -116,6 +117,10 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 		{
 			System.out.println("Luckperms Module Disabled.");
 			new AsyncPlayerChatEvent_Main(this);
+		}
+		if(Common_Spigot.getFieldBool("GAMEPLAY.game", "config")) 
+		{
+			new Main_Game(this);
 		}
 	}
 

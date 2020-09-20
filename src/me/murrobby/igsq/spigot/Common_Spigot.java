@@ -235,6 +235,7 @@ public class Common_Spigot {
         
         addFieldDefault("GAMEPLAY.expert","config",false);
         addFieldDefault("GAMEPLAY.dragoneggrespawn","config",true);
+        addFieldDefault("GAMEPLAY.game","config",false);
         
         addFieldDefault("SUPPORT.luckperms","config",true);
         addFieldDefault("SUPPORT.nametagedit","config",true);
@@ -258,6 +259,21 @@ public class Common_Spigot {
     	}
     	arrayAppended[array.length] = value;
     	return arrayAppended;
+    }
+    public static Player[] depend(Player[] array, int location)
+    {
+    	Player[] arrayDepended = new Player[array.length-1];
+        int hitRemove = 0;
+        for (int i = 0;i < array.length;i++)
+        {
+            if(location != i){
+                arrayDepended[i-hitRemove] = array[i];
+            }
+            else{
+                hitRemove++;
+            }
+        }
+        return arrayDepended;
     }
     // TODO commenting
     public static void applyDefault(Player player) 
