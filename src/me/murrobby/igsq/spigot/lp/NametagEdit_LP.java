@@ -53,8 +53,8 @@ public class NametagEdit_LP
 		nametagPrefixes.put("elite", "&3[&dEl&11&3] &d");
 		nametagPrefixes.put("elite2", "&3[&dEl&92&3] &d");
 		nametagPrefixes.put("elite3", "&3[&dEl&b3&3] &d");
-		nametagPrefixes.put("mod", "&6[&5T&eS&6] &e");
-		nametagPrefixes.put("mod2", "&6[&bJ&eS&6] &e");
+		nametagPrefixes.put("mod", "&e[&6H&e] &6");
+		nametagPrefixes.put("mod2", "&6[&eS&6] &e");
 		nametagPrefixes.put("mod3", "&6[&dS&eS&6] &e");
 		nametagPrefixes.put("council", "&5[&dC&5] &d");
 		

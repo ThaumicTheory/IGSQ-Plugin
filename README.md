@@ -56,7 +56,8 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #ff0065 council
 - #fffa00 mod3
 - #ffd100 mod2
-- #ec8d00 mod
+- #eb913a mod
+
 - #cbb1ff elite3
 - #a183e6 elite2
 - #7e65be elite
@@ -75,6 +76,8 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #ff899f supporter
 
 - #67fd67 Developer
+
+- #ec8d00 mod (Trial Staff LEGACY)
 
 **Error Codes**
 
