@@ -40,6 +40,7 @@ public class ServerConnectEvent_Security implements Listener
 			}
 			else //1.13 +
 			{
+				/*
 				plugin.getProxy().registerChannel("fml:handshake");
 				plugin.getProxy().getScheduler().schedule(plugin, new Runnable() 
 		    	{
@@ -51,6 +52,7 @@ public class ServerConnectEvent_Security implements Listener
 						event.getPlayer().sendData("fml:handshake", new byte[] {0, 2, 0, 0, 0, 0});
 					} 		
 		    	}, 150, TimeUnit.MILLISECONDS);
+		    	*/
 			}
 		}
 	}

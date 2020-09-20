@@ -30,10 +30,12 @@ public class PluginMessageEvent_Security implements Listener
 			}
 			else if(event.getTag().equalsIgnoreCase("fml:handshake")) 
 			{
+				/*
 		        if(event.getData()[0] == 2 && event.getSender() instanceof ProxiedPlayer) //Modlist
 				{
 					applyModList(event.getData(),(ProxiedPlayer)event.getSender());
 				}
+				*/
 			}
 		}
 	}
