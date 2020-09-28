@@ -1,12 +1,12 @@
 package me.murrobby.igsq.spigot;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import me.murrobby.igsq.spigot.expert.Main_Expert;
-import me.murrobby.igsq.spigot.game.Main_Game;
 import me.murrobby.igsq.spigot.lp.Main_LP;
 import me.murrobby.igsq.spigot.main.AsyncPlayerChatEvent_Main;
 import me.murrobby.igsq.spigot.main.EntityDeathEvent_Main;
@@ -14,6 +14,7 @@ import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
 import me.murrobby.igsq.spigot.security.Main_Security;
+import me.murrobby.igsq.spigot.blockhunt.Main_BlockHunt;
 import me.murrobby.igsq.spigot.commands.Main_Command;
 
 import java.io.ByteArrayInputStream;
@@ -32,19 +33,17 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 		Common_Spigot.loadFile("@all");
 		Common_Spigot.applyDefaultConfiguration();
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
-    {
+		{
 
-      @Override
-      public void run() 
-      {
-        Common_Spigot.saveFileChanges("@all");
-        Common_Spigot.loadFile("@all");
-      } 		
+			@Override
+			public void run() 
+			{
+					Common_Spigot.saveFileChanges("@all");
+					Common_Spigot.loadFile("@all");
+			} 		
     	}, 20, 600);
 		
-		
 		new Database_Spigot(this);
-		
 		
 		
 		new PlayerJoinEvent_Main(this);
@@ -74,7 +73,7 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 		}
 		if(Common_Spigot.getFieldBool("GAMEPLAY.game", "config")) 
 		{
-			new Main_Game(this);
+			new Main_BlockHunt(this);
 		}
 	}
 

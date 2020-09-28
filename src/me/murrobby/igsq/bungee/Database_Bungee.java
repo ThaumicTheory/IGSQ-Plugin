@@ -20,10 +20,14 @@ public class Database_Bungee
 		url = Common_Bungee.getFieldString("MYSQL.database", "config");
 		user = Common_Bungee.getFieldString("MYSQL.username", "config");
 		password = Common_Bungee.getFieldString("MYSQL.password", "config");
-		UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(link_number int PRIMARY KEY AUTO_INCREMENT,uuid VARCHAR(36),id VARCHAR(18),current_status VARCHAR(16));");
-		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16),code VARCHAR(6),ip VARCHAR(15));");
-		UpdateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
-		UpdateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37),nickname VARCHAR(32),role VARCHAR(32),founder bit(1),birthday bit(1),nitroboost bit(1),supporter bit(1),developer bit(1));");
+		if(testDatabase()) 
+		{
+			UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(link_number int PRIMARY KEY AUTO_INCREMENT,uuid VARCHAR(36),id VARCHAR(18),current_status VARCHAR(16));");
+			UpdateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16),code VARCHAR(6),ip VARCHAR(15));");
+			UpdateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
+			UpdateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37),nickname VARCHAR(32),role VARCHAR(32),founder bit(1),birthday bit(1),nitroboost bit(1),supporter bit(1),developer bit(1));");
+		}
+		else System.err.println("A Database Error Has Occured On Startup.");
 	}
 	public static ResultSet QueryCommand(String sql) 
 	{
@@ -87,5 +91,21 @@ public class Database_Bungee
         	System.out.println("Database Scalar:" + exception.toString());
         	return -1;
         } 
+    }
+	public static Boolean testDatabase() 
+	{
+        try 
+        {
+        	Connection connection = DriverManager.getConnection(url, user, password);
+            Statement commandAdapter = connection.createStatement();
+            commandAdapter.executeUpdate("CREATE TABLE IF NOT EXISTS testDatabase(number int PRIMARY KEY AUTO_INCREMENT,test VARCHAR(36));");
+            commandAdapter.executeUpdate("DROP TABLE testDatabase;");
+            connection.close();
+            return true;
+        }
+        catch (SQLException exception) 
+        {
+        	return false;
+        }
     }
 }

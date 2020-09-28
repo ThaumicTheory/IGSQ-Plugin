@@ -4,37 +4,37 @@ import org.bukkit.command.CommandSender;
 
 import me.murrobby.igsq.spigot.Common_Spigot;
 import me.murrobby.igsq.spigot.Main_Spigot;
-import me.murrobby.igsq.spigot.game.Common_Game;
+import me.murrobby.igsq.spigot.blockhunt.Common_BlockHunt;
 
-public class Game_Command {
+public class BlockHunt_Command {
 
 	private Main_Command commands;
 	private CommandSender sender;
 	public Boolean result;
-	public Game_Command(Main_Spigot plugin,Main_Command commands,CommandSender sender,String[] args) 
+	public BlockHunt_Command(Main_Spigot plugin,Main_Command commands,CommandSender sender,String[] args) 
 	{
 		this.commands = commands;
 		
 		this.sender = sender;
-		result = GameQuery();
+		result = BlockHuntQuery();
 	}
-	private Boolean Game() 
+	private Boolean BlockHunt() 
 	{
-		Common_Game.start();
+		Common_BlockHunt.start();
 		return true;
 		
 	}
-	private Boolean GameQuery() 
+	private Boolean BlockHuntQuery() 
 	{
-			if(commands.RequirePermission("igsq.game.start")) 
+			if(commands.RequirePermission("igsq.blockhunt.start")) 
 			{
-				if(Game()) 
+				if(BlockHunt()) 
 				{
 					return true;
 				}
 				else 
 				{
-					sender.sendMessage(Common_Spigot.chatFormatter("&#FFFF00game [start]"));
+					sender.sendMessage(Common_Spigot.chatFormatter("&#FFFF00blockhunt [start]"));
 					return false;
 				}
 			}
