@@ -14,13 +14,16 @@ public class PlayerSwapHandItemsEvent_BlockHunt implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerSwapHandItems_Security(org.bukkit.event.player.PlayerSwapHandItemsEvent event) 
+	public void PlayerSwapHandItems_BlockHunt(org.bukkit.event.player.PlayerSwapHandItemsEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
-			if(Common_BlockHunt.isPlayer(event.getPlayer())) 
+			if(Common_BlockHunt.blockhuntCheck()) 
 			{
-				event.setCancelled(true);
+				if(Common_BlockHunt.isPlayer(event.getPlayer())) 
+				{
+					event.setCancelled(true);
+				}
 			}
 		}
 	}

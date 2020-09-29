@@ -13,10 +13,16 @@ public class Main_BlockHunt
 		new InventoryClickEvent_BlockHunt(plugin);
 		new PlayerSwapHandItemsEvent_BlockHunt(plugin);
 		new PlayerDropItemEvent_BlockHunt(plugin);
-		Start_BlockHunt();
+		new FoodLevelChangeEvent_BlockHunt(plugin);
+		new ProjectileHitEvent_BlockHunt(plugin);
+		new PlayerTeleportEvent_BlockHunt(plugin);
+		new EntityChangeBlockEvent_BlockHunt(plugin);
+		new EntitySpawnEvent_BlockHunt(plugin);
+		new PlayerInteractEvent_BlockHunt(plugin);
 	}
 	public static void Start_BlockHunt() //Tasks will close if the game is turned off therefor they will need to be rerun for enabling the game
 	{
 		taskID++;
+		new GameTick_BlockHunt(plugin, taskID);
 	}
 }

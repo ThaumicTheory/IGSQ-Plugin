@@ -7,23 +7,23 @@ import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Main_Spigot;
 
-public class InventoryClickEvent_BlockHunt implements Listener
+public class FoodLevelChangeEvent_BlockHunt implements Listener
 {
-	public InventoryClickEvent_BlockHunt(Main_Spigot plugin)
+	public FoodLevelChangeEvent_BlockHunt(Main_Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void InventoryClick_BlockHunt(org.bukkit.event.inventory.InventoryClickEvent event) 
+	public void FoodLevelChange_BlockHunt(org.bukkit.event.entity.FoodLevelChangeEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
 			if(Common_BlockHunt.blockhuntCheck()) 
 			{
-				if(event.getWhoClicked() instanceof Player) 
+				if(event.getEntity() instanceof Player) 
 				{
-					Player player = (Player) event.getWhoClicked();
+					Player player = (Player) event.getEntity();
 					if(Common_BlockHunt.isPlayer(player)) 
 					{
 						event.setCancelled(true);

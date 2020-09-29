@@ -235,7 +235,7 @@ public class Common_Spigot {
         
         addFieldDefault("GAMEPLAY.expert","config",false);
         addFieldDefault("GAMEPLAY.dragoneggrespawn","config",true);
-        addFieldDefault("GAMEPLAY.game","config",false);
+        addFieldDefault("GAMEPLAY.blockhunt","config",false);
         
         addFieldDefault("SUPPORT.luckperms","config",true);
         addFieldDefault("SUPPORT.nametagedit","config",true);

@@ -71,7 +71,7 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 			System.out.println("Luckperms Module Disabled.");
 			new AsyncPlayerChatEvent_Main(this);
 		}
-		if(Common_Spigot.getFieldBool("GAMEPLAY.game", "config")) 
+		if(Common_Spigot.getFieldBool("GAMEPLAY.blockhunt", "config")) 
 		{
 			new Main_BlockHunt(this);
 		}

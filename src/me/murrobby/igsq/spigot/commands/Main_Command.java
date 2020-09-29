@@ -264,6 +264,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 				String[] types = {"true","false"};
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
+
 			else if(args[0].equalsIgnoreCase("nightvision") || args[0].equalsIgnoreCase("nv")) 
 			{
 				for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[1])) options.add(selectedPlayer.getName());
@@ -271,6 +272,11 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			else if(args[0].equalsIgnoreCase("error")) 
 			{
 				String[] types = {"test","log"};
+				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
+			}
+			else if(args[0].equalsIgnoreCase("blockhunt")) 
+			{
+				String[] types = {"start","forceseeker","forcehider"};
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 		}

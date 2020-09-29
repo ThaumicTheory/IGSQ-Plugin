@@ -1,30 +1,29 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import me.murrobby.igsq.spigot.Main_Spigot;
 
-public class InventoryClickEvent_BlockHunt implements Listener
+public class PlayerTeleportEvent_BlockHunt implements Listener
 {
-	public InventoryClickEvent_BlockHunt(Main_Spigot plugin)
+	public PlayerTeleportEvent_BlockHunt(Main_Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void InventoryClick_BlockHunt(org.bukkit.event.inventory.InventoryClickEvent event) 
+	public void PlayerTeleport_BlockHunt(org.bukkit.event.player.PlayerTeleportEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
 			if(Common_BlockHunt.blockhuntCheck()) 
 			{
-				if(event.getWhoClicked() instanceof Player) 
+				if(Common_BlockHunt.isHider(event.getPlayer())) 
 				{
-					Player player = (Player) event.getWhoClicked();
-					if(Common_BlockHunt.isPlayer(player)) 
+					if(event.getCause().equals(TeleportCause.ENDER_PEARL))
 					{
 						event.setCancelled(true);
 					}

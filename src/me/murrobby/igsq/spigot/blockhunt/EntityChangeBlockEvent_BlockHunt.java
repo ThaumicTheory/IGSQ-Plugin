@@ -1,30 +1,29 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Main_Spigot;
 
-public class InventoryClickEvent_BlockHunt implements Listener
+public class EntityChangeBlockEvent_BlockHunt implements Listener
 {
-	public InventoryClickEvent_BlockHunt(Main_Spigot plugin)
+	public EntityChangeBlockEvent_BlockHunt(Main_Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void InventoryClick_BlockHunt(org.bukkit.event.inventory.InventoryClickEvent event) 
+	public void EntityChangeBlock_BlockHunt(org.bukkit.event.entity.EntityChangeBlockEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
 			if(Common_BlockHunt.blockhuntCheck()) 
 			{
-				if(event.getWhoClicked() instanceof Player) 
+				if(event.getEntity() instanceof FallingBlock) 
 				{
-					Player player = (Player) event.getWhoClicked();
-					if(Common_BlockHunt.isPlayer(player)) 
+					if(Common_BlockHunt.isBlockPlayable(event.getTo())) 
 					{
 						event.setCancelled(true);
 					}

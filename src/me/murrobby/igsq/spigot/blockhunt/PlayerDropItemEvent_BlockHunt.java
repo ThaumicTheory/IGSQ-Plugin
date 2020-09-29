@@ -14,13 +14,16 @@ public class PlayerDropItemEvent_BlockHunt implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerDropItem_Security(org.bukkit.event.player.PlayerDropItemEvent event) 
+	public void PlayerDropItem_BlockHunt(org.bukkit.event.player.PlayerDropItemEvent event) 
 	{
 		if(!event.isCancelled()) 
 		{
-			if(Common_BlockHunt.isPlayer(event.getPlayer())) 
+			if(Common_BlockHunt.blockhuntCheck()) 
 			{
-				event.setCancelled(true);
+				if(Common_BlockHunt.isPlayer(event.getPlayer())) 
+				{
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
