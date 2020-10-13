@@ -6,29 +6,32 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class AsyncPlayerChatEvent_Main implements Listener
 {
-	public AsyncPlayerChatEvent_Main(Main_Spigot plugin)
+	public AsyncPlayerChatEvent_Main()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
 	public void AsyncPlayerChat_Main(AsyncPlayerChatEvent event) 
 	{
-		//Runs only if luckperms is not detected
 		if(!event.isCancelled()) 
 		{
-			if(!Common_Spigot.filterChat(event.getMessage(), event.getPlayer())) 
+			if(!Common.filterChat(event.getMessage(), event.getPlayer())) 
 			{
 				event.setCancelled(true);
 			}
-			String username = Common_Spigot.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "player");
-			if (username.equals("")) username = event.getPlayer().getName();
-			event.setFormat((Common_Spigot.chatFormatter(Common_Spigot.getFormattedMessage("message", new String[] {"<server>",Common_Spigot.getFieldString("server","internal"), "<prefix>","", "<player>", username,"<suffix>","", "<message>", event.getMessage()}))));
+			if(Common.isCurrentChatController("main", event.getPlayer())) 
+			{
+				String username = Configuration.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "player");
+				if (username.equals("")) username = event.getPlayer().getName();
+				event.setFormat((Messaging.chatFormatter(Messaging.getFormattedMessage("message", new String[] {"<server>",Configuration.getFieldString("server","internal"), "<prefix>","", "<player>", username,"<suffix>","", "<message>", event.getMessage()}))));
+			}
 		}
 	}
 	

@@ -4,13 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
 
 public class PlayerDropItemEvent_BlockHunt implements Listener
 {
-	public PlayerDropItemEvent_BlockHunt(Main_Spigot plugin)
+	public PlayerDropItemEvent_BlockHunt()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler

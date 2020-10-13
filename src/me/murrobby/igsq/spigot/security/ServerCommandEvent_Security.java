@@ -4,12 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Spigot;
 
 
 public class ServerCommandEvent_Security implements Listener
 {
-	public ServerCommandEvent_Security(Main_Spigot plugin)
+	public ServerCommandEvent_Security(Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}

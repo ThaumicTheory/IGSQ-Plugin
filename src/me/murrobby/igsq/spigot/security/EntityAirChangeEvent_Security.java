@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Spigot;
 
 public class EntityAirChangeEvent_Security implements Listener
 {
-	public EntityAirChangeEvent_Security(Main_Spigot plugin)
+	public EntityAirChangeEvent_Security(Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}

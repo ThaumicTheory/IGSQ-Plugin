@@ -5,26 +5,27 @@ import org.bukkit.World.Environment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Messaging;
 
 
 public class PlayerBedEnterEvent_Expert implements Listener
 {
-	public PlayerBedEnterEvent_Expert(Main_Spigot plugin)
+	public PlayerBedEnterEvent_Expert()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
 	public void PlayerBedEnter_Expert(org.bukkit.event.player.PlayerBedEnterEvent event) 
 	{
-		if(Common_Expert.ExpertCheck() && (!event.isCancelled()))
+		if(Common_Expert.expertCheck() && (!event.isCancelled()))
 		{
-			if(Common_Spigot.getFieldBool(event.getPlayer().getWorld().getUID() + ".event.bloodmoon", "internal") && event.getPlayer().getWorld().getEnvironment() != Environment.NETHER && event.getPlayer().getWorld().getEnvironment() != Environment.THE_END)	
+			if(Configuration.getFieldBool(event.getPlayer().getWorld().getUID() + ".event.bloodmoon", "internal") && event.getPlayer().getWorld().getEnvironment() != Environment.NETHER && event.getPlayer().getWorld().getEnvironment() != Environment.THE_END)	
 			{
 				event.setCancelled(true);
-				event.getPlayer().sendTitle(Common_Spigot.chatFormatter("&#84FF00Expert Mode &#A600FFEvent Present!"),Common_Spigot.chatFormatter("&#A600FFYou Cant Sleep Through a &#32FF82Blood Moon!"),10,70,20);
+				event.getPlayer().sendTitle(Messaging.chatFormatter("&#84FF00Expert Mode &#A600FFEvent Present!"),Messaging.chatFormatter("&#A600FFYou Cant Sleep Through a &#32FF82Blood Moon!"),10,70,20);
 			}
 		}
 	}

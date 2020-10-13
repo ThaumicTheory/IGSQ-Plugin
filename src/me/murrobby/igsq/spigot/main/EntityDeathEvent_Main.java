@@ -7,17 +7,15 @@ import org.bukkit.entity.EnderDragon;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Configuration;
 
 
 public class EntityDeathEvent_Main implements Listener
 {
-	private Main_Spigot plugin;
-	public EntityDeathEvent_Main(Main_Spigot plugin)
+	public EntityDeathEvent_Main()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
-		this.plugin = plugin;
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
@@ -26,9 +24,9 @@ public class EntityDeathEvent_Main implements Listener
 		if(event.getEntity() instanceof EnderDragon) 
 		{
 			EnderDragon enderDragon = (EnderDragon) event.getEntity();
-			if(Common_Spigot.getFieldBool("GAMEPLAY.dragoneggrespawn", "config") && enderDragon.getDragonBattle().hasBeenPreviouslyKilled())
+			if(Configuration.getFieldBool("GAMEPLAY.dragoneggrespawn", "config") && enderDragon.getDragonBattle().hasBeenPreviouslyKilled())
 			{
-				plugin.scheduler.scheduleSyncDelayedTask(plugin, new Runnable()
+				Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
 		    	{
 
 					@Override
@@ -37,7 +35,7 @@ public class EntityDeathEvent_Main implements Listener
 						Location location = enderDragon.getLocation();
 						location.setX(0);
 						location.setZ(0);
-						Common_Spigot.getHighestBlock(location,255).getLocation().add(0, 1, 0).getBlock().setType(Material.DRAGON_EGG);
+						Common.getHighestBlock(location,255).getLocation().add(0, 1, 0).getBlock().setType(Material.DRAGON_EGG);
 					}
 		    	},200);
 			}

@@ -5,24 +5,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class Entity_Command {
-	private Main_Spigot plugin;
-	private Main_Command commands;
 	private CommandSender sender;
 	public Boolean result;
 	private String[] args;
 	private String display = "Yourself";
 	
-	public Entity_Command(Main_Spigot plugin,Main_Command commands,CommandSender sender,String[] args) 
+	public Entity_Command(CommandSender sender,String[] args) 
 	{
-		this.commands = commands;
 		this.sender = sender;
 		this.args = args;
-		this.plugin = plugin;
 		result = EntityQuery();
 	}
 	
@@ -35,11 +30,11 @@ public class Entity_Command {
         }
         catch(Exception exception)
         {
-            sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000This Entity could not be found!"));
+            sender.sendMessage(Messaging.chatFormatter("&#CD0000This Entity could not be found!"));
             return false;
         }
-        plugin.getServer().getPlayer(player.getUniqueId()).getWorld().spawnEntity(player.getLocation(), entitytype);
-        sender.sendMessage(Common_Spigot.chatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+        Common.spigot.getServer().getPlayer(player.getUniqueId()).getWorld().spawnEntity(player.getLocation(), entitytype);
+        sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
         return true;
 
     }
@@ -47,7 +42,7 @@ public class Entity_Command {
 
 	private boolean EntityQuery() 
     {
-        if(commands.IsPlayer() && commands.RequirePermission("igsq.entity"))
+        if(sender instanceof Player && Common_Command.requirePermission("igsq.entity",sender))
         {
             if(Entity()) 
             {
@@ -55,13 +50,13 @@ public class Entity_Command {
             }
             else 
             {
-                sender.sendMessage(Common_Spigot.chatFormatter("&#FFFF00entity [entity_ID]"));
+                sender.sendMessage(Messaging.chatFormatter("&#FFFF00entity [entity_ID]"));
                 return false;
             }
         }
         else 
         {
-            sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+            sender.sendMessage(Messaging.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
             return false;
         }
 }

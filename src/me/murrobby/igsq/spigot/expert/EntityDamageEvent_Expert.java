@@ -14,28 +14,27 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class EntityDamageEvent_Expert implements Listener
 {
-	private Main_Spigot plugin;
-	public EntityDamageEvent_Expert(Main_Spigot plugin)
+	public EntityDamageEvent_Expert()
 	{
-		this.plugin = plugin;
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
 	public void EntityDamage_Expert(org.bukkit.event.entity.EntityDamageEvent event) 
 	{
-		if(Common_Expert.ExpertCheck() && (!event.isCancelled()))
+		if(Common_Expert.expertCheck() && (!event.isCancelled()))
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{
 				Player player = (Player)event.getEntity();
 				player.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK,(int) (200*event.getDamage()*((1+player.getHealthScale())-player.getHealth())),0,true));
-				Common_Spigot.updateField(player.getUniqueId().toString() + ".damage.last","player" ,player.getTicksLived() );
+				Configuration.updateField(player.getUniqueId().toString() + ".damage.last","player" ,player.getTicksLived() );
 				if(player.hasPotionEffect(PotionEffectType.LUCK)) 
 				{
 					player.removePotionEffect(PotionEffectType.LUCK);
@@ -93,16 +92,16 @@ public class EntityDamageEvent_Expert implements Listener
 				if(enderDragon.getHealth() - event.getDamage() <= 0 && enderDragon.getCustomName() == null) 
 				{
 					event.setCancelled(true);
-					enderDragon.setCustomName(Common_Spigot.chatFormatter("&#FF5300True Expert Ender Dragon"));
+					enderDragon.setCustomName(Messaging.chatFormatter("&#FF5300True Expert Ender Dragon"));
 					enderDragon.setHealth(enderDragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 					enderDragon.getBossBar().setColor(BarColor.RED);
 					enderDragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(enderDragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue()*2);
-					for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
+					for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) 
 					{
 						selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 0);
 						if(selectedPlayer.getWorld().getEnvironment() == Environment.THE_END) 
 						{
-							selectedPlayer.sendTitle(Common_Spigot.chatFormatter("&#7900FFEnder Dragon Phase 2"),Common_Spigot.chatFormatter("&#A600FFThe True Expert Ender Dragon"),10,70,20);
+							selectedPlayer.sendTitle(Messaging.chatFormatter("&#7900FFEnder Dragon Phase 2"),Messaging.chatFormatter("&#A600FFThe True Expert Ender Dragon"),10,70,20);
 							selectedPlayer.playSound(selectedPlayer.getLocation(), Sound.MUSIC_END, 10000, 2f);
 						}
 					}
@@ -111,7 +110,7 @@ public class EntityDamageEvent_Expert implements Listener
 				{
 					
 				}
-				else if(enderDragon.getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#FF5300True Expert Ender Dragon")))
+				else if(enderDragon.getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#FF5300True Expert Ender Dragon")))
 				{
 					if(event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION)
 					{

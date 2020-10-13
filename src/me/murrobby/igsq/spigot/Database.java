@@ -8,18 +8,18 @@ import java.sql.Statement;
 
 import org.bukkit.plugin.Plugin;
 
-public class Database_Spigot 
+public class Database 
 {
     static String url;
     static String user;
     static String password;
     static Plugin plugin;
-	public Database_Spigot(Plugin plugin)
+	public Database(Plugin plugin)
 	{
-		Database_Spigot.plugin = plugin;
-		url = Common_Spigot.getFieldString("MYSQL.database", "config");
-		user = Common_Spigot.getFieldString("MYSQL.username", "config");
-		password = Common_Spigot.getFieldString("MYSQL.password", "config");
+		Database.plugin = plugin;
+		url = Configuration.getFieldString("MYSQL.database", "config");
+		user = Configuration.getFieldString("MYSQL.username", "config");
+		password = Configuration.getFieldString("MYSQL.password", "config");
 		if(testDatabase()) 
 		{
 			UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(link_number int PRIMARY KEY AUTO_INCREMENT,uuid VARCHAR(36),id VARCHAR(18),current_status VARCHAR(16));");
@@ -48,7 +48,7 @@ public class Database_Spigot
 					}
 					catch (Exception exception)
 					{
-						Common_Spigot.sendException(exception, "Failed to expire Database Query.", "BIRCH_PLANK", null);
+						Messaging.sendException(exception, "Failed to expire Database Query.", "BIRCH_PLANK", null);
 					}
 				} 		
 	    	},60);
@@ -56,7 +56,7 @@ public class Database_Spigot
         }
         catch (SQLException exception) 
         {
-        	Common_Spigot.sendException(exception, "Database Query: " + sql + " failed", "BIRCH_LOG", null);
+        	Messaging.sendException(exception, "Database Query: " + sql + " failed", "BIRCH_LOG", null);
         	return null;
         } 
     }
@@ -71,7 +71,7 @@ public class Database_Spigot
         }
         catch (SQLException exception) 
         {
-        	Common_Spigot.sendException(exception, "Database Update: " + sql + " failed", "ACACIA_LOG", null);
+        	Messaging.sendException(exception, "Database Update: " + sql + " failed", "ACACIA_LOG", null);
         }
     }
 	public static int ScalarCommand(String sql) 
@@ -88,7 +88,7 @@ public class Database_Spigot
         } 
         catch (SQLException exception) 
         {
-        	Common_Spigot.sendException(exception, "Database Scalar Query: " + sql + " failed", "OAK_PLANK", null);
+        	Messaging.sendException(exception, "Database Scalar Query: " + sql + " failed", "OAK_PLANK", null);
         	return -1;
         } 
     }

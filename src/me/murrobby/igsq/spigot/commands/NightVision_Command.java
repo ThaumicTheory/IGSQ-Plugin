@@ -6,20 +6,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class NightVision_Command {
 	
-	private Main_Command commands;
 	private CommandSender sender;
 	public Boolean result;
 	private String[] args;
 	private Player player;
 	
-	public NightVision_Command(Main_Spigot plugin,Main_Command commands,CommandSender sender,String[] args) 
+	public NightVision_Command(CommandSender sender,String[] args) 
 	{
-		this.commands = commands;
 		this.sender = sender;
 		this.args = args;
 		result = NightVisionQuery();
@@ -42,19 +39,19 @@ public class NightVision_Command {
 		}
 		catch(Exception exception) 
 		{
-			sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000Player Could not be found!"));
+			sender.sendMessage(Messaging.chatFormatter("&#CD0000Player Could not be found!"));
 			return false;
 		}
 	}
 	if(player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
 	{
 		player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-		sender.sendMessage(Common_Spigot.chatFormatter("&#0000FFRemoved nightvision from " + display + "!"));
+		sender.sendMessage(Messaging.chatFormatter("&#0000FFRemoved nightvision from " + display + "!"));
 	}
 	else 
 	{
 		player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000,255,true));
-		sender.sendMessage(Common_Spigot.chatFormatter("&#00FFFFGave nightvision too " + display + "!"));
+		sender.sendMessage(Messaging.chatFormatter("&#00FFFFGave nightvision too " + display + "!"));
 	}
 	return true;
 		
@@ -63,7 +60,7 @@ public class NightVision_Command {
 
 	private boolean NightVisionQuery() 
 	{
-		if(commands.IsPlayer() && commands.RequirePermission("igsq.nightvision")) 
+		if(sender instanceof Player && Common_Command.requirePermission("igsq.nightvision",sender)) 
 		{
 				if(NightVision()) 
 				{
@@ -71,14 +68,14 @@ public class NightVision_Command {
 				}
 				else 
 				{
-					sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000Something Went Wrong When Executing this Command!"));
+					sender.sendMessage(Messaging.chatFormatter("&#CD0000Something Went Wrong When Executing this Command!"));
 					return false;
 				}
 				
 				}
 				else 
 				{
-					sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+					sender.sendMessage(Messaging.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
 		  			return false;
 				}
 		}

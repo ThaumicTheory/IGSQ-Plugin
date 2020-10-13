@@ -19,21 +19,21 @@ public class Common_LP {
 	public Common_LP() 
 	{
 	}
-	private static void GetUserData(User user) 
+	private static void getUserData(User user) 
 	{
 	    queryOptions = contextManager.getQueryOptions(user).orElse(contextManager.getStaticQueryOptions());
 		metaData = user.getCachedData().getMetaData(queryOptions);
 	}
-	public static String GetPrefix(Player player) 
+	public static String getPrefix(Player player) 
 	{
 		User user = luckPerms.getUserManager().getUser(player.getUniqueId());
-		GetUserData(user);
+		getUserData(user);
 		return metaData.getPrefix();
 	}
-	public static String GetSuffix(Player player) 
+	public static String getSuffix(Player player) 
 	{
 		User user = luckPerms.getUserManager().getUser(player.getUniqueId());
-		GetUserData(user);
+		getUserData(user);
 		return metaData.getSuffix();
 	}
     /**
@@ -42,10 +42,10 @@ public class Common_LP {
      * @see net.luckperms.api.cacheddata.CachedMetaData#getPrimaryGroup()
      * @return <b>String</b>
      */
-    public static String GetRank(Player player)
+    public static String getRank(Player player)
     {
     	User user = luckPerms.getUserManager().getUser(player.getUniqueId());
-    	GetUserData(user);
+    	getUserData(user);
     	return metaData.getPrimaryGroup();
     }
 }

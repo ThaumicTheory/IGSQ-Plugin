@@ -7,14 +7,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 
 import me.murrobby.igsq.shared.Common_Shared;
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class InventoryClickEvent_Main implements Listener
 {
-	public InventoryClickEvent_Main(Main_Spigot plugin)
+	public InventoryClickEvent_Main()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	String[] illegalNameTagWords = {};
 	String[] illegalWords;
@@ -23,33 +23,29 @@ public class InventoryClickEvent_Main implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if(event.getClickedInventory() == null || event.getCurrentItem() == null) 
-			{
-				
-			}
-			else 
+			if(event.getClickedInventory() != null && event.getCurrentItem() != null) 
 			{
 				if(event.getClickedInventory().getType() == InventoryType.ANVIL) 
 				{
 					if(event.getCurrentItem().getType() == Material.NAME_TAG) 
 					{
-						illegalWords = Common_Shared.arrayAppend(illegalNameTagWords, Common_Spigot.illegalChats);
+						illegalWords = Common_Shared.arrayAppend(illegalNameTagWords, Common.illegalChats);
 					}
 					else 
 					{
-						illegalWords = Common_Spigot.illegalChats;
+						illegalWords = Common.illegalChats;
 					}
 					for(String illegalWord : illegalWords)
 					{
 				       if(event.getCurrentItem().getItemMeta().getDisplayName().toUpperCase().contains(illegalWord))
 				       {
-				    	   if(event.getWhoClicked().hasPermission("IGSQ.ItemNameOverride")) 
+				    	   if(event.getWhoClicked().hasPermission("IGSQ.ItemNameOverride"))
 				    	   {
-				    		   event.getWhoClicked().sendMessage(Common_Spigot.getFormattedMessage("illegalitemnameoverride",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
+				    		   event.getWhoClicked().sendMessage(Messaging.getFormattedMessage("illegalitemnameoverride",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
 				    	   }
 				    	   else 
 				    	   {
-				    		   event.getWhoClicked().sendMessage(Common_Spigot.getFormattedMessage("illegalitemname",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
+				    		   event.getWhoClicked().sendMessage(Messaging.getFormattedMessage("illegalitemname",new String[] {"<blocked>",illegalWord,"<material>",event.getCurrentItem().getType().toString()}));
 					    	   event.setCancelled(true);
 				    	   }
 				       }

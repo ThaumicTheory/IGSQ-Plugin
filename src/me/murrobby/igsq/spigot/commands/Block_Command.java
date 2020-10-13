@@ -8,12 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.shared.Common_Shared;
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class Block_Command {
-	private Main_Spigot plugin;
-	private Main_Command commands;
 	private CommandSender sender;
 	public Boolean result;
 	private String[] args;
@@ -21,12 +19,10 @@ public class Block_Command {
 	private Player[] players = null;
 	private String display = "Yourself";
 	
-	public Block_Command(Main_Spigot plugin,Main_Command commands,CommandSender sender,String[] args) 
+	public Block_Command(CommandSender sender,String[] args) 
 	{
-		this.commands = commands;
 		this.sender = sender;
 		this.args = args;
-		this.plugin = plugin;
 		result = BlockQuery();
 	}
 		
@@ -47,9 +43,9 @@ public class Block_Command {
 				if(args[2].equalsIgnoreCase("@all")) 
 				{
 					display = "Everyone";
-					for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
+					for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) 
 					{
-						players = Common_Spigot.append(players,selectedPlayer);
+						players = Common.append(players,selectedPlayer);
 					}
 				}
 //				depracated code
@@ -70,7 +66,7 @@ public class Block_Command {
 					display = "";
 					for (String selectedPlayer : playerArgs) 
 					{ 
-						players = Common_Spigot.append(players,Bukkit.getPlayer(selectedPlayer));
+						players = Common.append(players,Bukkit.getPlayer(selectedPlayer));
 						display += players[players.length-1].getName() + " ";
 					}
 				}
@@ -78,7 +74,7 @@ public class Block_Command {
 		}
 		catch(Exception exception) 
 		{
-			sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000This Block, or a Player cound not be found!"));
+			sender.sendMessage(Messaging.chatFormatter("&#CD0000This Block, or a Player cound not be found!"));
 			return false;
 		}
 		Block block = location.getBlock();
@@ -88,24 +84,24 @@ public class Block_Command {
 			{ 
 				selectedPlayer.sendBlockChange(location, material.createBlockData());
 			}
-			sender.sendMessage(Common_Spigot.chatFormatter("&#58FFFFGave &#C8C8C8FAKE &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+			sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#C8C8C8FAKE &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
 			return true;
 		}
 		else if(args[1].equalsIgnoreCase("real"))
 		{
 			block.setType(Material.valueOf(args[0].toUpperCase()));
-			sender.sendMessage(Common_Spigot.chatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+			sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
 			return true;
 		}
 		else if(args[1].equalsIgnoreCase("trap")) 
 		{
 			block.setBlockData(Bukkit.createBlockData("minecraft:tnt[unstable=true]"));
-			Bukkit.getScheduler().runTaskLater(plugin, () -> {
+			Bukkit.getScheduler().runTaskLater(Common.spigot, () -> {
 				for (Player selectedPlayer : players) 
 				{ 
 					selectedPlayer.sendBlockChange(location, material.createBlockData());
 				}
-				sender.sendMessage(Common_Spigot.chatFormatter("&#58FFFFGave &#FFD700TRAP &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+				sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#FFD700TRAP &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
 			}, 2);
 			return true;
 		}
@@ -117,7 +113,7 @@ public class Block_Command {
 
 	private boolean BlockQuery() 
 	{
-		if(commands.RequirePermission("igsq.block") && commands.IsPlayer()) 
+		if(Common_Command.requirePermission("igsq.block",sender) && sender instanceof Player) 
 		{
 			if(Block()) 
 			{
@@ -125,13 +121,13 @@ public class Block_Command {
 			}
 			else 
 			{
-				sender.sendMessage(Common_Spigot.chatFormatter("&#FFFF00block [block_ID] [*fake*/real/trap] {@all/username/*\"you\"*} {\"another user\"} ..."));
+				sender.sendMessage(Messaging.chatFormatter("&#FFFF00block [block_ID] [*fake*/real/trap] {@all/username/*\"you\"*} {\"another user\"} ..."));
 				return false;
 			}
 		}
 		else
 		{
-			sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+			sender.sendMessage(Messaging.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
   			return false;
 		}
 	}

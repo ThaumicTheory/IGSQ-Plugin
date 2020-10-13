@@ -16,8 +16,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Messaging;
 
 import java.util.Random;
 
@@ -25,15 +25,15 @@ import java.util.Random;
 public class EntityDamageByEntityEvent_Expert implements Listener
 {
 	Random random = new Random();
-	public EntityDamageByEntityEvent_Expert(Main_Spigot plugin)
+	public EntityDamageByEntityEvent_Expert()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
 	public void EntityDamagedByEntity_Expert(org.bukkit.event.entity.EntityDamageByEntityEvent event) 
 	{
-		if(Common_Expert.ExpertCheck() && (!event.isCancelled()))
+		if(Common_Expert.expertCheck() && (!event.isCancelled()))
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{
@@ -42,7 +42,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				{
 					if(random.nextInt(200) < event.getDamage()*10) 
 					{
-						Common_Expert.GiveBlindness(player,(int) ((event.getDamage()*5 * random.nextInt(3))+20));
+						Common_Expert.giveBlindness(player,(int) ((event.getDamage()*5 * random.nextInt(3))+20));
 					}
 				}
 				else if(event.getDamager().getType() == EntityType.ENDER_DRAGON) 
@@ -51,17 +51,17 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 					{
 						
 					}
-					else if(event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#FF5300True Expert Ender Dragon"))) 
+					else if(event.getDamager().getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#FF5300True Expert Ender Dragon"))) 
 					{
 						if(random.nextInt(200) < event.getDamage()*10) 
 						{
-							Common_Expert.GiveBlindness(player,(int) ((event.getDamage()*10 * random.nextInt(5))+20));
+							Common_Expert.giveBlindness(player,(int) ((event.getDamage()*10 * random.nextInt(5))+20));
 						}
 					}
 				}
 				else if(event.getDamager().getType() == EntityType.SLIME) 
 				{
-					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Slimey Slime"))) 
+					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#84FF00Expert Slimey Slime"))) 
 					{
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,(int) ((event.getDamage()*5 * random.nextInt(3))+20),(int) (event.getDamage()*2* random.nextInt(3))));
 					}
@@ -72,7 +72,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				}
 				else if(event.getDamager().getType() == EntityType.MAGMA_CUBE) 
 				{
-					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Flamey Magma Slime"))) 
+					if(event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#84FF00Expert Flamey Magma Slime"))) 
 					{
 						player.setFireTicks((int) (player.getFireTicks()+((event.getDamage()*25 * random.nextInt(5))))+20);
 					}
@@ -84,9 +84,9 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				else if(event.getDamager() instanceof Phantom) 
 				{
 					Phantom phantom = (Phantom) event.getDamager();
-					if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"))) 
+					if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#84FF00Expert Phantom Warrior"))) 
 					{
-						Common_Expert.GiveBlindness(player,(int) ((event.getDamage()*10 * random.nextInt(5))+20));
+						Common_Expert.giveBlindness(player,(int) ((event.getDamage()*10 * random.nextInt(5))+20));
 						for(Entity nearbyEntity : phantom.getNearbyEntities(32, 32, 32)) 
 						{
 							if(nearbyEntity instanceof Player) 
@@ -109,10 +109,10 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				Slime slime = (Slime) event.getEntity();
 				if(event.getDamager().getType() == EntityType.PLAYER) 
 				{
-					if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert King Slime"))) 
+					if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#84FF00Expert King Slime"))) 
 					{
 						Slime spawnSlime = (Slime) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.SLIME);
-						spawnSlime.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Warrior Slime"));
+						spawnSlime.setCustomName(Messaging.chatFormatter("&#84FF00Expert Warrior Slime"));
 						spawnSlime.setSize(slime.getSize()/2);
 					}
 				}
@@ -122,13 +122,13 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 				MagmaCube slime = (MagmaCube) event.getEntity();
 				if(event.getDamager().getType() == EntityType.PLAYER) 
 				{
-					if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert King Magma Slime"))) 
+					if(event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#84FF00Expert King Magma Slime"))) 
 					{
 						int randomNum = random.nextInt(4);
 						for(int i = 0;i < randomNum;i++) 
 						{
 							MagmaCube spawnSlime = (MagmaCube) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.MAGMA_CUBE);
-							spawnSlime.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Warrior Magma Slime"));
+							spawnSlime.setCustomName(Messaging.chatFormatter("&#84FF00Expert Warrior Magma Slime"));
 							spawnSlime.setSize(slime.getSize()/2);
 						}
 						
@@ -157,7 +157,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 						if(arrow.getShooter() instanceof Player) 
 						{
 							Player player = (Player) arrow.getShooter();
-							Common_Expert.GiveBlindness(player,59);
+							Common_Expert.giveBlindness(player,59);
 						}
 					}
 				}

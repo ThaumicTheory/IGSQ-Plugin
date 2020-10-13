@@ -5,13 +5,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
 
 public class FoodLevelChangeEvent_BlockHunt implements Listener
 {
-	public FoodLevelChangeEvent_BlockHunt(Main_Spigot plugin)
+	public FoodLevelChangeEvent_BlockHunt()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler

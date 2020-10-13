@@ -1,12 +1,12 @@
 package me.murrobby.igsq.spigot.security;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Spigot;
 
 public class Main_Security 
 {
-	private static Main_Spigot plugin;
+	private static Spigot plugin;
 	public static int taskID = 0;
-	public Main_Security(Main_Spigot plugin)
+	public Main_Security(Spigot plugin)
 	{
 		Main_Security.plugin = plugin;
 		//Events run forever and cannot be turned off

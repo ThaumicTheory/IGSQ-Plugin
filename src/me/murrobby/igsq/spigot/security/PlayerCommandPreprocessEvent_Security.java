@@ -4,12 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Spigot;
 
 
 public class PlayerCommandPreprocessEvent_Security implements Listener
 {
-	public PlayerCommandPreprocessEvent_Security(Main_Spigot plugin)
+	public PlayerCommandPreprocessEvent_Security(Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}

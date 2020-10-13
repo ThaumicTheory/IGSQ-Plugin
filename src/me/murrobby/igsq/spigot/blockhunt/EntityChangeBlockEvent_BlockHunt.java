@@ -5,13 +5,13 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
 
 public class EntityChangeBlockEvent_BlockHunt implements Listener
 {
-	public EntityChangeBlockEvent_BlockHunt(Main_Spigot plugin)
+	public EntityChangeBlockEvent_BlockHunt()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler

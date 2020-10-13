@@ -4,11 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Spigot;
 
 public class PlayerItemDamageEvent_Security implements Listener
 {
-	public PlayerItemDamageEvent_Security(Main_Spigot plugin)
+	public PlayerItemDamageEvent_Security(Spigot plugin)
 	{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}

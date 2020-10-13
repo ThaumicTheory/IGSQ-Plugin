@@ -4,15 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
 
 
 public class PlayerCommandPreprocessEvent_Main implements Listener
 {
-	public PlayerCommandPreprocessEvent_Main(Main_Spigot plugin)
+	public PlayerCommandPreprocessEvent_Main()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
@@ -20,7 +19,7 @@ public class PlayerCommandPreprocessEvent_Main implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if(!Common_Spigot.filterChat(event.getMessage(), event.getPlayer())) 
+			if(!Common.filterChat(event.getMessage(), event.getPlayer())) 
 			{
 				event.setCancelled(true);
 			}

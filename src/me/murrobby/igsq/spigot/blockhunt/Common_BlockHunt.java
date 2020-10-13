@@ -4,55 +4,159 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
+import org.bukkit.util.BlockIterator;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class Common_BlockHunt 
 {
 	private static Random random = new Random();
 	public static int numberPerSeeker = 3;
 	
+	public static ProtocolManager protocol = ProtocolLibrary.getProtocolManager();
 	public static Player[] seekers = {};
 	public static Player[] hiders = {};
 	
 	public static Player[] players = {};
 	public static Material[] blocks = {Material.HAY_BLOCK,Material.CRAFTING_TABLE,Material.BOOKSHELF,Material.DRIED_KELP_BLOCK,Material.FURNACE,Material.PUMPKIN,Material.MELON,Material.OAK_WOOD,Material.NOTE_BLOCK};
+	public static Material[] interactWhitelist = 
+		{
+			Material.ACACIA_BUTTON,
+			Material.ACACIA_DOOR,
+			Material.ACACIA_FENCE_GATE,
+			Material.ACACIA_TRAPDOOR,
+			
+			Material.OAK_BUTTON,
+			Material.OAK_DOOR,
+			Material.OAK_FENCE_GATE,
+			Material.OAK_TRAPDOOR,
+			
+			Material.BIRCH_BUTTON,
+			Material.BIRCH_DOOR,
+			Material.BIRCH_FENCE_GATE,
+			Material.BIRCH_TRAPDOOR,
+			
+			Material.SPRUCE_TRAPDOOR,
+			Material.SPRUCE_BUTTON,
+			Material.SPRUCE_DOOR,
+			Material.SPRUCE_FENCE_GATE,
+			
+			Material.DARK_OAK_TRAPDOOR,
+			Material.DARK_OAK_BUTTON,
+			Material.DARK_OAK_DOOR,
+			Material.DARK_OAK_FENCE_GATE,
+			
+			Material.JUNGLE_TRAPDOOR,
+			Material.JUNGLE_BUTTON,
+			Material.JUNGLE_DOOR,
+			Material.JUNGLE_FENCE_GATE,
+			
+			Material.JUNGLE_TRAPDOOR,
+			Material.JUNGLE_BUTTON,
+			Material.JUNGLE_DOOR,
+			Material.JUNGLE_FENCE_GATE,
+			
+			Material.CRIMSON_TRAPDOOR,
+			Material.CRIMSON_BUTTON,
+			Material.CRIMSON_DOOR,
+			Material.CRIMSON_FENCE_GATE,
+			
+			Material.WARPED_TRAPDOOR,
+			Material.WARPED_BUTTON,
+			Material.WARPED_DOOR,
+			Material.WARPED_FENCE_GATE,
+			
+			Material.STONE_BUTTON,
+			
+		};
 	public static int playerCount;
 	public static int stage = -1;
+	
+    public static ScoreboardManager manager;
+    public static Scoreboard board;
+    
+    public static Team hidersTeam;
+    public static Team seekersTeam;
+    
 	public static void start()
 	{
 		OnGameStart_BlockHunt.start();
 	}
+	public static void end() 
+	{
+		OnGameEnd_BlockHunt.end();
+	}
+	public static void cleanup() 
+	{
+		hiders = new Player[]{};
+		seekers = new Player[]{};
+		players = new Player[]{};
+		playerCount = 0;
+		stage = 0;
+	}
+	public static void cleanup(Player player) 
+	{
+		Common_BlockHunt.removeCloak(player);
+		Common_BlockHunt.showPlayer(player);
+		player.setGameMode(GameMode.ADVENTURE);
+		player.setAllowFlight(false);
+		player.setAbsorptionAmount(0);
+		player.setArrowsInBody(0);
+		player.setCanPickupItems(true);
+		player.setExp(0);
+		player.setLevel(0);
+		player.setFlying(false);
+		player.setFireTicks(0);
+		player.setCollidable(true);
+		player.setFoodLevel(20);
+		player.setGliding(false);
+		player.setGlowing(false);
+		player.setGravity(true);
+		player.setHealthScale(20);
+		player.setHealth(20);
+		player.setSaturation(0);
+		player.setWalkSpeed(0.2f);
+		player.setSprinting(false);
+		Common_BlockHunt.seekersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
+		Common_BlockHunt.hidersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
+		player.getInventory().clear();
+		for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", "");
+		removePlayer(player);
+	}
 	public static int getSeekerCount() 
 	{
-		return (int)(playerCount/numberPerSeeker)+1;
-	}
-	
-	public static int getUniqueId(Player player) 
-	{
-		for(int i = 0;i < playerCount;i++) 
-		{
-			if(player.getUniqueId().equals(players[i].getUniqueId())) 
-			{
-				return i;
-			}
-		}
-		return -1;
+		if(playerCount <= 2) return 1;
+		else return (int)(playerCount/numberPerSeeker);
 	}
     public static Boolean blockhuntCheck() 
     {
-    	return Common_Spigot.getFieldBool("GAMEPLAY.blockhunt", "config");
+    	return Configuration.getFieldBool("GAMEPLAY.blockhunt", "config");
     }
     public static Boolean isSeeker(Player player) 
     {
@@ -78,6 +182,93 @@ public class Common_BlockHunt
     	}
     	return false;
     }
+    public static Boolean isCloaked(Player player) 
+    {
+    	return Configuration.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal");
+    }
+    public static void removeCloak(Player player) 
+    {
+    	if(Configuration.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal")) 
+    	{
+        	Location location = player.getLocation();
+        	location.setX(Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.x", "internal"));
+        	location.setY(Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.y", "internal"));
+        	location.setZ(Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.z", "internal"));
+        	for(Player selectedPlayer : players) 	
+        	{
+        		selectedPlayer.sendBlockChange(location, Bukkit.createBlockData(Material.AIR));
+        	}
+    		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.cloak", "internal", false);
+    	}
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.x", "internal", 0);
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", 0);
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.z", "internal", 0);
+		Common_BlockHunt.updateCloakItem(player);
+		Common_BlockHunt.updateBlockPickerItem(player, false);
+    }
+	public static Player raycastForCloak(Player seeker, int range) {
+        BlockIterator iter = new BlockIterator(seeker, range);
+        Block lastBlock = iter.next();
+        while (iter.hasNext()) {
+            lastBlock = iter.next();
+            if (lastBlock.getType() == Material.AIR) //Server will only see hider blocks as air.
+            {
+            	Player hiderHiding = getHiderCloaked(lastBlock.getLocation());
+            	if(hiderHiding != null) 
+            	{
+            		return hiderHiding;
+            	}
+            }
+        }
+        return null;
+    }
+	public static Player getHiderCloaked(Location location) 
+	{
+		int x = location.getBlockX();
+		int y = location.getBlockY();
+		int z = location.getBlockZ();
+    	for(Player hider : hiders) 
+    	{
+    		if(isCloaked(hider) && isHider(hider)) 
+    		{
+                if(hider.getLocation().getBlockX() == x && hider.getLocation().getBlockY() == y && hider.getLocation().getBlockZ() == z) 
+                {
+                	return hider;
+                }
+    		}
+    	}
+		return null;
+	}
+	
+    public static void addCloak(Player player) 
+    {
+    	Location location = player.getLocation();
+    	for(Player selectedPlayer : players) 	
+    	{
+    		if(!selectedPlayer.getUniqueId().equals(player.getUniqueId())) selectedPlayer.sendBlockChange(location, Bukkit.createBlockData(Material.valueOf(Configuration.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
+    	}
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.cloak", "internal", true);
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.x", "internal", location.getBlockX());
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", location.getBlockY());
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.z", "internal", location.getBlockZ());
+		Common_BlockHunt.updateCloakItem(player);
+		Common_BlockHunt.updateBlockPickerItem(player, false);
+    }
+    public static Boolean validateCloak(Player player) 
+    {
+    	if(!Configuration.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal")) 
+    	{
+        	Location targetLocation = player.getLocation().getBlock().getLocation();
+        	Location checkingLocation = targetLocation;
+        	
+        	if(!checkingLocation.getBlock().isEmpty()) return false; //Deny if block replacing is not air
+        	checkingLocation.setY(targetLocation.getY()-1);
+        	if(checkingLocation.getBlock().isPassable() || checkingLocation.getBlock().isLiquid()) return false; //Deny if block bellow is not solid
+        	checkingLocation.setY(targetLocation.getY()+1);
+        	if(checkingLocation.getBlock().isPassable()) return true; //Allow only if headroom is not solid
+    	}
+    	return false;
+    }
     public static void removePlayer(Player player) 
     {
     	if(isPlayer(player)) 
@@ -86,7 +277,7 @@ public class Common_BlockHunt
     		{
     			if(player.getUniqueId().equals(players[i].getUniqueId())) 
     			{
-    				 players = Common_Spigot.depend(players,i);
+    				 players = Common.depend(players,i);
     				 break;
     			}
     		}
@@ -102,7 +293,7 @@ public class Common_BlockHunt
     		{
     			if(player.getUniqueId().equals(seekers[i].getUniqueId())) 
     			{
-					seekers =  Common_Spigot.depend(seekers,i);
+					seekers =  Common.depend(seekers,i);
 					break;
     			}
     		}
@@ -116,7 +307,7 @@ public class Common_BlockHunt
     		{
     			if(player.getUniqueId().equals(hiders[i].getUniqueId())) 
     			{
-    				hiders =  Common_Spigot.depend(hiders,i);
+    				hiders =  Common.depend(hiders,i);
     				break;
     			}
     		}
@@ -130,44 +321,94 @@ public class Common_BlockHunt
     	}
     	return false;
     }
+    public static Boolean isPlayerVisible(Player player,double range)
+    {
+    	if(isSeeker(player)) return true;
+    	if(isCloaked(player)) return false;
+    	if(player.isSneaking()) return true;
+    	for (Entity entity : player.getNearbyEntities(range, range/2, range)) 
+    	{
+    		if(entity instanceof Player) 
+    		{
+    			Player selectedPlayer = (Player) entity;
+    			if(isSeeker(selectedPlayer)) return true;
+    		}
+    	}
+    	return false;
+    }
+    public static Boolean isPlayerSilent(Player player)
+    {
+    	if(isCloaked(player)) return true;
+    	if(player.isSneaking()) return true; //silent if sneaking
+    	if(isHider(player) && isPlayerVisible(player, Configuration.getFieldInt("visibilityrange", "blockhunt"))) return false; //if player is revealed then the player is not silent
+    	if(player.isSwimming()) return false; //we dont want to encourage people to swim
+    	if(player.isSprinting()) return false; //no-one can sprint silently
+    	if(isSeeker(player)) return true; //seekers are allowed to walk silently
+    	return false; //hiders are not allowed to walk silently
+    }
+    public static Boolean isInteractWhitelisted(Material material) 
+    {
+    	for (Material allowedMaterial : interactWhitelist) 
+    	{
+    		if(allowedMaterial.equals(material)) return true;
+    	}
+    	return false;
+    }
     
     public static void addPlayer(Player player) 
     {
-    	if(!isPlayer(player)) players = Common_Spigot.append(players, player);
+    	if(!isPlayer(player)) players = Common.append(players, player);
     }
     public static void addSeeker(Player player) 
     {
     	addPlayer(player);
-    	if(!isSeeker(player)) seekers = Common_Spigot.append(seekers, player);
+    	if(!isSeeker(player)) seekers = Common.append(seekers, player);
     }
     public static void addHider(Player player) 
     {
     	addPlayer(player);
-    	if(!isHider(player)) hiders = Common_Spigot.append(hiders, player);
+    	if(!isHider(player)) hiders = Common.append(hiders, player);
     }
-    public static void giveEye(Player player,Boolean isEye)
+    public static void updateBlockPickerItem(Player player,Boolean isBeingUsed)
     {
 		ItemStack eye;
 		ItemMeta eyeMeta;
 		List<String> eyeLore = new ArrayList<String>();
-		if(isEye) 
+		int cooldown = getBlockPickerCooldown(player)/20;
+		if(isCloaked(player)) 
+		{
+			eye = new ItemStack(Material.FIREWORK_STAR, 1);
+			eyeMeta = eye.getItemMeta();
+			eyeLore.add(Messaging.chatFormatter("&#66ccffPower draw too high."));
+			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#ccccccDISABLED"));
+		}
+		else if(cooldown != 0) 
+		{
+			eye = new ItemStack(Material.FIRE_CHARGE, cooldown);
+			eyeMeta = eye.getItemMeta();
+			eyeLore.add(Messaging.chatFormatter("&#FFFF00Overheated!"));
+			eyeLore.add(Messaging.chatFormatter("&#ff6600"+cooldown +" &#0099ffsecond/s until heat sink."));
+			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#ff6600"+ cooldown));
+		}
+		else if(isBeingUsed) 
 		{
 			eye = new ItemStack(Material.ENDER_EYE, 1);
 			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Common_Spigot.chatFormatter("&#0000FFAnalysing surroundings for us."));
-			eyeMeta.setDisplayName(Common_Spigot.chatFormatter("&#0000FFThemarite Shifter (Looking)"));
+			eyeLore.add(Messaging.chatFormatter("&#0099FFAnalysing surroundings for us."));
+			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#00ff00LOOKING"));
+			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
 		}
 		else
 		{
 			eye = new ItemStack(Material.ENDER_PEARL, 1);
 			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Common_Spigot.chatFormatter("&#0000FFAllows us to shift forms."));
-			eyeMeta.setDisplayName(Common_Spigot.chatFormatter("&#0000FFThemarite Shifter"));
+			eyeLore.add(Messaging.chatFormatter("&#0099ffAllows us to shift forms."));
+			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#FFFF00READY"));
+			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
 		}
 		
 		eyeMeta.setLore(eyeLore);
 		
-		eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
 		
 		eyeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		
@@ -175,18 +416,66 @@ public class Common_BlockHunt
 		
 		player.getInventory().setItem(0, eye);
     }
-    
-    public static void hiderBlockVisuals(Player player)
+    public static int getBlockPickerCooldown(Player player) 
     {
-		ItemStack block = new ItemStack(Material.valueOf(Common_Spigot.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal")), 1);
-		ItemMeta blockMeta = block.getItemMeta();
+    	return Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal");
+    }
+    public static void setBlockPickerCooldown(Player player,int cooldown) 
+    {
+    	int currentCooldown = getBlockPickerCooldown(player);
+    	Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal", cooldown);
+    	if(currentCooldown == 0) updateBlockPickerItem(player, true); //Force an update to block object use
+    }
+    
+    public static int getCloakCooldown(Player player) 
+    {
+    	return Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.cloakcooldown", "internal");
+    }
+    public static void setCloakCooldown(Player player,int cooldown) 
+    {
+    	int currentCooldown = getCloakCooldown(player);
+    	Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.cloakcooldown", "internal", cooldown);
+    	if(currentCooldown == 0) updateCloakItem(player); //Force an update to block object use
+    }
+    
+    public static void updateCloakItem(Player player)
+    {
+    	int cooldown = getCloakCooldown(player)/20;
+    	String matString = Configuration.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal");
+    	Material material = Material.BARRIER;
+    	if(matString != null && (!matString.equalsIgnoreCase("")) && Material.valueOf(matString) != null) material = Material.valueOf(matString);
+		ItemStack block;
+		ItemMeta blockMeta;
 		List<String> blockLore = new ArrayList<String>();
 		
-		blockLore.add(Common_Spigot.chatFormatter("&#0000FFThe block us has selected."));
+		if(isCloaked(player)) 
+		{
+			block = new ItemStack(material, 1);
+			blockMeta = block.getItemMeta();
+			
+			blockLore.add(Messaging.chatFormatter("&#FFFF00" +material.toString()));
+			blockMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Cloak &#00ff00ACTIVE"));
+			blockMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
+		}
+		else if(cooldown != 0) 
+		{
+			block = new ItemStack(material, cooldown);
+			blockMeta = block.getItemMeta();
+			
+			blockLore.add(Messaging.chatFormatter("&#FFFF00Overheated!"));
+			blockLore.add(Messaging.chatFormatter("&#ff6600"+cooldown +" &#0099ffsecond/s until heat sink."));
+			blockMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Cloak &#ff6600"+ cooldown));
+		}
+		else 
+		{
+			block = new ItemStack(material, 1);
+			blockMeta = block.getItemMeta();
+			
+			blockLore.add(Messaging.chatFormatter("&#0099ffThe block us has selected."));
+			blockMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Cloak &#FFFF00" + material.toString()));
+			blockMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
+		}
 		blockMeta.setLore(blockLore);
-		
-		blockMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
-		blockMeta.setDisplayName(Common_Spigot.chatFormatter("&#0000FFThemarite Target"));
 		
 		blockMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		
@@ -194,8 +483,20 @@ public class Common_BlockHunt
 		
 		player.getInventory().setItem(8, block);
     }
-	public static void setupGear(Player player) 
+    public static void hiderChangeDisguise(Player player,Material material) 
+    {
+    	if(!isCloaked(player) && getBlockPickerCooldown(player) == 0) 
+    	{
+        	Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", material.toString());
+        	updateCloakItem(player);
+        	setBlockPickerCooldown(player, Configuration.getFieldInt("blockpickcooldown", "blockhunt"));
+    	}
+    	else setBlockPickerCooldown(player, Configuration.getFieldInt("blockpickcooldown", "blockhunt")/Configuration.getFieldInt("failcooldown", "blockhunt"));
+    }
+	public static void setupPlayers(Player player) 
 	{
+		Common_BlockHunt.seekersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
+		Common_BlockHunt.hidersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
 		List<String> bootsLore = new ArrayList<String>();
 		List<String> leggingsLore = new ArrayList<String>();
 		List<String> chestplateLore = new ArrayList<String>();
@@ -213,48 +514,55 @@ public class Common_BlockHunt
 		
 		if(Common_BlockHunt.isHider(player)) 
 		{
-			bootsLore.add(Common_Spigot.chatFormatter("&#6666FFConfuses them when they are to far"));
-			leggingsLore.add(Common_Spigot.chatFormatter("&#6666FFAllows us to survive in their realm"));
-			chestplateLore.add(Common_Spigot.chatFormatter("&#6666FFCounters their lock after 10 seconds."));
-			helmetLore.add(Common_Spigot.chatFormatter("&#6666FFAllows us to see thems."));
+			player.setGameMode(GameMode.ADVENTURE);
+			bootsLore.add(Messaging.chatFormatter("&#0099ffConfuses them when they are to far"));
+			leggingsLore.add(Messaging.chatFormatter("&#0099ffAllows us to survive in their realm"));
+			chestplateLore.add(Messaging.chatFormatter("&#0099ffCounters their lock after 10 seconds."));
+			helmetLore.add(Messaging.chatFormatter("&#0099ffAllows us to see thems."));
 			
-			bootsMeta.setColor(Color.fromRGB(127, 127, 255));
-			leggingsMeta.setColor(Color.fromRGB(127, 127, 255));
-			chestplateMeta.setColor(Color.fromRGB(127, 127, 255));
-			helmetMeta.setColor(Color.fromRGB(127, 127, 255));
+			bootsMeta.setColor(Color.fromRGB(102, 204, 255));
+			leggingsMeta.setColor(Color.fromRGB(102, 204, 255));
+			chestplateMeta.setColor(Color.fromRGB(102, 204, 255));
+			helmetMeta.setColor(Color.fromRGB(102, 204, 255));
 			
-			bootsMeta.setDisplayName(Common_Spigot.chatFormatter("&#0000FFThemarite Corrupters"));
-			leggingsMeta.setDisplayName(Common_Spigot.chatFormatter("&#0000FFThemarite Shields"));
-			chestplateMeta.setDisplayName(Common_Spigot.chatFormatter("&#0000FFF6Themarite Counter-Lockdowns"));
-			helmetMeta.setDisplayName(Common_Spigot.chatFormatter("&#0000FFThemarite Sight"));
+			bootsMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Corrupters"));
+			leggingsMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shields"));
+			chestplateMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Counter-Lockdowns"));
+			helmetMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Sight"));
 			
-			hiderStartingBlock(player);
-			Common_BlockHunt.giveEye(player,false);
-			Common_BlockHunt.hiderBlockVisuals(player);
+			removeCloak(player);
+			
+			hidePlayer(player);
+			defaultDisguise(player);
+			setCloakCooldown(player, 100);
+			setBlockPickerCooldown(player, 60);
+			
+			hidersTeam.addEntry(player.getName()); //Will cause issues when with duplicate accounts
 			
 		}
 		else if(Common_BlockHunt.isSeeker(player)) 
 		{
-			bootsLore.add(Common_Spigot.chatFormatter("&#FF0000Corrupts the ones when i get too close."));
-			leggingsLore.add(Common_Spigot.chatFormatter("&#FF0000Block the ones offences."));
-			chestplateLore.add(Common_Spigot.chatFormatter("&#FF0000The ones wont shift dimensions."));
-			helmetLore.add(Common_Spigot.chatFormatter("&#FF0000Allows I to see the ones true form."));
+			player.setGameMode(GameMode.SURVIVAL);
+			bootsLore.add(Messaging.chatFormatter("&#990000Corrupts the ones when I get too close."));
+			leggingsLore.add(Messaging.chatFormatter("&#990000Block the ones offences."));
+			chestplateLore.add(Messaging.chatFormatter("&#990000The ones wont shift dimensions."));
+			helmetLore.add(Messaging.chatFormatter("&#990000Allows I to see the ones true form."));
 			
 			bootsMeta.setColor(Color.fromRGB(255, 25, 25));
 			leggingsMeta.setColor(Color.fromRGB(255, 25, 25));
 			chestplateMeta.setColor(Color.fromRGB(255, 25, 25));
 			helmetMeta.setColor(Color.fromRGB(255, 25, 25));
 			
-			bootsMeta.setDisplayName(Common_Spigot.chatFormatter("&#FF0000Oneite Corrupters"));
-			leggingsMeta.setDisplayName(Common_Spigot.chatFormatter("&#FF0000Oneite Shields"));
-			chestplateMeta.setDisplayName(Common_Spigot.chatFormatter("&#FF0000Oneite Lockdowns"));
-			helmetMeta.setDisplayName(Common_Spigot.chatFormatter("&#FF0000Oneite Sight"));
+			bootsMeta.setDisplayName(Messaging.chatFormatter("&#FF0000Oneite Corrupters"));
+			leggingsMeta.setDisplayName(Messaging.chatFormatter("&#FF0000Oneite Shields"));
+			chestplateMeta.setDisplayName(Messaging.chatFormatter("&#FF0000Oneite Lockdowns"));
+			helmetMeta.setDisplayName(Messaging.chatFormatter("&#FF0000Oneite Sight"));
 			
 			ItemStack sword = new ItemStack(Material.GOLDEN_SWORD, 1);
 			ItemMeta swordMeta = sword.getItemMeta();
 			List<String> swordLore = new ArrayList<String>();
 			
-			swordLore.add(Common_Spigot.chatFormatter("&#FF0000Allows I to damage the ones."));
+			swordLore.add(Messaging.chatFormatter("&#990000Allows I to damage the ones."));
 			swordMeta.setLore(swordLore);
 			
 			swordMeta.addEnchant(Enchantment.KNOCKBACK, 0, true);
@@ -268,10 +576,12 @@ public class Common_BlockHunt
 			
 			swordMeta.setUnbreakable(true);
 			
-			swordMeta.setDisplayName(Common_Spigot.chatFormatter("&#FF0000Oneite Ones Destroyer"));
+			swordMeta.setDisplayName(Messaging.chatFormatter("&#FF0000Oneite Ones Destroyer"));
 			
 			sword.setItemMeta(swordMeta);
 			player.getInventory().setItem(0,sword);
+			
+			seekersTeam.addEntry(player.getName()); //Will cause issues when with duplicate accounts
 			
 		}
 		
@@ -315,10 +625,91 @@ public class Common_BlockHunt
 		player.getInventory().setArmorContents(new ItemStack[]{boots,leggings,chestplate,helmet});
 	}
 	
-	public static void hiderStartingBlock(Player player) 
+	public static void defaultDisguise(Player player) 
 	{
 		
-		Common_Spigot.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", Common_BlockHunt.blocks[random.nextInt(Common_BlockHunt.blocks.length)].toString());
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", Common_BlockHunt.blocks[random.nextInt(Common_BlockHunt.blocks.length)].toString());
+	}
+	public static void hidePlayer(Player player) 
+	{
+		for(Player selectedPlayer : players) 
+		{
+			if(selectedPlayer != player) 
+			{
+				selectedPlayer.hidePlayer(Common.spigot, player);
+			}
+		}
+	}
+	public static void showPlayer(Player player) 
+	{
+		for(Player selectedPlayer : players) 
+		{
+			if(selectedPlayer != player) 
+			{
+				selectedPlayer.showPlayer(Common.spigot, player);
+			}
+		}
+	}
+	public static int inventoryAssistTick(Player player) 
+	{
+		int slot = Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal");
+		int direction = 0;
+		if(slot != player.getInventory().getHeldItemSlot())
+		{
+			if(slot == 8 && player.getInventory().getHeldItemSlot() == 0) 
+			{
+				direction = 1;
+			}
+			else if(slot == 0 && player.getInventory().getHeldItemSlot() == 8) 
+			{
+				direction = -1;
+			}
+			else if(slot > player.getInventory().getHeldItemSlot()) 
+			{
+				direction = -1;
+			}
+			else if(slot < player.getInventory().getHeldItemSlot()) 
+			{
+				direction = 1;
+			}
+			if(direction != 0) 
+			{
+				slot+=direction;
+				int attempts = 0;
+				while(true) 
+				{
+					if(slot> 8) 
+					{
+						slot = 0;
+					}
+					else if(slot < 0) 
+					{
+						slot = 8;
+					}
+					
+					
+					if(player.getInventory().getItem(slot) != null) 
+					{
+						Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", slot);
+						return slot;
+					}
+					else
+					{
+						attempts++;
+						slot+=direction;
+						
+						
+						if(attempts > 8) //Nothing in inventory 
+						{
+							Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
+							return -1;
+						}
+					}
+				}
+			}
+		}
+		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
+		return -1; //Inventory has not Moved
 	}
   
 }

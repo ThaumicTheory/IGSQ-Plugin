@@ -11,43 +11,42 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class BloodMoon_Expert {
-	Main_Spigot plugin;
 	Random random = new Random();
 	
 	final int taskID;
 	
 	private int bloodMoonTask = -1;
 	
-	public BloodMoon_Expert(Main_Spigot plugin,int taskID) 
+	public BloodMoon_Expert(int taskID) 
 	{
 		this.taskID = taskID;
-		this.plugin = plugin;
 		BloodMoonQuery();
 	}
 	private void BloodMoonQuery() 
 	{
-		bloodMoonTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
+		bloodMoonTask = Common.spigot.scheduler.scheduleSyncRepeatingTask(Common.spigot, new Runnable()
     	{
 
 			@Override
 			public void run() 
 			{
-				for(World selectedWorld : plugin.getServer().getWorlds()) 
+				for(World selectedWorld : Common.spigot.getServer().getWorlds()) 
 				{
 					BloodMoonEnabler(selectedWorld);
-					if(Common_Spigot.getFieldBool(selectedWorld.getUID() + ".event.bloodmoon", "internal")) 
+					if(Configuration.getFieldBool(selectedWorld.getUID() + ".event.bloodmoon", "internal")) 
 					{
 						BloodMoonVisuals(selectedWorld);
 					}
 				}
 				LuckEffects();
-				if(Main_Expert.taskID != taskID || !Common_Expert.ExpertCheck()) 
+				if(Main_Expert.taskID != taskID || !Common_Expert.expertCheck()) 
 				{
-					plugin.scheduler.cancelTask(bloodMoonTask);
+					Common.spigot.scheduler.cancelTask(bloodMoonTask);
 					System.out.println("Task: \"Blood Moon Expert\" Expired Closing Task To Save Resources.");
 				}
 			} 		
@@ -63,7 +62,7 @@ public class BloodMoon_Expert {
 		}
 		else if(worldTimeSecs > 1150 || worldTimeSecs < 600) //Day
 		{
-			if(Common_Spigot.getFieldBool(world.getUID() + ".event.bloodmoon", "internal")) 
+			if(Configuration.getFieldBool(world.getUID() + ".event.bloodmoon", "internal")) 
 			{
 				BloodMoonToggler(world,false);
 			}
@@ -71,7 +70,7 @@ public class BloodMoon_Expert {
 	}
 	private void BloodMoonVisuals(World world) 
 	{
-		for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
+		for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) 
 		{
 			if(selectedPlayer.getWorld() == world) 
 			{
@@ -107,7 +106,7 @@ public class BloodMoon_Expert {
 	{
 		if(!enabled) 
 		{
-			Common_Spigot.updateField(world.getUID() + ".event.bloodmoon","internal",false);
+			Configuration.updateField(world.getUID() + ".event.bloodmoon","internal",false);
 			world.setMonsterSpawnLimit(-1);
 			world.setTicksPerMonsterSpawns(-1);
 		}
@@ -115,22 +114,22 @@ public class BloodMoon_Expert {
 		{
 			if(random.nextInt(9) == 1 && world.getAllowMonsters()) 
 			{
-				Common_Spigot.updateField(world.getUID() + ".event.bloodmoon","internal",true);
+				Configuration.updateField(world.getUID() + ".event.bloodmoon","internal",true);
 				if(world.getEnvironment() == Environment.NORMAL) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.chatFormatter("&#32FF82The Blood Moon is rising..."));
+					Bukkit.broadcastMessage(Messaging.chatFormatter("&#32FF82The Blood Moon is rising..."));
 				}
 				else if(world.getEnvironment() == Environment.NETHER) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.chatFormatter("&#FF6464Screams echo from deep bellow..."));
+					Bukkit.broadcastMessage(Messaging.chatFormatter("&#FF6464Screams echo from deep bellow..."));
 				}
 				else if(world.getEnvironment() == Environment.THE_END) 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.chatFormatter("&#FFFFD0Some otherworldly place calls your name..."));
+					Bukkit.broadcastMessage(Messaging.chatFormatter("&#FFFFD0Some otherworldly place calls your name..."));
 				}
 				else 
 				{
-					Bukkit.broadcastMessage(Common_Spigot.chatFormatter("&#00FF00I wouldn't enter \""+ world.getName() + "\" tonight..."));
+					Bukkit.broadcastMessage(Messaging.chatFormatter("&#00FF00I wouldn't enter \""+ world.getName() + "\" tonight..."));
 				}
 				world.setMonsterSpawnLimit(world.getMonsterSpawnLimit()*3);
 				world.setTicksPerMonsterSpawns(10);
@@ -139,14 +138,14 @@ public class BloodMoon_Expert {
 	}
 	private void LuckEffects() 
 	{
-		for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
+		for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) 
 		{
-			if(Common_Expert.ExpertCheck()) 
+			if(Common_Expert.expertCheck()) 
 			{
 				if(!selectedPlayer.hasPotionEffect(PotionEffectType.UNLUCK)) 
 				{
-					long timeSinceDamageSeconds = (selectedPlayer.getTicksLived() - Common_Spigot.getFieldInt(selectedPlayer.getUniqueId() + ".damage.last","internal"))/20;
-					int bloodMoonBonus = Common_Spigot.getFieldBool(selectedPlayer.getWorld().getUID() + ".event.bloodmoon", "internal") ? 1 : 0;
+					long timeSinceDamageSeconds = (selectedPlayer.getTicksLived() - Configuration.getFieldInt(selectedPlayer.getUniqueId() + ".damage.last","internal"))/20;
+					int bloodMoonBonus = Configuration.getFieldBool(selectedPlayer.getWorld().getUID() + ".event.bloodmoon", "internal") ? 1 : 0;
 
 					if(timeSinceDamageSeconds >= 1800) 
 					{

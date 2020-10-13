@@ -13,8 +13,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Messaging;
 
 import java.util.Random;
 
@@ -22,17 +23,17 @@ import java.util.Random;
 public class CreatureSpawnEvent_Expert implements Listener
 {
 	Random random = new Random();
-	public CreatureSpawnEvent_Expert(Main_Spigot plugin)
+	public CreatureSpawnEvent_Expert()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
 	public void CreatureSpawn_Expert(org.bukkit.event.entity.CreatureSpawnEvent event) 
 	{
-		if(Common_Expert.ExpertCheck() && (!event.isCancelled())) 
+		if(Common_Expert.expertCheck() && (!event.isCancelled())) 
 		{
-			if(Common_Spigot.getFieldBool(event.getLocation().getWorld().getUID() + ".event.bloodmoon", "internal")) 
+			if(Configuration.getFieldBool(event.getLocation().getWorld().getUID() + ".event.bloodmoon", "internal")) 
 			{
 				SpecialCreatures(event,1,true);
 			}
@@ -54,17 +55,17 @@ public class CreatureSpawnEvent_Expert implements Listener
 			if(random.nextInt(8*rarityMultiplier) == 1) 
 			{
 				event.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,1000000,0,false));
-				event.getEntity().setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Invisible "+ spiderType + "Spider"));
+				event.getEntity().setCustomName(Messaging.chatFormatter("&#84FF00Expert Invisible "+ spiderType + "Spider"));
 			}
 			else if(random.nextInt(6*rarityMultiplier) == 1) 
 			{
 				event.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000,random.nextInt(5)-1,false));
-				event.getEntity().setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Quick "+ spiderType + "Spider"));
+				event.getEntity().setCustomName(Messaging.chatFormatter("&#84FF00Expert Quick "+ spiderType + "Spider"));
 			}
 			else if(random.nextInt(6*rarityMultiplier) == 1) 
 			{
 				event.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.JUMP,1000000,random.nextInt(5)-1,false));
-				event.getEntity().setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Springy "+ spiderType + "Spider"));
+				event.getEntity().setCustomName(Messaging.chatFormatter("&#84FF00Expert Springy "+ spiderType + "Spider"));
 			}
 		}
 		else if(event.getEntityType() == EntityType.CREEPER) 
@@ -74,7 +75,7 @@ public class CreatureSpawnEvent_Expert implements Listener
 			{
 				creeper.setPowered(true);
 				creeper.setExplosionRadius(3+(random.nextInt(3)*2));
-				creeper.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Charged Creeper"));
+				creeper.setCustomName(Messaging.chatFormatter("&#84FF00Expert Charged Creeper"));
 			}
 			else if(random.nextInt(3*rarityMultiplier) == 1) 
 			{
@@ -83,37 +84,37 @@ public class CreatureSpawnEvent_Expert implements Listener
 				if(random.nextInt(7) == 1)
 				{
 					creeper.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,1200,0,false));
-					creeper.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Confusing Creeper"));
+					creeper.setCustomName(Messaging.chatFormatter("&#84FF00Expert Confusing Creeper"));
 				}
 				else if(random.nextInt(6) == 1)
 				{
 					creeper.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,1200,0,false));
-					creeper.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Blinding Creeper"));
+					creeper.setCustomName(Messaging.chatFormatter("&#84FF00Expert Blinding Creeper"));
 				}
 				else if(random.nextInt(5) == 1)
 				{
 					creeper.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER,1200,3,false));
-					creeper.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Hunger Creeper"));
+					creeper.setCustomName(Messaging.chatFormatter("&#84FF00Expert Hunger Creeper"));
 				}
 				else if(random.nextInt(4) == 1)
 				{
 					creeper.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,1200,3,false));
-					creeper.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Slowing Creeper"));
+					creeper.setCustomName(Messaging.chatFormatter("&#84FF00Expert Slowing Creeper"));
 				}
 				else if(random.nextInt(3) == 1)
 				{
 					creeper.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING,1200,0,false));
-					creeper.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Fatugue Creeper"));
+					creeper.setCustomName(Messaging.chatFormatter("&#84FF00Expert Fatugue Creeper"));
 				}
 				else if(random.nextInt(2) == 1)
 				{
 					creeper.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,1200,0,false));
-					creeper.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Weakening Creeper"));
+					creeper.setCustomName(Messaging.chatFormatter("&#84FF00Expert Weakening Creeper"));
 				}
 				else 
 				{
 					creeper.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK,1200,2,false));
-					creeper.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Unlucking Creeper"));
+					creeper.setCustomName(Messaging.chatFormatter("&#84FF00Expert Unlucking Creeper"));
 				}
 			}
 		}
@@ -132,18 +133,18 @@ public class CreatureSpawnEvent_Expert implements Listener
 					size = 7;
 				}
 				slime.setSize(size);
-				slime.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert King Slime"));
+				slime.setCustomName(Messaging.chatFormatter("&#84FF00Expert King Slime"));
 			}
 			else if(random.nextInt(4*rarityMultiplier) == 1) 
 			{
 				slime.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,1000000,0,false));
-				slime.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Slimey Slime"));
+				slime.setCustomName(Messaging.chatFormatter("&#84FF00Expert Slimey Slime"));
 			}
 			else if(random.nextInt(6*rarityMultiplier) == 1) 
 			{
 				slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,1000000,2,false));
 				slime.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,1000000,255,true));
-				slime.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Rock Slime"));
+				slime.setCustomName(Messaging.chatFormatter("&#84FF00Expert Rock Slime"));
 			}
 			else 
 			{
@@ -164,18 +165,18 @@ public class CreatureSpawnEvent_Expert implements Listener
 					size = 10;
 				}
 				magmaCube.setSize(size);
-				magmaCube.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert King Magma Slime"));
+				magmaCube.setCustomName(Messaging.chatFormatter("&#84FF00Expert King Magma Slime"));
 			}
 			else if(random.nextInt(4*rarityMultiplier) == 1) 
 			{
 				magmaCube.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,1000000,0,false));
-				magmaCube.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Flamey Magma Slime"));
+				magmaCube.setCustomName(Messaging.chatFormatter("&#84FF00Expert Flamey Magma Slime"));
 			}
 			else if(random.nextInt(6*rarityMultiplier) == 1) 
 			{
 				magmaCube.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,1000000,2,false));
 				magmaCube.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,1000000,255,true));
-				magmaCube.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Rock Magma Slime"));
+				magmaCube.setCustomName(Messaging.chatFormatter("&#84FF00Expert Rock Magma Slime"));
 			}
 			else 
 			{

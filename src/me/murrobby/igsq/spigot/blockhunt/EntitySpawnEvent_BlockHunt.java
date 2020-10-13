@@ -8,15 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Configuration;
 
 public class EntitySpawnEvent_BlockHunt implements Listener
 {
-	private Main_Spigot plugin;
-	public EntitySpawnEvent_BlockHunt(Main_Spigot plugin)
+	public EntitySpawnEvent_BlockHunt()
 	{
-		this.plugin = plugin;
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
@@ -33,7 +32,7 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 					block.setGravity(false);
 					block.setSilent(true);
 					block.setHurtEntities(false);
-					plugin.scheduler.scheduleSyncDelayedTask(plugin, new Runnable()
+					Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
 			    	{
 
 						@Override
@@ -46,14 +45,14 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 				if(event.getEntity() instanceof EnderPearl)
 				{
 					EnderPearl pearl = (EnderPearl) event.getEntity();
-					pearl.setGravity(false);
-					pearl.setSilent(true);
 					if(pearl.getShooter() instanceof Player) 
 					{
 						Player player = (Player) pearl.getShooter();
 						if(Common_BlockHunt.isHider(player)) 
 						{
-							plugin.scheduler.scheduleSyncDelayedTask(plugin, new Runnable()
+							pearl.setGravity(false);
+							pearl.setSilent(true);
+							Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
 					    	{
 
 								@Override
@@ -61,18 +60,18 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 								{
 									if(player.getInventory().getItem(0).getType() == Material.ENDER_EYE) 
 									{
-										Common_BlockHunt.giveEye(player,false);
+										Common_BlockHunt.setBlockPickerCooldown(player, Configuration.getFieldInt("blockpickcooldown", "blockhunt")/Configuration.getFieldInt("failcooldown", "blockhunt"));
 									}
 									pearl.remove();
 								}
 					    	}, 20);
-							plugin.scheduler.scheduleSyncDelayedTask(plugin, new Runnable()
+							Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
 					    	{
 
 								@Override
 								public void run() 
 								{
-									Common_BlockHunt.giveEye(player,true);
+									Common_BlockHunt.updateBlockPickerItem(player,true);
 								}
 					    	}, 0);
 						}

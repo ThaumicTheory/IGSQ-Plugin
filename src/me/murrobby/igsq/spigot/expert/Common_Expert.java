@@ -4,22 +4,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
+import me.murrobby.igsq.spigot.Configuration;
 
 public class Common_Expert {
 	
-	public Common_Expert() 
-	{
-	}
-    public static void GiveBlindness(Player player,int time) 
+    public static void giveBlindness(Player player,int time) 
     {
     	if(!player.hasPotionEffect(PotionEffectType.NIGHT_VISION)) 
     	{
     		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,time,0,false));
     	}
     }
-    public static Boolean ExpertCheck() 
+    public static Boolean expertCheck() 
     {
-    	return Common_Spigot.getFieldBool("GAMEPLAY.expert", "config");
+    	return Configuration.getFieldBool("GAMEPLAY.expert", "config");
     }
 }

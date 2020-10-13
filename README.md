@@ -51,6 +51,14 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #84FF00 Expert
 - #32FF82 Blood Moon
 - #685985 IGSQ
+- #66ccff BlockHunt Blue
+- #0099ff BlockHunt Blue Secondary
+- #ff0000 BlockHunt Red
+- #990000 BlockHunt Red Secondary
+- #ff6600 BlockHunt Powerup Cooldown
+- #FFFF00 BlockHunt Highlighted
+- #00ff00 BlockHunt Active Powerup
+- #cccccc BlockHunt Disabled
 
 *Ranks*
 - #ff0065 council

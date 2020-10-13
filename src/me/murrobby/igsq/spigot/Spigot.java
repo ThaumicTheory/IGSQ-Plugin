@@ -21,59 +21,68 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
+public class Spigot extends JavaPlugin implements PluginMessageListener{
 	public BukkitScheduler scheduler = getServer().getScheduler();
 	@Override
 	public void onEnable()
 	{ 
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:yml", this);
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:sound", this);
-		Common_Spigot.spigot = this;
-		Common_Spigot.createFiles();
-		Common_Spigot.loadFile("@all");
-		Common_Spigot.applyDefaultConfiguration();
+		Common.spigot = this;
+		Configuration.createFiles();
+		Configuration.loadFile("@all");
+		Configuration.applyDefault();
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
 		{
 
 			@Override
 			public void run() 
 			{
-					Common_Spigot.saveFileChanges("@all");
-					Common_Spigot.loadFile("@all");
+					Configuration.saveFileChanges("@all");
+					Configuration.loadFile("@all");
 			} 		
     	}, 20, 600);
 		
-		new Database_Spigot(this);
+		new Database(this);
 		
 		
-		new PlayerJoinEvent_Main(this);
-		new InventoryClickEvent_Main(this);
-		new PlayerCommandPreprocessEvent_Main(this);
-		new EntityDeathEvent_Main(this);
+		new PlayerJoinEvent_Main();
+		new InventoryClickEvent_Main();
+		new PlayerCommandPreprocessEvent_Main();
+		new EntityDeathEvent_Main();
+		new AsyncPlayerChatEvent_Main();
 		
-		new Main_Expert(this);
+		new Main_Expert();
 		new Main_Security(this);
 		new Main_Command(this);
 		Boolean nametagEdit = false;
-		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Common_Spigot.getFieldBool("SUPPORT.nametagedit", "config")) 
+		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Configuration.getFieldBool("SUPPORT.nametagedit", "config")) 
 		{
 			System.out.println("NametagEdit Hook in Luckperms Module Enabled.");
 			nametagEdit = true;
 		}
 		else System.out.println("NametagEdit Hook in Luckperms Module Disabled.");
-		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && Common_Spigot.getFieldBool("SUPPORT.luckperms", "config")) 
+		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && Configuration.getFieldBool("SUPPORT.luckperms", "config")) 
 		{
 			System.out.println("Luckperms Module Enabled.");
 			new Main_LP(this,nametagEdit);
+			Configuration.updateField("controller.chat", "internal", "mainlp");
+			Configuration.updateField("controller.tag", "internal", "main");
 		}
 		else 
 		{
 			System.out.println("Luckperms Module Disabled.");
-			new AsyncPlayerChatEvent_Main(this);
+			Configuration.updateField("controller.chat", "internal", "main");
+			Configuration.updateField("controller.tag", "internal", "none");
 		}
-		if(Common_Spigot.getFieldBool("GAMEPLAY.blockhunt", "config")) 
+		if(this.getServer().getPluginManager().getPlugin("ProtocolLib") != null && Configuration.getFieldBool("GAMEPLAY.blockhunt", "config")) 
 		{
-			new Main_BlockHunt(this);
+			System.out.println("ProtocolLib Located, BlockHunt enabled.");
+			new Main_BlockHunt();
+		}
+		else 
+		{
+			System.out.println("BlockHunt disabled! (Either this was set in config or protocolLib was not located!)");
 		}
 	}
 
@@ -85,8 +94,8 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 	{
 		this.getServer().getScheduler().cancelTasks(this);
 		this.getServer().getPluginManager().disablePlugin(this);
-		Common_Spigot.saveFileChanges("@all");
-		Common_Spigot.disgardAndCloseFile("@all");
+		Configuration.saveFileChanges("@all");
+		Configuration.disgardAndCloseFile("@all");
 	}
 
 	@Override
@@ -100,13 +109,13 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 				String fileName = in.readUTF();
 				String path = in.readUTF();
 				String data = in.readUTF();
-				if(data.equalsIgnoreCase("false") || data.equalsIgnoreCase("true")) Common_Spigot.updateField(path, fileName, Boolean.valueOf(data));
-				else if(Integer.getInteger(data) != null) Common_Spigot.updateField(path, fileName, Integer.getInteger(data));
-				else Common_Spigot.updateField(path, fileName, data);
+				if(data.equalsIgnoreCase("false") || data.equalsIgnoreCase("true")) Configuration.updateField(path, fileName, Boolean.valueOf(data));
+				else if(Integer.getInteger(data) != null) Configuration.updateField(path, fileName, Integer.getInteger(data));
+				else Configuration.updateField(path, fileName, data);
 			}
 			catch (IOException e)
 			{
-				Common_Spigot.sendException(e,"Plugin Messaging Channel For Configuration Failed.","REDSTONE_LAMP", player);
+				Messaging.sendException(e,"Plugin Messaging Channel For Configuration Failed.","REDSTONE_LAMP", player);
 			}
 		}
 		else if(channel.equals("igsq:sound")) 
@@ -121,7 +130,7 @@ public class Main_Spigot extends JavaPlugin implements PluginMessageListener{
 			}
 			catch (IOException e)
 			{
-				Common_Spigot.sendException(e,"Plugin Messaging Channel For Sound Failed.","GLOWSTONE", player);
+				Messaging.sendException(e,"Plugin Messaging Channel For Sound Failed.","GLOWSTONE", player);
 			}
 		}
 	}

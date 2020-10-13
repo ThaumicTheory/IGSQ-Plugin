@@ -13,36 +13,34 @@ import org.bukkit.entity.EnderDragon.Phase;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Messaging;
 
 import java.util.Random;
 
 public class EnderDragon_Expert
 {	
-	Main_Spigot plugin;
 	Random random = new Random();
 	int enderDragonTask = -1;
 	final int taskID;
 	
-	public EnderDragon_Expert(Main_Spigot plugin,int taskID) 
+	public EnderDragon_Expert(int taskID) 
 	{
-		this.plugin = plugin;
 		this.taskID = taskID;
 		EnderDragonQuery();
 	}
 	private void EnderDragonQuery() 
 	{
-		enderDragonTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
+		enderDragonTask = Common.spigot.scheduler.scheduleSyncRepeatingTask(Common.spigot, new Runnable()
     	{
 
 			@Override
 			public void run() 
 			{
 				EnderDragon();
-				if(Main_Expert.taskID != taskID || !Common_Expert.ExpertCheck()) 
+				if(Main_Expert.taskID != taskID || !Common_Expert.expertCheck()) 
 				{
-					plugin.scheduler.cancelTask(enderDragonTask);
+					Common.spigot.scheduler.cancelTask(enderDragonTask);
 					System.out.println("Task: \"Ender Dragon Expert\" Expired Closing Task To Save Resources.");
 				}
 			} 		
@@ -50,7 +48,7 @@ public class EnderDragon_Expert
 	}
 	private void EnderDragon() 
 	{
-		for(World selectedWorld : plugin.getServer().getWorlds()) 
+		for(World selectedWorld : Common.spigot.getServer().getWorlds()) 
 		{
 			try 
 			{
@@ -79,7 +77,7 @@ public class EnderDragon_Expert
 										{
 											Player player = (Player) nearbyEntity;
 											Phantom phantom = (Phantom) selectedWorld.spawnEntity(enderDragon.getLocation(), EntityType.PHANTOM);
-											phantom.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"));
+											phantom.setCustomName(Messaging.chatFormatter("&#84FF00Expert Phantom Warrior"));
 											phantom.setTarget(player);
 											phantom.setHealth(1);
 										}
@@ -88,7 +86,7 @@ public class EnderDragon_Expert
 								}
 							}
 						}
-						else if(enderDragon.getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#FF5300True Expert Ender Dragon")))
+						else if(enderDragon.getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#FF5300True Expert Ender Dragon")))
 						{
 							if(enderDragon.getPhase() == Phase.LAND_ON_PORTAL || enderDragon.getPhase() == Phase.SEARCH_FOR_BREATH_ATTACK_TARGET) 
 							for(Entity nearbyEntity : enderDragon.getNearbyEntities(20, 20, 20)) 
@@ -123,7 +121,7 @@ public class EnderDragon_Expert
 										{
 											Player player = (Player) nearbyEntity;
 											Phantom phantom = (Phantom) selectedWorld.spawnEntity(enderDragon.getLocation(), EntityType.PHANTOM);
-											phantom.setCustomName(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"));
+											phantom.setCustomName(Messaging.chatFormatter("&#84FF00Expert Phantom Warrior"));
 											phantom.setTarget(player);
 											phantom.setHealth(3);
 										}
@@ -138,7 +136,7 @@ public class EnderDragon_Expert
 									if(nearbyEntity instanceof Phantom) 
 									{
 										Phantom phantom = (Phantom) nearbyEntity;
-										if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Common_Spigot.chatFormatter("&#84FF00Expert Phantom Warrior"))) 
+										if(phantom.getCustomName() != null && phantom.getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#84FF00Expert Phantom Warrior"))) 
 										{
 											phantom.setHealth(0);
 										}
@@ -151,7 +149,7 @@ public class EnderDragon_Expert
 								{
 
 									Player player = (Player) nearbyEntity;
-									Common_Expert.GiveBlindness(player,59);
+									Common_Expert.giveBlindness(player,59);
 
 								}
 
@@ -175,7 +173,7 @@ public class EnderDragon_Expert
 									{
 
 										Player player = (Player) nearbyEntity;
-										Common_Expert.GiveBlindness(player,59);
+										Common_Expert.giveBlindness(player,59);
 										player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,39,0,false));
 
 									}

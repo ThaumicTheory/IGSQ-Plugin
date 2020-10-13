@@ -4,13 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Common;
 
 public class PlayerSwapHandItemsEvent_BlockHunt implements Listener
 {
-	public PlayerSwapHandItemsEvent_BlockHunt(Main_Spigot plugin)
+	public PlayerSwapHandItemsEvent_BlockHunt()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler

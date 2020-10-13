@@ -3,18 +3,16 @@ package me.murrobby.igsq.spigot.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.murrobby.igsq.spigot.Common_Spigot;
-import me.murrobby.igsq.spigot.Main_Spigot;
+import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class Error_Command {
 
-	private Main_Command commands;
 	private CommandSender sender;
 	private String[] args = new String[0];
 	public Boolean result;
-	public Error_Command(Main_Spigot plugin,Main_Command commands,CommandSender sender,String[] args) 
+	public Error_Command(CommandSender sender,String[] args) 
 	{
-		this.commands = commands;
 		
 		this.sender = sender;
 		this.args = args;
@@ -32,7 +30,7 @@ public class Error_Command {
 		    	}
 		    	catch(Exception e) 
 		    	{
-		    		Common_Spigot.sendException(e,"Manually initiated error","DIRT",sender);
+		    		Messaging.sendException(e,"Manually initiated error","DIRT",sender);
 		    		return true;
 		    	}
 			}
@@ -46,13 +44,13 @@ public class Error_Command {
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
-						player.sendMessage(Common_Spigot.chatFormatter("&#FF0000Error Logging &#00FF00Enabled&#FF0000!"));
-						Common_Spigot.updateField(player.getUniqueId().toString() + ".errorlog", "player", "enabled");
+						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FF00Enabled&#FF0000!"));
+						Configuration.updateField(player.getUniqueId().toString() + ".errorlog", "player", "enabled");
 					}
 					else
 					{
-						sender.sendMessage(Common_Spigot.chatFormatterConsole("&cError Logging &aEnabled&c!"));
-						Common_Spigot.updateField("console.errorlog", "internal", "enabled");
+						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &aEnabled&c!"));
+						Configuration.updateField("console.errorlog", "internal", "enabled");
 					}
 				}
 				else if(args[1].equalsIgnoreCase("verbose"))
@@ -60,13 +58,13 @@ public class Error_Command {
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
-						player.sendMessage(Common_Spigot.chatFormatter("&#FF0000Error Logging &#00FFFFEnabled & Verbose&#FF0000!"));
-						Common_Spigot.updateField(player.getUniqueId().toString() + ".errorlog", "player", "verbose");
+						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FFFFEnabled & Verbose&#FF0000!"));
+						Configuration.updateField(player.getUniqueId().toString() + ".errorlog", "player", "verbose");
 					}
 					else
 					{
-						sender.sendMessage(Common_Spigot.chatFormatterConsole("&cError Logging &bEnabled & Verbose&c!"));
-						Common_Spigot.updateField("console.errorlog", "internal", "verbose");
+						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &bEnabled & Verbose&c!"));
+						Configuration.updateField("console.errorlog", "internal", "verbose");
 					}
 				}
 				else
@@ -74,13 +72,13 @@ public class Error_Command {
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
-						player.sendMessage(Common_Spigot.chatFormatter("&#FF0000Error Logging &#C8C8C8Disabled&#FF0000!"));
-						Common_Spigot.updateField(player.getUniqueId().toString() + ".errorlog", "player", "");
+						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#C8C8C8Disabled&#FF0000!"));
+						Configuration.updateField(player.getUniqueId().toString() + ".errorlog", "player", "");
 					}
 					else
 					{
-						sender.sendMessage(Common_Spigot.chatFormatterConsole("&cError Logging &7Disabled&c!"));
-						Common_Spigot.updateField("console.errorlog", "internal", "");
+						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &7Disabled&c!"));
+						Configuration.updateField("console.errorlog", "internal", "");
 					}
 				}
 				return true;
@@ -90,7 +88,7 @@ public class Error_Command {
 	}
 	private Boolean ErrorQuery() 
 	{
-			if(commands.RequirePermission("igsq.error")) 
+			if(Common_Command.requirePermission("igsq.error",sender)) 
 			{
 				if(Error()) 
 				{
@@ -98,13 +96,13 @@ public class Error_Command {
 				}
 				else 
 				{
-					sender.sendMessage(Common_Spigot.chatFormatter("&#FFFF00error [test/log]"));
+					sender.sendMessage(Messaging.chatFormatter("&#FFFF00error [test/log]"));
 					return false;
 				}
 			}
 			else 
 			{
-				sender.sendMessage(Common_Spigot.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
+				sender.sendMessage(Messaging.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
 	  			return false;
 			}
 	}
