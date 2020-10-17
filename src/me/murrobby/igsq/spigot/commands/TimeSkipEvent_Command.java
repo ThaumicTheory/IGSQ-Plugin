@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.TimeSkipEvent.SkipReason;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 
 public class TimeSkipEvent_Command implements Listener
 {
@@ -20,7 +20,7 @@ public class TimeSkipEvent_Command implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if(Configuration.getFieldBool(event.getWorld().getUID().toString() + ".realtime.enabled", "internal") && event.getSkipReason() != SkipReason.CUSTOM) event.setCancelled(true);
+			if(Yaml.getFieldBool(event.getWorld().getUID().toString() + ".realtime.enabled", "internal") && event.getSkipReason() != SkipReason.CUSTOM) event.setCancelled(true);
 		}
 	}
 	

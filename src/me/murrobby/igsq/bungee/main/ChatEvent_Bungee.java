@@ -1,7 +1,9 @@
 package me.murrobby.igsq.bungee.main;
 
-import me.murrobby.igsq.bungee.Common_Bungee;
-import me.murrobby.igsq.bungee.Main_Bungee;
+import me.murrobby.igsq.bungee.Common;
+import me.murrobby.igsq.bungee.Communication;
+import me.murrobby.igsq.bungee.Messaging;
+import me.murrobby.igsq.bungee.Yaml;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -9,11 +11,9 @@ import net.md_5.bungee.event.EventHandler;
 
 public class ChatEvent_Bungee implements Listener
 {
-	private Main_Bungee plugin;
-	public ChatEvent_Bungee(Main_Bungee plugin)
+	public ChatEvent_Bungee()
 	{
-		this.plugin = plugin;
-		ProxyServer.getInstance().getPluginManager().registerListener(plugin, this);
+		ProxyServer.getInstance().getPluginManager().registerListener(Common.bungee, this);
 	}
 	
 	@EventHandler
@@ -34,14 +34,14 @@ public class ChatEvent_Bungee implements Listener
 				{
 					server = player.getServer().getInfo().getName().toUpperCase();
 				}
-				System.out.println(Common_Bungee.getFormattedMessageConsole("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
+				System.out.println(Messaging.getFormattedMessageConsole("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
 				if(!player.hasPermission("igsq.commandwatchbypass"))
 				{
-					for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
+					for(ProxiedPlayer selectedPlayer : Common.bungee.getProxy().getPlayers())
 					{
 						if(selectedPlayer.hasPermission("igsq.commandwatch") && selectedPlayer != player)
 						{
-							selectedPlayer.sendMessage(Common_Bungee.getFormattedMessage("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
+							selectedPlayer.sendMessage(Messaging.getFormattedMessage("commandwatch",new String[] {"<player>",player.getName(),"<command>",event.getMessage(),"<server>",server}));
 						}
 					}
 				}
@@ -49,12 +49,12 @@ public class ChatEvent_Bungee implements Listener
 			else
 			{
 				
-				for(ProxiedPlayer selectedPlayer : plugin.getProxy().getPlayers())
+				for(ProxiedPlayer selectedPlayer : Common.bungee.getProxy().getPlayers())
 				{
 					if(player == selectedPlayer) continue;
 					Boolean sendmessage = false;
 					String[] message = event.getMessage().split(" ");
-					String discordUsername = Common_Bungee.getFieldString(selectedPlayer.getUniqueId() + ".discord.username", "player");
+					String discordUsername = Yaml.getFieldString(selectedPlayer.getUniqueId() + ".discord.username", "player");
 					for(String string : message) 
 					{
 
@@ -67,10 +67,10 @@ public class ChatEvent_Bungee implements Listener
 					{
 						try
 						{
-							Common_Bungee.sendSound(selectedPlayer, "BLOCK_NOTE_BLOCK_PLING", 1, 1);
+							Communication.sendSound(selectedPlayer, "BLOCK_NOTE_BLOCK_PLING", 1, 1);
 							if(!selectedPlayer.getServer().getInfo().getName().equals(player.getServer().getInfo().getName())) 
 							{
-								selectedPlayer.sendMessage(Common_Bungee.getFormattedMessage("mention", new String[] {"<mentioner>",player.getName(),"<mentionerserver>",player.getServer().getInfo().getName().toUpperCase(),"<message>",event.getMessage()}));
+								selectedPlayer.sendMessage(Messaging.getFormattedMessage("mention", new String[] {"<mentioner>",player.getName(),"<mentionerserver>",player.getServer().getInfo().getName().toUpperCase(),"<message>",event.getMessage()}));
 							}
 						}
 						catch(Exception exception) 

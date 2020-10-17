@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.murrobby.igsq.bungee.Common_Bungee;
+import me.murrobby.igsq.bungee.Messaging;
+import me.murrobby.igsq.bungee.Yaml;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -26,7 +27,7 @@ public class Test_Command  extends Command implements TabExecutor
 		List<String> options = new ArrayList<String>();
 		if(args.length == 1) 
 		{
-			for (String commands : Common_Bungee.fileNames) if(commands.contains(args[0].toLowerCase())) options.add(commands);
+			for (String commands : Yaml.fileNames) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		if(args.length == 2) 
 		{
@@ -64,9 +65,9 @@ public class Test_Command  extends Command implements TabExecutor
 					e.printStackTrace();
 				}
 			}
-			else sender.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission")));
+			else sender.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission")));
 		}
-		else sender.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FF0000This is an invalid arg length!")));
+		else sender.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FF0000This is an invalid arg length!")));
 		
 	}
 }

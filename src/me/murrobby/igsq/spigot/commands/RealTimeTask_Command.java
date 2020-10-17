@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 
 public class RealTimeTask_Command
 {	
@@ -27,7 +27,7 @@ public class RealTimeTask_Command
 			public void run() 
 			{
 				Boolean expireTask = true;
-				for(World world : Bukkit.getServer().getWorlds()) if(Configuration.getFieldBool(world.getUID().toString() + ".realtime.enabled", "internal")) expireTask = false;
+				for(World world : Bukkit.getServer().getWorlds()) if(Yaml.getFieldBool(world.getUID().toString() + ".realtime.enabled", "internal")) expireTask = false;
 				realTime();
 				if(Main_Command.taskID != taskID || expireTask) 
 				{
@@ -45,6 +45,6 @@ public class RealTimeTask_Command
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
 		long totalSeconds = (long) ((double)seconds + ((double)minutes*60) + ((double)hours*3600));
 		long mctime = (long)((double)totalSeconds/72*20);
-		for(World world : Bukkit.getServer().getWorlds()) if(Configuration.getFieldBool(world.getUID().toString() + ".realtime.enabled", "internal")) world.setTime((mctime)-5000);
+		for(World world : Bukkit.getServer().getWorlds()) if(Yaml.getFieldBool(world.getUID().toString() + ".realtime.enabled", "internal")) world.setTime((mctime)-5000);
 	}
 }

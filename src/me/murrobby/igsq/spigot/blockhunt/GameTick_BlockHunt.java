@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class GameTick_BlockHunt
@@ -50,11 +50,11 @@ public class GameTick_BlockHunt
 				{
 					if(Common_BlockHunt.isCloaked(player)) 
 					{
-						if(player.getLocation().getBlockX() != Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.x", "internal") || player.getLocation().getBlockY() != Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.y", "internal") || player.getLocation().getBlockZ() != Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.z", "internal")) 
+						if(player.getLocation().getBlockX() != Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.x", "internal") || player.getLocation().getBlockY() != Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.y", "internal") || player.getLocation().getBlockZ() != Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.z", "internal")) 
 						{
 							player.sendMessage(Messaging.chatFormatter("&#C8C8C8You are no longer hidden."));
 							Common_BlockHunt.removeCloak(player);
-							Common_BlockHunt.setCloakCooldown(player, Configuration.getFieldInt("cloakcooldown", "blockhunt"));
+							Common_BlockHunt.setCloakCooldown(player, Yaml.getFieldInt("cloakcooldown", "blockhunt"));
 						}
 						else 
 						{
@@ -62,17 +62,17 @@ public class GameTick_BlockHunt
 							{
 								if(!selectedPlayer.getUniqueId().equals(player.getUniqueId())) 
 								{
-									selectedPlayer.sendBlockChange(player.getLocation().getBlock().getLocation(), Bukkit.createBlockData(Material.valueOf(Configuration.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
+									selectedPlayer.sendBlockChange(player.getLocation().getBlock().getLocation(), Bukkit.createBlockData(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
 								}
 							}
 						}
 					}
 				}
-				if(Common_BlockHunt.isPlayerVisible(player, Configuration.getFieldInt("visibilityrange", "blockhunt"))) Common_BlockHunt.showPlayer(player);
+				if(Common_BlockHunt.isPlayerVisible(player, Yaml.getFieldInt("visibilityrange", "blockhunt"))) Common_BlockHunt.showPlayer(player);
 				else
 				{
 					Common_BlockHunt.hidePlayer(player);
-					if(secondTick && Common_BlockHunt.isHider(player) && !Common_BlockHunt.isCloaked(player)) player.getLocation().getWorld().spawnFallingBlock(player.getLocation(), Bukkit.createBlockData(Material.valueOf(Configuration.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
+					if(secondTick && Common_BlockHunt.isHider(player) && !Common_BlockHunt.isCloaked(player)) player.getLocation().getWorld().spawnFallingBlock(player.getLocation(), Bukkit.createBlockData(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
 				}
 				player.setSilent(Common_BlockHunt.isPlayerSilent(player));
 				if(!secondTick) 

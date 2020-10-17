@@ -2,7 +2,7 @@ package me.murrobby.igsq.bungee.security;
 
 import java.util.Arrays;
 
-import me.murrobby.igsq.bungee.Main_Bungee;
+import me.murrobby.igsq.bungee.Common;
 import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -11,9 +11,9 @@ import net.md_5.bungee.event.EventHandler;
 
 public class PluginMessageEvent_Security implements Listener
 {
-	public PluginMessageEvent_Security(Main_Bungee plugin)
+	public PluginMessageEvent_Security()
 	{
-		ProxyServer.getInstance().getPluginManager().registerListener(plugin, this);
+		ProxyServer.getInstance().getPluginManager().registerListener(Common.bungee, this);
 	}
 	
 	@EventHandler

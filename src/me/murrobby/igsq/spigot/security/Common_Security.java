@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.shared.Common_Shared;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class Common_Security 
@@ -30,8 +30,8 @@ public class Common_Security
     }
     public static boolean SecurityProtectionQuery(Player player) //returning true means that 2fa protection should be enabled false otherwise
     {
-		String player2FA = Configuration.getFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "player");
-		String code2FA = Configuration.getFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "player");
+		String player2FA = Yaml.getFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "player");
+		String code2FA = Yaml.getFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "player");
 		if(player2FA == null) return false;
 		else if((code2FA == null || code2FA.equalsIgnoreCase("")) && player2FA.equalsIgnoreCase("pending")) return false;
     	else if(player2FA.equalsIgnoreCase("")) return false;

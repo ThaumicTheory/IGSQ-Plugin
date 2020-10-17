@@ -88,13 +88,13 @@ public class Common {
     }
 	public static Boolean isCurrentChatController(String controller,Player player) 
 	{
-		String current = Common_Shared.removeNull(Configuration.getFieldString(player.getUniqueId().toString() + ".controller.chat", "internal"));
+		String current = Common_Shared.removeNull(Yaml.getFieldString(player.getUniqueId().toString() + ".controller.chat", "internal"));
 		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
 	}
 	public static Boolean isCurrentTagController(String controller,Player player) 
 	{
-		String current = Common_Shared.removeNull(Configuration.getFieldString(player.getUniqueId().toString() + ".controller.tag", "internal"));
+		String current = Common_Shared.removeNull(Yaml.getFieldString(player.getUniqueId().toString() + ".controller.tag", "internal"));
 		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
 	}

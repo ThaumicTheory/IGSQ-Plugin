@@ -30,7 +30,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class Common_BlockHunt 
@@ -146,7 +146,7 @@ public class Common_BlockHunt
 		Common_BlockHunt.hidersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
 		player.getInventory().clear();
 		for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", "");
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", "");
 		removePlayer(player);
 	}
 	public static int getSeekerCount() 
@@ -156,7 +156,7 @@ public class Common_BlockHunt
 	}
     public static Boolean blockhuntCheck() 
     {
-    	return Configuration.getFieldBool("GAMEPLAY.blockhunt", "config");
+    	return Yaml.getFieldBool("GAMEPLAY.blockhunt", "config");
     }
     public static Boolean isSeeker(Player player) 
     {
@@ -184,25 +184,25 @@ public class Common_BlockHunt
     }
     public static Boolean isCloaked(Player player) 
     {
-    	return Configuration.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal");
+    	return Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal");
     }
     public static void removeCloak(Player player) 
     {
-    	if(Configuration.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal")) 
+    	if(Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal")) 
     	{
         	Location location = player.getLocation();
-        	location.setX(Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.x", "internal"));
-        	location.setY(Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.y", "internal"));
-        	location.setZ(Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.z", "internal"));
+        	location.setX(Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.x", "internal"));
+        	location.setY(Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.y", "internal"));
+        	location.setZ(Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.z", "internal"));
         	for(Player selectedPlayer : players) 	
         	{
         		selectedPlayer.sendBlockChange(location, Bukkit.createBlockData(Material.AIR));
         	}
-    		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.cloak", "internal", false);
+    		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.cloak", "internal", false);
     	}
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.x", "internal", 0);
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", 0);
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.z", "internal", 0);
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.x", "internal", 0);
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", 0);
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.z", "internal", 0);
 		Common_BlockHunt.updateCloakItem(player);
 		Common_BlockHunt.updateBlockPickerItem(player, false);
     }
@@ -245,18 +245,18 @@ public class Common_BlockHunt
     	Location location = player.getLocation();
     	for(Player selectedPlayer : players) 	
     	{
-    		if(!selectedPlayer.getUniqueId().equals(player.getUniqueId())) selectedPlayer.sendBlockChange(location, Bukkit.createBlockData(Material.valueOf(Configuration.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
+    		if(!selectedPlayer.getUniqueId().equals(player.getUniqueId())) selectedPlayer.sendBlockChange(location, Bukkit.createBlockData(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
     	}
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.cloak", "internal", true);
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.x", "internal", location.getBlockX());
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", location.getBlockY());
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.location.z", "internal", location.getBlockZ());
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.cloak", "internal", true);
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.x", "internal", location.getBlockX());
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", location.getBlockY());
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.z", "internal", location.getBlockZ());
 		Common_BlockHunt.updateCloakItem(player);
 		Common_BlockHunt.updateBlockPickerItem(player, false);
     }
     public static Boolean validateCloak(Player player) 
     {
-    	if(!Configuration.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal")) 
+    	if(!Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal")) 
     	{
         	Location targetLocation = player.getLocation().getBlock().getLocation();
         	Location checkingLocation = targetLocation;
@@ -340,7 +340,7 @@ public class Common_BlockHunt
     {
     	if(isCloaked(player)) return true;
     	if(player.isSneaking()) return true; //silent if sneaking
-    	if(isHider(player) && isPlayerVisible(player, Configuration.getFieldInt("visibilityrange", "blockhunt"))) return false; //if player is revealed then the player is not silent
+    	if(isHider(player) && isPlayerVisible(player, Yaml.getFieldInt("visibilityrange", "blockhunt"))) return false; //if player is revealed then the player is not silent
     	if(player.isSwimming()) return false; //we dont want to encourage people to swim
     	if(player.isSprinting()) return false; //no-one can sprint silently
     	if(isSeeker(player)) return true; //seekers are allowed to walk silently
@@ -418,30 +418,30 @@ public class Common_BlockHunt
     }
     public static int getBlockPickerCooldown(Player player) 
     {
-    	return Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal");
+    	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal");
     }
     public static void setBlockPickerCooldown(Player player,int cooldown) 
     {
     	int currentCooldown = getBlockPickerCooldown(player);
-    	Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal", cooldown);
+    	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal", cooldown);
     	if(currentCooldown == 0) updateBlockPickerItem(player, true); //Force an update to block object use
     }
     
     public static int getCloakCooldown(Player player) 
     {
-    	return Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.cloakcooldown", "internal");
+    	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.cloakcooldown", "internal");
     }
     public static void setCloakCooldown(Player player,int cooldown) 
     {
     	int currentCooldown = getCloakCooldown(player);
-    	Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.cloakcooldown", "internal", cooldown);
+    	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.cloakcooldown", "internal", cooldown);
     	if(currentCooldown == 0) updateCloakItem(player); //Force an update to block object use
     }
     
     public static void updateCloakItem(Player player)
     {
     	int cooldown = getCloakCooldown(player)/20;
-    	String matString = Configuration.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal");
+    	String matString = Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal");
     	Material material = Material.BARRIER;
     	if(matString != null && (!matString.equalsIgnoreCase("")) && Material.valueOf(matString) != null) material = Material.valueOf(matString);
 		ItemStack block;
@@ -487,11 +487,11 @@ public class Common_BlockHunt
     {
     	if(!isCloaked(player) && getBlockPickerCooldown(player) == 0) 
     	{
-        	Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", material.toString());
+        	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", material.toString());
         	updateCloakItem(player);
-        	setBlockPickerCooldown(player, Configuration.getFieldInt("blockpickcooldown", "blockhunt"));
+        	setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt"));
     	}
-    	else setBlockPickerCooldown(player, Configuration.getFieldInt("blockpickcooldown", "blockhunt")/Configuration.getFieldInt("failcooldown", "blockhunt"));
+    	else setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
     }
 	public static void setupPlayers(Player player) 
 	{
@@ -628,7 +628,7 @@ public class Common_BlockHunt
 	public static void defaultDisguise(Player player) 
 	{
 		
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", Common_BlockHunt.blocks[random.nextInt(Common_BlockHunt.blocks.length)].toString());
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", Common_BlockHunt.blocks[random.nextInt(Common_BlockHunt.blocks.length)].toString());
 	}
 	public static void hidePlayer(Player player) 
 	{
@@ -652,7 +652,7 @@ public class Common_BlockHunt
 	}
 	public static int inventoryAssistTick(Player player) 
 	{
-		int slot = Configuration.getFieldInt(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal");
+		int slot = Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal");
 		int direction = 0;
 		if(slot != player.getInventory().getHeldItemSlot())
 		{
@@ -690,7 +690,7 @@ public class Common_BlockHunt
 					
 					if(player.getInventory().getItem(slot) != null) 
 					{
-						Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", slot);
+						Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", slot);
 						return slot;
 					}
 					else
@@ -701,14 +701,14 @@ public class Common_BlockHunt
 						
 						if(attempts > 8) //Nothing in inventory 
 						{
-							Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
+							Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
 							return -1;
 						}
 					}
 				}
 			}
 		}
-		Configuration.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
 		return -1; //Inventory has not Moved
 	}
   

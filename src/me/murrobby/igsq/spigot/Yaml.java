@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-public class Configuration 
+public class Yaml 
 {
     /**
      * filenames is a String array of all of the fileNames to be created into {@link java.io.File}
@@ -244,9 +244,9 @@ public class Configuration
     // TODO commenting
     public static void applyDefault(Player player) 
     {
-    	Configuration.addFieldDefault(player.getUniqueId().toString() + ".damage.last", "player", player.getTicksLived());
-    	Configuration.addFieldDefault(player.getUniqueId().toString() + "controller.chat", "internal", Configuration.getFieldString("controller.chat", "internal"));
-    	Configuration.addFieldDefault(player.getUniqueId().toString() + "controller.tag", "internal", Configuration.getFieldString("controller.tag", "internal"));
+    	Yaml.addFieldDefault(player.getUniqueId().toString() + ".damage.last", "player", player.getTicksLived());
+    	Yaml.addFieldDefault(player.getUniqueId().toString() + "controller.chat", "internal", Yaml.getFieldString("controller.chat", "internal"));
+    	Yaml.addFieldDefault(player.getUniqueId().toString() + "controller.tag", "internal", Yaml.getFieldString("controller.tag", "internal"));
     }
     
     

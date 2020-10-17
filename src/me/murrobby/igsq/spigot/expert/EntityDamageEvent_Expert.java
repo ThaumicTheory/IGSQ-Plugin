@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class EntityDamageEvent_Expert implements Listener
@@ -34,7 +34,7 @@ public class EntityDamageEvent_Expert implements Listener
 			{
 				Player player = (Player)event.getEntity();
 				player.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK,(int) (200*event.getDamage()*((1+player.getHealthScale())-player.getHealth())),0,true));
-				Configuration.updateField(player.getUniqueId().toString() + ".damage.last","player" ,player.getTicksLived() );
+				Yaml.updateField(player.getUniqueId().toString() + ".damage.last","player" ,player.getTicksLived() );
 				if(player.hasPotionEffect(PotionEffectType.LUCK)) 
 				{
 					player.removePotionEffect(PotionEffectType.LUCK);

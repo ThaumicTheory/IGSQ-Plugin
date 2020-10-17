@@ -1,6 +1,6 @@
 package me.murrobby.igsq.bungee.security;
 
-import me.murrobby.igsq.bungee.Main_Bungee;
+import me.murrobby.igsq.bungee.Common;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -8,9 +8,9 @@ import net.md_5.bungee.event.EventHandler;
 
 public class ChatEvent_Security implements Listener
 {
-	public ChatEvent_Security(Main_Bungee plugin)
+	public ChatEvent_Security()
 	{
-		ProxyServer.getInstance().getPluginManager().registerListener(plugin, this);
+		ProxyServer.getInstance().getPluginManager().registerListener(Common.bungee, this);
 	}
 	
 	@EventHandler

@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 
 public class PlayerJoinEvent_Main implements Listener
 {
@@ -21,9 +21,9 @@ public class PlayerJoinEvent_Main implements Listener
 	{
 		Player player = event.getPlayer();
 		
-		if(Configuration.getFieldInt(player.getUniqueId().toString() + ".damage.last", "internal") == 0) 
+		if(Yaml.getFieldInt(player.getUniqueId().toString() + ".damage.last", "internal") == 0) 
 		{
-			Configuration.applyDefault(player);
+			Yaml.applyDefault(player);
 		}
 	}
 }

@@ -14,7 +14,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 import java.util.Random;
@@ -33,7 +33,7 @@ public class CreatureSpawnEvent_Expert implements Listener
 	{
 		if(Common_Expert.expertCheck() && (!event.isCancelled())) 
 		{
-			if(Configuration.getFieldBool(event.getLocation().getWorld().getUID() + ".event.bloodmoon", "internal")) 
+			if(Yaml.getFieldBool(event.getLocation().getWorld().getUID() + ".event.bloodmoon", "internal")) 
 			{
 				SpecialCreatures(event,1,true);
 			}

@@ -48,7 +48,7 @@ public class Messaging {
 			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
-		String message = Configuration.getFieldString(messageName, "message");
+		String message = Yaml.getFieldString(messageName, "message");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
     	return chatFormatter(message);
 	}
@@ -65,7 +65,7 @@ public class Messaging {
      */
     public static String getFormattedMessage(String messageName,String replace,String with) //1
     {
-    	return chatFormatter(Configuration.getFieldString(messageName, "message").replace(replace,with));
+    	return chatFormatter(Yaml.getFieldString(messageName, "message").replace(replace,with));
     }
     
     
@@ -80,7 +80,7 @@ public class Messaging {
      */
     public static String getFormattedMessage(String messageName) //0
     {
-    	return chatFormatter(Configuration.getFieldString(messageName, "message"));
+    	return chatFormatter(Yaml.getFieldString(messageName, "message"));
     }
     
 
@@ -120,7 +120,7 @@ public class Messaging {
 			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
 			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
-		String message = Configuration.getFieldString(messageName, "message");
+		String message = Yaml.getFieldString(messageName, "message");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
     	return chatFormatterConsole(message);
 	}
@@ -137,7 +137,7 @@ public class Messaging {
      */
     public static String getFormattedMessageConsole(String messageName,String replace,String with) //1 Console
     {
-    	return chatFormatterConsole(Configuration.getFieldString(messageName, "message").replace(replace,with));
+    	return chatFormatterConsole(Yaml.getFieldString(messageName, "message").replace(replace,with));
     }
     
     
@@ -152,7 +152,7 @@ public class Messaging {
      */
     public static String getFormattedMessageConsole(String messageName)//0 Console
     {
-    	return chatFormatterConsole(Configuration.getFieldString(messageName, "message"));
+    	return chatFormatterConsole(Yaml.getFieldString(messageName, "message"));
     }
     
     /**
@@ -171,7 +171,7 @@ public class Messaging {
     	{
     		if(player.hasPermission("igsq.error")) 
     		{
-    			String errorLogStatus = Configuration.getFieldString(player.getUniqueId().toString()+".errorlog", "player");
+    			String errorLogStatus = Yaml.getFieldString(player.getUniqueId().toString()+".errorlog", "player");
     			if(errorLogStatus != null && !errorLogStatus.equalsIgnoreCase("")) 
     			{
     	    		if(errorLogStatus.equalsIgnoreCase("verbose")) 
@@ -191,7 +191,7 @@ public class Messaging {
     			player.sendMessage(chatFormatter("&#FF0000Something went wrong. If you see a developer tell them this secret code &#ff00ff" + errorCode));
     		}
     	}
-    	String errorLogStatus = Configuration.getFieldString("console.errorlog", "internal");
+    	String errorLogStatus = Yaml.getFieldString("console.errorlog", "internal");
 		if(errorLogStatus != null && !errorLogStatus.equalsIgnoreCase("")) 
 		{
     		if(errorLogStatus.equalsIgnoreCase("verbose")) 

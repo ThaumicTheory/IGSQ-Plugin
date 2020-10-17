@@ -8,7 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class AsyncPlayerChatEvent_LP implements Listener
@@ -26,9 +26,9 @@ public class AsyncPlayerChatEvent_LP implements Listener
 		{
 			if(Common.isCurrentChatController("mainlp", event.getPlayer())) 
 			{
-				String username = Configuration.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "player");
+				String username = Yaml.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "player");
 				if (username.equals("")) username = event.getPlayer().getName();
-				event.setFormat((Messaging.getFormattedMessage("message", new String[] {"<server>",Configuration.getFieldString("server","internal"), "<prefix>",Common_LP.getPrefix(event.getPlayer()) , "<player>", username,"<suffix>",Common_Shared.removeNull(Common_LP.getSuffix(event.getPlayer())), "<message>", event.getMessage()})));
+				event.setFormat((Messaging.getFormattedMessage("message", new String[] {"<server>",Yaml.getFieldString("server","internal"), "<prefix>",Common_LP.getPrefix(event.getPlayer()) , "<player>", username,"<suffix>",Common_Shared.removeNull(Common_LP.getSuffix(event.getPlayer())), "<message>", event.getMessage()})));
 			}
 		}
 	}

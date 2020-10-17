@@ -14,7 +14,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
-public class Main_Bungee extends Plugin
+public class Bungee extends Plugin
 {
 	@Override
 	public void onEnable()
@@ -23,10 +23,10 @@ public class Main_Bungee extends Plugin
 		this.getProxy().registerChannel("igsq:sound");
 		
 		
-		Common_Bungee.bungee = this;
-		Common_Bungee.createFiles();
-		Common_Bungee.loadFile("@all");
-		Common_Bungee.applyDefaultConfiguration();	
+		Common.bungee = this;
+		Yaml.createFiles();
+		Yaml.loadFile("@all");
+		Yaml.applyDefault();	
     	
     	this.getProxy().getScheduler().schedule(this, new Runnable() 
     	{
@@ -34,8 +34,8 @@ public class Main_Bungee extends Plugin
 			@Override
 			public void run() 
 			{
-				Common_Bungee.saveFileChanges("@all");
-				Common_Bungee.loadFile("@all");
+				Yaml.saveFileChanges("@all");
+				Yaml.loadFile("@all");
 				String[] servers = new String[0];
 		    	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
 		    	{
@@ -50,7 +50,7 @@ public class Main_Bungee extends Plugin
 		    		}
 		    		if((!serverChecked) && player.getServer() != null) 
 		    		{
-		    			Common_Bungee.sendConfigUpdate("server","internal", player.getServer().getInfo().getName(),player);
+		    			Communication.sendConfigUpdate("server","internal", player.getServer().getInfo().getName(),player);
 		    		}
 		    		
 		    	}
@@ -59,19 +59,19 @@ public class Main_Bungee extends Plugin
     		
     	}, 5, 30, TimeUnit.SECONDS);
     	
-		new Database_Bungee(this);
-		new PostLoginEvent_Bungee(this);
-		new ChatEvent_Bungee(this);
-		new ServerKickEvent_Bungee(this);
+		new Database();
+		new PostLoginEvent_Bungee();
+		new ChatEvent_Bungee();
+		new ServerKickEvent_Bungee();
 		
-		new Main_Security(this);
+		new Main_Security();
 		getProxy().getPluginManager().registerCommand(this,new Link_Command());
 		getProxy().getPluginManager().registerCommand(this,new TwoFA_Command());
 		getProxy().getPluginManager().registerCommand(this,new Test_Command());
-		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && Common_Bungee.getFieldString("SUPPORT.luckperms", "config").equalsIgnoreCase("true")) 
+		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && Yaml.getFieldString("SUPPORT.luckperms", "config").equalsIgnoreCase("true")) 
 		{
 			System.out.println("Luckperms Module Enabled.");
-			new Main_LP(this);
+			new Main_LP();
 		}
 		else 
 		{
@@ -89,8 +89,8 @@ public class Main_Bungee extends Plugin
 		this.getProxy().getScheduler().cancel(this);
 		this.getProxy().getPluginManager().unregisterListeners(this);
 		this.getProxy().getPluginManager().unregisterCommands(this);
-		Common_Bungee.saveFileChanges("@all");
-		Common_Bungee.disgardAndCloseFile("@all");
+		Yaml.saveFileChanges("@all");
+		Yaml.disgardAndCloseFile("@all");
 	}
 	
 }

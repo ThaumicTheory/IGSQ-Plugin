@@ -14,7 +14,7 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 
 public class PlayServerBlockChange_BlockHunt implements Listener
 {
@@ -43,7 +43,7 @@ public class PlayServerBlockChange_BlockHunt implements Listener
 				        	{
 				        		PacketContainer fakeBlock = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
 				        		fakeBlock.getBlockPositionModifier().write(0, position);
-				        		fakeBlock.getBlockData().write(0, WrappedBlockData.createData(Material.valueOf(Configuration.getFieldString(hider.getUniqueId().toString()+".blockhunt.block", "internal"))));
+				        		fakeBlock.getBlockData().write(0, WrappedBlockData.createData(Material.valueOf(Yaml.getFieldString(hider.getUniqueId().toString()+".blockhunt.block", "internal"))));
 				        		event.setPacket(fakeBlock);
 			        		}
 			        	}

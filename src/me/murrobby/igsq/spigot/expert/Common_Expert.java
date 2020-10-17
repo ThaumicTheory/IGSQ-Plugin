@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 
 public class Common_Expert {
 	
@@ -17,6 +17,6 @@ public class Common_Expert {
     }
     public static Boolean expertCheck() 
     {
-    	return Configuration.getFieldBool("GAMEPLAY.expert", "config");
+    	return Yaml.getFieldBool("GAMEPLAY.expert", "config");
     }
 }

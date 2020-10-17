@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class BloodMoon_Expert {
@@ -38,7 +38,7 @@ public class BloodMoon_Expert {
 				for(World selectedWorld : Common.spigot.getServer().getWorlds()) 
 				{
 					BloodMoonEnabler(selectedWorld);
-					if(Configuration.getFieldBool(selectedWorld.getUID() + ".event.bloodmoon", "internal")) 
+					if(Yaml.getFieldBool(selectedWorld.getUID() + ".event.bloodmoon", "internal")) 
 					{
 						BloodMoonVisuals(selectedWorld);
 					}
@@ -62,7 +62,7 @@ public class BloodMoon_Expert {
 		}
 		else if(worldTimeSecs > 1150 || worldTimeSecs < 600) //Day
 		{
-			if(Configuration.getFieldBool(world.getUID() + ".event.bloodmoon", "internal")) 
+			if(Yaml.getFieldBool(world.getUID() + ".event.bloodmoon", "internal")) 
 			{
 				BloodMoonToggler(world,false);
 			}
@@ -106,7 +106,7 @@ public class BloodMoon_Expert {
 	{
 		if(!enabled) 
 		{
-			Configuration.updateField(world.getUID() + ".event.bloodmoon","internal",false);
+			Yaml.updateField(world.getUID() + ".event.bloodmoon","internal",false);
 			world.setMonsterSpawnLimit(-1);
 			world.setTicksPerMonsterSpawns(-1);
 		}
@@ -114,7 +114,7 @@ public class BloodMoon_Expert {
 		{
 			if(random.nextInt(9) == 1 && world.getAllowMonsters()) 
 			{
-				Configuration.updateField(world.getUID() + ".event.bloodmoon","internal",true);
+				Yaml.updateField(world.getUID() + ".event.bloodmoon","internal",true);
 				if(world.getEnvironment() == Environment.NORMAL) 
 				{
 					Bukkit.broadcastMessage(Messaging.chatFormatter("&#32FF82The Blood Moon is rising..."));
@@ -144,8 +144,8 @@ public class BloodMoon_Expert {
 			{
 				if(!selectedPlayer.hasPotionEffect(PotionEffectType.UNLUCK)) 
 				{
-					long timeSinceDamageSeconds = (selectedPlayer.getTicksLived() - Configuration.getFieldInt(selectedPlayer.getUniqueId() + ".damage.last","internal"))/20;
-					int bloodMoonBonus = Configuration.getFieldBool(selectedPlayer.getWorld().getUID() + ".event.bloodmoon", "internal") ? 1 : 0;
+					long timeSinceDamageSeconds = (selectedPlayer.getTicksLived() - Yaml.getFieldInt(selectedPlayer.getUniqueId() + ".damage.last","internal"))/20;
+					int bloodMoonBonus = Yaml.getFieldBool(selectedPlayer.getWorld().getUID() + ".event.bloodmoon", "internal") ? 1 : 0;
 
 					if(timeSinceDamageSeconds >= 1800) 
 					{

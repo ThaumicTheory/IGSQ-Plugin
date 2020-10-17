@@ -1,7 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import org.bukkit.command.CommandSender;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.expert.Common_Expert;
 import me.murrobby.igsq.spigot.expert.Main_Expert;
@@ -22,14 +22,14 @@ public class Expert_Command {
 		Boolean currentSetting = Common_Expert.expertCheck();
 		if((args.length == 0 || args[0].equalsIgnoreCase("true")) && !currentSetting) 
 		{
-			Configuration.updateField("GAMEPLAY.expert", "config", true);
+			Yaml.updateField("GAMEPLAY.expert", "config", true);
      		sender.sendMessage(Messaging.chatFormatter("&#84FF00Expert Mode &#00FF00Enabled&#84FF00!"));
 			Main_Expert.Start_Expert();
 			return true;
 		}
 		else if((args.length == 0 || args[0].equalsIgnoreCase("false")) && currentSetting) 
 		{
-			Configuration.updateField("GAMEPLAY.expert", "config", false);
+			Yaml.updateField("GAMEPLAY.expert", "config", false);
      		sender.sendMessage(Messaging.chatFormatter("&#84FF00Expert Mode &#C8C8C8Disabled&#84FF00!"));
 			return true;
 		}

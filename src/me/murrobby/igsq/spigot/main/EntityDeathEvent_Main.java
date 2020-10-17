@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 
 
 public class EntityDeathEvent_Main implements Listener
@@ -24,7 +24,7 @@ public class EntityDeathEvent_Main implements Listener
 		if(event.getEntity() instanceof EnderDragon) 
 		{
 			EnderDragon enderDragon = (EnderDragon) event.getEntity();
-			if(Configuration.getFieldBool("GAMEPLAY.dragoneggrespawn", "config") && enderDragon.getDragonBattle().hasBeenPreviouslyKilled())
+			if(Yaml.getFieldBool("GAMEPLAY.dragoneggrespawn", "config") && enderDragon.getDragonBattle().hasBeenPreviouslyKilled())
 			{
 				Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
 		    	{

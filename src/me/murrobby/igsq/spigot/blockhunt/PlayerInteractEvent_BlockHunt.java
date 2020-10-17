@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class PlayerInteractEvent_BlockHunt implements Listener
@@ -59,7 +59,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 							else 
 							{
 								event.getPlayer().sendMessage(Messaging.chatFormatter("&#FFb900You cannot hide here!"));
-								Common_BlockHunt.setCloakCooldown(event.getPlayer(), Configuration.getFieldInt("cloakcooldown", "blockhunt")/Configuration.getFieldInt("failcooldown", "blockhunt"));
+								Common_BlockHunt.setCloakCooldown(event.getPlayer(), Yaml.getFieldInt("cloakcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
 							}
 						}
 					}
@@ -73,7 +73,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 						{
 		    				hider.sendMessage(Messaging.chatFormatter("&#FF0000You have been revealed by "+ event.getPlayer().getName() +"!"));
 		    				event.getPlayer().sendMessage(Messaging.chatFormatter("&#00FF00Hider "+ hider.getName() +" located!" ));
-		    				Common_BlockHunt.setCloakCooldown(hider, Configuration.getFieldInt("cloakcooldown", "blockhunt"));
+		    				Common_BlockHunt.setCloakCooldown(hider, Yaml.getFieldInt("cloakcooldown", "blockhunt"));
 		    				Common_BlockHunt.removeCloak(hider);
 						}
 					}

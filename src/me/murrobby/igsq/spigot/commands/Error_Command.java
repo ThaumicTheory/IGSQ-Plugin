@@ -3,7 +3,7 @@ package me.murrobby.igsq.spigot.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class Error_Command {
@@ -45,12 +45,12 @@ public class Error_Command {
 					{
 						Player player = (Player) sender;
 						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FF00Enabled&#FF0000!"));
-						Configuration.updateField(player.getUniqueId().toString() + ".errorlog", "player", "enabled");
+						Yaml.updateField(player.getUniqueId().toString() + ".errorlog", "player", "enabled");
 					}
 					else
 					{
 						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &aEnabled&c!"));
-						Configuration.updateField("console.errorlog", "internal", "enabled");
+						Yaml.updateField("console.errorlog", "internal", "enabled");
 					}
 				}
 				else if(args[1].equalsIgnoreCase("verbose"))
@@ -59,12 +59,12 @@ public class Error_Command {
 					{
 						Player player = (Player) sender;
 						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FFFFEnabled & Verbose&#FF0000!"));
-						Configuration.updateField(player.getUniqueId().toString() + ".errorlog", "player", "verbose");
+						Yaml.updateField(player.getUniqueId().toString() + ".errorlog", "player", "verbose");
 					}
 					else
 					{
 						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &bEnabled & Verbose&c!"));
-						Configuration.updateField("console.errorlog", "internal", "verbose");
+						Yaml.updateField("console.errorlog", "internal", "verbose");
 					}
 				}
 				else
@@ -73,12 +73,12 @@ public class Error_Command {
 					{
 						Player player = (Player) sender;
 						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#C8C8C8Disabled&#FF0000!"));
-						Configuration.updateField(player.getUniqueId().toString() + ".errorlog", "player", "");
+						Yaml.updateField(player.getUniqueId().toString() + ".errorlog", "player", "");
 					}
 					else
 					{
 						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &7Disabled&c!"));
-						Configuration.updateField("console.errorlog", "internal", "");
+						Yaml.updateField("console.errorlog", "internal", "");
 					}
 				}
 				return true;

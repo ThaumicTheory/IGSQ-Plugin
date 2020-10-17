@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.murrobby.igsq.bungee.Common_Bungee;
-import me.murrobby.igsq.bungee.Database_Bungee;
+import me.murrobby.igsq.bungee.Messaging;
+import me.murrobby.igsq.bungee.Database;
 import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -30,9 +30,9 @@ public class TwoFA_Command extends Command implements TabExecutor
 			String current_status = null;
 			try 
 			{
-				if(Database_Bungee.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
+				if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
 				{
-					ResultSet current_StatusDB  = Database_Bungee.QueryCommand("SELECT current_status from discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+					ResultSet current_StatusDB  = Database.QueryCommand("SELECT current_status from discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
 					current_StatusDB.next();
 					current_status = current_StatusDB.getString(1);
 					
@@ -50,24 +50,24 @@ public class TwoFA_Command extends Command implements TabExecutor
 					{
 						if(args[1].equalsIgnoreCase("true")) 
 						{
-							Database_Bungee.UpdateCommand("UPDATE discord_2fa SET current_status = 'pending', ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
-							player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FF002FA Security Enabled!")));
+							Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'pending', ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+							player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF002FA Security Enabled!")));
 						}
 						else
 						{
-							Database_Bungee.UpdateCommand("UPDATE discord_2fa SET current_status = null, ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
-							player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FF00002FA Security Disabled!")));
+							Database.UpdateCommand("UPDATE discord_2fa SET current_status = null, ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+							player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FF00002FA Security Disabled!")));
 						}
 					}
-					else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FF0000You cannot modify 2FA settings at this time. Are you logged in? Are you a staff member?")));
+					else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FF0000You cannot modify 2FA settings at this time. Are you logged in? Are you a staff member?")));
 				}
-				else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FFFF00Use /2fa enabled [true/false]")));
+				else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FFFF00Use /2fa enabled [true/false]")));
 			}
 			else if(args.length >= 1 && args[0].equalsIgnoreCase("confirm")) 
 			{
 				if(args.length == 2) 
 				{
-					ResultSet discord_2fa = Database_Bungee.QueryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+					ResultSet discord_2fa = Database.QueryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
 					try 
 					{
 						if(discord_2fa.next()) 
@@ -80,69 +80,69 @@ public class TwoFA_Command extends Command implements TabExecutor
 							{
 								if(code != null && args[1].equalsIgnoreCase(code)) 
 								{
-									Database_Bungee.UpdateCommand("UPDATE discord_2fa SET current_status = 'accepted', ip = '"+ socket[0] +"',code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
-									player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FF002FA Code matched! 2FA Security standing down!")));
+									Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'accepted', ip = '"+ socket[0] +"',code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+									player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF002FA Code matched! 2FA Security standing down!")));
 								}
-								else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000Code does not match try again!")));
+								else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Code does not match try again!")));
 							}
-							else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#C8C8C8You dont need a 2FA code right now!")));
+							else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#C8C8C8You dont need a 2FA code right now!")));
 
 						}
 					}
 					catch (SQLException e)
 					{
 						e.printStackTrace();
-						player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FF0000Something Went Wrong When Trying To Read Your 2FA code.")));
+						player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FF0000Something Went Wrong When Trying To Read Your 2FA code.")));
 					}
 				} 
 			}
 			else if(args.length >= 1 && args[0].equalsIgnoreCase("logout")) 
 			{
-				Database_Bungee.UpdateCommand("UPDATE discord_2fa SET current_status = 'expired',ip = null,code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
-				player.disconnect(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FF00Logout Successful. Goodbye!")));
+				Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'expired',ip = null,code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+				player.disconnect(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF00Logout Successful. Goodbye!")));
 			}
 			else
 			{
-				player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FFFFCurrent 2fa Status")));
-				if(Database_Bungee.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") >= 1) 
+				player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFFCurrent 2fa Status")));
+				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") >= 1) 
 				{
-					if(Database_Bungee.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
+					if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
 					{
-						ResultSet discord_2fa = Database_Bungee.QueryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+						ResultSet discord_2fa = Database.QueryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
 						try 
 						{
 							if(discord_2fa.next()) 
 							{
 								current_status = discord_2fa.getString(1);
 								String code = discord_2fa.getString(2);
-								if(current_status == null || current_status.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD00002fa Disabled.")));
+								if(current_status == null || current_status.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD00002fa Disabled.")));
 								else if(current_status.equalsIgnoreCase("pending")) 
 								{
-									if(code == null || code.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#ffb900IGSQbot is unresponsive! We will let you in until a code is generated.")));
-									else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FFFF00Waiting For Discord Code! Your linked account should get a message from igsqbot.")));
+									if(code == null || code.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#ffb900IGSQbot is unresponsive! We will let you in until a code is generated.")));
+									else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FFFF00Waiting For Discord Code! Your linked account should get a message from igsqbot.")));
 								}
-								else if(current_status.equalsIgnoreCase("accepted")) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FF002FA Enabled and Accepted!")));
-								else if(current_status.equalsIgnoreCase("expired")) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#C8C8C82FA Enabled, On Standby!")));
-								else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000 Unknown Issue.")));
+								else if(current_status.equalsIgnoreCase("accepted")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF002FA Enabled and Accepted!")));
+								else if(current_status.equalsIgnoreCase("expired")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#C8C8C82FA Enabled, On Standby!")));
+								else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000 Unknown Issue.")));
 							}
 						}
 						catch (SQLException e)
 						{
 							e.printStackTrace();
-							player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#FF0000Something Went Wrong When Trying To Read Your 2fa status.")));
+							player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FF0000Something Went Wrong When Trying To Read Your 2fa status.")));
 						}
 					}
-					else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD00002fa Disabled.")));
-					if(player.hasPermission("igsq.require2fa")) player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#C8C8C8As a staff member your account will always be protected by 2FA!")));
-					else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FFFFUse &#FFFF00/2fa enabled [true/false] &#00FFFFto enable or disable 2fa.")));
-					player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FFFFUse &#FFFF00/2fa confirm [code_from_IGSQbot] &#00FFFFto confirm a pending discord 2fa request.")));
-					player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FFFFUse &#FFFF00/2fa logout &#00FFFFto logout completly and reset any \"rememberme\" options.")));
-					player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#00FFFFType &#FFFF00/2fa &#00FFFFTo See This Summary Again.")));
+					else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD00002fa Disabled.")));
+					if(player.hasPermission("igsq.require2fa")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#C8C8C8As a staff member your account will always be protected by 2FA!")));
+					else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFFUse &#FFFF00/2fa enabled [true/false] &#00FFFFto enable or disable 2fa.")));
+					player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFFUse &#FFFF00/2fa confirm [code_from_IGSQbot] &#00FFFFto confirm a pending discord 2fa request.")));
+					player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFFUse &#FFFF00/2fa logout &#00FFFFto logout completly and reset any \"rememberme\" options.")));
+					player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFFType &#FFFF00/2fa &#00FFFFTo See This Summary Again.")));
 				}
-				else player.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD00002FA Disabled. You need to link your account to discord first before you can use 2FA.\nSee &#FFFF00/link &#CD0000for more details!")));
+				else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD00002FA Disabled. You need to link your account to discord first before you can use 2FA.\nSee &#FFFF00/link &#CD0000for more details!")));
 			}
 		}
-		else sender.sendMessage(TextComponent.fromLegacyText(Common_Bungee.chatFormatter("&#CD0000Sorry, but only Players can go into 2FA settings!")));
+		else sender.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Sorry, but only Players can go into 2FA settings!")));
 	}
 	
 	@Override
@@ -156,9 +156,9 @@ public class TwoFA_Command extends Command implements TabExecutor
 		}
 		try 
 		{
-			if(Database_Bungee.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
+			if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
 			{
-				ResultSet current_StatusDB  = Database_Bungee.QueryCommand("SELECT current_status from discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+				ResultSet current_StatusDB  = Database.QueryCommand("SELECT current_status from discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
 				current_StatusDB.next();
 				current_status = current_StatusDB.getString(1);
 				
@@ -187,7 +187,7 @@ public class TwoFA_Command extends Command implements TabExecutor
 	private boolean CanModify2FA(ProxiedPlayer player,String current_status) 
 	{
 		if (player.hasPermission("igsq.require2fa")) return false;
-		if(Database_Bungee.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") == 0) return false;
+		if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") == 0) return false;
 		if (current_status == null) return true;
 		if (current_status.equalsIgnoreCase("")) return true;
 		if (current_status.equalsIgnoreCase("accepted")) return true;

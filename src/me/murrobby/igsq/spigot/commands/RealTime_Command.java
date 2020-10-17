@@ -5,7 +5,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class RealTime_Command {
@@ -22,21 +22,21 @@ public class RealTime_Command {
 	private Boolean realTime() 
 	{
 		World world = ((Player)sender).getWorld();
-		Boolean currentSetting = Configuration.getFieldBool(world.getUID().toString() + ".realtime.enabled", "internal");
+		Boolean currentSetting = Yaml.getFieldBool(world.getUID().toString() + ".realtime.enabled", "internal");
 		if((args.length == 0 || args[0].equalsIgnoreCase("true")) && !currentSetting) 
 		{
-			Configuration.updateField(world.getUID().toString() + ".realtime.enabled", "internal", true);
+			Yaml.updateField(world.getUID().toString() + ".realtime.enabled", "internal", true);
 			sender.sendMessage(Messaging.chatFormatter("&#00FFFFRealtime mode Turned On!"));
-			Configuration.updateField(world.getUID().toString() + ".Modules.realtime.storeddaycycle", "internal", world.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE));
+			Yaml.updateField(world.getUID().toString() + ".Modules.realtime.storeddaycycle", "internal", world.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE));
 			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 			Main_Command.Start_Command();
 			return true;
 		}
 		else if((args.length == 0 || args[0].equalsIgnoreCase("false")) && currentSetting) 
 		{
-			Configuration.updateField(world.getUID().toString() + ".realtime.enabled", "internal", false);
+			Yaml.updateField(world.getUID().toString() + ".realtime.enabled", "internal", false);
 			sender.sendMessage(Messaging.chatFormatter("&#0000FFRealtime mode Turned Off!"));
-			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, Configuration.getFieldBool(world.getUID().toString() + ".realtime.storeddaycycle", "internal"));
+			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, Yaml.getFieldBool(world.getUID().toString() + ".realtime.storeddaycycle", "internal"));
 			return true;
 		}
 		else if(args[0].equalsIgnoreCase("false") || args[0].equalsIgnoreCase("true")) 

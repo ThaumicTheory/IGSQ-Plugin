@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Configuration;
+import me.murrobby.igsq.spigot.Yaml;
 
 public class EntitySpawnEvent_BlockHunt implements Listener
 {
@@ -60,7 +60,7 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 								{
 									if(player.getInventory().getItem(0).getType() == Material.ENDER_EYE) 
 									{
-										Common_BlockHunt.setBlockPickerCooldown(player, Configuration.getFieldInt("blockpickcooldown", "blockhunt")/Configuration.getFieldInt("failcooldown", "blockhunt"));
+										Common_BlockHunt.setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
 									}
 									pearl.remove();
 								}

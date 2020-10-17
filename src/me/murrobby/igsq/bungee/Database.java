@@ -8,18 +8,17 @@ import java.sql.Statement;
 import java.util.concurrent.TimeUnit;
 
 
-public class Database_Bungee 
+public class Database 
 {
     static String url;
     static String user;
     static String password;
-    static Main_Bungee plugin;
-	public Database_Bungee(Main_Bungee plugin)
+    static Bungee plugin;
+	public Database()
 	{
-		Database_Bungee.plugin = plugin;
-		url = Common_Bungee.getFieldString("MYSQL.database", "config");
-		user = Common_Bungee.getFieldString("MYSQL.username", "config");
-		password = Common_Bungee.getFieldString("MYSQL.password", "config");
+		url = Yaml.getFieldString("MYSQL.database", "config");
+		user = Yaml.getFieldString("MYSQL.username", "config");
+		password = Yaml.getFieldString("MYSQL.password", "config");
 		if(testDatabase()) 
 		{
 			UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(link_number int PRIMARY KEY AUTO_INCREMENT,uuid VARCHAR(36),id VARCHAR(18),current_status VARCHAR(16));");
