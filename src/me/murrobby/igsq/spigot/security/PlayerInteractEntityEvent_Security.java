@@ -4,13 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Spigot;
+import me.murrobby.igsq.spigot.Common;
 
 public class PlayerInteractEntityEvent_Security implements Listener
 {
-	public PlayerInteractEntityEvent_Security(Spigot plugin)
+	public PlayerInteractEntityEvent_Security()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler

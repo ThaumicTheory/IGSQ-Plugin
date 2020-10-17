@@ -1,13 +1,10 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,24 +13,28 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.shared.Common_Shared;
-import me.murrobby.igsq.spigot.Configuration;
-import me.murrobby.igsq.spigot.Spigot;
+import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
-import me.murrobby.igsq.spigot.expert.Main_Expert;
 
 public class Main_Command implements CommandExecutor, TabCompleter{
-	private Spigot plugin;
-	private Player player;
 	private CommandSender sender;
 	private String[] args = new String[0];
 	
-	private int realtimeTask = -1;
+	public static int taskID;
 	
-	public Main_Command(Spigot plugin)
+	public Main_Command()
 	{
-		this.plugin = plugin;
-		plugin.getCommand("igsq").setExecutor(this);
-		plugin.getCommand("igsq").setTabCompleter(this);
+		Common.spigot.getCommand("igsq").setExecutor(this);
+		Common.spigot.getCommand("igsq").setTabCompleter(this);
+		
+		new TimeSkipEvent_Command();
+		
+		Start_Command();
+	}
+	public static void Start_Command() //Tasks will close if the game is turned off therefor they will need to be rerun for enabling the game
+	{
+		taskID++;
+		new RealTimeTask_Command(taskID);
 	}
 	@Override 
 	
@@ -50,88 +51,26 @@ public class Main_Command implements CommandExecutor, TabCompleter{
     	switch(args[0].toLowerCase()) 
     	{
   	  		case "version":
-  	  			Version_Command version = new Version_Command(sender,this.args);
-  	  			return version.result;
+  	  			return new Version_Command(sender,this.args).result;
   	  		case "nightvision":
   	  		case "nv":
-  	  			NightVision_Command nightvision = new NightVision_Command(sender,this.args);
-  	  			return nightvision.result;
+  	  			return new NightVision_Command(sender,this.args).result;
   	  		case "block":
-  	  			Block_Command block = new Block_Command(sender,this.args);
-  	  			return block.result;
+  	  			return new Block_Command(sender,this.args).result;
   	  		case "entity":
-  	  		Entity_Command entity = new Entity_Command(sender,this.args);
-  	  			return entity.result;
+  	  			return new Entity_Command(sender,this.args).result;
   	  		case "error":
-  	  		Error_Command error = new Error_Command(sender,this.args);
-  	  			return error.result;
+  	  			return new Error_Command(sender,this.args).result;
   	  		case "blockhunt":
-  	  		BlockHunt_Command game = new BlockHunt_Command(sender,this.args);
-  	  			return game.result;
+  	  			return new BlockHunt_Command(sender,this.args).result;
   	  		case "realtime":
-  	  			return RealTimeQuery();
+  	  			return new RealTime_Command(sender,this.args).result;
   	  		case "expert":
-  	  			return ExpertDifficultyQuery();
+  	  			return new Expert_Command(sender,this.args).result;
   	  		default:
   	  			Help();
   	  			return false;
     	}
-	}
-	//Permission checking function
-	private boolean RealTimeQuery()
-	{
-		
-		if(Common_Command.requirePermission("igsq.realtime",sender)) 
-		{
-			if(RealTime()) 
-			{
-				return true;
-			}
-			else 
-			{
-				sender.sendMessage(Messaging.chatFormatter("&#CD0000Something Went Wrong When Executing this Command!"));
-				return false;
-			}
-		}
-		else 
-		{
-			sender.sendMessage(Messaging.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to not having the required permission"));
-  			return false;
-		}
-	}
-	private boolean RealTime() {
-		World world = player.getWorld();
-		if(Configuration.getFieldBool("Modules.realtime", "internal").equals(false))
-		{
-			realtimeTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
-	    	{
-
-				@Override
-				public void run() 
-				{
-					Calendar calendar = Calendar.getInstance();
-					int seconds = calendar.get(Calendar.SECOND);
-					int minutes = calendar.get(Calendar.MINUTE);
-					int hours = calendar.get(Calendar.HOUR_OF_DAY);
-					long totalSeconds = (long) ((double)seconds + ((double)minutes*60) + ((double)hours*3600));
-					long mctime = (long)((double)totalSeconds/72*20);
-					world.setTime((mctime)-5000);
-				} 		
-	    	}, 0, 20);
-			Configuration.updateField("Modules.realtime", "config", true);
-			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-			sender.sendMessage(Messaging.chatFormatter("&#00FFFFRealtime mode Turned On!"));
-			return true;
-		}
-		else
-		{
-			Configuration.updateField("Modules.realtime", "config", false);
-			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,true);
-			plugin.scheduler.cancelTask(realtimeTask);
-			sender.sendMessage(Messaging.chatFormatter("&#0000FFRealtime mode Turned Off!"));
-			return true;
-		}
-		
 	}
 	private Boolean Help() 
 	{
@@ -150,52 +89,6 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		sender.sendMessage(Messaging.chatFormatter("&#FFFF00... &#C8C8C8- &#FFCA00Follows previous block"));
 		return true;
 	}
-
-	private boolean ExpertDifficultyQuery() 
-    {
-        if(Common_Command.requirePermission("igsq.difficulty",sender))
-        {
-            if(ExpertDifficulty()) 
-            {
-                return true;
-            }
-            else 
-            {
-                sender.sendMessage(Messaging.chatFormatter("&#FFFF00expert [true/false]"));
-                return false;
-            }
-        }
-        else 
-        {
-            sender.sendMessage(Messaging.chatFormatter("&#CD0000You cannot Execute this command!\nThis may be due to being the wrong type or not having the required permission"));
-            return false;
-        }
-    }
-
-    private boolean ExpertDifficulty() //turn expert mode on or off
-    {
-    	 try
-         {
-         	boolean enabled = Boolean.parseBoolean(args[0]);
-        	plugin.getConfig().set("GAMEPLAY.expert", enabled);
-         	plugin.saveConfig();
-         	if(enabled) 
-         	{
-         		player.sendMessage(Messaging.chatFormatter("&#84FF00Expert Mode &#00FF00Enabled&#84FF00!"));
-         		Main_Expert.Start_Expert();
-         	}
-         	else 
-         	{
-         		player.sendMessage(Messaging.chatFormatter("&#84FF00Expert Mode &#C8C8C8Disabled&#84FF00!"));
-         	}
-         }
-         catch(Exception exception)
-         {
-             sender.sendMessage(Messaging.chatFormatter("&#CD0000This Boolean is not valid!"));
-             return false;
-         }
-         return true;
-    }
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) 
 	{
@@ -236,7 +129,6 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 				String[] types = {"true","false"};
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
-
 			else if(args[0].equalsIgnoreCase("nightvision") || args[0].equalsIgnoreCase("nv")) 
 			{
 				for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[1])) options.add(selectedPlayer.getName());
@@ -249,6 +141,11 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			else if(args[0].equalsIgnoreCase("blockhunt")) 
 			{
 				String[] types = {"start","forceseeker","forcehider","end"};
+				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
+			}
+			else if(args[0].equalsIgnoreCase("realtime")) 
+			{
+				String[] types = {"true","false"};
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 		}

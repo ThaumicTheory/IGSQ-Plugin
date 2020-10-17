@@ -1,37 +1,33 @@
 package me.murrobby.igsq.spigot.security;
 
-import me.murrobby.igsq.spigot.Spigot;
-
 public class Main_Security 
 {
-	private static Spigot plugin;
 	public static int taskID = 0;
-	public Main_Security(Spigot plugin)
+	public Main_Security()
 	{
-		Main_Security.plugin = plugin;
 		//Events run forever and cannot be turned off
-		new PlayerCommandPreprocessEvent_Security(plugin);
-		new ServerCommandEvent_Security(plugin);
+		new PlayerCommandPreprocessEvent_Security();
+		new ServerCommandEvent_Security();
 		
-		new PlayerDropItemEvent_Security(plugin);
-		new PlayerInteractEvent_Security(plugin);
-		new PlayerBedEnterEvent_Security(plugin);
-		new PlayerInteractEntityEvent_Security(plugin);
-		new PlayerItemDamageEvent_Security(plugin);
-		new PlayerEditBookEvent_Security(plugin);
-		new EntityPickupItemEvent_Security(plugin);
-		new EntityDamageEvent_Security(plugin);
-		new InventoryClickEvent_Security(plugin);
-		new FoodLevelChangeEvent_Security(plugin);
-		new EntityTargetEvent_Security(plugin);
-		new EntityDamageByEntityEvent_Security(plugin);
-		new PlayerMoveEvent_Security(plugin);
-		new EntityAirChangeEvent_Security(plugin);
+		new PlayerDropItemEvent_Security();
+		new PlayerInteractEvent_Security();
+		new PlayerBedEnterEvent_Security();
+		new PlayerInteractEntityEvent_Security();
+		new PlayerItemDamageEvent_Security();
+		new PlayerEditBookEvent_Security();
+		new EntityPickupItemEvent_Security();
+		new EntityDamageEvent_Security();
+		new InventoryClickEvent_Security();
+		new FoodLevelChangeEvent_Security();
+		new EntityTargetEvent_Security();
+		new EntityDamageByEntityEvent_Security();
+		new PlayerMoveEvent_Security();
+		new EntityAirChangeEvent_Security();
 		Start_Security();
 	}
 	public static void Start_Security() //Tasks will need to be closed if security is turned off therefor they will need to be rerun for enabling security
 	{
 		taskID++;
-		new AccountProtection_Security(plugin,taskID);
+		new AccountProtection_Security(taskID);
 	}
 }

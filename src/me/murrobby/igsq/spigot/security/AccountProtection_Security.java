@@ -7,25 +7,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Spigot;
+import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class AccountProtection_Security
 {	
-	Spigot plugin;
+	
 	int accountProtectionTask = -1;
 	Random random = new Random();
 	final int taskID;
 	
-	public AccountProtection_Security(Spigot plugin,int taskID) 
+	public AccountProtection_Security(int taskID) 
 	{
-		this.plugin = plugin;
 		this.taskID = taskID;
 		AccountProtectionQuery();
 	}
 	private void AccountProtectionQuery() 
 	{
-		accountProtectionTask = plugin.scheduler.scheduleSyncRepeatingTask(plugin, new Runnable()
+		accountProtectionTask = Common.spigot.scheduler.scheduleSyncRepeatingTask(Common.spigot, new Runnable()
     	{
 
 			@Override
@@ -34,7 +33,7 @@ public class AccountProtection_Security
 				AccountProtection() ;
 				if(Main_Security.taskID != taskID) 
 				{
-					plugin.scheduler.cancelTask(accountProtectionTask);
+					Common.spigot.scheduler.cancelTask(accountProtectionTask);
 					System.out.println("Task: \"Account Protection Security\" Expired Closing Task To Save Resources.");
 				}
 			} 		

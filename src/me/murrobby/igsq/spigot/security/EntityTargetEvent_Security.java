@@ -5,13 +5,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.murrobby.igsq.spigot.Spigot;
+import me.murrobby.igsq.spigot.Common;
 
 public class EntityTargetEvent_Security implements Listener
 {
-	public EntityTargetEvent_Security(Spigot plugin)
+	public EntityTargetEvent_Security()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler

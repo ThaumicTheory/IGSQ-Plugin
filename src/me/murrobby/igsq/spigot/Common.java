@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import me.murrobby.igsq.shared.Common_Shared;
+
 public class Common {
     /**
      * The universal reference to spigot which allows for {@link org.bukkit.plugin.java.JavaPlugin the plugin} to be referenced anywhere.
@@ -86,12 +88,14 @@ public class Common {
     }
 	public static Boolean isCurrentChatController(String controller,Player player) 
 	{
-		if(Configuration.getFieldString(player.getUniqueId().toString() + ".controller.chat", "internal").equalsIgnoreCase(controller)) return true;
+		String current = Common_Shared.removeNull(Configuration.getFieldString(player.getUniqueId().toString() + ".controller.chat", "internal"));
+		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
 	}
 	public static Boolean isCurrentTagController(String controller,Player player) 
 	{
-		if(Configuration.getFieldString(player.getUniqueId().toString() + ".controller.tag", "internal").equalsIgnoreCase(controller)) return true;
+		String current = Common_Shared.removeNull(Configuration.getFieldString(player.getUniqueId().toString() + ".controller.tag", "internal"));
+		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
 	}
 }

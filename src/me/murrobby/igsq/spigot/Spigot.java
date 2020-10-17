@@ -53,8 +53,8 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		new AsyncPlayerChatEvent_Main();
 		
 		new Main_Expert();
-		new Main_Security(this);
-		new Main_Command(this);
+		new Main_Security();
+		new Main_Command();
 		Boolean nametagEdit = false;
 		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Configuration.getFieldBool("SUPPORT.nametagedit", "config")) 
 		{

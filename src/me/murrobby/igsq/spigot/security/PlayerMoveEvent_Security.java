@@ -5,13 +5,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Spigot;
 
 public class PlayerMoveEvent_Security implements Listener
 {
-	public PlayerMoveEvent_Security(Spigot plugin)
+	public PlayerMoveEvent_Security()
 	{
-		Bukkit.getPluginManager().registerEvents(this, plugin);
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
