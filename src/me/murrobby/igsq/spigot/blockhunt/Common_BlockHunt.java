@@ -31,6 +31,10 @@ import com.comphenix.protocol.ProtocolManager;
 
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.event.GameEndEvent;
+import me.murrobby.igsq.spigot.event.GameStartEvent;
+import me.murrobby.igsq.spigot.event.LobbyCreateEvent;
+import me.murrobby.igsq.spigot.event.PlayerJoinLobbyEvent;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class Common_BlockHunt 
@@ -95,21 +99,55 @@ public class Common_BlockHunt
 			
 		};
 	public static int playerCount;
-	public static int stage = -1;
+	public static Stage stage = Stage.NO_GAME;
 	
     public static ScoreboardManager manager;
     public static Scoreboard board;
     
     public static Team hidersTeam;
     public static Team seekersTeam;
+
+    public static Location hubLocation = Common.parseLocationFromString(Yaml.getFieldString("map.hub.location" , "blockhunt"));
+    public static int mapID = 0;
+    public static String mapName;
+    public static Location lobbyLocation;
+    public static Location hiderSpawnLocation;
+    public static Location seekerSpawnLocation;
+    public static Location seekerWaitLocation;
+    public static int timer;
     
 	public static void start()
 	{
-		OnGameStart_BlockHunt.start();
+		if(stage.equals(Stage.IN_LOBBY)) 
+		{
+			GameStartEvent event = new GameStartEvent(mapID);
+			Bukkit.getPluginManager().callEvent(event);
+		}
 	}
-	public static void end() 
+	public static void end(EndReason reason) 
 	{
-		OnGameEnd_BlockHunt.end();
+		if(stage.equals(Stage.IN_GAME)) 
+		{
+			GameEndEvent event = new GameEndEvent(reason);
+			Bukkit.getPluginManager().callEvent(event);
+		}
+	}
+	public static void createLobby()
+	{
+		if(stage.equals(Stage.NO_GAME)) 
+		{
+			LobbyCreateEvent event = new LobbyCreateEvent();
+			Bukkit.getPluginManager().callEvent(event);
+		}
+	}
+	public static void joinLobby(Player player)
+	{
+		if(stage.equals(Stage.NO_GAME)) createLobby();
+		if(stage.equals(Stage.IN_LOBBY)) 
+		{
+			PlayerJoinLobbyEvent event = new PlayerJoinLobbyEvent(player);
+			Bukkit.getPluginManager().callEvent(event);
+		}
 	}
 	public static void cleanup() 
 	{
@@ -117,7 +155,8 @@ public class Common_BlockHunt
 		seekers = new Player[]{};
 		players = new Player[]{};
 		playerCount = 0;
-		stage = 0;
+		stage = Stage.NO_GAME;
+		mapID = 0;
 	}
 	public static void cleanup(Player player) 
 	{
@@ -710,6 +749,36 @@ public class Common_BlockHunt
 		}
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
 		return -1; //Inventory has not Moved
+	}
+	public static int getMapCount() 
+	{
+		String mapName = "";
+		int incrementer = 1;
+		int mapCount = -1;
+		do 
+		{
+			mapCount++;
+			mapName = Yaml.getFieldString("map."+ incrementer +".name", "blockhunt");
+		}while (mapName != null && !mapName.equals(""));
+		return mapCount;
+	}
+	public static void loadMap(int mapID) 
+	{
+		Common_BlockHunt.mapID = mapID;
+		mapName = Yaml.getFieldString("map."+ mapID +".name" , "blockhunt");
+		lobbyLocation = Common.parseLocationFromString(Yaml.getFieldString("map."+ mapID +".prelobby" , "blockhunt"));
+		hiderSpawnLocation = Common.parseLocationFromString(Yaml.getFieldString("map."+ mapID +".hider" , "blockhunt"));
+		seekerWaitLocation = Common.parseLocationFromString(Yaml.getFieldString("map."+ mapID +".preseeker" , "blockhunt"));
+		seekerSpawnLocation = Common.parseLocationFromString(Yaml.getFieldString("map."+ mapID +".seeker" , "blockhunt"));
+		blocks = Common.parseMaterialListFromString(Yaml.getFieldString("map."+ mapID +".blocks" , "blockhunt"));
+	}
+	public static void loadMap() 
+	{
+		loadMap(random.nextInt(getMapCount())+1);
+	}
+	public static Boolean isMapSelected() 
+	{
+		return (mapID > 0);
 	}
   
 }

@@ -31,7 +31,7 @@ public class GameTick_BlockHunt
 			public void run() 
 			{
 				gameTick() ;
-				if(Main_BlockHunt.taskID != taskID || (!Common_BlockHunt.blockhuntCheck()) || Common_BlockHunt.stage < 0) 
+				if(Main_BlockHunt.taskID != taskID || (!Common_BlockHunt.blockhuntCheck()) || Common_BlockHunt.stage.equals(Stage.NO_GAME)) 
 				{
 					Common.spigot.scheduler.cancelTask(gameTickTask);
 					System.out.println("Task: \"Game Tick BlockHunt\" Expired Closing Task To Save Resources.");
@@ -41,10 +41,11 @@ public class GameTick_BlockHunt
 	}
 	private void gameTick() 
 	{
+		int minPlayers = Yaml.getFieldInt("minimumplayers", "blockhunt");
 		secondTick = !secondTick;
 		for(Player player : Common_BlockHunt.players) 
 		{
-			if(Common_BlockHunt.stage == 1) 
+			if(Common_BlockHunt.stage.equals(Stage.IN_GAME)) 
 			{
 				if(Common_BlockHunt.isHider(player)) 
 				{
@@ -80,34 +81,53 @@ public class GameTick_BlockHunt
 					int selectedItemAfterAssist = Common_BlockHunt.inventoryAssistTick(player);
 					if(selectedItemAfterAssist != -1) player.getInventory().setHeldItemSlot(selectedItemAfterAssist);
 				}
+				//Cooldowns
+				if(Common_BlockHunt.getBlockPickerCooldown(player)> 0) 
+				{
+					if(Common_BlockHunt.getBlockPickerCooldown(player)%20 == 0) 
+					{
+						Common_BlockHunt.updateBlockPickerItem(player,false);
+					}
+					Common_BlockHunt.setBlockPickerCooldown(player, Common_BlockHunt.getBlockPickerCooldown(player)-1);
+					if(Common_BlockHunt.getBlockPickerCooldown(player) == 0) 
+					{
+						Common_BlockHunt.updateBlockPickerItem(player,false);
+					}
+				}
+				
+				if(Common_BlockHunt.getCloakCooldown(player)> 0) 
+				{
+					if(Common_BlockHunt.getCloakCooldown(player)%20 == 0) 
+					{
+						Common_BlockHunt.updateCloakItem(player);
+					}
+					Common_BlockHunt.setCloakCooldown(player, Common_BlockHunt.getCloakCooldown(player)-1);
+					if(Common_BlockHunt.getCloakCooldown(player) == 0) 
+					{
+						Common_BlockHunt.updateCloakItem(player);
+					}
+				}
+				
+				if(Common_BlockHunt.timer <= 0) Common_BlockHunt.end(EndReason.TIME_UP); 
+				
+			}
+			else if (Common_BlockHunt.stage.equals(Stage.IN_LOBBY)) //Lobby
+			{
+				if(Common_BlockHunt.playerCount >= minPlayers) 
+				{
+					player.sendTitle(Messaging.chatFormatter("&#00FF00" +Math.round((double)Common_BlockHunt.timer*50)/1000),Messaging.chatFormatter("&#00FFFFSeconds Until The Game Starts!"),0,5,10);
+				}
+				else 
+				{
+					player.sendTitle(Messaging.chatFormatter("&#FF0000"+ (minPlayers - Common_BlockHunt.playerCount)),Messaging.chatFormatter("&#00FFFFPlayer(s) Until The Countdown Starts!"),0,5,10);
+					Common_BlockHunt.timer = Yaml.getFieldInt("lobbytime", "blockhunt");
+				}
+				
+				if(Common_BlockHunt.timer <= 0) Common_BlockHunt.start(); 
 			}
 			
-			//Cooldowns
-			if(Common_BlockHunt.getBlockPickerCooldown(player)> 0) 
-			{
-				if(Common_BlockHunt.getBlockPickerCooldown(player)%20 == 0) 
-				{
-					Common_BlockHunt.updateBlockPickerItem(player,false);
-				}
-				Common_BlockHunt.setBlockPickerCooldown(player, Common_BlockHunt.getBlockPickerCooldown(player)-1);
-				if(Common_BlockHunt.getBlockPickerCooldown(player) == 0) 
-				{
-					Common_BlockHunt.updateBlockPickerItem(player,false);
-				}
-			}
-			
-			if(Common_BlockHunt.getCloakCooldown(player)> 0) 
-			{
-				if(Common_BlockHunt.getCloakCooldown(player)%20 == 0) 
-				{
-					Common_BlockHunt.updateCloakItem(player);
-				}
-				Common_BlockHunt.setCloakCooldown(player, Common_BlockHunt.getCloakCooldown(player)-1);
-				if(Common_BlockHunt.getCloakCooldown(player) == 0) 
-				{
-					Common_BlockHunt.updateCloakItem(player);
-				}
-			}
 		}
+		if(Common_BlockHunt.stage.equals(Stage.IN_LOBBY) && Common_BlockHunt.playerCount >= minPlayers) Common_BlockHunt.timer--;
+		else if(Common_BlockHunt.stage.equals(Stage.IN_GAME)) Common_BlockHunt.timer--;
 	}
 }

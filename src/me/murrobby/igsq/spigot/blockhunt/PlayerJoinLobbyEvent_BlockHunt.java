@@ -1,66 +1,42 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
-import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
 import me.murrobby.igsq.spigot.Common;
 
-public class OnGameStart_BlockHunt
+public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 {
-	private static Random random = new Random();
-	public OnGameStart_BlockHunt()
+	public PlayerJoinLobbyEvent_BlockHunt()
 	{
-		start();
+		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
-	public static void start() 
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void PlayerJoinLobby_BlockHunt(me.murrobby.igsq.spigot.event.PlayerJoinLobbyEvent event) 
 	{
-		Common_BlockHunt.cleanup();
-		getPlayers();
-		shufflePlayers(100);
-		allocatePlayers();
-		setupPlayers();
-		Common_BlockHunt.stage = 1;
-		Main_BlockHunt.Start_BlockHunt();
-	}
-	private static void getPlayers() 
-	{
-		for(Player player : Bukkit.getOnlinePlayers()) 
+		if(!event.isCancelled()) 
 		{
-			Common_BlockHunt.players = Common.append(Common_BlockHunt.players, player);
-			Common_BlockHunt.playerCount++;
-		}
-	}
-	private static void shufflePlayers(int shuffles) 
-	{
-		for(int i = 0; i < shuffles;i++) 
-		{
-			int randomNumber = random.nextInt(Common_BlockHunt.playerCount);
-			Player player = Common_BlockHunt.players[randomNumber];
-			Common_BlockHunt.players = Common.depend(Common_BlockHunt.players, randomNumber);
-			Common_BlockHunt.players = Common.append(Common_BlockHunt.players, player);
+			Common_BlockHunt.addPlayer(event.getPlayer());
+			setupPlayers();
+			event.getPlayer().teleport(Common_BlockHunt.lobbyLocation);
+			
 			
 		}
 	}
-	private static void allocatePlayers() 
-	{
-		Player[] allocation = Common_BlockHunt.players;
-		for(int i = 0; i < Common_BlockHunt.getSeekerCount() ;i++) //seeker allocation
-		{
-			int randomNumber = random.nextInt(Common_BlockHunt.playerCount);
-			Common_BlockHunt.seekers = Common.append(Common_BlockHunt.seekers,allocation[randomNumber]);
-			allocation = Common.depend(allocation, randomNumber);
-		}
-		for(Player player : allocation) //hider allocation
-		{
-			Common_BlockHunt.hiders = Common.append(Common_BlockHunt.hiders, player);
-		}
-	}
+	
+	
+	
+	
+	
+	
 	private static void setupPlayers() 
 	{
 		Common_BlockHunt.manager = Bukkit.getScoreboardManager();
@@ -122,8 +98,7 @@ public class OnGameStart_BlockHunt
 			player.getInventory().clear();
 			player.getInventory().setHeldItemSlot(0);
 			for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
-			Common_BlockHunt.setupPlayers(player);
-			
 		}
 	}
+	
 }

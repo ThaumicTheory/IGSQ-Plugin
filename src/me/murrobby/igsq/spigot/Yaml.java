@@ -237,6 +237,16 @@ public class Yaml
         addFieldDefault("cloakcooldown","blockhunt",200);
         addFieldDefault("failcooldown","blockhunt",2);
         addFieldDefault("visibilityrange","blockhunt",4);
+        addFieldDefault("lobbytime","blockhunt",400);
+        addFieldDefault("gametime","blockhunt",6000);
+        addFieldDefault("minimumplayers","blockhunt",2);
+        addFieldDefault("maps.hub.location","blockhunt","world 0 0 0 0f 0f");
+        addFieldDefault("maps.1.name","blockhunt","");
+        addFieldDefault("maps.1.prelobby","blockhunt","world 0 0 0 0f 0f");
+        addFieldDefault("maps.1.hider","blockhunt","world 0 0 0 0f 0f");
+        addFieldDefault("maps.1.preseeker","blockhunt","world 0 0 0 0f 0f");
+        addFieldDefault("maps.1.seeker","blockhunt","world 0 0 0 0f 0f");
+        addFieldDefault("maps.1.blocks","blockhunt","");
         
         addFieldDefault("server","internal","unknown");
         for(FileConfiguration configuration : configurations) configuration.options().copyDefaults(true);

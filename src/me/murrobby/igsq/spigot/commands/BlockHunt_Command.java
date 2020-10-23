@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.blockhunt.Common_BlockHunt;
+import me.murrobby.igsq.spigot.blockhunt.EndReason;
 
 public class BlockHunt_Command {
 
@@ -44,7 +45,7 @@ public class BlockHunt_Command {
 			}
 			else if(args[0].equalsIgnoreCase("end")) 
 			{
-				Common_BlockHunt.end();
+				Common_BlockHunt.end(EndReason.FORCED);
 				return true;
 			}
 		}

@@ -68,11 +68,11 @@ public class Main_Command implements CommandExecutor, TabCompleter{
   	  		case "expert":
   	  			return new Expert_Command(sender,this.args).result;
   	  		default:
-  	  			Help();
+  	  			help();
   	  			return false;
     	}
 	}
-	private Boolean Help() 
+	private Boolean help() 
 	{
 		sender.sendMessage(Messaging.chatFormatter("&#FF8A00+&#FFFF00----&#FFCA00IGSQ HELP&#FFFF00----&#FF8A00+"));
 		sender.sendMessage(Messaging.chatFormatter("&#FFFF00Version &#C8C8C8- &#FFCA00Returns current IGSQ plugin version."));

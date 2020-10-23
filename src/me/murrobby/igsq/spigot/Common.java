@@ -1,6 +1,9 @@
 package me.murrobby.igsq.spigot;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -45,6 +48,16 @@ public class Common {
             }
         }
         return arrayDepended;
+    }
+    public static Material[] append(Material[] array, Material value)
+    {
+    	Material[] arrayAppended = new Material[array.length+1];
+    	for (int i = 0;i < array.length;i++)
+    	{
+    		arrayAppended[i] = array[i];
+    	}
+    	arrayAppended[array.length] = value;
+    	return arrayAppended;
     }
     
     
@@ -97,5 +110,26 @@ public class Common {
 		String current = Common_Shared.removeNull(Yaml.getFieldString(player.getUniqueId().toString() + ".controller.tag", "internal"));
 		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
+	}
+	public static Location parseLocationFromString(String input) 
+	{
+		String[] locationString = input.split(" ");
+		World world = Bukkit.getWorld(locationString[0]);
+		Double x = Double.parseDouble(locationString[1]);
+		Double y = Double.parseDouble(locationString[2]);
+		Double z = Double.parseDouble(locationString[3]);
+		Float yaw = Float.parseFloat(locationString[4]);
+		Float pitch = Float.parseFloat(locationString[5]);
+		return new Location(world,x,y,z,yaw,pitch);
+	}
+	public static Material[] parseMaterialListFromString(String input) 
+	{
+		String[] blocksString = input.split(" ");
+		Material[] blocks = new Material[0];
+		for(String block : blocksString) 
+		{
+			blocks = append(blocks, Material.valueOf(block.toUpperCase()));
+		}
+		return blocks;
 	}
 }
