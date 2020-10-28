@@ -50,7 +50,7 @@ public class NightVision_Command {
 	}
 	else 
 	{
-		player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000,255,true));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000,0,true,false));
 		sender.sendMessage(Messaging.chatFormatter("&#00FFFFGave nightvision too " + display + "!"));
 	}
 	return true;

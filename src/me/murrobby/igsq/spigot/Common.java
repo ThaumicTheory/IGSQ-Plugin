@@ -113,14 +113,22 @@ public class Common {
 	}
 	public static Location parseLocationFromString(String input) 
 	{
-		String[] locationString = input.split(" ");
-		World world = Bukkit.getWorld(locationString[0]);
-		Double x = Double.parseDouble(locationString[1]);
-		Double y = Double.parseDouble(locationString[2]);
-		Double z = Double.parseDouble(locationString[3]);
-		Float yaw = Float.parseFloat(locationString[4]);
-		Float pitch = Float.parseFloat(locationString[5]);
-		return new Location(world,x,y,z,yaw,pitch);
+		try 
+		{
+			String[] locationString = input.split(" ");
+			World world = Bukkit.getWorld(locationString[0]);
+			Double x = Double.parseDouble(locationString[1]);
+			Double y = Double.parseDouble(locationString[2]);
+			Double z = Double.parseDouble(locationString[3]);
+			Float yaw = Float.parseFloat(locationString[4]);
+			Float pitch = Float.parseFloat(locationString[5]);
+			return new Location(world,x,y,z,yaw,pitch);
+		}
+		catch(Exception exception) 
+		{
+			Messaging.sendException(exception,"Parsed location is not a valid location", "BEDROCK", null);
+			return null;
+		}
 	}
 	public static Material[] parseMaterialListFromString(String input) 
 	{

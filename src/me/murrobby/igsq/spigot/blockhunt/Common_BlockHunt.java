@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -21,9 +22,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.Team.Option;
+import org.bukkit.scoreboard.Team.OptionStatus;
 import org.bukkit.util.BlockIterator;
 
 import com.comphenix.protocol.ProtocolLibrary;
@@ -31,6 +35,7 @@ import com.comphenix.protocol.ProtocolManager;
 
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.event.BeginSeekEvent;
 import me.murrobby.igsq.spigot.event.GameEndEvent;
 import me.murrobby.igsq.spigot.event.GameStartEvent;
 import me.murrobby.igsq.spigot.event.LobbyCreateEvent;
@@ -47,7 +52,7 @@ public class Common_BlockHunt
 	public static Player[] hiders = {};
 	
 	public static Player[] players = {};
-	public static Material[] blocks = {Material.HAY_BLOCK,Material.CRAFTING_TABLE,Material.BOOKSHELF,Material.DRIED_KELP_BLOCK,Material.FURNACE,Material.PUMPKIN,Material.MELON,Material.OAK_WOOD,Material.NOTE_BLOCK};
+	public static Material[] blocks = {};
 	public static Material[] interactWhitelist = 
 		{
 			Material.ACACIA_BUTTON,
@@ -96,9 +101,9 @@ public class Common_BlockHunt
 			Material.WARPED_FENCE_GATE,
 			
 			Material.STONE_BUTTON,
+			Material.LEVER
 			
 		};
-	public static int playerCount;
 	public static Stage stage = Stage.NO_GAME;
 	
     public static ScoreboardManager manager;
@@ -107,7 +112,7 @@ public class Common_BlockHunt
     public static Team hidersTeam;
     public static Team seekersTeam;
 
-    public static Location hubLocation = Common.parseLocationFromString(Yaml.getFieldString("map.hub.location" , "blockhunt"));
+    public static Location hubLocation = Common.parseLocationFromString(Yaml.getFieldString("maps.hub.location" , "blockhunt"));
     public static int mapID = 0;
     public static String mapName;
     public static Location lobbyLocation;
@@ -115,18 +120,32 @@ public class Common_BlockHunt
     public static Location seekerSpawnLocation;
     public static Location seekerWaitLocation;
     public static int timer;
-    
+    public static void killPlayer(Player player) 
+    {
+    	setCloakCooldown(player, 0);
+		setBlockPickerCooldown(player, 0);
+		removeCloak(player);
+    	player.setHealthScale(20);
+    	player.setHealth(20);
+    	player.setGameMode(GameMode.ADVENTURE);
+    	player.setAllowFlight(true);
+    	player.setHealth(player.getHealthScale());
+    	player.getInventory().clear();
+    	player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
+    	player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000000,2, true,false));
+    	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.dead", "internal", true);
+    }
 	public static void start()
 	{
 		if(stage.equals(Stage.IN_LOBBY)) 
 		{
-			GameStartEvent event = new GameStartEvent(mapID);
+			GameStartEvent event = new GameStartEvent();
 			Bukkit.getPluginManager().callEvent(event);
 		}
 	}
 	public static void end(EndReason reason) 
 	{
-		if(stage.equals(Stage.IN_GAME)) 
+		if(!stage.equals(Stage.NO_GAME)) 
 		{
 			GameEndEvent event = new GameEndEvent(reason);
 			Bukkit.getPluginManager().callEvent(event);
@@ -134,6 +153,7 @@ public class Common_BlockHunt
 	}
 	public static void createLobby()
 	{
+		if(getMapCount() <= 0) return;
 		if(stage.equals(Stage.NO_GAME)) 
 		{
 			LobbyCreateEvent event = new LobbyCreateEvent();
@@ -142,10 +162,19 @@ public class Common_BlockHunt
 	}
 	public static void joinLobby(Player player)
 	{
+		if(getMapCount() <= 0) return;
 		if(stage.equals(Stage.NO_GAME)) createLobby();
 		if(stage.equals(Stage.IN_LOBBY)) 
 		{
 			PlayerJoinLobbyEvent event = new PlayerJoinLobbyEvent(player);
+			Bukkit.getPluginManager().callEvent(event);
+		}
+	}
+	public static void startSeek()
+	{
+		if(stage.equals(Stage.PRE_SEEKER)) 
+		{
+			BeginSeekEvent event = new BeginSeekEvent();
 			Bukkit.getPluginManager().callEvent(event);
 		}
 	}
@@ -154,14 +183,13 @@ public class Common_BlockHunt
 		hiders = new Player[]{};
 		seekers = new Player[]{};
 		players = new Player[]{};
-		playerCount = 0;
 		stage = Stage.NO_GAME;
 		mapID = 0;
 	}
 	public static void cleanup(Player player) 
 	{
-		Common_BlockHunt.removeCloak(player);
-		Common_BlockHunt.showPlayer(player);
+		removeCloak(player);
+		showPlayer(player);
 		player.setGameMode(GameMode.ADVENTURE);
 		player.setAllowFlight(false);
 		player.setAbsorptionAmount(0);
@@ -181,17 +209,18 @@ public class Common_BlockHunt
 		player.setSaturation(0);
 		player.setWalkSpeed(0.2f);
 		player.setSprinting(false);
-		Common_BlockHunt.seekersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
-		Common_BlockHunt.hidersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
+		seekersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
+		hidersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
 		player.getInventory().clear();
 		for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", "");
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.dead", "internal", false);
 		removePlayer(player);
 	}
 	public static int getSeekerCount() 
 	{
-		if(playerCount <= 2) return 1;
-		else return (int)(playerCount/numberPerSeeker);
+		if(getPlayerCount() <= 2) return 1;
+		else return (int)(getPlayerCount()/numberPerSeeker);
 	}
     public static Boolean blockhuntCheck() 
     {
@@ -204,6 +233,10 @@ public class Common_BlockHunt
     		if(selectedPlayer.getUniqueId().equals(player.getUniqueId())) return true;
     	}
     	return false;
+    }
+    public static Boolean isDead(Player player) 
+    {
+    	return Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.dead", "internal");
     }
     public static Boolean isHider(Player player) 
     {
@@ -223,7 +256,7 @@ public class Common_BlockHunt
     }
     public static Boolean isCloaked(Player player) 
     {
-    	return Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal");
+    	return isHider(player) && Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal");
     }
     public static void removeCloak(Player player) 
     {
@@ -233,11 +266,11 @@ public class Common_BlockHunt
         	location.setX(Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.x", "internal"));
         	location.setY(Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.y", "internal"));
         	location.setZ(Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.z", "internal"));
+    		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.cloak", "internal", false);
         	for(Player selectedPlayer : players) 	
         	{
         		selectedPlayer.sendBlockChange(location, Bukkit.createBlockData(Material.AIR));
         	}
-    		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.cloak", "internal", false);
     	}
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.x", "internal", 0);
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", 0);
@@ -268,7 +301,7 @@ public class Common_BlockHunt
 		int z = location.getBlockZ();
     	for(Player hider : hiders) 
     	{
-    		if(isCloaked(hider) && isHider(hider)) 
+    		if(isCloaked(hider)) 
     		{
                 if(hider.getLocation().getBlockX() == x && hider.getLocation().getBlockY() == y && hider.getLocation().getBlockZ() == z) 
                 {
@@ -362,6 +395,8 @@ public class Common_BlockHunt
     }
     public static Boolean isPlayerVisible(Player player,double range)
     {
+    	if(stage.equals(Stage.PRE_SEEKER)) return false; //no one shall be visible while seekers have not spawned
+    	if(isDead(player)) return false;
     	if(isSeeker(player)) return true;
     	if(isCloaked(player)) return false;
     	if(player.isSneaking()) return true;
@@ -377,6 +412,8 @@ public class Common_BlockHunt
     }
     public static Boolean isPlayerSilent(Player player)
     {
+    	if(stage.equals(Stage.PRE_SEEKER)) return true; //no one shall be heard when the seekers have not spawned
+    	if(isDead(player)) return true;
     	if(isCloaked(player)) return true;
     	if(player.isSneaking()) return true; //silent if sneaking
     	if(isHider(player) && isPlayerVisible(player, Yaml.getFieldInt("visibilityrange", "blockhunt"))) return false; //if player is revealed then the player is not silent
@@ -532,8 +569,30 @@ public class Common_BlockHunt
     	}
     	else setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
     }
+	public static void setupPlayers(Player player,boolean forced) 
+	{
+		if(!forced) setupPlayers(player);
+		else 
+		{
+			setupPlayers(player);
+			if(isSeeker(player)) 
+			{
+				if(stage.equals(Stage.PRE_SEEKER)) player.teleport(seekerWaitLocation);
+				else
+				{
+					player.setGameMode(GameMode.SURVIVAL); //Compensate for a role force which misses the BeginSeekEvent
+					player.teleport(seekerSpawnLocation);
+				}
+			}
+			else if(isHider(player)) 
+			{
+				player.teleport(hiderSpawnLocation);
+			}
+		}
+	}
 	public static void setupPlayers(Player player) 
 	{
+		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.dead", "internal", false);
 		Common_BlockHunt.seekersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
 		Common_BlockHunt.hidersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
 		List<String> bootsLore = new ArrayList<String>();
@@ -581,7 +640,8 @@ public class Common_BlockHunt
 		}
 		else if(Common_BlockHunt.isSeeker(player)) 
 		{
-			player.setGameMode(GameMode.SURVIVAL);
+			player.setGameMode(GameMode.ADVENTURE);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000000,0, true,false));
 			bootsLore.add(Messaging.chatFormatter("&#990000Corrupts the ones when I get too close."));
 			leggingsLore.add(Messaging.chatFormatter("&#990000Block the ones offences."));
 			chestplateLore.add(Messaging.chatFormatter("&#990000The ones wont shift dimensions."));
@@ -758,19 +818,23 @@ public class Common_BlockHunt
 		do 
 		{
 			mapCount++;
-			mapName = Yaml.getFieldString("map."+ incrementer +".name", "blockhunt");
+			mapName = Yaml.getFieldString("maps."+ incrementer++ +".name", "blockhunt");
 		}while (mapName != null && !mapName.equals(""));
 		return mapCount;
+	}
+	public static int getPlayerCount() 
+	{
+		return players.length;
 	}
 	public static void loadMap(int mapID) 
 	{
 		Common_BlockHunt.mapID = mapID;
-		mapName = Yaml.getFieldString("map."+ mapID +".name" , "blockhunt");
-		lobbyLocation = Common.parseLocationFromString(Yaml.getFieldString("map."+ mapID +".prelobby" , "blockhunt"));
-		hiderSpawnLocation = Common.parseLocationFromString(Yaml.getFieldString("map."+ mapID +".hider" , "blockhunt"));
-		seekerWaitLocation = Common.parseLocationFromString(Yaml.getFieldString("map."+ mapID +".preseeker" , "blockhunt"));
-		seekerSpawnLocation = Common.parseLocationFromString(Yaml.getFieldString("map."+ mapID +".seeker" , "blockhunt"));
-		blocks = Common.parseMaterialListFromString(Yaml.getFieldString("map."+ mapID +".blocks" , "blockhunt"));
+		mapName = Yaml.getFieldString("maps."+ mapID +".name" , "blockhunt");
+		lobbyLocation = Common.parseLocationFromString(Yaml.getFieldString("maps."+ mapID +".prelobby" , "blockhunt"));
+		hiderSpawnLocation = Common.parseLocationFromString(Yaml.getFieldString("maps."+ mapID +".hider" , "blockhunt"));
+		seekerWaitLocation = Common.parseLocationFromString(Yaml.getFieldString("maps."+ mapID +".preseeker" , "blockhunt"));
+		seekerSpawnLocation = Common.parseLocationFromString(Yaml.getFieldString("maps."+ mapID +".seeker" , "blockhunt"));
+		blocks = Common.parseMaterialListFromString(Yaml.getFieldString("maps."+ mapID +".blocks" , "blockhunt"));
 	}
 	public static void loadMap() 
 	{
@@ -779,6 +843,45 @@ public class Common_BlockHunt
 	public static Boolean isMapSelected() 
 	{
 		return (mapID > 0);
+	}
+	public static void setupTeams() 
+	{
+		Common_BlockHunt.manager = Bukkit.getScoreboardManager();
+		Common_BlockHunt.board = Common_BlockHunt.manager.getMainScoreboard();
+		try
+		{
+			Common_BlockHunt.hidersTeam = Common_BlockHunt.board.registerNewTeam("hiderteambhigsq");
+		}
+		catch(Exception exception) 
+		{
+			System.out.println("Hider Team Already Exists. getting it!");
+			Common_BlockHunt.hidersTeam = Common_BlockHunt.board.getTeam("hiderteambhigsq");
+		}
+		try
+		{
+			Common_BlockHunt.seekersTeam = Common_BlockHunt.board.registerNewTeam("seekerteambhigsq");
+		}
+		catch(Exception exception) 
+		{
+			System.out.println("Seeker Team Already Exists. getting it!");
+			Common_BlockHunt.seekersTeam = Common_BlockHunt.board.getTeam("seekerteambhigsq");
+		}
+		
+	    Common_BlockHunt.seekersTeam.setAllowFriendlyFire(false);
+	    Common_BlockHunt.seekersTeam.setColor(ChatColor.RED);
+	    Common_BlockHunt.seekersTeam.setDisplayName("Seekers");
+	    Common_BlockHunt.seekersTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OWN_TEAM);
+	    Common_BlockHunt.seekersTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
+	    Common_BlockHunt.seekersTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY, OptionStatus.NEVER);
+	    Common_BlockHunt.seekersTeam.setCanSeeFriendlyInvisibles(true);
+	    
+	    Common_BlockHunt.hidersTeam.setAllowFriendlyFire(false);
+	    Common_BlockHunt.hidersTeam.setColor(ChatColor.AQUA);
+	    Common_BlockHunt.hidersTeam.setDisplayName("Hiders");
+	    Common_BlockHunt.hidersTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OWN_TEAM);
+	    Common_BlockHunt.hidersTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
+	    Common_BlockHunt.hidersTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY, OptionStatus.NEVER);
+	    Common_BlockHunt.hidersTeam.setCanSeeFriendlyInvisibles(true);
 	}
   
 }

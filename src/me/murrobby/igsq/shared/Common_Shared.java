@@ -71,7 +71,7 @@ public class Common_Shared
     	{
     		if(!targetFound)
     		{
-    			if(charArray[i] == target && !targetFound) targetFound = true;
+    			if(charArray[i] == target) targetFound = true;
     		}
     		else rebuiltString += charArray[i];
     	}
@@ -102,4 +102,17 @@ public class Common_Shared
 		}
 		return input;
 	}
+	public static String getTimeFromTicks(int ticks) 
+	{
+		int seconds = ticks/20;
+		int minutes = 0;
+		while(seconds >= 60) 
+		{
+			seconds-=60;
+			minutes++;
+		}
+		if(minutes == 0) return "" + seconds;
+		return minutes + " : " + seconds;
+	}
+	
 }

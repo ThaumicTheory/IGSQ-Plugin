@@ -1,11 +1,11 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Yaml;
 
 public class GameEndEvent_BlockHunt implements Listener
 {
@@ -20,15 +20,11 @@ public class GameEndEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			for(Player player : Common_BlockHunt.players)
-			{
-				Common_BlockHunt.cleanup(player);
-				
-			}
-			Common_BlockHunt.cleanup();
-			
 			Common_BlockHunt.stage = Stage.NO_GAME;
-			
+		}
+		else 
+		{
+			if(event.getReason().equals(EndReason.TIME_UP)) Common_BlockHunt.timer = Yaml.getFieldInt("gametime", "blockhunt");
 		}
 	}
 }

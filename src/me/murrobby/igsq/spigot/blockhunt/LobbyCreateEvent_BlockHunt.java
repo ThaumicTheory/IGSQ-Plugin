@@ -23,7 +23,8 @@ public class LobbyCreateEvent_BlockHunt implements Listener
 			Common_BlockHunt.cleanup();
 			Common_BlockHunt.stage = Stage.IN_LOBBY;
 			Common_BlockHunt.timer = Yaml.getFieldInt("lobbytime", "blockhunt");
-			if(!Common_BlockHunt.isMapSelected()) Common_BlockHunt.loadMap();
+			if(!Common_BlockHunt.isMapSelected()) Common_BlockHunt.loadMap(event.getMap());
+			Main_BlockHunt.startBlockHunt();
 		}
 	}
 	

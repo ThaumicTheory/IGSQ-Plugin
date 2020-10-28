@@ -10,16 +10,16 @@ Official Repo of the IGSQ Minecraft server plugin.
 - [ ] Add option for per server login locations.
 
 **Commands:**
-- [\] Move Commands to seperate files
+- [x] Move Commands to seperate files
 - [ ] Fix and implement a better help menu and system.
 - [ ] More usefull errors
-- [ ] tab completion
+- [x] tab completion
 
 **Chat:**
 - [x] Change Message Support to support custom inputs rather than halfs.
 - [x] Hex Support
 - [x] Chat Prefix
-- [ ] Chat Suffix
+- [x] Chat Suffix
 
 **Cleanup, optimisation and commenting:**
 - [x] Remove mc_accounts lookup in spigot it is only required in 1 server bungee can handle this
@@ -29,8 +29,7 @@ Official Repo of the IGSQ Minecraft server plugin.
 
 - [] On Reload Common_Security sometimes throws java.lang.NoClassDefFoundError: in FilterCommand. Investigation needed
 - [] If expert mode is turned off after enderdragon has been killed it will not reset its name
-- [] If user disconects from server ServerKickEvent Still triggers causing bungee & the hub to wait for the users closed connection.
-- [] Realtime Does Not Continue on server Restart
+- [] If expert mode increases entity health it may obtain way more health than its supposed to get. Investigation needed
 
 ## Developer Notes
 
@@ -101,5 +100,6 @@ Official Repo of the IGSQ Minecraft server plugin.
 - REDSTONE_LAMP plugin Messaging Channel For Configurations Failed Communication.onPluginMessageReceived()
 - GLOWSTONE plugin Messaging Channel For Sound Failed Communication.onPluginMessageReceived()
 - STONE data in 2FA didnt exist or was corrupt upon reciept in TwoFactorAuthentication_Security.TwoFactorAuthentication()
+- BEDROCK location string is not a valid location Common.parseLocationFromString()
 
 

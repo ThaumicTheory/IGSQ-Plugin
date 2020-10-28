@@ -24,15 +24,20 @@ public class PlayerJoinLobbyEvent extends Event implements Cancellable{
 		this.isCancelled = cancel;
 		
 	}
-
-	@Override
-	public HandlerList getHandlers() {
-		return HANDLERS_LIST;
-	}
 	
 	public Player getPlayer() 
 	{
 		return player;
 	}
 
+	
+	
+	@Override
+	public HandlerList getHandlers() {
+		return HANDLERS_LIST;
+	}
+	
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }

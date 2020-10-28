@@ -33,19 +33,25 @@ public class BlockHunt_Command {
 			{
 				if(Common_BlockHunt.isPlayer(player)) Common_BlockHunt.removePlayer(player);
 				Common_BlockHunt.addSeeker(player);
-				Common_BlockHunt.setupPlayers(player);
+				Common_BlockHunt.setupPlayers(player,true);
 				return true;
 			}
 			else if(args[0].equalsIgnoreCase("forcehider")) 
 			{
 				if(Common_BlockHunt.isPlayer(player)) Common_BlockHunt.removePlayer(player);
 				Common_BlockHunt.addHider(player);
-				Common_BlockHunt.setupPlayers(player);
+				Common_BlockHunt.setupPlayers(player,true);
 				return true;
 			}
 			else if(args[0].equalsIgnoreCase("end")) 
 			{
 				Common_BlockHunt.end(EndReason.FORCED);
+				return true;
+			}
+			else if(args[0].equalsIgnoreCase("joinlobby")) 
+			{
+				Common_BlockHunt.createLobby();
+				Common_BlockHunt.joinLobby(player);
 				return true;
 			}
 		}

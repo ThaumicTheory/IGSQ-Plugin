@@ -239,6 +239,7 @@ public class Yaml
         addFieldDefault("visibilityrange","blockhunt",4);
         addFieldDefault("lobbytime","blockhunt",400);
         addFieldDefault("gametime","blockhunt",6000);
+        addFieldDefault("hidetime","blockhunt",600);
         addFieldDefault("minimumplayers","blockhunt",2);
         addFieldDefault("maps.hub.location","blockhunt","world 0 0 0 0f 0f");
         addFieldDefault("maps.1.name","blockhunt","");
@@ -257,6 +258,8 @@ public class Yaml
     	Yaml.addFieldDefault(player.getUniqueId().toString() + ".damage.last", "player", player.getTicksLived());
     	Yaml.addFieldDefault(player.getUniqueId().toString() + "controller.chat", "internal", Yaml.getFieldString("controller.chat", "internal"));
     	Yaml.addFieldDefault(player.getUniqueId().toString() + "controller.tag", "internal", Yaml.getFieldString("controller.tag", "internal"));
+		Yaml.addFieldDefault(player.getUniqueId().toString() + ".playercompass.target","internal","");
+		Yaml.addFieldDefault(player.getUniqueId().toString() + ".playercompass.accuracy", "internal",0);
     }
     
     

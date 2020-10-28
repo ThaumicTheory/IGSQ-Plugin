@@ -27,7 +27,7 @@ public class NametagEdit_BlockHunt
 			public void run() 
 			{
 				NametagUpdater();
-				if(Main_BlockHunt.taskID != taskID) 
+				if(Main_BlockHunt.taskID != taskID || (!Common_BlockHunt.blockhuntCheck()) || Common_BlockHunt.stage.equals(Stage.NO_GAME)) 
 				{
 					Common.spigot.scheduler.cancelTask(nteTask);
 					System.out.println("Task: \"NametagEdit BlockHunt\" Expired Closing Task To Save Resources.");

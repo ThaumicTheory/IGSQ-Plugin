@@ -24,11 +24,21 @@ public class GameStartEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
+			Common_BlockHunt.setupTeams();
 			shufflePlayers(100);
 			allocatePlayers();
-			for (Player player : Common_BlockHunt.players) Common_BlockHunt.setupPlayers(player);
-			Common_BlockHunt.stage = Stage.IN_GAME;
-			Common_BlockHunt.timer = Yaml.getFieldInt("gametime", "blockhunt");
+			Common_BlockHunt.stage = Stage.PRE_SEEKER;
+			Common_BlockHunt.timer = Yaml.getFieldInt("hidetime", "blockhunt");
+			for (Player selectedPlayer : Common_BlockHunt.players) 
+			{
+				Common_BlockHunt.setupPlayers(selectedPlayer);
+				if(Common_BlockHunt.isSeeker(selectedPlayer)) selectedPlayer.teleport(Common_BlockHunt.seekerWaitLocation);
+				else if(Common_BlockHunt.isHider(selectedPlayer)) selectedPlayer.teleport(Common_BlockHunt.hiderSpawnLocation);
+			}
+		}
+		else 
+		{
+			Common_BlockHunt.timer = Yaml.getFieldInt("lobbytime", "blockhunt");
 		}
 	}
 	
@@ -42,7 +52,7 @@ public class GameStartEvent_BlockHunt implements Listener
 	{
 		for(int i = 0; i < shuffles;i++) 
 		{
-			int randomNumber = random.nextInt(Common_BlockHunt.playerCount);
+			int randomNumber = random.nextInt(Common_BlockHunt.getPlayerCount());
 			Player player = Common_BlockHunt.players[randomNumber];
 			Common_BlockHunt.players = Common.depend(Common_BlockHunt.players, randomNumber);
 			Common_BlockHunt.players = Common.append(Common_BlockHunt.players, player);
@@ -54,7 +64,7 @@ public class GameStartEvent_BlockHunt implements Listener
 		Player[] allocation = Common_BlockHunt.players;
 		for(int i = 0; i < Common_BlockHunt.getSeekerCount() ;i++) //seeker allocation
 		{
-			int randomNumber = random.nextInt(Common_BlockHunt.playerCount);
+			int randomNumber = random.nextInt(Common_BlockHunt.getPlayerCount());
 			Common_BlockHunt.seekers = Common.append(Common_BlockHunt.seekers,allocation[randomNumber]);
 			allocation = Common.depend(allocation, randomNumber);
 		}

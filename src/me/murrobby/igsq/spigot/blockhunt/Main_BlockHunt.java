@@ -16,12 +16,23 @@ public class Main_BlockHunt
 		new EntitySpawnEvent_BlockHunt();
 		new PlayerInteractEvent_BlockHunt();
 		new PlayerQuitEvent_BlockHunt();
+		new EntityDamageEvent_BlockHunt();
+		new EntityDamageByEntityEvent_BlockHunt();
 		
 		new PlayServerBlockChange_BlockHunt();
+		
+		new LobbyCreateEvent_BlockHunt();
+		new PlayerJoinLobbyEvent_BlockHunt();
+		new GameStartEvent_BlockHunt();
+		new GameEndEvent_BlockHunt();
+		new BeginSeekEvent_BlockHunt();
+		
+		startBlockHunt();
 	}
-	public static void Start_BlockHunt() //Tasks will close if the game is turned off therefor they will need to be rerun for enabling the game
+	public static void startBlockHunt() //Tasks will close if the game is turned off therefor they will need to be rerun for enabling the game
 	{
 		taskID++;
+		Common_BlockHunt.setupTeams();
 		new GameTick_BlockHunt(taskID);
 		new NametagEdit_BlockHunt(taskID);
 	}

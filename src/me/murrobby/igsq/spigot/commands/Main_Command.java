@@ -35,6 +35,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 	{
 		taskID++;
 		new RealTimeTask_Command(taskID);
+		new PlayerCompassTask_Command(taskID);
 	}
 	@Override 
 	
@@ -67,6 +68,8 @@ public class Main_Command implements CommandExecutor, TabCompleter{
   	  			return new RealTime_Command(sender,this.args).result;
   	  		case "expert":
   	  			return new Expert_Command(sender,this.args).result;
+  	  		case "playercompass":
+  	  			return new PlayerCompass_Command(sender,this.args).result;
   	  		default:
   	  			help();
   	  			return false;
@@ -100,7 +103,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		List<String> options = new ArrayList<String>();
 		if(args.length == 1) 
 		{
-			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt"};
+			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass"};
 			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		else if(args.length == 2) 
@@ -140,13 +143,17 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("blockhunt")) 
 			{
-				String[] types = {"start","forceseeker","forcehider","end"};
+				String[] types = {"start","forceseeker","forcehider","end","joinlobby"};
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("realtime")) 
 			{
 				String[] types = {"true","false"};
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
+			}
+			else if(args[0].equalsIgnoreCase("playercompass")) 
+			{
+				for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[1])) options.add(selectedPlayer.getName());
 			}
 		}
 		else if(args.length == 3) 
@@ -159,6 +166,11 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			else if(args[0].equalsIgnoreCase("error") && args[1].equalsIgnoreCase("log")) 
 			{
 				String[] types = {"enabled","disabled","verbose"};
+				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
+			}
+			if(args[0].equalsIgnoreCase("playercompass")) 
+			{
+				String[] types = {"0","10","20","30","40","50","60","70","80","90","100","150","200","300","400","500","1000"};
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 		}

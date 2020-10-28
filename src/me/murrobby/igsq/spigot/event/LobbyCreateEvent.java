@@ -32,18 +32,23 @@ public class LobbyCreateEvent extends Event implements Cancellable{
 		this.isCancelled = cancel;
 		
 	}
-
-	@Override
-	public HandlerList getHandlers() {
-		return HANDLERS_LIST;
-	}
 	public int getMap() 
 	{
 		return mapID;
 	}
 	public void setMap(int mapID) {
 		this.mapID = mapID;
-		
 	}
+	
+	
+	
+	@Override
+	public HandlerList getHandlers() {
+		return HANDLERS_LIST;
+	}
+	
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 
 }
