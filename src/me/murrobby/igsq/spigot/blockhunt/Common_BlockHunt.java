@@ -132,8 +132,9 @@ public class Common_BlockHunt
     	player.setHealth(player.getHealthScale());
     	player.getInventory().clear();
     	player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
-    	player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000000,2, true,false));
+    	player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000000,4, true,false));
     	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.dead", "internal", true);
+    	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.barrier", "internal", 0);
     }
 	public static void start()
 	{

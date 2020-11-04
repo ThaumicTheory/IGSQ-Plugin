@@ -88,9 +88,9 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 	public void onDisable()
 	{
 		this.getServer().getScheduler().cancelTasks(this);
-		this.getServer().getPluginManager().disablePlugin(this);
 		Yaml.saveFileChanges("@all");
 		Yaml.disgardAndCloseFile("@all");
+		this.getServer().getPluginManager().disablePlugin(this);
 	}
 
 	@Override

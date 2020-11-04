@@ -26,7 +26,8 @@ public class EntityDamageEvent_BlockHunt implements Listener
 				{
 					if(Common_BlockHunt.stage.equals(Stage.IN_LOBBY) && Common_BlockHunt.isPlayer(player)) event.setCancelled(true);
 					else if(Common_BlockHunt.stage.equals(Stage.PRE_SEEKER) && Common_BlockHunt.isSeeker(player)) event.setCancelled(true);
-					else 
+					else if(Common_BlockHunt.isDead(player)) event.setCancelled(true);
+					else
 					{
 						if (player.getHealth() - event.getFinalDamage() <= 0) //Player Would Die
 						{

@@ -5,6 +5,8 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
@@ -54,6 +56,33 @@ public class GameTick_BlockHunt
 			preSeeker(player);
 			endGame(player);
 			
+			if(!Common_BlockHunt.isDead(player)) 
+			{
+				int barrierKillValue = Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.barrier", "internal");
+				if(barrierKillValue > Yaml.getFieldInt("outofboundstime", "blockhunt")) 
+				{
+					Common_BlockHunt.killPlayer(player);
+				}
+				else if(Common.getHighestBlock(player.getLocation(), player.getLocation().getBlockY()).getType() == Material.BARRIER) 
+				{
+					if((Common_BlockHunt.isHider(player) && Common_BlockHunt.stage.equals(Stage.PRE_SEEKER)) || Common_BlockHunt.stage.equals(Stage.IN_GAME)) 
+					{
+						player.sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (Yaml.getFieldInt("outofboundstime", "blockhunt") - (barrierKillValue))/20),0,5,10);
+						Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.barrier", "internal", barrierKillValue+1);
+					}
+					else if(Common_BlockHunt.stage.equals(Stage.IN_LOBBY))
+					{
+						player.sendTitle(Messaging.chatFormatter("&#FF0000A Player has left the area of operation"),Messaging.chatFormatter("&#cc0000Putting you back into the playable area!"),10,20,10);
+						player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,0,true,false));
+						player.teleport(Common_BlockHunt.lobbyLocation);
+					}
+				}
+				else if(barrierKillValue > 0) 
+				{
+					Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.barrier", "internal", barrierKillValue-1);
+				}
+			}
+			
 		}
 		if(Common_BlockHunt.stage.equals(Stage.IN_LOBBY) && Common_BlockHunt.getPlayerCount() >= minPlayers) Common_BlockHunt.timer--;
 		else if(Common_BlockHunt.stage.equals(Stage.IN_GAME) || Common_BlockHunt.stage.equals(Stage.PRE_SEEKER)) Common_BlockHunt.timer--;
@@ -69,6 +98,7 @@ public class GameTick_BlockHunt
 		if(Common_BlockHunt.stage.equals(Stage.NO_GAME)) 
 		{
 			Common_BlockHunt.cleanup(player);
+			player.teleport(Common_BlockHunt.hubLocation);
 		}
 	}
 	private void inGame(Player player) 
@@ -147,6 +177,7 @@ public class GameTick_BlockHunt
 					Common_BlockHunt.updateCloakItem(player);
 				}
 			}
+			
 		}
 	}
 	private void preSeeker(Player player) 
@@ -175,11 +206,12 @@ public class GameTick_BlockHunt
 		{
 			if(Common_BlockHunt.getPlayerCount() >= minPlayers) 
 			{
-				player.sendTitle(Messaging.chatFormatter("&#00FF00" +Common_BlockHunt.timer/20),Messaging.chatFormatter("&#00FFFFSeconds Until The Game Starts!"),0,5,10);
+				if(Common_BlockHunt.timer <= 200) player.sendTitle(Messaging.chatFormatter("&#00FF00" +Common_BlockHunt.timer/20),Messaging.chatFormatter("&#00FFFFSeconds Until The Game Starts!"),0,5,10);
+				else player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FFFF00"+ Common_Shared.getTimeFromTicks(Common_BlockHunt.timer)))));
 			}
 			else 
 			{
-				player.sendTitle(Messaging.chatFormatter("&#FF0000"+ (minPlayers - Common_BlockHunt.getPlayerCount())),Messaging.chatFormatter("&#00FFFFPlayer(s) Until The Countdown Starts!"),0,5,10);
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000" + (minPlayers - Common_BlockHunt.getPlayerCount()) + " &#00FFFFPlayers until the Countdown Starts!"))));
 				Common_BlockHunt.timer = Yaml.getFieldInt("lobbytime", "blockhunt");
 			}
 			

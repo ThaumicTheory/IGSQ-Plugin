@@ -240,6 +240,7 @@ public class Yaml
         addFieldDefault("lobbytime","blockhunt",400);
         addFieldDefault("gametime","blockhunt",6000);
         addFieldDefault("hidetime","blockhunt",600);
+        addFieldDefault("outofboundstime","blockhunt",100);
         addFieldDefault("minimumplayers","blockhunt",2);
         addFieldDefault("maps.hub.location","blockhunt","world 0 0 0 0f 0f");
         addFieldDefault("maps.1.name","blockhunt","");
