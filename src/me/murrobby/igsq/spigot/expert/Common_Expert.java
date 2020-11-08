@@ -1,9 +1,12 @@
 package me.murrobby.igsq.spigot.expert;
 
+import org.bukkit.boss.BarColor;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.Yaml;
 
 public class Common_Expert {
@@ -18,5 +21,15 @@ public class Common_Expert {
     public static Boolean expertCheck() 
     {
     	return Yaml.getFieldBool("GAMEPLAY.expert", "config");
+    }
+    
+    public static void updateEnderDragon(EnderDragon enderDragon) 
+    {
+		if(enderDragon.getBossBar() != null && enderDragon.getBossBar().getTitle().equalsIgnoreCase(Messaging.chatFormatter("&#FF5300True Expert Ender Dragon"))) 
+		{
+			enderDragon.getBossBar().setTitle("Ender Dragon");
+			enderDragon.setCustomName(null);
+			enderDragon.getBossBar().setColor(BarColor.PINK);
+		}
     }
 }

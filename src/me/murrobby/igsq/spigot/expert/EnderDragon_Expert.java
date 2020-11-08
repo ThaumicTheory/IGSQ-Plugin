@@ -88,7 +88,11 @@ public class EnderDragon_Expert
 						}
 						else if(enderDragon.getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#FF5300True Expert Ender Dragon")))
 						{
-							if(enderDragon.getPhase() == Phase.LAND_ON_PORTAL || enderDragon.getPhase() == Phase.SEARCH_FOR_BREATH_ATTACK_TARGET) 
+							if(!Common_Expert.expertCheck()) // Enderdragon name chage
+							{
+								Common_Expert.updateEnderDragon(enderDragon);
+							}
+							else if(enderDragon.getPhase() == Phase.LAND_ON_PORTAL || enderDragon.getPhase() == Phase.SEARCH_FOR_BREATH_ATTACK_TARGET) 
 							for(Entity nearbyEntity : enderDragon.getNearbyEntities(20, 20, 20)) 
 							{
 								if(nearbyEntity.getType() == EntityType.PLAYER) 

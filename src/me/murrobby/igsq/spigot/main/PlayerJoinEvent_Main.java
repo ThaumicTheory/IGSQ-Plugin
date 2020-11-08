@@ -1,7 +1,6 @@
 package me.murrobby.igsq.spigot.main;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -19,11 +18,6 @@ public class PlayerJoinEvent_Main implements Listener
 	@EventHandler
 	public void PlayerJoin_Main(PlayerJoinEvent event) 
 	{
-		Player player = event.getPlayer();
-		
-		if(Yaml.getFieldInt(player.getUniqueId().toString() + ".damage.last", "internal") == 0) 
-		{
-			Yaml.applyDefault(player);
-		}
+		Yaml.applyDefault(event.getPlayer());
 	}
 }
