@@ -3,7 +3,6 @@ package me.murrobby.igsq.bungee;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +12,6 @@ public class Database
     static String url;
     static String user;
     static String password;
-    static Bungee plugin;
 	public Database()
 	{
 		url = Yaml.getFieldString("MYSQL.database", "config");
@@ -35,7 +33,7 @@ public class Database
         	Connection connection = DriverManager.getConnection(url, user, password);
             Statement commandAdapter = connection.createStatement();
             ResultSet resultTable = commandAdapter.executeQuery(sql);
-            plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+            Common.bungee.getProxy().getScheduler().schedule(Common.bungee, new Runnable()
 	    	{
 
 				@Override
@@ -53,7 +51,7 @@ public class Database
 	    	},3,TimeUnit.SECONDS);
 			return resultTable;
         }
-        catch (SQLException exception) 
+        catch (Exception exception) 
         {
         	System.out.println("Database Query:" + exception.toString());
         	return null;
@@ -68,7 +66,7 @@ public class Database
             commandAdapter.executeUpdate(sql);
             connection.close();
         }
-        catch (SQLException exception) 
+        catch (Exception exception) 
         {
         	System.out.println("Database Update:" + exception.toString());
         }
@@ -85,7 +83,7 @@ public class Database
             connection.close();
             return result;
         } 
-        catch (SQLException exception) 
+        catch (Exception exception) 
         {
         	System.out.println("Database Scalar:" + exception.toString());
         	return -1;
@@ -102,7 +100,7 @@ public class Database
             connection.close();
             return true;
         }
-        catch (SQLException exception) 
+        catch (Exception exception) 
         {
         	return false;
         }

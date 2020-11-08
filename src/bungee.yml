@@ -1,5 +1,5 @@
 name: IGSQ-BUNGEE
-version: 0.1.4
+version: 0.1.5
 author: Murrobby
 softdepend: [LuckPerms]
 main: me.murrobby.igsq.bungee.Bungee

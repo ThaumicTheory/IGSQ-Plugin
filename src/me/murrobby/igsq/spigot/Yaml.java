@@ -256,15 +256,17 @@ public class Yaml
     // TODO commenting
     public static void applyDefault(Player player) 
     {
-    	Yaml.addFieldDefault(player.getUniqueId().toString() + ".damage.last", "player", player.getTicksLived());
-    	Yaml.addFieldDefault(player.getUniqueId().toString() + "controller.chat", "internal", Yaml.getFieldString("controller.chat", "internal"));
-    	Yaml.addFieldDefault(player.getUniqueId().toString() + "controller.tag", "internal", Yaml.getFieldString("controller.tag", "internal"));
-		Yaml.addFieldDefault(player.getUniqueId().toString() + ".playercompass.target","internal","");
-		Yaml.addFieldDefault(player.getUniqueId().toString() + ".playercompass.accuracy", "internal",0);
+    	addFieldDefault(player.getUniqueId().toString() + ".damage.last", "player", player.getTicksLived());
+    	addFieldDefault(player.getUniqueId().toString() + ".controller.chat", "internal", Yaml.getFieldString("controller.chat", "internal"));
+    	addFieldDefault(player.getUniqueId().toString() + ".controller.tag", "internal", Yaml.getFieldString("controller.tag", "internal"));
+		addFieldDefault(player.getUniqueId().toString() + ".playercompass.target","internal","");
+		addFieldDefault(player.getUniqueId().toString() + ".playercompass.accuracy", "internal",0);
+		
+		for(FileConfiguration configuration : configurations) configuration.options().copyDefaults(true);
     }
     
     
-	public static void InterpretMessage(String message, Player player)
+	public static void interpretMessage(String message, Player player)
 	{
 		System.out.println("Message: " + message);
 		String[] args = message.split(".");

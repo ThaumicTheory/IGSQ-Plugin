@@ -2,7 +2,6 @@ package me.murrobby.igsq.spigot.expert;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EntityType;
@@ -31,15 +30,25 @@ public class CreatureSpawnEvent_Expert implements Listener
 	@EventHandler
 	public void CreatureSpawn_Expert(org.bukkit.event.entity.CreatureSpawnEvent event) 
 	{
-		if(Common_Expert.expertCheck() && (!event.isCancelled())) 
+		if(!event.isCancelled())
 		{
-			if(Yaml.getFieldBool(event.getLocation().getWorld().getUID() + ".event.bloodmoon", "internal")) 
+			if(Common_Expert.expertCheck()) 
 			{
-				SpecialCreatures(event,1,true);
+				if(Yaml.getFieldBool(event.getLocation().getWorld().getUID() + ".event.bloodmoon", "internal")) 
+				{
+					SpecialCreatures(event,1,true);
+				}
+				else 
+				{
+					SpecialCreatures(event,3,false);
+				}
 			}
 			else 
 			{
-				SpecialCreatures(event,3,false);
+				if(event.getEntity() instanceof EnderDragon) 
+				{
+					Common_Expert.updateEnderDragon((EnderDragon) event.getEntity());
+				}
 			}
 		}
 	}
@@ -182,11 +191,9 @@ public class CreatureSpawnEvent_Expert implements Listener
 			{
 			}
 		}
-		else if(event.getEntityType() == EntityType.ENDER_DRAGON) 
+		else if(event.getEntity() instanceof EnderDragon) 
 		{
-			EnderDragon enderDragon = (EnderDragon) event.getEntity();
-			enderDragon.getBossBar().setTitle("Ender Dragon");
-			enderDragon.getBossBar().setColor(BarColor.PINK);
+			Common_Expert.updateEnderDragon((EnderDragon) event.getEntity());
 		}
 		if(event.getEntityType() !=EntityType.PLAYER) 
 		{

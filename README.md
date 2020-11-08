@@ -25,12 +25,6 @@ Official Repo of the IGSQ Minecraft server plugin.
 - [x] Remove mc_accounts lookup in spigot it is only required in 1 server bungee can handle this
 - [ ] Major commenting required
 
-## Known Issues
-
-- [] On Reload Common_Security sometimes throws java.lang.NoClassDefFoundError: in FilterCommand. Investigation needed
-- [] If expert mode is turned off after enderdragon has been killed it will not reset its name
-- [] If expert mode increases entity health it may obtain way more health than its supposed to get. Investigation needed
-
 ## Developer Notes
 
 **Colour Standardisation**

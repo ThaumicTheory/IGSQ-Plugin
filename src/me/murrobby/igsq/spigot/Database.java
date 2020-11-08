@@ -3,7 +3,6 @@ package me.murrobby.igsq.spigot;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.bukkit.plugin.Plugin;
@@ -54,7 +53,7 @@ public class Database
 	    	},60);
 			return resultTable;
         }
-        catch (SQLException exception) 
+        catch (Exception exception) 
         {
         	Messaging.sendException(exception, "Database Query: " + sql + " failed", "BIRCH_LOG", null);
         	return null;
@@ -69,7 +68,7 @@ public class Database
             commandAdapter.executeUpdate(sql);
             connection.close();
         }
-        catch (SQLException exception) 
+        catch (Exception exception) 
         {
         	Messaging.sendException(exception, "Database Update: " + sql + " failed", "ACACIA_LOG", null);
         }
@@ -86,7 +85,7 @@ public class Database
             connection.close();
             return result;
         } 
-        catch (SQLException exception) 
+        catch (Exception exception) 
         {
         	Messaging.sendException(exception, "Database Scalar Query: " + sql + " failed", "OAK_PLANK", null);
         	return -1;
@@ -103,7 +102,7 @@ public class Database
             connection.close();
             return true;
         }
-        catch (SQLException exception) 
+        catch (Exception exception) 
         {
         	return false;
         }
