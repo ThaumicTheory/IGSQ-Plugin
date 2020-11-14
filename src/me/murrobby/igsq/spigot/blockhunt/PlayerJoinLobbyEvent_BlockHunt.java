@@ -22,7 +22,7 @@ public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			Common_BlockHunt.addPlayer(event.getPlayer());
+			event.getGame().addPlayer(event.getPlayer());
 			
 			event.getPlayer().setGameMode(GameMode.ADVENTURE);
 			Common_BlockHunt.showPlayer(event.getPlayer());
@@ -48,7 +48,7 @@ public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 			for (PotionEffect effect : event.getPlayer().getActivePotionEffects()) event.getPlayer().removePotionEffect(effect.getType());
 			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
 			
-			event.getPlayer().teleport(Common_BlockHunt.lobbyLocation);
+			event.getPlayer().teleport(event.getGame().getMap().getLobbyLocation());
 			
 		}
 	}

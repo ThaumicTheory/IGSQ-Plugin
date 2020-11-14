@@ -24,7 +24,7 @@ public class FoodLevelChangeEvent_BlockHunt implements Listener
 				if(event.getEntity() instanceof Player) 
 				{
 					Player player = (Player) event.getEntity();
-					if(Common_BlockHunt.isPlayer(player)) 
+					if(Game_BlockHunt.getPlayersGame(player) != null) 
 					{
 						event.setCancelled(true);
 					}

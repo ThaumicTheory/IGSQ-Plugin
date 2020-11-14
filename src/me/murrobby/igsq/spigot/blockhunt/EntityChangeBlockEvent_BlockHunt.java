@@ -23,10 +23,7 @@ public class EntityChangeBlockEvent_BlockHunt implements Listener
 			{
 				if(event.getEntity() instanceof FallingBlock) 
 				{
-					if(Common_BlockHunt.isBlockPlayable(event.getTo())) 
-					{
-						event.setCancelled(true);
-					}
+					event.setCancelled(true);
 				}
 			}
 		}

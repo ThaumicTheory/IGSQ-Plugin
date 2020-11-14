@@ -1,22 +1,19 @@
 package me.murrobby.igsq.spigot.event;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.murrobby.igsq.spigot.blockhunt.Common_BlockHunt;
+import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
 
 public class BeginSeekEvent extends Event implements Cancellable{
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
-    private final int MAP_ID;
-    private final Player[] SEEKERS;
-	public BeginSeekEvent() 
+	private Game_BlockHunt gameInstance;
+	public BeginSeekEvent(Game_BlockHunt gameInstance) 
 	{
-		MAP_ID = Common_BlockHunt.mapID;
-		SEEKERS = Common_BlockHunt.seekers;
+		this.gameInstance = gameInstance;
 	}
 	@Override
 	public boolean isCancelled() {
@@ -29,14 +26,9 @@ public class BeginSeekEvent extends Event implements Cancellable{
 		
 	}
 
-	public int getMap() 
+	public Game_BlockHunt getGame() 
 	{
-		return MAP_ID;
-	}
-	
-	public Player[] getSeekers() 
-	{
-		return SEEKERS;
+		return gameInstance;
 	}
 	
 	

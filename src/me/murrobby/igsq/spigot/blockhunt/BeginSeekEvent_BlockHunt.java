@@ -22,17 +22,17 @@ public class BeginSeekEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			Common_BlockHunt.timer = Yaml.getFieldInt("gametime", "blockhunt");
-			Common_BlockHunt.stage = Stage.IN_GAME;
-			for (Player seeker : event.getSeekers()) 
+			event.getGame().setTimer(Yaml.getFieldInt("gametime", "blockhunt"));
+			event.getGame().setStage(Stage.IN_GAME);
+			for (Player seeker : event.getGame().getSeekers()) 
 			{
 				seeker.setGameMode(GameMode.SURVIVAL);
-				seeker.teleport(Common_BlockHunt.seekerSpawnLocation);
+				seeker.teleport(event.getGame().getMap().getSeekerSpawnLocation());
 			}
 		}
 		else 
 		{
-			Common_BlockHunt.timer = Yaml.getFieldInt("hidetime", "blockhunt");
+			event.getGame().setTimer(Yaml.getFieldInt("hidetime", "blockhunt"));
 		}
 	}
 }

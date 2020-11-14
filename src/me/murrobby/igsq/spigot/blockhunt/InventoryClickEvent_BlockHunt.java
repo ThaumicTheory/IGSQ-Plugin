@@ -24,7 +24,8 @@ public class InventoryClickEvent_BlockHunt implements Listener
 				if(event.getWhoClicked() instanceof Player) 
 				{
 					Player player = (Player) event.getWhoClicked();
-					if(Common_BlockHunt.isPlayer(player)) 
+					Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
+					if(gameInstance != null) 
 					{
 						event.setCancelled(true);
 					}

@@ -20,11 +20,13 @@ public class LobbyCreateEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			Common_BlockHunt.cleanup();
-			Common_BlockHunt.stage = Stage.IN_LOBBY;
-			Common_BlockHunt.timer = Yaml.getFieldInt("lobbytime", "blockhunt");
-			if(!Common_BlockHunt.isMapSelected()) Common_BlockHunt.loadMap(event.getMap());
+			event.getGame().setStage(Stage.IN_LOBBY);
+			event.getGame().setTimer(Yaml.getFieldInt("lobbytime", "blockhunt"));
 			Main_BlockHunt.startBlockHunt();
+		}
+		else 
+		{
+			event.getGame().delete();
 		}
 	}
 	

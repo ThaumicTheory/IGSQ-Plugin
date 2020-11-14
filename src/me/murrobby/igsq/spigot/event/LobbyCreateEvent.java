@@ -1,26 +1,19 @@
 package me.murrobby.igsq.spigot.event;
 
-import java.util.Random;
-
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.murrobby.igsq.spigot.blockhunt.Common_BlockHunt;
+import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
 
 public class LobbyCreateEvent extends Event implements Cancellable{
 
-	private static Random random = new Random();
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
-    private int mapID;
-	public LobbyCreateEvent(int mapID) 
+	private Game_BlockHunt gameInstance;
+	public LobbyCreateEvent(Game_BlockHunt gameInstance) 
 	{
-		this.mapID = mapID;
-	}
-	public LobbyCreateEvent() 
-	{
-		 mapID = random.nextInt(Common_BlockHunt.getMapCount())+1;
+		this.gameInstance = gameInstance;
 	}
 	@Override
 	public boolean isCancelled() {
@@ -32,12 +25,9 @@ public class LobbyCreateEvent extends Event implements Cancellable{
 		this.isCancelled = cancel;
 		
 	}
-	public int getMap() 
+	public Game_BlockHunt getGame() 
 	{
-		return mapID;
-	}
-	public void setMap(int mapID) {
-		this.mapID = mapID;
+		return gameInstance;
 	}
 	
 	

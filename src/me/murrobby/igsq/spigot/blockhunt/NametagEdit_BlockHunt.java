@@ -27,7 +27,7 @@ public class NametagEdit_BlockHunt
 			public void run() 
 			{
 				NametagUpdater();
-				if(Main_BlockHunt.taskID != taskID || (!Common_BlockHunt.blockhuntCheck()) || Common_BlockHunt.stage.equals(Stage.NO_GAME)) 
+				if(Main_BlockHunt.taskID != taskID || (!Common_BlockHunt.blockhuntCheck()) || Game_BlockHunt.getGameInstances().length == 0) 
 				{
 					Common.spigot.scheduler.cancelTask(nteTask);
 					System.out.println("Task: \"NametagEdit BlockHunt\" Expired Closing Task To Save Resources.");
@@ -39,10 +39,11 @@ public class NametagEdit_BlockHunt
 	{
 		for (Player player : Bukkit.getOnlinePlayers())
 		{
-			if(Common.isCurrentTagController("blockhunt", player)) 
+			Game_BlockHunt playersGame =  Game_BlockHunt.getPlayersGame(player);
+			if(Common.isCurrentTagController("blockhunt", player) && playersGame != null) 
 			{
-				if(Common_BlockHunt.isHider(player)) NametagEdit.getApi().setNametag(player,Messaging.chatFormatter("&3[&bH&3] &b"),"");
-				else if(Common_BlockHunt.isSeeker(player)) NametagEdit.getApi().setNametag(player,Messaging.chatFormatter("&4[&cS&4] &c"),"");
+				if(playersGame.isHider(player)) NametagEdit.getApi().setNametag(player,Messaging.chatFormatter("&3[&bH&3] &b"),"");
+				else if(playersGame.isSeeker(player)) NametagEdit.getApi().setNametag(player,Messaging.chatFormatter("&4[&cS&4] &c"),"");
 				else NametagEdit.getApi().setNametag(player,Messaging.chatFormatter("&8[&7Sp&8] &7"),"");
 			}
 		}

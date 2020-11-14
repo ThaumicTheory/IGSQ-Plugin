@@ -4,16 +4,16 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.murrobby.igsq.spigot.blockhunt.Common_BlockHunt;
+import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
 
 public class GameStartEvent extends Event implements Cancellable{
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
-    private final int MAP_ID;
-	public GameStartEvent() 
+    private Game_BlockHunt gameInstance;
+	public GameStartEvent(Game_BlockHunt gameInstance) 
 	{
-		MAP_ID = Common_BlockHunt.mapID;
+		this.gameInstance = gameInstance;
 	}
 	@Override
 	public boolean isCancelled() {
@@ -26,9 +26,9 @@ public class GameStartEvent extends Event implements Cancellable{
 		
 	}
 
-	public int getMap() 
+	public Game_BlockHunt getGame() 
 	{
-		return MAP_ID;
+		return gameInstance;
 	}
 	
 	

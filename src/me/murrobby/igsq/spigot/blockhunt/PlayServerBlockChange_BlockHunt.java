@@ -29,23 +29,26 @@ public class PlayServerBlockChange_BlockHunt implements Listener
 			    {
 			        if (!event.isCancelled() && Common_BlockHunt.blockhuntCheck())
 			        {
-			        	PacketContainer packet = event.getPacket();
-			        	if(event.getPacketType() == PacketType.Play.Server.BLOCK_CHANGE)
+			        	for(Game_BlockHunt gameInstance : Game_BlockHunt.getGameInstances()) 
 			        	{
-			        		BlockPosition position = packet.getBlockPositionModifier().read(0);
-			        		Location location = event.getPlayer().getLocation();
-			        		location.setX(position.getX());
-			        		location.setY(position.getY());
-			        		location.setZ(position.getZ());
-			        		
-			        		Player hider = Common_BlockHunt.getHiderCloaked(location);
-				        	if(hider != null && Common_BlockHunt.isPlayer(event.getPlayer()) && !event.getPlayer().equals(hider))
+				        	PacketContainer packet = event.getPacket();
+				        	if(event.getPacketType() == PacketType.Play.Server.BLOCK_CHANGE)
 				        	{
-				        		PacketContainer fakeBlock = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
-				        		fakeBlock.getBlockPositionModifier().write(0, position);
-				        		fakeBlock.getBlockData().write(0, WrappedBlockData.createData(Material.valueOf(Yaml.getFieldString(hider.getUniqueId().toString()+".blockhunt.block", "internal"))));
-				        		event.setPacket(fakeBlock);
-			        		}
+				        		BlockPosition position = packet.getBlockPositionModifier().read(0);
+				        		Location location = event.getPlayer().getLocation();
+				        		location.setX(position.getX());
+				        		location.setY(position.getY());
+				        		location.setZ(position.getZ());
+				        		
+				        		Player hider = gameInstance.getHiderCloaked(location);
+					        	if(hider != null && gameInstance.isPlayer(event.getPlayer()) && !event.getPlayer().equals(hider))
+					        	{
+					        		PacketContainer fakeBlock = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
+					        		fakeBlock.getBlockPositionModifier().write(0, position);
+					        		fakeBlock.getBlockData().write(0, WrappedBlockData.createData(Material.valueOf(Yaml.getFieldString(hider.getUniqueId().toString()+".blockhunt.block", "internal"))));
+					        		event.setPacket(fakeBlock);
+				        		}
+				        	}
 			        	}
 			        }
 			    }

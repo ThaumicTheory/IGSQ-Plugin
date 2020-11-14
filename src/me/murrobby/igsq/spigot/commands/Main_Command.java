@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
 
 public class Main_Command implements CommandExecutor, TabCompleter{
 	private CommandSender sender;
@@ -168,9 +169,18 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 				String[] types = {"enabled","disabled","verbose"};
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
-			if(args[0].equalsIgnoreCase("playercompass")) 
+			else if(args[0].equalsIgnoreCase("playercompass")) 
 			{
 				String[] types = {"0","10","20","30","40","50","60","70","80","90","100","150","200","300","400","500","1000"};
+				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
+			}
+			else if(args[0].equalsIgnoreCase("blockhunt") && args[1].equalsIgnoreCase("joinlobby")) 
+			{
+				String[] types = {};
+				for(Game_BlockHunt game : Game_BlockHunt.getGameInstances()) 
+				{
+					types = Common_Shared.append(types, game.getName());
+				}
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 		}

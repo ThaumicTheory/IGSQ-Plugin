@@ -23,11 +23,12 @@ public class ProjectileHitEvent_BlockHunt implements Listener
 			if(event.getEntity() instanceof EnderPearl && event.getEntity().getShooter() instanceof Player) 
 			{
 				Player player = (Player) event.getEntity().getShooter();
-				if(Common_BlockHunt.isHider(player))
+				Game_BlockHunt playersGame = Game_BlockHunt.getPlayersGame(player);
+				if(playersGame != null && playersGame.isHider(player))
 				{
 					if(event.getHitBlock() != null) 
 					{
-						if(Common_BlockHunt.isBlockPlayable(event.getHitBlock().getType())) 
+						if(playersGame.isBlockPlayable(event.getHitBlock().getType())) 
 						{
 							Common_BlockHunt.hiderChangeDisguise(player, event.getHitBlock().getType());				
 						}

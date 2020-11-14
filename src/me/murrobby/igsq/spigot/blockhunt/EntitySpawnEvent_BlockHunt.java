@@ -48,7 +48,8 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 					if(pearl.getShooter() instanceof Player) 
 					{
 						Player player = (Player) pearl.getShooter();
-						if(Common_BlockHunt.isHider(player)) 
+						Game_BlockHunt playersGame = Game_BlockHunt.getPlayersGame(player);
+						if(playersGame != null && playersGame.isHider(player)) 
 						{
 							pearl.setGravity(false);
 							pearl.setSilent(true);

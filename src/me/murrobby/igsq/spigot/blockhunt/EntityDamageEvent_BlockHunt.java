@@ -22,16 +22,18 @@ public class EntityDamageEvent_BlockHunt implements Listener
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{
 				Player player = (Player)event.getEntity();
-				if(Common_BlockHunt.isPlayer(player)) 
+				Game_BlockHunt playersGame = Game_BlockHunt.getPlayersGame(player);
+				if(playersGame != null) 
 				{
-					if(Common_BlockHunt.stage.equals(Stage.IN_LOBBY) && Common_BlockHunt.isPlayer(player)) event.setCancelled(true);
-					else if(Common_BlockHunt.stage.equals(Stage.PRE_SEEKER) && Common_BlockHunt.isSeeker(player)) event.setCancelled(true);
-					else if(Common_BlockHunt.isDead(player)) event.setCancelled(true);
+					if(playersGame.isStage(Stage.IN_LOBBY)) event.setCancelled(true);
+					else if(playersGame.isStage(Stage.PRE_SEEKER) && playersGame.isSeeker(player)) event.setCancelled(true);
+					else if(playersGame.isDead(player)) event.setCancelled(true);
 					else
 					{
-						if (player.getHealth() - event.getFinalDamage() <= 0) //Player Would Die
+						if (player.getHealth() - event.getDamage() <= 0) //Player Would Die
 						{
-							Common_BlockHunt.killPlayer(player);
+							System.out.println(player.getHealth() + " - " + event.getDamage() + " = " + (player.getHealth() - event.getDamage()));
+							playersGame.killPlayer(player);
 							event.setCancelled(true);
 						}
 					}

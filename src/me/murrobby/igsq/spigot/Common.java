@@ -36,6 +36,7 @@ public class Common {
     }
     public static Player[] depend(Player[] array, int location)
     {
+    	if(array.length == 0) return array;
     	Player[] arrayDepended = new Player[array.length-1];
         int hitRemove = 0;
         for (int i = 0;i < array.length;i++)
@@ -44,6 +45,25 @@ public class Common {
                 arrayDepended[i-hitRemove] = array[i];
             }
             else{
+                hitRemove++;
+            }
+        }
+        return arrayDepended;
+    }
+	public static Player[] depend(Player[] array, Player value)
+    {
+		if(array.length == 0) return array;
+		Player[] arrayDepended = new Player[array.length-1];
+        int hitRemove = 0;
+        
+        for (int i = 0;i < array.length;i++)
+        {
+            if(!value.getUniqueId().equals(array[i].getUniqueId()))
+            {
+                arrayDepended[i-hitRemove] = array[i];
+            }
+            else
+            {
                 hitRemove++;
             }
         }
@@ -83,13 +103,36 @@ public class Common {
     
     /**
      * gets the highest block From a Location.
+     * Overloads {@link #getHighestBlock(Location, int, int) max check distance}, {@link #getHighestBlock(Location) from location height}
      * @apiNote Raycasts downwards until it hits a Block. Returns the block it hit. Ignores Passable.
      * @see org.bukkit.block.Block#isPassable
      * @return <b>Block</b>
      */
     public static Block getHighestBlock(Location location,int startingHeight)
     {
-    	for(int i = startingHeight;i > 0;i--) 
+    	return getHighestBlock(location,startingHeight,startingHeight);
+    }
+    /**
+     * gets the highest block From a Location.
+     * Overloads {@link #getHighestBlock(Location, int, int) max check distance}, {@link #getHighestBlock(Location, int) starting height}
+     * @apiNote Raycasts downwards until it hits a Block. Returns the block it hit. Ignores Passable.
+     * @see org.bukkit.block.Block#isPassable
+     * @return <b>Block</b>
+     */
+    public static Block getHighestBlock(Location location)
+    {
+    	return getHighestBlock(location,location.getBlockY(),location.getBlockY());
+    }
+    /**
+     * gets the highest block From a Location.
+     * Overloads {@link #getHighestBlock(Location, int) starting height}, {@link #getHighestBlock(Location) from location height}
+     * @apiNote Raycasts downwards until it hits a Block. Returns the block it hit. Ignores Passable.
+     * @see org.bukkit.block.Block#isPassable
+     * @return <b>Block</b>
+     */
+    public static Block getHighestBlock(Location location,double startingHeight,int maximumCheck)
+    {
+    	for(double i = startingHeight;i > startingHeight-maximumCheck;i--) 
     	{
     		location.setY(i);
     		if(!(location.getBlock().isEmpty() || location.getBlock().isPassable())) 

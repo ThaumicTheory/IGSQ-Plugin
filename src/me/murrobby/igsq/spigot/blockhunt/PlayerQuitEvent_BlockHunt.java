@@ -18,9 +18,10 @@ public class PlayerQuitEvent_BlockHunt implements Listener
 	{
 		if(Common_BlockHunt.blockhuntCheck()) 
 		{
-			if(Common_BlockHunt.isPlayer(event.getPlayer()))
+			Game_BlockHunt playersGame = Game_BlockHunt.getPlayersGame(event.getPlayer());
+			if(playersGame != null) 
 			{
-				Common_BlockHunt.cleanup(event.getPlayer());
+				playersGame.cleanup(event.getPlayer());
 			}
 		}
 	}

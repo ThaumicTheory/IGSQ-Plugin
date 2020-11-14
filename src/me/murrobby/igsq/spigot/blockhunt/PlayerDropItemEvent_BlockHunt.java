@@ -20,7 +20,7 @@ public class PlayerDropItemEvent_BlockHunt implements Listener
 		{
 			if(Common_BlockHunt.blockhuntCheck()) 
 			{
-				if(Common_BlockHunt.isPlayer(event.getPlayer())) 
+				if(Game_BlockHunt.getPlayersGame(event.getPlayer()) != null) 
 				{
 					event.setCancelled(true);
 				}

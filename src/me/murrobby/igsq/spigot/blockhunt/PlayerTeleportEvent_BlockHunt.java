@@ -21,7 +21,8 @@ public class PlayerTeleportEvent_BlockHunt implements Listener
 		{
 			if(Common_BlockHunt.blockhuntCheck()) 
 			{
-				if(Common_BlockHunt.isHider(event.getPlayer())) 
+				Game_BlockHunt playersGame = Game_BlockHunt.getPlayersGame(event.getPlayer());
+				if(playersGame != null) 
 				{
 					if(event.getCause().equals(TeleportCause.ENDER_PEARL))
 					{

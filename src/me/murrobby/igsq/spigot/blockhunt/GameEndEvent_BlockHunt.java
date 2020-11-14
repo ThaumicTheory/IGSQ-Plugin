@@ -20,11 +20,12 @@ public class GameEndEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			Common_BlockHunt.stage = Stage.NO_GAME;
+			event.getGame().setStage(Stage.NO_GAME);
+			event.getGame().delete();
 		}
 		else 
 		{
-			if(event.getReason().equals(EndReason.TIME_UP)) Common_BlockHunt.timer = Yaml.getFieldInt("gametime", "blockhunt");
+			if(event.getReason().equals(EndReason.TIME_UP)) event.getGame().setTimer(Yaml.getFieldInt("gametime", "blockhunt"));
 		}
 	}
 }

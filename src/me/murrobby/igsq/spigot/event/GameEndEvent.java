@@ -5,15 +5,18 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import me.murrobby.igsq.spigot.blockhunt.EndReason;
+import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
 
 public class GameEndEvent extends Event implements Cancellable{
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
     private EndReason endReason;
+	private Game_BlockHunt gameInstance;
     
-	public GameEndEvent(EndReason endReason) 
+	public GameEndEvent(Game_BlockHunt gameInstance, EndReason endReason) 
 	{
+		this.gameInstance = gameInstance;
 		this.endReason = endReason;
 	}
 	
@@ -33,8 +36,12 @@ public class GameEndEvent extends Event implements Cancellable{
 	}
 	public EndReason getReason() 
 	{
-		return endReason;
-		
+		return endReason;	
+	}
+	
+	public Game_BlockHunt getGame() 
+	{
+		return gameInstance;	
 	}
 	
 
