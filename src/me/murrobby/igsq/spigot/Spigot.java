@@ -27,6 +27,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		Yaml.createFiles();
 		Yaml.loadFile("@all");
 		Yaml.applyDefault();
+		Dictionaries.generateNetworkIds();
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
 		{
 

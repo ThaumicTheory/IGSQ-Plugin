@@ -1,15 +1,22 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Dictionaries;
 import me.murrobby.igsq.spigot.Yaml;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -64,7 +71,7 @@ public class GameTick_BlockHunt
 					{
 						gameInstance.killPlayer(player);
 					}
-					else if(Common.getHighestBlock(player.getLocation(), player.getLocation().getY()-0.1,1) != null && Common.getHighestBlock(player.getLocation(), player.getLocation().getY()-0.1,1).getType() == Material.BARRIER) 
+					else if(Common.getHighestBlock(player.getLocation(), player.getLocation().getY(),2) != null && Common.getHighestBlock(player.getLocation(), player.getLocation().getY(),2).getType() == Material.BARRIER) 
 					{
 						if(gameInstance.isHider(player) && gameInstance.isStage(Stage.PRE_SEEKER) || gameInstance.isStage(Stage.IN_GAME))
 						{
@@ -133,7 +140,47 @@ public class GameTick_BlockHunt
 			else
 			{
 				gameInstance.hidePlayer(player);
-				if(secondTick && gameInstance.isHider(player) && !Common_BlockHunt.isCloaked(player) && !player.isSneaking() && !gameInstance.isDead(player)) player.getLocation().getWorld().spawnFallingBlock(player.getLocation(), Bukkit.createBlockData(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
+				if(gameInstance.isHider(player) && !Common_BlockHunt.isCloaked(player) && !player.isSneaking() && !gameInstance.isDead(player)) 
+				{
+					//player.getLocation().getWorld().spawnFallingBlock(player.getLocation(), Bukkit.createBlockData(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
+					int entityID = (int) (Math.random() * Integer.MAX_VALUE);
+					PacketContainer packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
+					packet.getIntegers().write(0,entityID);
+					packet.getUUIDs().write(0, UUID.randomUUID());
+					packet.getEntityTypeModifier().write(0, EntityType.FALLING_BLOCK);
+					packet.getDoubles().write(0, player.getLocation().getX());
+					packet.getDoubles().write(1, player.getLocation().getY());
+					packet.getDoubles().write(2, player.getLocation().getZ());
+					packet.getIntegers().write(4,0); //Angle Pitch
+					packet.getIntegers().write(5,0); //Angle Yaw
+					packet.getIntegers().write(6, Dictionaries.getNetworkIdFromMaterial(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
+					try 
+					{
+						ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+					}
+					catch (InvocationTargetException e) 
+					{
+						
+						e.printStackTrace();
+					}
+					Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
+			    	{
+
+						@Override
+						public void run() 
+						{
+							PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
+							//packet.getIntegers().write(0, 1);
+							packet.getIntegerArrays().write(0, new int[]{entityID});
+							try {
+								ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+							} catch (InvocationTargetException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+			    	},1);
+				}
 			}
 			player.setSilent(gameInstance.isPlayerSilent(player));
 			
@@ -143,6 +190,7 @@ public class GameTick_BlockHunt
 				int selectedItemAfterAssist = Common_BlockHunt.inventoryAssistTick(player);
 				if(selectedItemAfterAssist != -1) player.getInventory().setHeldItemSlot(selectedItemAfterAssist);
 			}
+			
 			
 			//Cooldowns
 			if(Common_BlockHunt.getBlockPickerCooldown(player)> 0) 

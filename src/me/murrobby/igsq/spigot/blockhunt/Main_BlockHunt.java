@@ -10,8 +10,8 @@ public class Main_BlockHunt
 		new PlayerSwapHandItemsEvent_BlockHunt();
 		new PlayerDropItemEvent_BlockHunt();
 		new FoodLevelChangeEvent_BlockHunt();
-		new ProjectileHitEvent_BlockHunt();
-		new PlayerTeleportEvent_BlockHunt();
+		//new ProjectileHitEvent_BlockHunt();
+		//new PlayerTeleportEvent_BlockHunt();
 		new EntityChangeBlockEvent_BlockHunt();
 		new EntitySpawnEvent_BlockHunt();
 		new PlayerInteractEvent_BlockHunt();

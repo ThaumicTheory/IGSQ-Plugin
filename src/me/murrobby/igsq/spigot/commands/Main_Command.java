@@ -71,6 +71,8 @@ public class Main_Command implements CommandExecutor, TabCompleter{
   	  			return new Expert_Command(sender,this.args).result;
   	  		case "playercompass":
   	  			return new PlayerCompass_Command(sender,this.args).result;
+  	  		case "test":
+  	  			return new Test_Command(sender,this.args).result;
   	  		default:
   	  			help();
   	  			return false;
@@ -104,7 +106,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		List<String> options = new ArrayList<String>();
 		if(args.length == 1) 
 		{
-			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass"};
+			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass","test"};
 			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		else if(args.length == 2) 
@@ -155,6 +157,11 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			else if(args[0].equalsIgnoreCase("playercompass")) 
 			{
 				for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[1])) options.add(selectedPlayer.getName());
+			}
+			else if(args[0].equalsIgnoreCase("test")) 
+			{
+				String[] types = {"generate"};
+				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 		}
 		else if(args.length == 3) 

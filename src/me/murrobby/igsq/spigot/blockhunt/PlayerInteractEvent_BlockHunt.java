@@ -34,7 +34,8 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && playersGame.isHider(event.getPlayer())) event.setCancelled(true); //stops use of ender eye
 				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && playersGame.isHider(event.getPlayer())) 
 				{
-					if(Common_BlockHunt.isCloaked(event.getPlayer()) && event.getAction().equals(Action.RIGHT_CLICK_AIR))
+					event.setCancelled(true);
+					/*if(Common_BlockHunt.isCloaked(event.getPlayer()) && event.getAction().equals(Action.RIGHT_CLICK_AIR))
 					{
 						if(playersGame.isStage(Stage.IN_GAME) || playersGame.isStage(Stage.PRE_SEEKER)) 
 						{
@@ -42,6 +43,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 							event.getPlayer().sendMessage(Messaging.chatFormatter("&#FF0000You cannot change block while hiding!"));
 						}
 					}
+					*/
 				}
 				
 				if(playersGame.isHider(event.getPlayer())) 

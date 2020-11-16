@@ -22,7 +22,6 @@ public class Common {
      */
 	public static String[] illegalChats = {"NIGGER","NOGGER","COON","NIGGA"};
 	
- 
     // TODO commenting
     public static Player[] append(Player[] array, Player value)
     {
@@ -183,4 +182,5 @@ public class Common {
 		}
 		return blocks;
 	}
+	
 }
