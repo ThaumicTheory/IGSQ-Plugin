@@ -1,7 +1,6 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -11,10 +10,8 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
-import com.comphenix.protocol.wrappers.WrappedBlockData;
-
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.Dictionaries;
 
 public class PlayServerBlockChange_BlockHunt implements Listener
 {
@@ -45,7 +42,8 @@ public class PlayServerBlockChange_BlockHunt implements Listener
 					        	{
 					        		PacketContainer fakeBlock = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
 					        		fakeBlock.getBlockPositionModifier().write(0, position);
-					        		fakeBlock.getBlockData().write(0, WrappedBlockData.createData(Material.valueOf(Yaml.getFieldString(hider.getUniqueId().toString()+".blockhunt.block", "internal"))));
+					        		fakeBlock.getIntegers().write(0, Dictionaries.getNetworkIdFromMaterial(Common_BlockHunt.getHidersBlock(event.getPlayer())) + Common_BlockHunt.getHiderBlockMeta(event.getPlayer())-1);
+					        		//fakeBlock.getBlockData().write(0, WrappedBlockData.createData(Material.valueOf(Yaml.getFieldString(hider.getUniqueId().toString()+".blockhunt.block", "internal")))); 
 					        		event.setPacket(fakeBlock);
 				        		}
 				        	}

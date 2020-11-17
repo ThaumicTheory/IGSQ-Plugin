@@ -13,7 +13,7 @@ public class Main_BlockHunt
 		//new ProjectileHitEvent_BlockHunt();
 		//new PlayerTeleportEvent_BlockHunt();
 		new EntityChangeBlockEvent_BlockHunt();
-		new EntitySpawnEvent_BlockHunt();
+		//new EntitySpawnEvent_BlockHunt();
 		new PlayerInteractEvent_BlockHunt();
 		new PlayerQuitEvent_BlockHunt();
 		new EntityDamageEvent_BlockHunt();

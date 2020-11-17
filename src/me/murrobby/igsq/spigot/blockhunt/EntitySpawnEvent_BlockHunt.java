@@ -72,7 +72,7 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 								@Override
 								public void run() 
 								{
-									Common_BlockHunt.updateBlockPickerItem(player,true);
+									Common_BlockHunt.updateBlockPickerItem(player);
 								}
 					    	}, 0);
 						}

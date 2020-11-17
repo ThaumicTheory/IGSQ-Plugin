@@ -43,60 +43,24 @@ public class Test_Command {
 				location.setX(x);
 				location.setZ(z);
 				int airCount = 0;
+				int metaCount = 1;
 				Material lastBlock = null;
 				String message = "";
-				while(airCount <= 5) 
+				while(airCount <= 10) //After air is obtained more than 10 times in a row count block read as complete
 				{
 					if(location.getBlock().getType() != lastBlock && (id == 0 || !location.getBlock().getType().isAir())) 
 					{
+						if(lastBlock != null) message += "metaDictionary.put(Material." + lastBlock+ ", "+ metaCount+ ");";
+						
 						lastBlock = location.getBlock().getType();
+						metaCount = 1;
 						message += "blockDictionary.put(Material." + location.getBlock().getType()+ ", "+ id+ ");";
-					}
-					
-					
-					/*
-					int entityID = (int) (Math.random() * Integer.MAX_VALUE);
-					PacketContainer packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
-					packet.getIntegers().write(0,entityID);
-					packet.getUUIDs().write(0, UUID.randomUUID());
-					packet.getEntityTypeModifier().write(0, EntityType.FALLING_BLOCK);
-					packet.getDoubles().write(0, x);
-					packet.getDoubles().write(1, (double) 71);
-					packet.getDoubles().write(2, z);
-					packet.getIntegers().write(4,0); //Angle Pitch
-					packet.getIntegers().write(5,0); //Angle Yaw
-					packet.getIntegers().write(6, id);
-					try 
-					{
-						ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-					}
-					catch (InvocationTargetException e) 
-					{
-						e.printStackTrace();
-					}
-					
-					
-					Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
-			    	{
 
-						@Override
-						public void run() 
-						{
-							PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-							packet.getIntegerArrays().write(0, new int[]{entityID});
-							try 
-							{
-								ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-							} 
-							catch (InvocationTargetException e) 
-							{
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-			    	},200);
-			    	*/
-					
+					}
+					else if(location.getBlock().getType() == lastBlock) 
+					{
+						metaCount++;
+					}
 					
 					z+=2;
 					if(z > 261.5) //Ignore last row because it is duplicated
@@ -107,11 +71,11 @@ public class Test_Command {
 					if(location.getBlock().getType().isAir()) airCount++;
 					else airCount = 0;
 					
-					
 					id++;
 					location.setX(x);
 					location.setZ(z);
 				}
+				if(lastBlock != null) message += "metaDictionary.put(Material." + lastBlock+ ", "+ metaCount+ ");";
 				System.out.println(message);
 				return true;
 			}

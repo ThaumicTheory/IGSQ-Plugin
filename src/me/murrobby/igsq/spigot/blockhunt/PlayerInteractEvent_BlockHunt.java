@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Dictionaries;
 import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
@@ -31,21 +32,9 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 				else if(Common_BlockHunt.isCloaked(event.getPlayer())) event.setCancelled(true);
 				//else if(event.getItem() != null && event.getItem().getType().isBlock()) event.setCancelled(true); //Stops interactions with blocks in inventory
 				else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) event.setCancelled(true); //Stops interactions with blocks
-				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && playersGame.isHider(event.getPlayer())) event.setCancelled(true); //stops use of ender eye
-				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && playersGame.isHider(event.getPlayer())) 
-				{
-					event.setCancelled(true);
-					/*if(Common_BlockHunt.isCloaked(event.getPlayer()) && event.getAction().equals(Action.RIGHT_CLICK_AIR))
-					{
-						if(playersGame.isStage(Stage.IN_GAME) || playersGame.isStage(Stage.PRE_SEEKER)) 
-						{
-							event.setCancelled(true);
-							event.getPlayer().sendMessage(Messaging.chatFormatter("&#FF0000You cannot change block while hiding!"));
-						}
-					}
-					*/
-				}
-				
+				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && playersGame.isHider(event.getPlayer() )&& event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true); //stops use of ender eye
+				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && playersGame.isHider(event.getPlayer()) && event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true);
+				//Block Picker
 				if(playersGame.isHider(event.getPlayer())) 
 				{
 					if(event.getClickedBlock() != null && event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && playersGame.isBlockPlayable(event.getClickedBlock().getType())) 
@@ -55,7 +44,27 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 							Common_BlockHunt.hiderChangeDisguise(event.getPlayer(), event.getClickedBlock().getType());
 						}
 					}
-					if(event.getItem() != null && playersGame.isBlockPlayable(event.getItem().getType()) && Common_BlockHunt.getCloakCooldown(event.getPlayer()) == 0 && (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())))
+					//Block Meta Picker
+					else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())))
+					{
+						if(playersGame.isStage(Stage.IN_GAME) || playersGame.isStage(Stage.PRE_SEEKER)) 
+						{
+							int metaChange = Common_BlockHunt.getHiderBlockMeta(event.getPlayer());
+							int maxMeta = Dictionaries.getMetaCountFromMaterial(Common_BlockHunt.getHidersBlock(event.getPlayer()));
+							if(event.getPlayer().isSneaking() && maxMeta >= 10)
+							{
+								if(event.getAction().equals(Action.LEFT_CLICK_AIR ) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) metaChange -= maxMeta/10;
+								else metaChange += maxMeta/10;
+		
+							}
+							else if(event.getAction().equals(Action.LEFT_CLICK_AIR ) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) metaChange--;
+							else metaChange++;
+
+							Common_BlockHunt.hiderChangeMeta(event.getPlayer(), metaChange);
+						}
+					}
+					//Block Cloaker
+					else if(event.getItem() != null && playersGame.isBlockPlayable(event.getItem().getType()) && Common_BlockHunt.getCloakCooldown(event.getPlayer()) == 0 && (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())))
 					{
 						if(playersGame.isStage(Stage.IN_GAME) || playersGame.isStage(Stage.PRE_SEEKER)) 
 						{
@@ -77,6 +86,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 				}
 				else if(playersGame.isSeeker(event.getPlayer())) 
 				{
+					//Sword
 					if(event.getItem() != null && event.getItem().getType() == Material.GOLDEN_SWORD && (event.getAction().equals(Action.LEFT_CLICK_BLOCK)))
 					{
 						if(playersGame.isStage(Stage.IN_GAME) ) 

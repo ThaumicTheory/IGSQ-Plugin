@@ -22,6 +22,7 @@ public class PlayerQuitEvent_BlockHunt implements Listener
 			if(playersGame != null) 
 			{
 				playersGame.cleanup(event.getPlayer());
+				playersGame.removePlayer(event.getPlayer());
 			}
 		}
 	}

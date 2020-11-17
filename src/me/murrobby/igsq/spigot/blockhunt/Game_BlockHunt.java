@@ -110,19 +110,6 @@ public class Game_BlockHunt
 		}
 	}
 	
-	
-	
-	
-	
-	
-	public void cleanup() 
-	{
-		hiders = new Player[]{};
-		seekers = new Player[]{};
-		players = new Player[]{};
-		stage = Stage.NO_GAME;
-	}
-	
     public Boolean isSeeker(Player player) 
     {
     	for(Player selectedPlayer :seekers) 
@@ -156,10 +143,6 @@ public class Game_BlockHunt
     {
     	return map;
     }
-    public boolean isPlayerInThis(Player player) 
-    {
-    	return this.equals(getPlayersGame(player));
-    }
     
     public Player getHiderCloaked(Location location) 
 	{
@@ -168,7 +151,7 @@ public class Game_BlockHunt
 		int z = location.getBlockZ();
     	for(Player hider : hiders) 
     	{
-    		if(Common_BlockHunt.isCloaked(hider) && isPlayerInThis(hider)) 
+    		if(Common_BlockHunt.isCloaked(hider)) 
     		{
                 if(hider.getLocation().getBlockX() == x && hider.getLocation().getBlockY() == y && hider.getLocation().getBlockZ() == z) 
                 {
@@ -191,7 +174,8 @@ public class Game_BlockHunt
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", location.getBlockY());
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.z", "internal", location.getBlockZ());
 		Common_BlockHunt.updateCloakItem(player);
-		Common_BlockHunt.updateBlockPickerItem(player, false);
+		Common_BlockHunt.updateBlockPickerItem(player);
+		Common_BlockHunt.updateBlockMetaPickerItem(player);
     }
 	public Player raycastForCloak(Player seeker, int range) {
         BlockIterator iter = new BlockIterator(seeker, range);
@@ -256,41 +240,6 @@ public class Game_BlockHunt
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.dead", "internal", false);
 	}
 	
-	public void cleanup(Player player,boolean global) 
-	{
-		if(!global) 
-		{
-			cleanup(player);
-			return;
-		}
-		removeCloak(player);
-		showPlayer(player);
-		player.setGameMode(GameMode.ADVENTURE);
-		player.setAllowFlight(false);
-		player.setAbsorptionAmount(0);
-		player.setArrowsInBody(0);
-		player.setCanPickupItems(true);
-		player.setExp(0);
-		player.setLevel(0);
-		player.setFlying(false);
-		player.setFireTicks(0);
-		player.setCollidable(true);
-		player.setFoodLevel(20);
-		player.setGliding(false);
-		player.setGlowing(false);
-		player.setGravity(true);
-		player.setHealthScale(20);
-		player.setHealth(20);
-		player.setSaturation(0);
-		player.setWalkSpeed(0.2f);
-		player.setSprinting(false);
-		Common_BlockHunt.seekersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
-		Common_BlockHunt.hidersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
-		player.getInventory().clear();
-		for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
-		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", "");
-		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.dead", "internal", false);
-	}
 	public void setupPlayers(Player player,boolean forced) 
 	{
 		if(!forced) setupPlayers(player);
@@ -312,7 +261,7 @@ public class Game_BlockHunt
 			}
 		}
 	}
-	public  void setupPlayers(Player player) 
+	public void setupPlayers(Player player) 
 	{
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.dead", "internal", false);
 		Common_BlockHunt.seekersTeam.removeEntry(player.getName()); //Will cause issues when with duplicate accounts
@@ -356,6 +305,7 @@ public class Game_BlockHunt
 			defaultDisguise(player);
 			Common_BlockHunt.setCloakCooldown(player, 100);
 			Common_BlockHunt.setBlockPickerCooldown(player, 60);
+			Common_BlockHunt.updateBlockMetaPickerItem(player);
 			
 			Common_BlockHunt.hidersTeam.addEntry(player.getName()); //Will cause issues when with duplicate accounts
 			
@@ -448,6 +398,7 @@ public class Game_BlockHunt
 	
 	public void defaultDisguise(Player player) 
 	{
+		Yaml.updateField(player.getUniqueId().toString()+".blockhunt.blockmeta", "internal",1);
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", getMap().getBlocks()[random.nextInt(getMap().getBlocks().length)].toString());
 	}
 	public void hidePlayer(Player player) 
@@ -485,7 +436,6 @@ public class Game_BlockHunt
     	if(isDead(player)) return false;
     	if(isSeeker(player)) return true;
     	if(Common_BlockHunt.isCloaked(player)) return false;
-    	if(player.isSneaking()) return true;
     	for (Entity entity : player.getNearbyEntities(range, range/2, range)) 
     	{
     		if(entity instanceof Player) 
@@ -526,7 +476,8 @@ public class Game_BlockHunt
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.y", "internal", 0);
 		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.location.z", "internal", 0);
 		Common_BlockHunt.updateCloakItem(player);
-		Common_BlockHunt.updateBlockPickerItem(player, false);
+		Common_BlockHunt.updateBlockPickerItem(player);
+		Common_BlockHunt.updateBlockMetaPickerItem(player);
     }
     //Timers
     public void decrementTimer() 
@@ -572,12 +523,13 @@ public class Game_BlockHunt
     }
     public void addSeeker(Player player) 
     {
-    	setHiders(Common.depend(getHiders(),player));
-    	setSeekers(Common.append(getSeekers(),player));
+    	removeHider(player);
+    	addPlayer(player);
+    	if(!isSeeker(player)) setSeekers(Common.append(getSeekers(),player));
     }
     public void removeSeeker(Player player) 
     {
-    	setSeekers(Common.depend(getSeekers(),player));
+    	if(isSeeker(player)) setSeekers(Common.depend(getSeekers(),player));
     }
 	public int getSeekerCount() 
 	{
@@ -594,12 +546,13 @@ public class Game_BlockHunt
     }
     public void addHider(Player player) 
     {
-    	setSeekers(Common.depend(getSeekers(),player));
-    	setHiders(Common.append(getHiders(),player));
+    	removeSeeker(player);
+    	addPlayer(player);
+    	if(!isHider(player)) setHiders(Common.append(getHiders(),player));
     }
     public void removeHider(Player player) 
     {
-    	setHiders(Common.depend(getHiders(),player));
+    	if(isHider(player)) setHiders(Common.depend(getHiders(),player));
     }
 	public int getHiderCount() 
 	{
@@ -616,13 +569,13 @@ public class Game_BlockHunt
     }
     public void addPlayer(Player player) 
     {
-    	setPlayers(Common.append(getPlayers(),player));
+    	if(!isPlayer(player)) setPlayers(Common.append(getPlayers(),player));
     }
     public void removePlayer(Player player) 
     {
-    	setPlayers(Common.depend(getPlayers(),player));
-    	setHiders(Common.depend(getHiders(),player));
-    	setSeekers(Common.depend(getSeekers(),player));
+    	if(isPlayer(player)) setPlayers(Common.depend(getPlayers(),player));
+    	removeHider(player);
+    	removeSeeker(player);
     }
 	public int getPlayerCount() 
 	{
@@ -633,8 +586,7 @@ public class Game_BlockHunt
 	{
 		for(Player player : players) 
 		{
-			cleanup(player,true);
-			cleanup();
+			cleanup(player);
 			player.teleport(Map_BlockHunt.getHubLocation());
 		}
 		games = depend(games,this);
@@ -691,13 +643,9 @@ public class Game_BlockHunt
 		return null;
     	
     }
-    public static Game_BlockHunt removePlayerFromGames(Player player) 
+    public static void removePlayerFromGames(Player player) 
     {
-    	for(Game_BlockHunt game : games) 
-    	{
-    		if(game.isPlayerInThis(player)) game.removePlayer(player);
-    	}
-		return null;
+    	for(Game_BlockHunt game : games) game.removePlayer(player);
     	
     }
 }

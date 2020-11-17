@@ -42,7 +42,6 @@ public class BlockHunt_Command {
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
 				if(gameInstance != null) 
 				{
-					gameInstance.removePlayer(player);
 					gameInstance.addSeeker(player);
 					gameInstance.setupPlayers(player,true);
 					return true;
@@ -54,7 +53,6 @@ public class BlockHunt_Command {
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
 				if(gameInstance != null) 
 				{
-					gameInstance.removePlayer(player);
 					gameInstance.addHider(player);
 					gameInstance.setupPlayers(player,true);
 					return true;

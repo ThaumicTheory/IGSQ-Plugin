@@ -2,11 +2,14 @@ package me.murrobby.igsq.spigot.blockhunt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -16,10 +19,14 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
+
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Dictionaries;
 import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 
@@ -90,6 +97,17 @@ public class Common_BlockHunt
     {
     	return Yaml.getFieldBool("GAMEPLAY.blockhunt", "config");
     }
+    public static Material getHidersBlock(Player player) 
+    {
+    	try 
+    	{
+    		return Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString() + ".blockhunt.block", "internal"));
+    	}
+    	catch(Exception exception)
+    	{
+    		return null;
+    	}
+    }
     public static Boolean validateCloak(Player player) 
     {
     	if(!Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal")) 
@@ -128,7 +146,7 @@ public class Common_BlockHunt
     	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal");
     }
     
-    public static void updateBlockPickerItem(Player player,Boolean isBeingUsed)
+    public static void updateBlockPickerItem(Player player/*,Boolean isBeingUsed*/)
     {
 		ItemStack eye;
 		ItemMeta eyeMeta;
@@ -149,14 +167,14 @@ public class Common_BlockHunt
 			eyeLore.add(Messaging.chatFormatter("&#ff6600"+cooldown +" &#0099ffsecond/s until heat sink."));
 			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#ff6600"+ cooldown));
 		}
-		else if(isBeingUsed) 
+		/*else if(isBeingUsed) 
 		{
 			eye = new ItemStack(Material.ENDER_EYE, 1);
 			eyeMeta = eye.getItemMeta();
 			eyeLore.add(Messaging.chatFormatter("&#0099FFAnalysing surroundings for us."));
 			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#00ff00LOOKING"));
 			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
-		}
+		}*/
 		else
 		{
 			eye = new ItemStack(Material.ENDER_PEARL, 1);
@@ -175,11 +193,63 @@ public class Common_BlockHunt
 		
 		player.getInventory().setItem(0, eye);
     }
+    public static int getSeeSelfTime(Player player) 
+    {
+    	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.seeselftime", "internal");
+    }
+    public static void updateBlockMetaPickerItem(Player player)
+    {
+		ItemStack eye;
+		ItemMeta eyeMeta;
+		List<String> eyeLore = new ArrayList<String>();
+		String matString = Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal");
+    	Material material = Material.BARRIER;
+    	if(matString != null && (!matString.equalsIgnoreCase("")) && Material.valueOf(matString) != null) material = Material.valueOf(matString);
+    	
+    	int meta = Yaml.getFieldInt(player.getUniqueId().toString()+".blockhunt.blockmeta", "internal");
+		int maxMeta = Dictionaries.getMetaCountFromMaterial(material);
+		if(isCloaked(player)) 
+		{
+			eye = new ItemStack(Material.FIREWORK_STAR, 1);
+			eyeMeta = eye.getItemMeta();
+			eyeLore.add(Messaging.chatFormatter("&#66ccffPower draw too high."));
+			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Meta &#ccccccDISABLED"));
+		}
+		else if(maxMeta == 1) 
+		{
+			eye = new ItemStack(Material.SLIME_BALL, 1);
+			eyeMeta = eye.getItemMeta();
+			eyeLore.add(Messaging.chatFormatter("&#66ccffNo seperate meta's could be found."));
+			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Meta &#ff0000FAILED"));
+			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
+		}
+		else
+		{
+			eye = new ItemStack(Material.ENDER_EYE, 1);
+			eyeMeta = eye.getItemMeta();
+			eyeLore.add(Messaging.chatFormatter("&#0099ffAllows us to shift forms."));
+			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Meta &#FFFF00" + meta + " / " + maxMeta));
+			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
+		}
+		
+		eyeMeta.setLore(eyeLore);
+		
+		
+		eyeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		
+		eye.setItemMeta(eyeMeta);
+		
+		player.getInventory().setItem(7, eye);
+    }
     public static void setBlockPickerCooldown(Player player,int cooldown) 
     {
     	int currentCooldown = Common_BlockHunt.getBlockPickerCooldown(player);
     	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal", cooldown);
-    	if(currentCooldown == 0) updateBlockPickerItem(player, true); //Force an update to block object use
+    	if(currentCooldown == 0) updateBlockPickerItem(player); //Force an update to block object use
+    }
+    public static void setSeeSelfTime(Player player,int cooldown) 
+    {
+    	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.seeselftime", "internal", cooldown);
     }
     public static Boolean isCloaked(Player player) 
     {
@@ -199,9 +269,8 @@ public class Common_BlockHunt
     public static void updateCloakItem(Player player)
     {
     	int cooldown = getCloakCooldown(player)/20;
-    	String matString = Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal");
-    	Material material = Material.BARRIER;
-    	if(matString != null && (!matString.equalsIgnoreCase("")) && Material.valueOf(matString) != null) material = Material.valueOf(matString);
+    	Material material = getHidersBlock(player);
+    	if(material == null) material = Material.BARRIER;
 		ItemStack block;
 		ItemMeta blockMeta;
 		List<String> blockLore = new ArrayList<String>();
@@ -241,15 +310,67 @@ public class Common_BlockHunt
 		
 		player.getInventory().setItem(8, block);
     }
+    
     public static void hiderChangeDisguise(Player player,Material material) 
     {
     	if(!isCloaked(player) && getBlockPickerCooldown(player) == 0) 
     	{
         	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", material.toString());
+        	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.blockmeta", "internal", 1);
         	updateCloakItem(player);
         	setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt"));
+        	updateBlockMetaPickerItem(player);
     	}
     	else setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
+    }
+    public static PacketContainer createHiderFallingSand(Player player,int entityID,boolean isNotExact) 
+    {
+    	PacketContainer packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
+		packet.getIntegers().write(0,entityID);
+		packet.getUUIDs().write(0, UUID.randomUUID());
+		packet.getEntityTypeModifier().write(0, EntityType.FALLING_BLOCK);
+		if(isNotExact) 
+		{
+			packet.getDoubles().write(0, player.getLocation().getBlockX()+ 0.5);
+			packet.getDoubles().write(1, (double) player.getLocation().getBlockY());
+			packet.getDoubles().write(2,player.getLocation().getBlockZ()+ 0.5);
+			
+		}
+		else 
+		{
+			packet.getDoubles().write(0, player.getLocation().getX());
+			packet.getDoubles().write(1, player.getLocation().getY());
+			packet.getDoubles().write(2, player.getLocation().getZ());
+		}
+		packet.getIntegers().write(4,0); //Angle Pitch
+		packet.getIntegers().write(5,0); //Angle Yaw
+		packet.getIntegers().write(6, Dictionaries.getNetworkIdFromMaterial(getHidersBlock(player))+ Common_BlockHunt.getHiderBlockMeta(player)-1);
+		return packet;
+    }
+    public static void hiderChangeMeta(Player player,int meta) 
+    {
+    	Material block = getHidersBlock(player);
+    	if(block != null) 
+    	{
+    		if(meta > Dictionaries.getMetaCountFromMaterial(block)) 
+    		{
+    			meta = 1;
+    		}
+    		else if(meta < 1) 
+    		{
+    			meta = Dictionaries.getMetaCountFromMaterial(block);
+    		}
+        	if(!isCloaked(player)) 
+        	{
+        		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.blockmeta", "internal", meta);
+            	updateBlockMetaPickerItem(player);
+            	setSeeSelfTime(player, 100);
+        	}
+    	}
+    }
+    public static int getHiderBlockMeta(Player player) 
+    {
+    	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.blockmeta", "internal");
     }
 	public static void showPlayer(Player player) 
 	{
