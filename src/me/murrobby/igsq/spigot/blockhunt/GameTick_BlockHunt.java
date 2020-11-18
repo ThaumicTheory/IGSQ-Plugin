@@ -53,101 +53,110 @@ public class GameTick_BlockHunt
 		secondTick = !secondTick;
 		for(Game_BlockHunt gameInstance : Game_BlockHunt.getGameInstances()) 
 		{
-			for(Player player : gameInstance.getPlayers()) 
+			for(Player_BlockHunt player : gameInstance.getPlayers()) 
 			{
 				inGame(player,gameInstance);
 				inGameAndPreSeeker(player,gameInstance);
-				lobby(player,gameInstance);
 				preSeeker(player,gameInstance);
 				
-				if(!gameInstance.isDead(player)) 
+				if(!player.isDead()) 
 				{
-					int barrierKillValue = Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.barrier", "internal");
-					if(barrierKillValue > Yaml.getFieldInt("outofboundstime", "blockhunt")) 
+					if(player.getGeneric().getOutOfBoundsTime() > Yaml.getFieldInt("outofboundstime", "blockhunt")) 
 					{
-						gameInstance.killPlayer(player);
+						player.kill();
 					}
-					else if(Common.getHighestBlock(player.getLocation(), player.getLocation().getY(),3) != null && Common.getHighestBlock(player.getLocation(), player.getLocation().getY(),3).getType() == Material.BARRIER) 
+					else if(Common.getHighestBlock(player.getPlayer().getLocation(), player.getPlayer().getLocation().getY(),3) != null && Common.getHighestBlock(player.getPlayer().getLocation(), player.getPlayer().getLocation().getY(),3).getType() == Material.BARRIER) 
 					{
-						if(gameInstance.isHider(player) && gameInstance.isStage(Stage.PRE_SEEKER) || gameInstance.isStage(Stage.IN_GAME))
+						if(player.isHider() && gameInstance.isStage(Stage.PRE_SEEKER) || gameInstance.isStage(Stage.IN_GAME))
 						{
-							player.sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (Yaml.getFieldInt("outofboundstime", "blockhunt") - (barrierKillValue))/20),0,5,10);
-							Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.barrier", "internal", barrierKillValue+1);
-						}
-						else if(gameInstance.isStage(Stage.IN_LOBBY))
-						{
-							player.sendTitle(Messaging.chatFormatter("&#FF0000A Player has left the area of operation"),Messaging.chatFormatter("&#cc0000Putting you back into the playable area!"),10,20,10);
-							player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,0,true,false));
-							player.teleport(gameInstance.getMap().getLobbyLocation());
+							player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (Yaml.getFieldInt("outofboundstime", "blockhunt") - (player.getGeneric().getOutOfBoundsTime()))/20),0,5,10);
+							Yaml.updateField(player.getPlayer().getUniqueId().toString() + ".blockhunt.barrier", "internal", player.getGeneric().getOutOfBoundsTime()+1);
 						}
 					}
-					else if(barrierKillValue > 0) 
+					else if(player.getGeneric().getOutOfBoundsTime() > 0) 
 					{
-						Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.barrier", "internal", barrierKillValue-1);
+						player.getGeneric().setOutOfBoundsTime(player.getGeneric().getOutOfBoundsTime()-1);
 					}
+				}
+				if(gameInstance.isStage(Stage.IN_LOBBY) && gameInstance.getPlayerCount() >= minPlayers) gameInstance.decrementTimer();
+				else if(gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER)) gameInstance.decrementTimer();
+				if(gameInstance.getPlayerCount() == 0) 
+				{
+					gameInstance.delete();
 				}
 				
 			}
-			
-			if(gameInstance.isStage(Stage.IN_LOBBY) && gameInstance.getPlayerCount() >= minPlayers) gameInstance.decrementTimer();
-			else if(gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER)) gameInstance.decrementTimer();
-			if(gameInstance.getPlayerCount() == 0) 
+			for(Player player : gameInstance.getQueuedPlayers()) 
 			{
-				gameInstance.delete();
+				lobby(player,gameInstance);
+				
+				if(!player.isDead()) 
+				{
+					if(Common.getHighestBlock(player.getPlayer().getLocation(), player.getPlayer().getLocation().getY(),3) != null && Common.getHighestBlock(player.getPlayer().getLocation(), player.getPlayer().getLocation().getY(),3).getType() == Material.BARRIER) 
+					{
+						if(gameInstance.isStage(Stage.IN_LOBBY))
+						{
+							player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000A Player has left the area of operation"),Messaging.chatFormatter("&#cc0000Putting you back into the playable area!"),10,20,10);
+							player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,0,true,false));
+							player.getPlayer().teleport(gameInstance.getMap().getLobbyLocation());
+						}
+					}
+				}
 			}
+			
 		}
 	}
-	private void inGame(Player player,Game_BlockHunt gameInstance) 
+	private void inGame(Player_BlockHunt player,Game_BlockHunt gameInstance) 
 	{
 		if(gameInstance.isStage(Stage.IN_GAME))
 		{
 			if(gameInstance.getTimer() <= 0) gameInstance.end(EndReason.TIME_UP); 
-			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFF"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer()))));
+			player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFF"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer()))));
 			
 		}
 	} 
-	private void inGameAndPreSeeker(Player player,Game_BlockHunt gameInstance) 
+	private void inGameAndPreSeeker(Player_BlockHunt player,Game_BlockHunt gameInstance) 
 	{
 		if(gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER)) 
 		{
 			//Cloak update & check hider is still there
-			if(Common_BlockHunt.isCloaked(player))
+			if(player.isHider() && player.toHider().getGeneric().isCloaked())
 			{
-				if(player.getLocation().getBlockX() != Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.x", "internal") || player.getLocation().getBlockY() != Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.y", "internal") || player.getLocation().getBlockZ() != Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.location.z", "internal")) 
+				if(player.getPlayer().getLocation().getBlockX() != player.toHider().getGeneric().getCloakLocation().getBlockX() || player.getPlayer().getLocation().getBlockY() != player.toHider().getGeneric().getCloakLocation().getBlockY() || player.getPlayer().getLocation().getBlockZ() != player.toHider().getGeneric().getCloakLocation().getBlockZ()) 
 				{
-					player.sendMessage(Messaging.chatFormatter("&#C8C8C8You are no longer hidden."));
-					gameInstance.removeCloak(player);
-					Common_BlockHunt.setCloakCooldown(player, Yaml.getFieldInt("cloakcooldown", "blockhunt"));
+					player.getPlayer().sendMessage(Messaging.chatFormatter("&#C8C8C8You are no longer hidden."));
+					player.toHider().removeCloak();
+					player.toHider().getGeneric().setCloakCooldown(Yaml.getFieldInt("cloakcooldown", "blockhunt"));
 				}
 				else 
 				{
-					for(Player selectedPlayer : gameInstance.getPlayers()) 
+					for(Player_BlockHunt selectedPlayer : gameInstance.getPlayers()) 
 					{
-						if(!selectedPlayer.getUniqueId().equals(player.getUniqueId())) 
+						if(!selectedPlayer.getPlayer().getUniqueId().equals(player.getPlayer().getUniqueId())) 
 						{
-							selectedPlayer.sendBlockChange(player.getLocation().getBlock().getLocation(), Bukkit.createBlockData(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
+							selectedPlayer.getPlayer().sendBlockChange(player.getPlayer().getLocation().getBlock().getLocation(), Bukkit.createBlockData(player.toHider().getGeneric().getBlock()));
 						}
 					}
 				}
 			}
 			
 			//Player visibility and sound
-			if(gameInstance.isPlayerVisible(player, Yaml.getFieldInt("visibilityrange", "blockhunt"))) gameInstance.showPlayer(player);
+			if(player.isPlayerVisible(Yaml.getFieldInt("visibilityrange", "blockhunt"))) gameInstance.showPlayer(player.getPlayer());
 			else
 			{
-				gameInstance.hidePlayer(player);
-				if(gameInstance.isHider(player) && !gameInstance.isDead(player)) 
+				gameInstance.hidePlayer(player.getPlayer());
+				if(player.isHider() && !player.isDead()) 
 				{
 					//player.getLocation().getWorld().spawnFallingBlock(player.getLocation(), Bukkit.createBlockData(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
 					int entityID = (int) (Math.random() * Integer.MAX_VALUE);
 					try 
 					{
-						Player[] players = gameInstance.getPlayers();
+						Player_BlockHunt[] players = gameInstance.getPlayers();
 						if(gameInstance.isStage(Stage.PRE_SEEKER)) players = gameInstance.getHiders();
-						for(Player selectedPlayer : players) 
+						for(Player_BlockHunt selectedPlayer : players) 
 						{
-							if(selectedPlayer.getUniqueId().equals(player.getUniqueId()) && Common_BlockHunt.isCloaked(player)) ProtocolLibrary.getProtocolManager().sendServerPacket(player, Common_BlockHunt.createHiderFallingSand(player, entityID, true));
-							else if(( Common_BlockHunt.getSeeSelfTime(player) > 0 ||!selectedPlayer.getUniqueId().equals(player.getUniqueId())) && !Common_BlockHunt.isCloaked(player) ) ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, Common_BlockHunt.createHiderFallingSand(player, entityID, false));
+							if(selectedPlayer.getPlayer().getUniqueId().equals(player.getPlayer().getUniqueId()) && player.toHider().getGeneric().isCloaked()) ProtocolLibrary.getProtocolManager().sendServerPacket(player.getPlayer(), player.toHider().getGeneric().dynamicCloakPacket(entityID, true));
+							else if((player.toHider().getGeneric().getSeeSelfTime() > 0 ||!selectedPlayer.getPlayer().getUniqueId().equals(player.getPlayer().getUniqueId())) && !player.toHider().getGeneric().isCloaked() ) ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer.getPlayer(), player.toHider().getGeneric().dynamicCloakPacket(entityID, false));
 						}
 					}
 					catch (InvocationTargetException e) 
@@ -164,12 +173,12 @@ public class GameTick_BlockHunt
 							PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
 							try 
 							{
-								Player[] players = gameInstance.getPlayers();
+								Player_BlockHunt[] players = gameInstance.getPlayers();
 								packet.getIntegerArrays().write(0, new int[] {entityID});
 								if(gameInstance.isStage(Stage.PRE_SEEKER)) players = gameInstance.getHiders();
-								for(Player selectedPlayer : players) 
+								for(Player_BlockHunt selectedPlayer : players) 
 								{
-									ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, packet);
+									ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer.getPlayer(), packet);
 								}
 							}
 							catch (InvocationTargetException e) 
@@ -181,51 +190,54 @@ public class GameTick_BlockHunt
 			    	},1);
 				}
 			}
-			player.setSilent(gameInstance.isPlayerSilent(player));
+			player.getPlayer().setSilent(player.isPlayerSilent());
 			
 			//Inventory management
 			if(!secondTick) 
 			{
-				int selectedItemAfterAssist = Common_BlockHunt.inventoryAssistTick(player);
-				if(selectedItemAfterAssist != -1) player.getInventory().setHeldItemSlot(selectedItemAfterAssist);
+				int selectedItemAfterAssist = player.getGeneric().inventoryAssist();
+				if(selectedItemAfterAssist != -1) player.getPlayer().getInventory().setHeldItemSlot(selectedItemAfterAssist);
 			}
 			
 			
 			//Cooldowns
-			if(Common_BlockHunt.getBlockPickerCooldown(player)> 0) 
+			if(player.isHider()) 
 			{
-				if(Common_BlockHunt.getBlockPickerCooldown(player)%20 == 0) 
+				Hider_BlockHunt hider = player.toHider();
+				if(hider.getGeneric().getBlockPickerCooldown()> 0) 
 				{
-					Common_BlockHunt.updateBlockPickerItem(player);
+					if(hider.getGeneric().getBlockPickerCooldown()%20 == 0) 
+					{
+						hider.getGeneric().updateBlockPickerItem();
+					}
+					hider.getGeneric().setBlockPickerCooldown(hider.getGeneric().getBlockPickerCooldown()-1);
+					if(hider.getGeneric().getBlockPickerCooldown() == 0) 
+					{
+						hider.getGeneric().updateBlockPickerItem();
+					}
 				}
-				Common_BlockHunt.setBlockPickerCooldown(player, Common_BlockHunt.getBlockPickerCooldown(player)-1);
-				if(Common_BlockHunt.getBlockPickerCooldown(player) == 0) 
+				
+				if(hider.getGeneric().getCloakCooldown()> 0) 
 				{
-					Common_BlockHunt.updateBlockPickerItem(player);
+					if(hider.getGeneric().getCloakCooldown()%20 == 0) 
+					{
+						hider.getGeneric().updateCloakItem();
+					}
+					hider.getGeneric().setCloakCooldown(hider.getGeneric().getCloakCooldown()-1);
+					if(hider.getGeneric().getCloakCooldown() == 0) 
+					{
+						hider.getGeneric().updateCloakItem();
+					}
+				}
+				
+				if(hider.getGeneric().getSeeSelfTime() > 0) 
+				{
+					hider.getGeneric().setSeeSelfTime(hider.getGeneric().getSeeSelfTime()-1);
 				}
 			}
-			
-			if(Common_BlockHunt.getCloakCooldown(player)> 0) 
-			{
-				if(Common_BlockHunt.getCloakCooldown(player)%20 == 0) 
-				{
-					Common_BlockHunt.updateCloakItem(player);
-				}
-				Common_BlockHunt.setCloakCooldown(player, Common_BlockHunt.getCloakCooldown(player)-1);
-				if(Common_BlockHunt.getCloakCooldown(player) == 0) 
-				{
-					Common_BlockHunt.updateCloakItem(player);
-				}
-			}
-			
-			if(Common_BlockHunt.getSeeSelfTime(player)> 0) 
-			{
-				Common_BlockHunt.setSeeSelfTime(player, Common_BlockHunt.getSeeSelfTime(player)-1);
-			}
-			
 		}
 	}
-	private void preSeeker(Player player,Game_BlockHunt gameInstance) 
+	private void preSeeker(Player_BlockHunt player,Game_BlockHunt gameInstance) 
 	{
 		if(gameInstance.isStage(Stage.PRE_SEEKER)) 
 		{
@@ -233,15 +245,15 @@ public class GameTick_BlockHunt
 			{
 				gameInstance.startSeek();
 				String subTitle = "";
-				if(gameInstance.isSeeker(player)) subTitle = "&#FFCCCCYou like seeking, right? Everybody likes seeking. Well, let's go get some.";
-				else if (gameInstance.isHider(player)) subTitle = "&#CCCCFFAnd to your right, something huge hurtling towards you OH GOD RUN! THAT'S NOT SUPPOSED TO BE THERE.";
+				if(player.isSeeker()) subTitle = "&#FFCCCCYou like seeking, right? Everybody likes seeking. Well, let's go get some.";
+				else if (player.isHider()) subTitle = "&#CCCCFFAnd to your right, something huge hurtling towards you OH GOD RUN! THAT'S NOT SUPPOSED TO BE THERE.";
 				else subTitle = "&#CCCCCCOh, that's funny, is it? Because we've been at this twelve hours and you haven't found them either, so I don't know why you're laughing.";
 				
 				
-				player.sendTitle(Messaging.chatFormatter("&#FF0000Seekers have been released"),Messaging.chatFormatter(subTitle),20,120,10);
+				player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000Seekers have been released"),Messaging.chatFormatter(subTitle),20,120,10);
 				
 			}
-			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));
+			player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));
 				
 		} 
 	}
@@ -249,14 +261,14 @@ public class GameTick_BlockHunt
 	{
 		if (gameInstance.isStage(Stage.IN_LOBBY)) //Lobby
 		{
-			if(gameInstance.getPlayerCount() >= minPlayers) 
+			if(gameInstance.getQueueCount() >= minPlayers) 
 			{
 				if(gameInstance.getTimer() <= 200) player.sendTitle(Messaging.chatFormatter("&#00FF00" +gameInstance.getTimer()/20),Messaging.chatFormatter("&#00FFFFSeconds Until The Game Starts!"),0,5,10);
 				else player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FFFF00"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));
 			}
 			else 
 			{
-				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000" + (minPlayers - gameInstance.getPlayerCount()) + " &#00FFFFPlayers until the Countdown Starts!"))));
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000" + (minPlayers - gameInstance.getQueueCount()) + " &#00FFFFPlayers until the Countdown Starts!"))));
 				gameInstance.setTimer(Yaml.getFieldInt("lobbytime", "blockhunt"));
 			}
 			

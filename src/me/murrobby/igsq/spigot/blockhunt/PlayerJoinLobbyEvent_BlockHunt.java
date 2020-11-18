@@ -22,10 +22,10 @@ public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			event.getGame().addPlayer(event.getPlayer());
+			event.getGame().addQueuedPlayer(event.getPlayer());
 			
 			event.getPlayer().setGameMode(GameMode.ADVENTURE);
-			Common_BlockHunt.showPlayer(event.getPlayer());
+			event.getGame().showPlayer(event.getPlayer());
 			event.getPlayer().setAllowFlight(false);
 			event.getPlayer().setAbsorptionAmount(0);
 			event.getPlayer().setArrowsInBody(0);

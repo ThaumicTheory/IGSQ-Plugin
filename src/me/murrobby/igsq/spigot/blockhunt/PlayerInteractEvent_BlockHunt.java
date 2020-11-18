@@ -2,7 +2,6 @@ package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -24,33 +23,33 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 	{
 		if(Common_BlockHunt.blockhuntCheck()) 
 		{
-			Game_BlockHunt playersGame = Game_BlockHunt.getPlayersGame(event.getPlayer());
-			if(playersGame != null) 
+			Player_BlockHunt player = Player_BlockHunt.getPlayer((event.getPlayer()));
+			if(player != null) 
 			{
-				if(playersGame.isDead(event.getPlayer())) event.setCancelled(true);
+				if(player.isDead()) event.setCancelled(true);
 				else if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock() != null && !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())) event.setCancelled(true); //only allows certain blocks to be right clicked
-				else if(Common_BlockHunt.isCloaked(event.getPlayer())) event.setCancelled(true);
+				else if(player.isHider() && player.toHider().getGeneric().isCloaked()) event.setCancelled(true);
 				//else if(event.getItem() != null && event.getItem().getType().isBlock()) event.setCancelled(true); //Stops interactions with blocks in inventory
 				else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) event.setCancelled(true); //Stops interactions with blocks
-				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && playersGame.isHider(event.getPlayer() )&& event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true); //stops use of ender eye
-				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && playersGame.isHider(event.getPlayer()) && event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true);
+				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && player.getGame().isHider(event.getPlayer() )&& event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true); //stops use of ender eye
+				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && player.getGame().isHider(event.getPlayer()) && event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true);
 				//Block Picker
-				if(playersGame.isHider(event.getPlayer())) 
+				if(player.isHider())
 				{
-					if(event.getClickedBlock() != null && event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && playersGame.isBlockPlayable(event.getClickedBlock().getType())) 
+					if(event.getClickedBlock() != null && event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && player.getGame().isBlockPlayable(event.getClickedBlock().getType())) 
 					{
-						if(playersGame.isStage(Stage.IN_GAME) || playersGame.isStage(Stage.PRE_SEEKER)) 
+						if(player.getGame().isStage(Stage.IN_GAME) || player.getGame().isStage(Stage.PRE_SEEKER)) 
 						{
-							Common_BlockHunt.hiderChangeDisguise(event.getPlayer(), event.getClickedBlock().getType());
+							player.toHider().getGeneric().changeCloak(event.getClickedBlock().getType());
 						}
 					}
 					//Block Meta Picker
 					else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())))
 					{
-						if(playersGame.isStage(Stage.IN_GAME) || playersGame.isStage(Stage.PRE_SEEKER)) 
+						if(player.getGame().isStage(Stage.IN_GAME) || player.getGame().isStage(Stage.PRE_SEEKER)) 
 						{
-							int metaChange = Common_BlockHunt.getHiderBlockMeta(event.getPlayer());
-							int maxMeta = Dictionaries.getMetaCountFromMaterial(Common_BlockHunt.getHidersBlock(event.getPlayer()));
+							int metaChange = player.toHider().getGeneric().getBlockMeta();
+							int maxMeta = Dictionaries.getMetaCountFromMaterial(player.toHider().getGeneric().getBlock());
 							if(event.getPlayer().isSneaking() && maxMeta >= 10)
 							{
 								if(event.getAction().equals(Action.LEFT_CLICK_AIR ) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) metaChange -= maxMeta/10;
@@ -60,44 +59,44 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 							else if(event.getAction().equals(Action.LEFT_CLICK_AIR ) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)) metaChange--;
 							else metaChange++;
 
-							Common_BlockHunt.hiderChangeMeta(event.getPlayer(), metaChange);
+							player.toHider().getGeneric().setBlockMeta(metaChange);
 						}
 					}
 					//Block Cloaker
-					else if(event.getItem() != null && playersGame.isBlockPlayable(event.getItem().getType()) && Common_BlockHunt.getCloakCooldown(event.getPlayer()) == 0 && (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())))
+					else if(event.getItem() != null && player.getGame().isBlockPlayable(event.getItem().getType()) && player.toHider().getGeneric().getCloakCooldown() == 0 && (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())))
 					{
-						if(playersGame.isStage(Stage.IN_GAME) || playersGame.isStage(Stage.PRE_SEEKER)) 
+						if(player.getGame().isStage(Stage.IN_GAME) || player.getGame().isStage(Stage.PRE_SEEKER)) 
 						{
-							if(!Common_BlockHunt.isCloaked(event.getPlayer())) 
+							if(!player.toHider().getGeneric().isCloaked()) 
 							{
-								if(Common_BlockHunt.validateCloak(event.getPlayer())) 
+								if(player.toHider().getGeneric().isCloakValid()) 
 								{
 									event.getPlayer().sendMessage(Messaging.chatFormatter("&#00FF00You are now hidden."));
-									playersGame.addCloak(event.getPlayer());
+									player.toHider().setCloak();
 								}
 								else 
 								{
 									event.getPlayer().sendMessage(Messaging.chatFormatter("&#FFb900You cannot hide here!"));
-									Common_BlockHunt.setCloakCooldown(event.getPlayer(), Yaml.getFieldInt("cloakcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
+									player.toHider().getGeneric().setCloakCooldown(Yaml.getFieldInt("cloakcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
 								}
 							}
 						}
 					}
 				}
-				else if(playersGame.isSeeker(event.getPlayer())) 
+				else if(player.isSeeker()) 
 				{
 					//Sword
 					if(event.getItem() != null && event.getItem().getType() == Material.GOLDEN_SWORD && (event.getAction().equals(Action.LEFT_CLICK_BLOCK)))
 					{
-						if(playersGame.isStage(Stage.IN_GAME) ) 
+						if(player.getGame().isStage(Stage.IN_GAME) ) 
 						{
-							Player hider = playersGame.raycastForCloak(event.getPlayer(), 6);
+							Hider_BlockHunt hider = player.toSeeker().raycastForCloak(6);
 							if(hider != null) 
 							{
-			    				hider.sendMessage(Messaging.chatFormatter("&#FF0000You have been revealed by "+ event.getPlayer().getName() +"!"));
-			    				event.getPlayer().sendMessage(Messaging.chatFormatter("&#00FF00Hider "+ hider.getName() +" located!" ));
-			    				Common_BlockHunt.setCloakCooldown(hider, Yaml.getFieldInt("cloakcooldown", "blockhunt"));
-			    				playersGame.removeCloak(hider);
+			    				hider.getPlayer().sendMessage(Messaging.chatFormatter("&#FF0000You have been revealed by "+ event.getPlayer().getName() +"!"));
+			    				event.getPlayer().sendMessage(Messaging.chatFormatter("&#00FF00Hider "+ hider.getPlayer().getName() +" located!" ));
+			    				hider.getGeneric().setCloakCooldown(Yaml.getFieldInt("cloakcooldown", "blockhunt"));
+			    				hider.removeCloak();
 							}
 						}
 					}

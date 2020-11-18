@@ -1,34 +1,20 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Dictionaries;
 import me.murrobby.igsq.spigot.Yaml;
-import me.murrobby.igsq.spigot.Messaging;
 
 public class Common_BlockHunt 
 {
@@ -97,32 +83,6 @@ public class Common_BlockHunt
     {
     	return Yaml.getFieldBool("GAMEPLAY.blockhunt", "config");
     }
-    public static Material getHidersBlock(Player player) 
-    {
-    	try 
-    	{
-    		return Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString() + ".blockhunt.block", "internal"));
-    	}
-    	catch(Exception exception)
-    	{
-    		return null;
-    	}
-    }
-    public static Boolean validateCloak(Player player) 
-    {
-    	if(!Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal")) 
-    	{
-        	Location targetLocation = player.getLocation().getBlock().getLocation();
-        	Location checkingLocation = targetLocation;
-        	
-        	if(!checkingLocation.getBlock().isEmpty()) return false; //Deny if block replacing is not air
-        	checkingLocation.setY(targetLocation.getY()-1);
-        	if(checkingLocation.getBlock().isPassable() || checkingLocation.getBlock().isLiquid()) return false; //Deny if block bellow is not solid
-        	checkingLocation.setY(targetLocation.getY()+1);
-        	if(checkingLocation.getBlock().isPassable()) return true; //Allow only if headroom is not solid
-    	}
-    	return false;
-    }
 	public static int getSeekerCount(Player[] players) 
 	{
 		if(players.length <= 2) return 1;
@@ -141,307 +101,25 @@ public class Common_BlockHunt
     	}
     	return false;
     }
-    public static int getBlockPickerCooldown(Player player) 
-    {
-    	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal");
-    }
-    
-    public static void updateBlockPickerItem(Player player/*,Boolean isBeingUsed*/)
-    {
-		ItemStack eye;
-		ItemMeta eyeMeta;
-		List<String> eyeLore = new ArrayList<String>();
-		int cooldown = Common_BlockHunt.getBlockPickerCooldown(player)/20;
-		if(isCloaked(player)) 
-		{
-			eye = new ItemStack(Material.FIREWORK_STAR, 1);
-			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Messaging.chatFormatter("&#66ccffPower draw too high."));
-			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#ccccccDISABLED"));
-		}
-		else if(cooldown != 0) 
-		{
-			eye = new ItemStack(Material.FIRE_CHARGE, cooldown);
-			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Messaging.chatFormatter("&#FFFF00Overheated!"));
-			eyeLore.add(Messaging.chatFormatter("&#ff6600"+cooldown +" &#0099ffsecond/s until heat sink."));
-			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#ff6600"+ cooldown));
-		}
-		/*else if(isBeingUsed) 
-		{
-			eye = new ItemStack(Material.ENDER_EYE, 1);
-			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Messaging.chatFormatter("&#0099FFAnalysing surroundings for us."));
-			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#00ff00LOOKING"));
-			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
-		}*/
-		else
-		{
-			eye = new ItemStack(Material.ENDER_PEARL, 1);
-			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Messaging.chatFormatter("&#0099ffAllows us to shift forms."));
-			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Shifter &#FFFF00READY"));
-			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
-		}
-		
-		eyeMeta.setLore(eyeLore);
-		
-		
-		eyeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		
-		eye.setItemMeta(eyeMeta);
-		
-		player.getInventory().setItem(0, eye);
-    }
-    public static int getSeeSelfTime(Player player) 
-    {
-    	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.seeselftime", "internal");
-    }
-    public static void updateBlockMetaPickerItem(Player player)
-    {
-		ItemStack eye;
-		ItemMeta eyeMeta;
-		List<String> eyeLore = new ArrayList<String>();
-		String matString = Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal");
-    	Material material = Material.BARRIER;
-    	if(matString != null && (!matString.equalsIgnoreCase("")) && Material.valueOf(matString) != null) material = Material.valueOf(matString);
-    	
-    	int meta = Yaml.getFieldInt(player.getUniqueId().toString()+".blockhunt.blockmeta", "internal");
-		int maxMeta = Dictionaries.getMetaCountFromMaterial(material);
-		if(isCloaked(player)) 
-		{
-			eye = new ItemStack(Material.FIREWORK_STAR, 1);
-			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Messaging.chatFormatter("&#66ccffPower draw too high."));
-			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Meta &#ccccccDISABLED"));
-		}
-		else if(maxMeta == 1) 
-		{
-			eye = new ItemStack(Material.SLIME_BALL, 1);
-			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Messaging.chatFormatter("&#66ccffNo seperate meta's could be found."));
-			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Meta &#ff0000FAILED"));
-			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
-		}
-		else
-		{
-			eye = new ItemStack(Material.ENDER_EYE, 1);
-			eyeMeta = eye.getItemMeta();
-			eyeLore.add(Messaging.chatFormatter("&#0099ffAllows us to shift forms."));
-			eyeMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Meta &#FFFF00" + meta + " / " + maxMeta));
-			eyeMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
-		}
-		
-		eyeMeta.setLore(eyeLore);
-		
-		
-		eyeMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		
-		eye.setItemMeta(eyeMeta);
-		
-		player.getInventory().setItem(7, eye);
-    }
-    public static void setBlockPickerCooldown(Player player,int cooldown) 
-    {
-    	int currentCooldown = Common_BlockHunt.getBlockPickerCooldown(player);
-    	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.blockpickcooldown", "internal", cooldown);
-    	if(currentCooldown == 0) updateBlockPickerItem(player); //Force an update to block object use
-    }
-    public static void setSeeSelfTime(Player player,int cooldown) 
-    {
-    	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.seeselftime", "internal", cooldown);
-    }
-    public static Boolean isCloaked(Player player) 
-    {
-    	return Yaml.getFieldBool(player.getUniqueId().toString() + ".blockhunt.cloak", "internal");
-    }
-    public static int getCloakCooldown(Player player) 
-    {
-    	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.cloakcooldown", "internal");
-    }
-    public static void setCloakCooldown(Player player,int cooldown) 
-    {
-    	int currentCooldown = getCloakCooldown(player);
-    	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.cloakcooldown", "internal", cooldown);
-    	if(currentCooldown == 0) updateCloakItem(player); //Force an update to block object use
-    }
-    
-    public static void updateCloakItem(Player player)
-    {
-    	int cooldown = getCloakCooldown(player)/20;
-    	Material material = getHidersBlock(player);
-    	if(material == null) material = Material.BARRIER;
-		ItemStack block;
-		ItemMeta blockMeta;
-		List<String> blockLore = new ArrayList<String>();
-		
-		if(isCloaked(player)) 
-		{
-			block = new ItemStack(material, 1);
-			blockMeta = block.getItemMeta();
-			
-			blockLore.add(Messaging.chatFormatter("&#FFFF00" +material.toString()));
-			blockMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Cloak &#00ff00ACTIVE"));
-			blockMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
-		}
-		else if(cooldown != 0) 
-		{
-			block = new ItemStack(material, cooldown);
-			blockMeta = block.getItemMeta();
-			
-			blockLore.add(Messaging.chatFormatter("&#FFFF00Overheated!"));
-			blockLore.add(Messaging.chatFormatter("&#ff6600"+cooldown +" &#0099ffsecond/s until heat sink."));
-			blockMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Cloak &#ff6600"+ cooldown));
-		}
-		else 
-		{
-			block = new ItemStack(material, 1);
-			blockMeta = block.getItemMeta();
-			
-			blockLore.add(Messaging.chatFormatter("&#0099ffThe block us has selected."));
-			blockMeta.setDisplayName(Messaging.chatFormatter("&#66ccffThemarite Cloak &#FFFF00" + material.toString()));
-			blockMeta.addEnchant(Enchantment.DEPTH_STRIDER, 0, true);
-		}
-		blockMeta.setLore(blockLore);
-		
-		blockMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		
-		block.setItemMeta(blockMeta);
-		
-		player.getInventory().setItem(8, block);
-    }
-    
-    public static void hiderChangeDisguise(Player player,Material material) 
-    {
-    	if(!isCloaked(player) && getBlockPickerCooldown(player) == 0) 
-    	{
-        	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.block", "internal", material.toString());
-        	Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.blockmeta", "internal", 1);
-        	updateCloakItem(player);
-        	setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt"));
-        	updateBlockMetaPickerItem(player);
-    	}
-    	else setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
-    }
-    public static PacketContainer createHiderFallingSand(Player player,int entityID,boolean isNotExact) 
-    {
-    	PacketContainer packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
-		packet.getIntegers().write(0,entityID);
-		packet.getUUIDs().write(0, UUID.randomUUID());
-		packet.getEntityTypeModifier().write(0, EntityType.FALLING_BLOCK);
-		if(isNotExact) 
-		{
-			packet.getDoubles().write(0, player.getLocation().getBlockX()+ 0.5);
-			packet.getDoubles().write(1, (double) player.getLocation().getBlockY());
-			packet.getDoubles().write(2,player.getLocation().getBlockZ()+ 0.5);
-			
-		}
-		else 
-		{
-			packet.getDoubles().write(0, player.getLocation().getX());
-			packet.getDoubles().write(1, player.getLocation().getY());
-			packet.getDoubles().write(2, player.getLocation().getZ());
-		}
-		packet.getIntegers().write(4,0); //Angle Pitch
-		packet.getIntegers().write(5,0); //Angle Yaw
-		packet.getIntegers().write(6, Dictionaries.getNetworkIdFromMaterial(getHidersBlock(player))+ Common_BlockHunt.getHiderBlockMeta(player)-1);
-		return packet;
-    }
-    public static void hiderChangeMeta(Player player,int meta) 
-    {
-    	Material block = getHidersBlock(player);
-    	if(block != null) 
-    	{
-    		if(meta > Dictionaries.getMetaCountFromMaterial(block)) 
-    		{
-    			meta = 1;
-    		}
-    		else if(meta < 1) 
-    		{
-    			meta = Dictionaries.getMetaCountFromMaterial(block);
-    		}
-        	if(!isCloaked(player)) 
-        	{
-        		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.blockmeta", "internal", meta);
-            	updateBlockMetaPickerItem(player);
-            	setSeeSelfTime(player, 100);
-        	}
-    	}
-    }
-    public static int getHiderBlockMeta(Player player) 
-    {
-    	return Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.blockmeta", "internal");
-    }
-	public static void showPlayer(Player player) 
+	public void hidePlayer() 
 	{
 		for(Player selectedPlayer : Bukkit.getOnlinePlayers()) 
 		{
-			if(selectedPlayer != player) 
+			if(!selectedPlayer.getUniqueId().equals(selectedPlayer.getUniqueId()))  
 			{
-				selectedPlayer.showPlayer(Common.spigot, player);
+				selectedPlayer.hidePlayer(Common.spigot, selectedPlayer);
 			}
 		}
 	}
-	public static int inventoryAssistTick(Player player) 
+	public void showPlayer() 
 	{
-		int slot = Yaml.getFieldInt(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal");
-		int direction = 0;
-		if(slot != player.getInventory().getHeldItemSlot())
+		for(Player selectedPlayer : Bukkit.getOnlinePlayers()) 
 		{
-			if(slot == 8 && player.getInventory().getHeldItemSlot() == 0) 
+			if(!selectedPlayer.getUniqueId().equals(selectedPlayer.getUniqueId()))  
 			{
-				direction = 1;
-			}
-			else if(slot == 0 && player.getInventory().getHeldItemSlot() == 8) 
-			{
-				direction = -1;
-			}
-			else if(slot > player.getInventory().getHeldItemSlot()) 
-			{
-				direction = -1;
-			}
-			else if(slot < player.getInventory().getHeldItemSlot()) 
-			{
-				direction = 1;
-			}
-			if(direction != 0) 
-			{
-				slot+=direction;
-				int attempts = 0;
-				while(true) 
-				{
-					if(slot> 8) 
-					{
-						slot = 0;
-					}
-					else if(slot < 0) 
-					{
-						slot = 8;
-					}
-					
-					
-					if(player.getInventory().getItem(slot) != null) 
-					{
-						Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", slot);
-						return slot;
-					}
-					else
-					{
-						attempts++;
-						slot+=direction;
-						
-						
-						if(attempts > 8) //Nothing in inventory 
-						{
-							Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
-							return -1;
-						}
-					}
-				}
+				selectedPlayer.showPlayer(Common.spigot, selectedPlayer);
 			}
 		}
-		Yaml.updateField(player.getUniqueId().toString() + ".blockhunt.hotbar", "internal", player.getInventory().getHeldItemSlot());
-		return -1; //Inventory has not Moved
 	}
 	public static void setupTeams() 
 	{
@@ -453,7 +131,6 @@ public class Common_BlockHunt
 		}
 		catch(Exception exception) 
 		{
-			System.out.println("Hider Team Already Exists. getting it!");
 			Common_BlockHunt.hidersTeam = Common_BlockHunt.board.getTeam("hiderteambhigsq");
 		}
 		try
@@ -462,7 +139,6 @@ public class Common_BlockHunt
 		}
 		catch(Exception exception) 
 		{
-			System.out.println("Seeker Team Already Exists. getting it!");
 			Common_BlockHunt.seekersTeam = Common_BlockHunt.board.getTeam("seekerteambhigsq");
 		}
 		
@@ -482,5 +158,120 @@ public class Common_BlockHunt
 	    Common_BlockHunt.hidersTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY, OptionStatus.NEVER);
 	    Common_BlockHunt.hidersTeam.setCanSeeFriendlyInvisibles(true);
 	}
+    public static Player_BlockHunt[] append(Player_BlockHunt[] array, Player_BlockHunt value)
+    {
+    	Player_BlockHunt[] arrayAppended = new Player_BlockHunt[array.length+1];
+    	for (int i = 0;i < array.length;i++)
+    	{
+    		arrayAppended[i] = array[i];
+    	}
+    	arrayAppended[array.length] = value;
+    	return arrayAppended;
+    }
+    public static Player_BlockHunt[] depend(Player_BlockHunt[] array, Player_BlockHunt value)
+    {
+		if(array.length == 0) return array;
+		Player_BlockHunt[] arrayDepended = new Player_BlockHunt[array.length-1];
+        int hitRemove = 0;
+        
+        for (int i = 0;i < array.length;i++)
+        {
+            if(!value.getPlayer().getUniqueId().equals(array[i].getPlayer().getUniqueId()))
+            {
+                arrayDepended[i-hitRemove] = array[i];
+            }
+            else
+            {
+                hitRemove++;
+            }
+        }
+        return arrayDepended;
+    }
+    public static Hider_BlockHunt[] append(Hider_BlockHunt[] array, Hider_BlockHunt value)
+    {
+    	Hider_BlockHunt[] arrayAppended = new Hider_BlockHunt[array.length+1];
+    	for (int i = 0;i < array.length;i++)
+    	{
+    		arrayAppended[i] = array[i];
+    	}
+    	arrayAppended[array.length] = value;
+    	return arrayAppended;
+    }
+    public static Hider_BlockHunt[] depend(Hider_BlockHunt[] array, Hider_BlockHunt value)
+    {
+		if(array.length == 0) return array;
+		Hider_BlockHunt[] arrayDepended = new Hider_BlockHunt[array.length-1];
+        int hitRemove = 0;
+        
+        for (int i = 0;i < array.length;i++)
+        {
+            if(!value.getPlayer().getUniqueId().equals(array[i].getPlayer().getUniqueId()))
+            {
+                arrayDepended[i-hitRemove] = array[i];
+            }
+            else
+            {
+                hitRemove++;
+            }
+        }
+        return arrayDepended;
+    }
+    public static Seeker_BlockHunt[] append(Seeker_BlockHunt[] array, Seeker_BlockHunt value)
+    {
+    	Seeker_BlockHunt[] arrayAppended = new Seeker_BlockHunt[array.length+1];
+    	for (int i = 0;i < array.length;i++)
+    	{
+    		arrayAppended[i] = array[i];
+    	}
+    	arrayAppended[array.length] = value;
+    	return arrayAppended;
+    }
+    public static Seeker_BlockHunt[] depend(Seeker_BlockHunt[] array, Seeker_BlockHunt value)
+    {
+		if(array.length == 0) return array;
+		Seeker_BlockHunt[] arrayDepended = new Seeker_BlockHunt[array.length-1];
+        int hitRemove = 0;
+        
+        for (int i = 0;i < array.length;i++)
+        {
+            if(!value.getPlayer().getUniqueId().equals(array[i].getPlayer().getUniqueId()))
+            {
+                arrayDepended[i-hitRemove] = array[i];
+            }
+            else
+            {
+                hitRemove++;
+            }
+        }
+        return arrayDepended;
+    }
+	public static Game_BlockHunt[] append(Game_BlockHunt[] array, Game_BlockHunt value) 
+	{
+		Game_BlockHunt[] arrayAppended = new Game_BlockHunt[array.length+1];
+    	for (int i = 0;i < array.length;i++)
+    	{
+    		arrayAppended[i] = array[i];
+    	}
+    	arrayAppended[array.length] = value;
+    	return arrayAppended;
+	}
+	public static Game_BlockHunt[] depend(Game_BlockHunt[] array, Game_BlockHunt value)
+    {
+		Game_BlockHunt[] arrayDepended = new Game_BlockHunt[array.length-1];
+        int hitRemove = 0;
+        
+        for (int i = 0;i < array.length;i++)
+        {
+            if(!value.equals(array[i]))
+            {
+                arrayDepended[i-hitRemove] = array[i];
+            }
+            else
+            {
+                hitRemove++;
+            }
+        }
+        return arrayDepended;
+    }
   
 }

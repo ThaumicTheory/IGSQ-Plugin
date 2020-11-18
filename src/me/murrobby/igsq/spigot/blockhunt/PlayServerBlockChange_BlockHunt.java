@@ -1,7 +1,6 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.comphenix.protocol.PacketType;
@@ -37,12 +36,12 @@ public class PlayServerBlockChange_BlockHunt implements Listener
 				        		location.setY(position.getY());
 				        		location.setZ(position.getZ());
 				        		
-				        		Player hider = gameInstance.getHiderCloaked(location);
-					        	if(hider != null && gameInstance.isPlayer(event.getPlayer()) && !event.getPlayer().equals(hider))
+				        		Hider_BlockHunt hider = gameInstance.getHiderCloaked(location);
+					        	if(hider != null && gameInstance.isPlayer(event.getPlayer()) && !event.getPlayer().getUniqueId().equals(hider.getPlayer().getUniqueId()))
 					        	{
 					        		PacketContainer fakeBlock = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
 					        		fakeBlock.getBlockPositionModifier().write(0, position);
-					        		fakeBlock.getIntegers().write(0, Dictionaries.getNetworkIdFromMaterial(Common_BlockHunt.getHidersBlock(event.getPlayer())) + Common_BlockHunt.getHiderBlockMeta(event.getPlayer())-1);
+					        		fakeBlock.getIntegers().write(0, Dictionaries.getNetworkIdFromMaterial(hider.getGeneric().getBlock()) + hider.getGeneric().getBlockMeta()-1);
 					        		//fakeBlock.getBlockData().write(0, WrappedBlockData.createData(Material.valueOf(Yaml.getFieldString(hider.getUniqueId().toString()+".blockhunt.block", "internal")))); 
 					        		event.setPacket(fakeBlock);
 				        		}

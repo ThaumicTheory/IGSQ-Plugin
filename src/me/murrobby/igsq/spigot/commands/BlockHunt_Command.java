@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.blockhunt.EndReason;
 import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
+import me.murrobby.igsq.spigot.blockhunt.Hider_BlockHunt;
+import me.murrobby.igsq.spigot.blockhunt.Seeker_BlockHunt;
 
 public class BlockHunt_Command {
 
@@ -43,7 +45,7 @@ public class BlockHunt_Command {
 				if(gameInstance != null) 
 				{
 					gameInstance.addSeeker(player);
-					gameInstance.setupPlayers(player,true);
+					Seeker_BlockHunt.getSeeker(player).setup(true);
 					return true;
 				}
 				return false;
@@ -54,7 +56,7 @@ public class BlockHunt_Command {
 				if(gameInstance != null) 
 				{
 					gameInstance.addHider(player);
-					gameInstance.setupPlayers(player,true);
+					Hider_BlockHunt.getHider(player).setup(true);
 					return true;
 				}
 				return false;

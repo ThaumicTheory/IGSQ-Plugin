@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
 
 public class EntitySpawnEvent_BlockHunt implements Listener
 {
@@ -47,9 +46,8 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 					EnderPearl pearl = (EnderPearl) event.getEntity();
 					if(pearl.getShooter() instanceof Player) 
 					{
-						Player player = (Player) pearl.getShooter();
-						Game_BlockHunt playersGame = Game_BlockHunt.getPlayersGame(player);
-						if(playersGame != null && playersGame.isHider(player)) 
+						Player_BlockHunt player = Player_BlockHunt.getPlayer((Player) pearl.getShooter());
+						if(player != null && player.isHider()) 
 						{
 							pearl.setGravity(false);
 							pearl.setSilent(true);
@@ -59,9 +57,9 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 								@Override
 								public void run() 
 								{
-									if(player.getInventory().getItem(0).getType() == Material.ENDER_EYE) 
+									if(player.getPlayer().getInventory().getItem(0).getType() == Material.ENDER_EYE) 
 									{
-										Common_BlockHunt.setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
+										//Common_BlockHunt.setBlockPickerCooldown(player, Yaml.getFieldInt("blockpickcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
 									}
 									pearl.remove();
 								}
@@ -72,7 +70,7 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 								@Override
 								public void run() 
 								{
-									Common_BlockHunt.updateBlockPickerItem(player);
+									//Common_BlockHunt.updateBlockPickerItem(player);
 								}
 					    	}, 0);
 						}

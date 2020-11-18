@@ -2,7 +2,6 @@ package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,10 +23,10 @@ public class BeginSeekEvent_BlockHunt implements Listener
 		{
 			event.getGame().setTimer(Yaml.getFieldInt("gametime", "blockhunt"));
 			event.getGame().setStage(Stage.IN_GAME);
-			for (Player seeker : event.getGame().getSeekers()) 
+			for (Seeker_BlockHunt seeker : event.getGame().getSeekers()) 
 			{
-				seeker.setGameMode(GameMode.SURVIVAL);
-				seeker.teleport(event.getGame().getMap().getSeekerSpawnLocation());
+				seeker.getPlayer().setGameMode(GameMode.SURVIVAL);
+				seeker.getPlayer().teleport(event.getGame().getMap().getSeekerSpawnLocation());
 			}
 		}
 		else 

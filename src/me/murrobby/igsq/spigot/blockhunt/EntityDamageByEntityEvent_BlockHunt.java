@@ -21,15 +21,15 @@ public class EntityDamageByEntityEvent_BlockHunt implements Listener
 		{
 			if(event.getEntity() instanceof Player && event.getDamager() instanceof Player) 
 			{
-				Player victim = (Player) event.getEntity();
-				Player attacker = (Player) event.getDamager();
-				Game_BlockHunt attackerGame = Game_BlockHunt.getPlayersGame(attacker);
-				if(attackerGame != null) 
+				
+				Player_BlockHunt attacker = Player_BlockHunt.getPlayer((Player) event.getDamager());
+				Player_BlockHunt victim = Player_BlockHunt.getPlayer((Player) event.getEntity());
+				if(attacker != null) 
 				{
-					if(!attackerGame.equals(Game_BlockHunt.getPlayersGame(victim))) event.setCancelled(true); //People from different games cannot hurt people
-					else if(attackerGame.isDead(attacker)) event.setCancelled(true); //dead attacker cannot hurt players.
-					else if(attackerGame.isHider(victim) == Game_BlockHunt.getPlayersGame(attacker).isHider(attacker)) event.setCancelled(true); //Stop friendly fire if teams fail to do so
-					else if(Common_BlockHunt.isCloaked(attacker)) event.setCancelled(true);
+					if(!attacker.getGame().equals(victim.getGame())) event.setCancelled(true); //People from different games cannot hurt people
+					else if(attacker.isDead()) event.setCancelled(true); //dead attacker cannot hurt players.
+					else if(attacker.isHider() == victim.isHider()) event.setCancelled(true); //Stop friendly fire if teams fail to do so
+					else if(attacker.isHider() && attacker.toHider().getGeneric().isCloaked()) event.setCancelled(true);
 				}
 			}
 				

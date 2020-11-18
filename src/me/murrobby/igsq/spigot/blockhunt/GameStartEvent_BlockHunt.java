@@ -29,11 +29,11 @@ public class GameStartEvent_BlockHunt implements Listener
 			allocatePlayers(event.getGame());
 			event.getGame().setStage(Stage.PRE_SEEKER);
 			event.getGame().setTimer(Yaml.getFieldInt("hidetime", "blockhunt"));
-			for (Player selectedPlayer : event.getGame().getPlayers()) 
+			for (Player_BlockHunt selectedPlayer : event.getGame().getPlayers()) 
 			{
-				event.getGame().setupPlayers(selectedPlayer);
-				if(event.getGame().isSeeker(selectedPlayer)) selectedPlayer.teleport(event.getGame().getMap().getSeekerWaitLocation());
-				else if(event.getGame().isHider(selectedPlayer)) selectedPlayer.teleport(event.getGame().getMap().getHiderSpawnLocation());
+				//event.getGame().setupPlayers(selectedPlayer);
+				if(selectedPlayer.isSeeker()) selectedPlayer.getPlayer().teleport(event.getGame().getMap().getSeekerWaitLocation());
+				else if(selectedPlayer.isHider()) selectedPlayer.getPlayer().teleport(event.getGame().getMap().getHiderSpawnLocation());
 			}
 		}
 		else 
@@ -52,16 +52,16 @@ public class GameStartEvent_BlockHunt implements Listener
 	{
 		for(int i = 0; i < shuffles;i++) 
 		{
-			int randomNumber = random.nextInt(Common_BlockHunt.getSeekerCount(gameInstance.getPlayerCount()));
-			Player player = gameInstance.getPlayers()[randomNumber];
-			gameInstance.removePlayer(player);
-			gameInstance.addPlayer(player);
+			int randomNumber = random.nextInt(Common_BlockHunt.getSeekerCount(gameInstance.getQueueCount()));
+			Player player = gameInstance.getQueuedPlayers()[randomNumber];
+			gameInstance.removeQueuedPlayer(player);
+			gameInstance.addQueuedPlayer(player);
 			
 		}
 	}
 	private void allocatePlayers(Game_BlockHunt gameInstance) 
 	{
-		Player[] allocation = gameInstance.getPlayers();
+		Player[] allocation = gameInstance.getQueuedPlayers();
 		for(int i = 0; i < Common_BlockHunt.getSeekerCount(allocation) ;i++) //seeker allocation
 		{
 			int randomNumber = random.nextInt(Common_BlockHunt.getSeekerCount(gameInstance.getPlayerCount()));
