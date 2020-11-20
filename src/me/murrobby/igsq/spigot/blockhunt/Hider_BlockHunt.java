@@ -23,17 +23,20 @@ public class Hider_BlockHunt extends Player_BlockHunt
 		setup();
 	}
 
-	public void setup(boolean forced) 
+	public Hider_BlockHunt(Player_BlockHunt player) 
 	{
-		if(!forced) setup();
-		else 
-		{
-			setup();
-			getPlayer().teleport(getGame().getMap().getHiderSpawnLocation());
-		}
+		super(player);
+		this.generic = new GenericHider_BlockHunt(player);
+		setup();
+	}
+	
+	private void goToShould() 
+	{
+		if(getGame().isStage(Stage.PRE_SEEKER) || getGame().isStage(Stage.IN_GAME)) getPlayer().teleport(getGame().getMap().getHiderSpawnLocation());
 	}
 	private void setup() 
 	{
+		getPlayer().getInventory().clear();
 		Common_BlockHunt.seekersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		Common_BlockHunt.hidersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		List<String> bootsLore = new ArrayList<String>();
@@ -110,15 +113,31 @@ public class Hider_BlockHunt extends Player_BlockHunt
 		
 		
 		getPlayer().getInventory().setArmorContents(new ItemStack[]{boots,leggings,chestplate,helmet});
+		
+		getGeneric().updateBlockMetaPickerItem();
+		getGeneric().updateCloakItem();
+		getGeneric().updateBlockPickerItem();
+		goToShould();
 	}
 	
 	//Cloaking
-    public void setCloak() 
+    public void setCloak(boolean cloaked) 
     {
-    	getGeneric().setCloakLocation();
-    	for(Player_BlockHunt selectedPlayer : getGame().getPlayers()) 	
+    	if(cloaked) 
     	{
-    		if(!selectedPlayer.getPlayer().getUniqueId().equals(getPlayer().getUniqueId())) selectedPlayer.getPlayer().sendBlockChange(getGeneric().getCloakLocation(), Bukkit.createBlockData(getGeneric().getBlock()));
+        	getGeneric().setCloakLocation();
+        	for(Player_BlockHunt selectedPlayer : getGame().getPlayers()) 	
+        	{
+        		if(!selectedPlayer.getPlayer().getUniqueId().equals(getPlayer().getUniqueId())) selectedPlayer.getPlayer().sendBlockChange(getGeneric().getCloakLocation(), Bukkit.createBlockData(getGeneric().getBlock()));
+        	}
+    	}
+    	else 
+    	{
+        	for(Player_BlockHunt selectedPlayer : getGame().getPlayers()) 	
+        	{
+        		selectedPlayer.getPlayer().sendBlockChange(getGeneric().getCloakLocation(), Bukkit.createBlockData(Material.AIR));
+        	}
+        	getGeneric().setCloakLocation(null);
     	}
 		getGeneric().updateCloakItem();
 		getGeneric().updateBlockPickerItem();
@@ -126,33 +145,20 @@ public class Hider_BlockHunt extends Player_BlockHunt
     }
 	public void defaultDisguise() 
 	{
-		getGeneric().setBlockMeta(1);
 		getGeneric().setBlock(getGame().getMap().getBlocks()[getGame().getRandom().nextInt(getGame().getMap().getBlocks().length)]);
+		getGeneric().setBlockMeta(1);
 	}
-    public void removeCloak() 
-    {
-    	if(getGeneric().isCloaked()) 
-    	{
-        	for(Player_BlockHunt selectedPlayer : getGame().getPlayers()) 	
-        	{
-        		selectedPlayer.getPlayer().sendBlockChange(getGeneric().getCloakLocation(), Bukkit.createBlockData(Material.AIR));
-        	}
-    	}
-		getGeneric().updateCloakItem();
-		getGeneric().updateBlockPickerItem();
-		getGeneric().updateBlockMetaPickerItem();
-    }
     @Override
 	public void kill() 
     {
-		removeCloak();
+		setCloak(false);
     	super.kill();
     }
     
     @Override
 	public void cleanup() 
 	{
-		removeCloak();
+		setCloak(false);
 		super.cleanup();
 	}
     @Override

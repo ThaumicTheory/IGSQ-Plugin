@@ -19,15 +19,15 @@ public class Game_BlockHunt
 {
 	private Seeker_BlockHunt[] seekers = {};
 	private Hider_BlockHunt[] hiders = {};
+	private Player_BlockHunt[] players = {};
 	
-	private Player[] queue = {};
 	private Stage stage = Stage.NO_GAME;
 	private Map_BlockHunt map;
     private int timer;
     private String name;
     
     private static Game_BlockHunt[] games = {};
-    private static Random random = new Random();
+    private Random random = new Random();
 	
 	public Game_BlockHunt(String name) 
 	{
@@ -113,35 +113,6 @@ public class Game_BlockHunt
     	for(Player_BlockHunt selectedPlayer : getPlayers()) 
     	{
     		if(selectedPlayer.getPlayer().getUniqueId().equals(player.getUniqueId())) return true;
-    	}
-    	for(Player selectedPlayer : getQueuedPlayers()) 
-    	{
-    		if(selectedPlayer.getUniqueId().equals(player.getUniqueId())) return true;
-    	}
-    	return false;
-    }
-    public void setQueue(Player[] queue) 
-    {
-    	this.queue = queue;
-    }
-    public void addQueuedPlayer(Player player) 
-    {
-    	if(!isPlayerInQueue(player)) setQueue(Common.append(getQueuedPlayers(), player));
-    }
-    public void removeQueuedPlayer(Player player) 
-    {
-    	if(isPlayerInQueue(player)) setQueue(Common.depend(getQueuedPlayers(), player));
-    }
-    public Player[] getQueuedPlayers() 
-    {
-    	return queue;
-    }
-    
-    public boolean isPlayerInQueue(Player player) 
-    {
-    	for(Player selectedPlayer : getQueuedPlayers()) 
-    	{
-    		if(selectedPlayer.getUniqueId().equals(player.getUniqueId())) return true;
     	}
     	return false;
     }
@@ -242,8 +213,33 @@ public class Game_BlockHunt
     }
     public void addSeeker(Player player) 
     {
+    	removePlayer(player);
     	removeHider(player);
     	if(!isSeeker(player)) setSeekers(Common_BlockHunt.append(getSeekers(),new Seeker_BlockHunt(player,this)));
+    }
+    public void addSeeker(Player_BlockHunt player) 
+    {
+    	removePlayer(player);
+    	removeHider(player);
+    	if(!player.isSeeker()) setSeekers(Common_BlockHunt.append(getSeekers(),new Seeker_BlockHunt(player)));
+    }
+    public void addSeeker(Seeker_BlockHunt player) 
+    {
+    	removePlayer(player);
+    	removeHider(player);
+    	if(!player.isSeeker()) setSeekers(Common_BlockHunt.append(getSeekers(),player));
+    }
+    public void addPlayer(Player player) 
+    {
+    	removeSeeker(player);
+    	removeHider(player);
+    	if(!isPlayer(player)) setPlayers(Common_BlockHunt.append(getPlayers(),new Player_BlockHunt(player,this)));
+    }
+    public void addPlayer(Player_BlockHunt player) 
+    {
+    	removeSeeker(player);
+    	removeHider(player);
+    	if(!player.isPlayer()) setPlayers(Common_BlockHunt.append(getPlayers(),player));
     }
     public void removeSeeker(Player player) 
     {
@@ -274,6 +270,10 @@ public class Game_BlockHunt
     {
     	this.hiders = hiders;
     }
+    public void setPlayers(Player_BlockHunt[] players) 
+    {
+    	this.players = players;
+    }
 	public Seeker_BlockHunt getSeeker(Player player) 
 	{
 		for(Seeker_BlockHunt seeker : seekers) 
@@ -284,8 +284,21 @@ public class Game_BlockHunt
 	}
     public void addHider(Player player) 
     {
+    	removePlayer(player);
     	removeSeeker(player);
     	if(!isHider(player)) setHiders(Common_BlockHunt.append(getHiders(),new Hider_BlockHunt(player,this)));
+    }
+    public void addHider(Player_BlockHunt player) 
+    {
+    	removePlayer(player);
+    	removeSeeker(player);
+    	if(!player.isHider()) setHiders(Common_BlockHunt.append(getHiders(),new Hider_BlockHunt(player)));
+    }
+    public void addHider(Hider_BlockHunt player) 
+    {
+    	removePlayer(player);
+    	removeSeeker(player);
+    	if(!player.isHider()) setHiders(Common_BlockHunt.append(getHiders(),player));
     }
     public void removeHider(Player player) 
     {
@@ -318,31 +331,30 @@ public class Game_BlockHunt
     //Players
     public Player_BlockHunt[] getPlayers() 
     {
-    	Player_BlockHunt[] players = getHiders();
-    	for(Seeker_BlockHunt seeker : seekers) 
-    	{
-    		players = Common_BlockHunt.append(players, seeker);
-    	}
+    	Player_BlockHunt[] players = this.players;
+    	for(Player_BlockHunt hider : getHiders()) players = Common_BlockHunt.append(players, hider);
+    	for(Player_BlockHunt seeker : getSeekers()) players = Common_BlockHunt.append(players, seeker);
     	return players;
-    }
-    public void removePlayer(Player_BlockHunt player) 
-    {
-    	removeHider((Hider_BlockHunt)player);
-    	removeSeeker(player);
     }
     public void removePlayer(Player player) 
     {
-    	getPlayer(player);
-    	removeHider((Hider_BlockHunt)player);
-    	removeSeeker(player);
+    	Hider_BlockHunt hider = getHider(player);
+    	if(hider != null) 
+    	{
+    		setHiders(Common_BlockHunt.depend(getHiders(),hider));
+    	}
+    }
+    public void removePlayer(Player_BlockHunt player) 
+    {
+    	Player_BlockHunt selectedPlayer = getPlayer(player.getPlayer());
+    	if(selectedPlayer != null) 
+    	{
+    		setPlayers(Common_BlockHunt.depend(getPlayers(),selectedPlayer));
+    	}
     }
 	public int getPlayerCount() 
 	{
 		return getPlayers().length;
-	}
-	public int getQueueCount() 
-	{
-		return getQueuedPlayers().length;
 	}
 	public Player_BlockHunt getPlayer(Player player) 
 	{
@@ -402,4 +414,5 @@ public class Game_BlockHunt
     	}
     	return false;
     }
+
 }

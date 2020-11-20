@@ -11,12 +11,15 @@ import me.murrobby.igsq.spigot.Yaml;
 public class Player_BlockHunt extends GenericPlayer_BlockHunt
 {
 	private final Game_BlockHunt game;
-	private GenericPlayer_BlockHunt generic;
 	public Player_BlockHunt(Player player,Game_BlockHunt game) 
 	{
 		super(player);
 		this.game = game;
-		this.generic = new GenericPlayer_BlockHunt(player);
+	}
+	public Player_BlockHunt(Player_BlockHunt player) 
+	{
+		super(player.getPlayer());
+		this.game = player.getGame();
 	}
 	
 	public void kill() 
@@ -27,8 +30,10 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
     	getPlayer().setAllowFlight(true);
     	getPlayer().setHealth(getPlayer().getHealthScale());
     	getPlayer().getInventory().clear();
+    	for (PotionEffect effect : getPlayer().getActivePotionEffects()) getPlayer().removePotionEffect(effect.getType());
     	getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
     	getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000000,4, true,false));
+    	setDead(true);
     }
 	public void cleanup() 
 	{
@@ -97,10 +102,6 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 		return game;
 	}
 	//getters
-	public GenericPlayer_BlockHunt getGeneric() 
-	{
-		return generic;
-	}
 	public Seeker_BlockHunt toSeeker() 
 	{
 		return getGame().getSeeker(getPlayer());
@@ -126,13 +127,13 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 	public static Hider_BlockHunt getHider(Player player) 
 	{
 		Game_BlockHunt game = Game_BlockHunt.getPlayersGame(player);
-		if(game != null) return game.getHider(player);
+		if(game != null && game.isHider(player)) return game.getHider(player);
 		return null;
 	}
 	public static Seeker_BlockHunt getSeeker(Player player) 
 	{
 		Game_BlockHunt game = Game_BlockHunt.getPlayersGame(player);
-		if(game != null) return game.getSeeker(player);
+		if(game != null && game.isSeeker(player)) return game.getSeeker(player);
 		return null;
 	}
     //issers

@@ -72,7 +72,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 								if(player.toHider().getGeneric().isCloakValid()) 
 								{
 									event.getPlayer().sendMessage(Messaging.chatFormatter("&#00FF00You are now hidden."));
-									player.toHider().setCloak();
+									player.toHider().setCloak(true);
 								}
 								else 
 								{
@@ -96,7 +96,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 			    				hider.getPlayer().sendMessage(Messaging.chatFormatter("&#FF0000You have been revealed by "+ event.getPlayer().getName() +"!"));
 			    				event.getPlayer().sendMessage(Messaging.chatFormatter("&#00FF00Hider "+ hider.getPlayer().getName() +" located!" ));
 			    				hider.getGeneric().setCloakCooldown(Yaml.getFieldInt("cloakcooldown", "blockhunt"));
-			    				hider.removeCloak();
+			    				hider.setCloak(false);
 							}
 						}
 					}

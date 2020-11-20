@@ -83,7 +83,7 @@ public class Common_BlockHunt
     {
     	return Yaml.getFieldBool("GAMEPLAY.blockhunt", "config");
     }
-	public static int getSeekerCount(Player[] players) 
+	public static int getSeekerCount(Player_BlockHunt[] players) 
 	{
 		if(players.length <= 2) return 1;
 		else return (int)(players.length/numberPerSeeker);

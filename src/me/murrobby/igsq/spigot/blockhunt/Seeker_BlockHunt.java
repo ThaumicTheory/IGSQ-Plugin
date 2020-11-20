@@ -32,23 +32,28 @@ public class Seeker_BlockHunt extends Player_BlockHunt
 		this.generic = new GenericSeeker_BlockHunt(player);
 		setup();
 	}
-	public void setup(boolean forced) 
+	public Seeker_BlockHunt(Player_BlockHunt player) 
 	{
-		if(!forced) setup();
-		else 
+		super(player);
+		this.generic = new GenericSeeker_BlockHunt(player);
+		setup();
+	}
+	private void goToShould() 
+	{
+		if(getGame().isStage(Stage.PRE_SEEKER)) 
 		{
-			setup();
-			if(getGame().isStage(Stage.PRE_SEEKER)) getPlayer().teleport(getGame().getMap().getSeekerWaitLocation());
-			else
-			{
-				getPlayer().setGameMode(GameMode.SURVIVAL); //Compensate for a role force which misses the BeginSeekEvent
-				getPlayer().teleport(getGame().getMap().getSeekerSpawnLocation());
-			}
+			getPlayer().teleport(getGame().getMap().getSeekerWaitLocation());
+			getPlayer().setGameMode(GameMode.ADVENTURE);
+		}
+		else if(getGame().isStage(Stage.IN_GAME)) 
+		{
+			getPlayer().teleport(getGame().getMap().getSeekerSpawnLocation());
+			getPlayer().setGameMode(GameMode.SURVIVAL);
 		}
 	}
-	
 	private void setup() 
 	{
+		getPlayer().getInventory().clear();
 		Common_BlockHunt.seekersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		Common_BlockHunt.hidersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		List<String> bootsLore = new ArrayList<String>();
@@ -67,7 +72,6 @@ public class Seeker_BlockHunt extends Player_BlockHunt
 		LeatherArmorMeta helmetMeta = (LeatherArmorMeta) helmet.getItemMeta();
 		
 
-		getPlayer().setGameMode(GameMode.ADVENTURE);
 		getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000000,0, true,false));
 		bootsLore.add(Messaging.chatFormatter("&#990000Corrupts the ones when I get too close."));
 		leggingsLore.add(Messaging.chatFormatter("&#990000Block the ones offences."));
@@ -147,6 +151,8 @@ public class Seeker_BlockHunt extends Player_BlockHunt
 		
 		
 		getPlayer().getInventory().setArmorContents(new ItemStack[]{boots,leggings,chestplate,helmet});
+		
+		goToShould();
 	}
 	public Hider_BlockHunt raycastForCloak(int range) 
 	{

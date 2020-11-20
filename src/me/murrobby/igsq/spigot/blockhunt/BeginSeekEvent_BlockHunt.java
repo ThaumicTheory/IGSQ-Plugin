@@ -23,6 +23,7 @@ public class BeginSeekEvent_BlockHunt implements Listener
 		{
 			event.getGame().setTimer(Yaml.getFieldInt("gametime", "blockhunt"));
 			event.getGame().setStage(Stage.IN_GAME);
+			
 			for (Seeker_BlockHunt seeker : event.getGame().getSeekers()) 
 			{
 				seeker.getPlayer().setGameMode(GameMode.SURVIVAL);

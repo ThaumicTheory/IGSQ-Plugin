@@ -3,7 +3,6 @@ package me.murrobby.igsq.spigot.blockhunt;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,17 +23,11 @@ public class GameStartEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
+			event.getGame().setStage(Stage.PRE_SEEKER);
 			Common_BlockHunt.setupTeams();
 			shufflePlayers(100,event.getGame());
 			allocatePlayers(event.getGame());
-			event.getGame().setStage(Stage.PRE_SEEKER);
 			event.getGame().setTimer(Yaml.getFieldInt("hidetime", "blockhunt"));
-			for (Player_BlockHunt selectedPlayer : event.getGame().getPlayers()) 
-			{
-				//event.getGame().setupPlayers(selectedPlayer);
-				if(selectedPlayer.isSeeker()) selectedPlayer.getPlayer().teleport(event.getGame().getMap().getSeekerWaitLocation());
-				else if(selectedPlayer.isHider()) selectedPlayer.getPlayer().teleport(event.getGame().getMap().getHiderSpawnLocation());
-			}
 		}
 		else 
 		{
@@ -52,23 +45,23 @@ public class GameStartEvent_BlockHunt implements Listener
 	{
 		for(int i = 0; i < shuffles;i++) 
 		{
-			int randomNumber = random.nextInt(Common_BlockHunt.getSeekerCount(gameInstance.getQueueCount()));
-			Player player = gameInstance.getQueuedPlayers()[randomNumber];
-			gameInstance.removeQueuedPlayer(player);
-			gameInstance.addQueuedPlayer(player);
+			int randomNumber = random.nextInt(Common_BlockHunt.getSeekerCount(gameInstance.getPlayerCount()));
+			Player_BlockHunt player = gameInstance.getPlayers()[randomNumber];
+			gameInstance.removePlayer(player);
+			gameInstance.addPlayer(player);
 			
 		}
 	}
 	private void allocatePlayers(Game_BlockHunt gameInstance) 
 	{
-		Player[] allocation = gameInstance.getQueuedPlayers();
+		Player_BlockHunt[] allocation = gameInstance.getPlayers();
 		for(int i = 0; i < Common_BlockHunt.getSeekerCount(allocation) ;i++) //seeker allocation
 		{
 			int randomNumber = random.nextInt(Common_BlockHunt.getSeekerCount(gameInstance.getPlayerCount()));
 			gameInstance.addSeeker(allocation[randomNumber]);
-			allocation = Common.depend(allocation, randomNumber);
+			allocation = Common_BlockHunt.depend(allocation, allocation[randomNumber]);
 		}
-		for(Player player : allocation) //hider allocation
+		for(Player_BlockHunt player : allocation) //hider allocation
 		{
 			gameInstance.addHider(player);
 		}

@@ -34,6 +34,13 @@ public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
 	{
 		super(player);
 	}
+	public GenericHider_BlockHunt(GenericPlayer_BlockHunt player) 
+	{
+		super(player.getPlayer());
+		setHotbar(player.getHotbar());
+		setDead(player.isDead());
+		setOutOfBoundsTime(player.getOutOfBoundsTime());
+	}
 	//Items
     public void updateBlockPickerItem()
     {
@@ -148,6 +155,12 @@ public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
     {
     	return cooldown/20;
     }
+	private void updateMaxMeta() 
+	{
+		maxMeta = Dictionaries.getMetaCountFromMaterial(blockType);
+		if(blockMeta > maxMeta) blockMeta = maxMeta;
+		
+	}
     //Cloaking
     public void changeCloak(Material material) 
     {
@@ -214,10 +227,15 @@ public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
 	public void setBlock(Material material) 
     {
 		this.blockType = material;
+		updateBlockMetaPickerItem();
+		updateCloakItem();
+		updateBlockPickerItem();
+		updateMaxMeta();
     }
 	public void setCloakLocation(Location cloakLocation) 
 	{
-		this.cloakLocation = cloakLocation.getBlock().getLocation();
+		if(cloakLocation == null) this.cloakLocation = null;
+		else this.cloakLocation = cloakLocation.getBlock().getLocation();
 	}
 	public void setCloakLocation() 
 	{
@@ -225,7 +243,6 @@ public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
 	}
 	public void setBlockMeta(int metaID) 
     {
-		maxMeta = Dictionaries.getMetaCountFromMaterial(blockType);
 		if(metaID > maxMeta) metaID = 1;
     	else if(metaID < 1) metaID = maxMeta;
         if(!isCloaked()) 

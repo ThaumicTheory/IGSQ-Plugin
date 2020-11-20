@@ -8,8 +8,7 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.blockhunt.EndReason;
 import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
-import me.murrobby.igsq.spigot.blockhunt.Hider_BlockHunt;
-import me.murrobby.igsq.spigot.blockhunt.Seeker_BlockHunt;
+import me.murrobby.igsq.spigot.blockhunt.Stage;
 
 public class BlockHunt_Command {
 
@@ -42,10 +41,9 @@ public class BlockHunt_Command {
 			else if(args[0].equalsIgnoreCase("forceseeker")) 
 			{
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
-				if(gameInstance != null) 
+				if(gameInstance != null && (gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER))) 
 				{
 					gameInstance.addSeeker(player);
-					Seeker_BlockHunt.getSeeker(player).setup(true);
 					return true;
 				}
 				return false;
@@ -53,10 +51,9 @@ public class BlockHunt_Command {
 			else if(args[0].equalsIgnoreCase("forcehider")) 
 			{
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
-				if(gameInstance != null) 
+				if(gameInstance != null && (gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER))) 
 				{
 					gameInstance.addHider(player);
-					Hider_BlockHunt.getHider(player).setup(true);
 					return true;
 				}
 				return false;

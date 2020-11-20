@@ -9,4 +9,11 @@ public class GenericSeeker_BlockHunt extends GenericPlayer_BlockHunt
 	{
 		super(player);
 	}
+	public GenericSeeker_BlockHunt(GenericPlayer_BlockHunt player) 
+	{
+		super(player.getPlayer());
+		setHotbar(player.getHotbar());
+		setDead(player.isDead());
+		setOutOfBoundsTime(player.getOutOfBoundsTime());
+	}
 }

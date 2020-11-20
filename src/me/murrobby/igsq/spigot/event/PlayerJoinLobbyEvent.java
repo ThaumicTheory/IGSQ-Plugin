@@ -6,17 +6,19 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
+import me.murrobby.igsq.spigot.blockhunt.Player_BlockHunt;
 
 public class PlayerJoinLobbyEvent extends Event implements Cancellable{
 
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
     private boolean isCancelled;
-    private Player player;
+    private Player_BlockHunt player;
 	private Game_BlockHunt gameInstance;
     public PlayerJoinLobbyEvent(Game_BlockHunt gameInstance,Player player) 
     {
     	this.gameInstance = gameInstance;
-    	this.player = player;
+    	gameInstance.addPlayer(player);
+    	this.player = gameInstance.getPlayer(player);
     }
 	@Override
 	public boolean isCancelled() {
@@ -29,7 +31,7 @@ public class PlayerJoinLobbyEvent extends Event implements Cancellable{
 		
 	}
 	
-	public Player getPlayer() 
+	public Player_BlockHunt getPlayer() 
 	{
 		return player;
 	}
