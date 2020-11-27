@@ -14,6 +14,9 @@ public class Main_BlockHunt
 		new PlayerQuitEvent_BlockHunt();
 		new EntityDamageEvent_BlockHunt();
 		new EntityDamageByEntityEvent_BlockHunt();
+		new PlayerMoveEvent_BlockHunt();
+		new PlayerJoinEvent_BlockHunt();
+		new PlayerInteractEntityEvent_BlockHunt();
 		
 		new PlayServerBlockChange_BlockHunt();
 		

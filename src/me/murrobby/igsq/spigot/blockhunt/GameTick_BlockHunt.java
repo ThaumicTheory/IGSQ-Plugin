@@ -22,7 +22,7 @@ public class GameTick_BlockHunt
 	int gameTickTask = -1;
 	int minPlayers = Yaml.getFieldInt("minimumplayers", "blockhunt");
 	Random random = new Random();
-	Boolean secondTick = false;
+	int second = 0;
 	final int taskID;
 	
 	public GameTick_BlockHunt(int taskID) 
@@ -49,11 +49,12 @@ public class GameTick_BlockHunt
 	}
 	private void gameTick() 
 	{
-		secondTick = !secondTick;
 		for(Game_BlockHunt gameInstance : Game_BlockHunt.getGameInstances()) 
 		{
+			//Bukkit.broadcastMessage(gameInstance.getName());
 			for(Player_BlockHunt player : gameInstance.getPlayers()) 
 			{
+				//Bukkit.broadcastMessage(gameInstance.getName() + " : " + player.getPlayer().getName());
 				inGame(player,gameInstance);
 				inGameAndPreSeeker(player,gameInstance);
 				preSeeker(player,gameInstance);
@@ -61,7 +62,7 @@ public class GameTick_BlockHunt
 				
 				if(!player.isDead()) 
 				{
-					if(player.getOutOfBoundsTime() > Yaml.getFieldInt("outofboundstime", "blockhunt")) 
+					if(player.getOutOfBoundsTime() > Yaml.getFieldInt("outofboundstime", "blockhunt") || (player.isHider() && player.getOutOfBoundsTime() > Yaml.getFieldInt("outofboundstime", "blockhunt")/2)) 
 					{
 						player.kill();
 					}
@@ -69,7 +70,8 @@ public class GameTick_BlockHunt
 					{
 						if(player.isHider() && gameInstance.isStage(Stage.PRE_SEEKER) || gameInstance.isStage(Stage.IN_GAME))
 						{
-							player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (Yaml.getFieldInt("outofboundstime", "blockhunt") - (player.getOutOfBoundsTime()))/20),0,5,10);
+							if(player.isHider()) player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (Yaml.getFieldInt("outofboundstime", "blockhunt")/2 - (player.getOutOfBoundsTime()))/20),0,5,10);
+							else player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (Yaml.getFieldInt("outofboundstime", "blockhunt") - (player.getOutOfBoundsTime()))/20),0,5,10);
 							player.setOutOfBoundsTime(player.getOutOfBoundsTime()+1);
 						}
 						else if(gameInstance.isStage(Stage.IN_LOBBY))
@@ -79,21 +81,30 @@ public class GameTick_BlockHunt
 							player.getPlayer().teleport(gameInstance.getMap().getLobbyLocation());
 						}
 					}
-					else if(player.getOutOfBoundsTime() > 0) 
-					{
-						player.setOutOfBoundsTime(player.getOutOfBoundsTime()-1);
-					}
-				}
-				if(gameInstance.isStage(Stage.IN_LOBBY) && gameInstance.getPlayerCount() >= minPlayers) gameInstance.decrementTimer();
-				else if(gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER)) gameInstance.decrementTimer();
-				if(gameInstance.getPlayerCount() == 0) 
-				{
-					gameInstance.delete();
+					else if(player.getOutOfBoundsTime() > 0) player.setOutOfBoundsTime(0);
 				}
 				
 			}
+			if(gameInstance.isStage(Stage.IN_LOBBY) && (gameInstance.getPlayerCount() >= minPlayers || gameInstance.isTestMode())) gameInstance.decrementTimer();
+			else if(gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER)) gameInstance.decrementTimer();
+			if(gameInstance.getPlayerCount() == 0) 
+			{
+				gameInstance.delete();
+			}
+			if(!gameInstance.isTestMode() && (gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER))) 
+			{
+				if(gameInstance.getAliveHiderCount() == 0) gameInstance.end(EndReason.HIDERS_DEAD);
+				else if(gameInstance.getAliveSeekerCount() == 0) gameInstance.end(EndReason.SEEKERS_DEAD);
+				else if(gameInstance.getAlivePlayerCount() == 0) gameInstance.end(EndReason.NOT_SPECIFIED);
+			}
 			
 		}
+		if(second == 20) 
+		{
+			Common_BlockHunt.updateGui();
+			second = 0;
+		}
+		else second++;
 	}
 	private void inGame(Player_BlockHunt player,Game_BlockHunt gameInstance) 
 	{
@@ -181,12 +192,6 @@ public class GameTick_BlockHunt
 			}
 			player.getPlayer().setSilent(player.isPlayerSilent());
 			
-			//Inventory management
-			if(!secondTick) 
-			{
-				int selectedItemAfterAssist = player.inventoryAssist();
-				if(selectedItemAfterAssist != -1) player.getPlayer().getInventory().setHeldItemSlot(selectedItemAfterAssist);
-			}
 			//Cooldowns
 			if(player.isHider()) 
 			{
@@ -248,7 +253,7 @@ public class GameTick_BlockHunt
 	{
 		if (gameInstance.isStage(Stage.IN_LOBBY)) //Lobby
 		{
-			if(gameInstance.getPlayerCount() >= minPlayers) 
+			if(gameInstance.getPlayerCount() >= minPlayers || gameInstance.isTestMode()) 
 			{
 				if(gameInstance.getTimer() <= 200) player.getPlayer().sendTitle(Messaging.chatFormatter("&#00FF00" +gameInstance.getTimer()/20),Messaging.chatFormatter("&#00FFFFSeconds Until The Game Starts!"),0,5,10);
 				else player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FFFF00"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));

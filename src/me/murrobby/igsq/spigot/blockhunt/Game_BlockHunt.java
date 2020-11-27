@@ -1,13 +1,20 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.Yaml;
 import me.murrobby.igsq.spigot.event.BeginSeekEvent;
 import me.murrobby.igsq.spigot.event.GameEndEvent;
@@ -25,6 +32,7 @@ public class Game_BlockHunt
 	private Map_BlockHunt map;
     private int timer;
     private String name;
+    private boolean testMode;
     
     private static Game_BlockHunt[] games = {};
     private Random random = new Random();
@@ -127,7 +135,7 @@ public class Game_BlockHunt
 		int x = location.getBlockX();
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
-    	for(Hider_BlockHunt hider : hiders) 
+    	for(Hider_BlockHunt hider : getHiders()) 
     	{
     		if(hider.getGeneric().isCloaked()) 
     		{
@@ -169,6 +177,16 @@ public class Game_BlockHunt
 			}
 		}
 	}
+	//Test Mode
+    public boolean isTestMode() 
+    {
+    	return testMode;
+    }
+    
+    public void setTestMode(boolean testMode) 
+    {
+    	this.testMode = testMode;
+    }
     //Timers
     public void decrementTimer() 
     {
@@ -206,6 +224,19 @@ public class Game_BlockHunt
     public Seeker_BlockHunt[] getSeekers() 
     {
     	return seekers;
+    }
+    public Seeker_BlockHunt[] getAliveSeekers() 
+    {
+    	Seeker_BlockHunt[] aliveSeekers = {};
+    	for(Seeker_BlockHunt player : getSeekers()) 
+    	{
+    		if(!player.isDead()) aliveSeekers = Common_BlockHunt.append(aliveSeekers, player);
+    	}
+    	return aliveSeekers;
+    }
+    public int getAliveSeekerCount() 
+    {
+    	return getAliveSeekers().length;
     }
     public void setSeekers(Seeker_BlockHunt[] seekers) 
     {
@@ -265,6 +296,19 @@ public class Game_BlockHunt
     public Hider_BlockHunt[] getHiders() 
     {
     	return hiders;
+    }
+    public Hider_BlockHunt[] getAliveHiders() 
+    {
+    	Hider_BlockHunt[] aliveHiders = {};
+    	for(Hider_BlockHunt player : getHiders()) 
+    	{
+    		if(!player.isDead()) aliveHiders = Common_BlockHunt.append(aliveHiders, player);
+    	}
+    	return aliveHiders;
+    }
+    public int getAliveHiderCount() 
+    {
+    	return getAliveHiders().length;
     }
     public void setHiders(Hider_BlockHunt[] hiders) 
     {
@@ -336,12 +380,25 @@ public class Game_BlockHunt
     	for(Player_BlockHunt seeker : getSeekers()) players = Common_BlockHunt.append(players, seeker);
     	return players;
     }
+    public Player_BlockHunt[] getAlivePlayers() 
+    {
+    	Player_BlockHunt[] alivePlayers = {};
+    	for(Player_BlockHunt player : getPlayers()) 
+    	{
+    		if(!player.isDead()) alivePlayers = Common_BlockHunt.append(alivePlayers, player);
+    	}
+    	return alivePlayers;
+    }
+    public int getAlivePlayerCount() 
+    {
+    	return getAlivePlayers().length;
+    }
     public void removePlayer(Player player) 
     {
-    	Hider_BlockHunt hider = getHider(player);
-    	if(hider != null) 
+    	Player_BlockHunt selectedPlayer = getPlayer(player);
+    	if(selectedPlayer != null) 
     	{
-    		setHiders(Common_BlockHunt.depend(getHiders(),hider));
+    		setPlayers(Common_BlockHunt.depend(getPlayers(),selectedPlayer));
     	}
     }
     public void removePlayer(Player_BlockHunt player) 
@@ -366,10 +423,15 @@ public class Game_BlockHunt
 	}
 	public void delete() 
 	{
-		for(Player_BlockHunt player : getPlayers()) 
+		for(Player_BlockHunt selectedPlayer : getPlayers()) 
 		{
-			player.cleanup();
-			player.getPlayer().teleport(Map_BlockHunt.getHubLocation());
+			selectedPlayer.cleanup();
+			selectedPlayer.getPlayer().teleport(Map_BlockHunt.getHubLocation());
+
+			for(Player player : Bukkit.getOnlinePlayers()) 
+			{
+				if(isPlayer(player) || Game_BlockHunt.getPlayersGame(player) == null) selectedPlayer.getPlayer().showPlayer(Common.spigot, player);
+			}
 		}
 		games = Common_BlockHunt.depend(games,this);
 	}
@@ -378,6 +440,40 @@ public class Game_BlockHunt
 		return random;
 	}
 	
+	public ItemStack getItem() 
+	{
+		ItemStack item = new ItemStack(Material.RED_CONCRETE);
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = new ArrayList<String>();
+		if(isStage(Stage.IN_LOBBY)) 
+		{
+			item.setType(Material.LIME_CONCRETE);
+			meta.setDisplayName(Messaging.chatFormatter("&#00FF00" + getName()));
+			lore.add(Messaging.chatFormatter("&#00DD00JOINABLE"));
+			lore.add(Messaging.chatFormatter("&#EEEEEE") + getMap().getName());
+			lore.add(Messaging.chatFormatter("&#FF00FF") + getPlayerCount() + " Players");
+			lore.add(Messaging.chatFormatter("&#FF0000Starts in ") + (getTimer()/20) + " Seconds");
+		}
+		else if(isStage(Stage.IN_GAME) || isStage(Stage.PRE_SEEKER)) 
+		{
+			item.setType(Material.GRAY_CONCRETE);
+			meta.setDisplayName(Messaging.chatFormatter("&#cccccc" + getName()));
+			lore.add(Messaging.chatFormatter("&#ccccccIN-GAME"));
+			lore.add(Messaging.chatFormatter("&#EEEEEE") + getMap().getName());
+			lore.add(Messaging.chatFormatter("&#66ccff") + getAliveHiderCount() +"/" + getHiderCount() +" &#FF0000" + getAliveSeekerCount() + "/" + getSeekerCount());
+			if(isStage(Stage.IN_GAME)) lore.add(Messaging.chatFormatter("&#FF0000Ends in ") + (getTimer()/20) + " Seconds");
+			else lore.add(Messaging.chatFormatter("&#FF0000Ends in ") + ((getTimer()+ Yaml.getFieldInt("gametime", "blockhunt"))/20) + " Seconds");
+		}
+		else 
+		{
+			item.setType(Material.RED_CONCRETE);
+			meta.setDisplayName(Messaging.chatFormatter("&#FF0000" + getName()));
+			lore.add(Messaging.chatFormatter("&#DD0000UNKNOWN"));
+		}
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
 	
     public static Game_BlockHunt getPlayersGame(Player player)
     {
@@ -390,6 +486,11 @@ public class Game_BlockHunt
     public static Game_BlockHunt[] getGameInstances() 
     {
     	return games;
+    }
+    
+    public static int getGameInstanceCount() 
+    {
+    	return getGameInstances().length;
     }
     
     public static Game_BlockHunt getInstanceByName(String name) 
@@ -414,5 +515,16 @@ public class Game_BlockHunt
     	}
     	return false;
     }
+	public void updatePlayerLayering() 
+	{
+		for(Player_BlockHunt selectedPlayer : getPlayers()) 
+		{
+			for(Player player : Bukkit.getOnlinePlayers()) 
+			{
+				if(isPlayer(player)) player.showPlayer(Common.spigot, selectedPlayer.getPlayer());
+				else selectedPlayer.getPlayer().hidePlayer(Common.spigot, player);
+			}
+		}
+	}
 
 }

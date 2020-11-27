@@ -1,6 +1,8 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -24,6 +26,11 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 	
 	public void kill() 
     {
+		outOfGame();
+    	setDead(true);
+    }
+	public void outOfGame() 
+	{
     	getPlayer().setHealthScale(20);
     	getPlayer().setHealth(20);
     	getPlayer().setGameMode(GameMode.ADVENTURE);
@@ -33,8 +40,7 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
     	for (PotionEffect effect : getPlayer().getActivePotionEffects()) getPlayer().removePotionEffect(effect.getType());
     	getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
     	getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,1000000000,4, true,false));
-    	setDead(true);
-    }
+	}
 	public void cleanup() 
 	{
 		showPlayer();
@@ -57,6 +63,7 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 		getPlayer().setSaturation(0);
 		getPlayer().setWalkSpeed(0.2f);
 		getPlayer().setSprinting(false);
+		getPlayer().setFallDistance(0);
 		Common_BlockHunt.seekersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		Common_BlockHunt.hidersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		getPlayer().getInventory().clear();
@@ -151,5 +158,64 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 	{
 		return getGame().getPlayer(getPlayer()) != null;
 		
+	}
+	public Player_BlockHunt[] getTeamMembers() 
+	{
+		Player_BlockHunt[] players = {};
+		if(isHider()) 
+		{
+			for(Hider_BlockHunt hider : getGame().getHiders()) 
+			{
+				if(!hider.getPlayer().getUniqueId().equals(getPlayer().getUniqueId())) players = Common_BlockHunt.append(players, hider);
+			}
+		}
+		else if(isSeeker()) 
+		{
+			for(Seeker_BlockHunt seeker : getGame().getSeekers()) 
+			{
+				if(!seeker.getPlayer().getUniqueId().equals(getPlayer().getUniqueId())) players = Common_BlockHunt.append(players, seeker);
+			}
+		}
+		return players;
+	}
+	public Player_BlockHunt[] getEnemies() 
+	{
+		if(isHider()) 
+		{
+			return getGame().getSeekers();
+		}
+		else if(isSeeker()) 
+		{
+			return getGame().getHiders();
+		}
+		return new Player_BlockHunt[]{};
+	}
+	public void playSound(String sound,Location location,SoundTargets targets) 
+	{
+		Player_BlockHunt[] players = {};
+		if(targets.equals(SoundTargets.SELF)) 
+		{
+			players = new Player_BlockHunt[]{this};
+		}
+		else if(targets.equals(SoundTargets.FRIENDLIES)) 
+		{
+			players = getTeamMembers();
+		}
+		else if(targets.equals(SoundTargets.ENEMIES)) 
+		{
+			players = getEnemies();
+		}
+		else if(targets.equals(SoundTargets.EVERYONE)) 
+		{
+			players = getGame().getPlayers();
+		}
+		for(Player_BlockHunt player : players) 
+		{
+			player.playSound(sound, getPlayer().getLocation());
+		}
+	}
+	public void playSound(String sound,SoundTargets targets) 
+	{
+		playSound(Sound sound,SoundTargets targets) 
 	}
 }

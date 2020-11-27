@@ -123,7 +123,7 @@ public class Hider_BlockHunt extends Player_BlockHunt
 	//Cloaking
     public void setCloak(boolean cloaked) 
     {
-    	if(cloaked) 
+    	if(cloaked && !getGeneric().isCloaked()) 
     	{
         	getGeneric().setCloakLocation();
         	for(Player_BlockHunt selectedPlayer : getGame().getPlayers()) 	
@@ -131,7 +131,7 @@ public class Hider_BlockHunt extends Player_BlockHunt
         		if(!selectedPlayer.getPlayer().getUniqueId().equals(getPlayer().getUniqueId())) selectedPlayer.getPlayer().sendBlockChange(getGeneric().getCloakLocation(), Bukkit.createBlockData(getGeneric().getBlock()));
         	}
     	}
-    	else 
+    	else if(getGeneric().isCloaked())
     	{
         	for(Player_BlockHunt selectedPlayer : getGame().getPlayers()) 	
         	{
@@ -149,10 +149,10 @@ public class Hider_BlockHunt extends Player_BlockHunt
 		getGeneric().setBlockMeta(1);
 	}
     @Override
-	public void kill() 
+	public void outOfGame() 
     {
 		setCloak(false);
-    	super.kill();
+    	super.outOfGame();
     }
     
     @Override

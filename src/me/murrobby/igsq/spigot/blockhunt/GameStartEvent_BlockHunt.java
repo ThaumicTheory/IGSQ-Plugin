@@ -57,7 +57,7 @@ public class GameStartEvent_BlockHunt implements Listener
 		Player_BlockHunt[] allocation = gameInstance.getPlayers();
 		for(int i = 0; i < Common_BlockHunt.getSeekerCount(allocation) ;i++) //seeker allocation
 		{
-			int randomNumber = random.nextInt(Common_BlockHunt.getSeekerCount(gameInstance.getPlayerCount()));
+			int randomNumber = random.nextInt(gameInstance.getPlayerCount());
 			gameInstance.addSeeker(allocation[randomNumber]);
 			allocation = Common_BlockHunt.depend(allocation, allocation[randomNumber]);
 		}

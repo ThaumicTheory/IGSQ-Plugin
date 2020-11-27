@@ -31,8 +31,8 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 				else if(player.isHider() && player.toHider().getGeneric().isCloaked()) event.setCancelled(true);
 				//else if(event.getItem() != null && event.getItem().getType().isBlock()) event.setCancelled(true); //Stops interactions with blocks in inventory
 				else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) event.setCancelled(true); //Stops interactions with blocks
-				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && player.getGame().isHider(event.getPlayer() )&& event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true); //stops use of ender eye
-				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && player.getGame().isHider(event.getPlayer()) && event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true);
+				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && player.isHider() && event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true); //stops use of ender eye
+				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && player.isHider() && event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true);
 				//Block Picker
 				if(player.isHider())
 				{

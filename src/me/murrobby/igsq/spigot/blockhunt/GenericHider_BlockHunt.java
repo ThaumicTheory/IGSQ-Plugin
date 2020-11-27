@@ -44,6 +44,7 @@ public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
 	//Items
     public void updateBlockPickerItem()
     {
+    	if(isDead()) return;
 		ItemStack item;
 		ItemMeta itemMeta;
 		List<String> itemLore = new ArrayList<String>();
@@ -79,6 +80,7 @@ public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
     
     public void updateBlockMetaPickerItem()
     {
+    	if(isDead()) return;
     	if(blockType == null) return;
 		ItemStack item;
 		ItemMeta itemMeta;
@@ -113,6 +115,7 @@ public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
     }
     public void updateCloakItem()
     {
+    	if(isDead()) return;
     	if(blockType == null) return;
     	int itemCount = getItemCount(cloakCooldown);
 		ItemStack item;

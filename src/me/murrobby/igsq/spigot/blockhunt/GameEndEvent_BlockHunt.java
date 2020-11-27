@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Yaml;
 
@@ -21,7 +22,19 @@ public class GameEndEvent_BlockHunt implements Listener
 		if(!event.isCancelled()) 
 		{
 			event.getGame().setStage(Stage.NO_GAME);
-			event.getGame().delete();
+			for(Player_BlockHunt player : event.getGame().getPlayers()) player.outOfGame();
+			
+			
+			
+			Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
+	    	{
+
+				@Override
+				public void run() 
+				{
+					event.getGame().delete();
+				}
+	    	},200);
 		}
 		else 
 		{

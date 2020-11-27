@@ -146,7 +146,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("blockhunt")) 
 			{
-				String[] types = {"start","forceseeker","forcehider","end","joinlobby"};
+				String[] types = {"start","forceseeker","forcehider","end","joinlobby","testmode","gui"};
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("realtime")) 

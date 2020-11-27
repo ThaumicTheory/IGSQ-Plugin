@@ -49,6 +49,7 @@ public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 			event.getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
 			
 			event.getPlayer().getPlayer().teleport(event.getGame().getMap().getLobbyLocation());
+			event.getGame().updatePlayerLayering();
 			
 		}
 	}

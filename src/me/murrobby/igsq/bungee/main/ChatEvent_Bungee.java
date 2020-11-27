@@ -51,7 +51,7 @@ public class ChatEvent_Bungee implements Listener
 				
 				for(ProxiedPlayer selectedPlayer : Common.bungee.getProxy().getPlayers())
 				{
-					if(player == selectedPlayer) continue;
+					if(player.getUniqueId().equals(selectedPlayer.getUniqueId())) continue;
 					Boolean sendmessage = false;
 					String[] message = event.getMessage().split(" ");
 					String discordUsername = Yaml.getFieldString(selectedPlayer.getUniqueId() + ".discord.username", "player");

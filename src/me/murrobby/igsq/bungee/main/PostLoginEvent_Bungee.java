@@ -35,7 +35,7 @@ public class PostLoginEvent_Bungee implements Listener
 			else if(usernameUpdate == 0) 
 			{
 				Database.UpdateCommand("INSERT INTO mc_accounts VALUES ('"+ playerUUID +"','" + username +"');");
-				Database.UpdateCommand("INSERT INTO discord_2fa VALUES ('"+ playerUUID +"','kick');");
+				//Database.UpdateCommand("INSERT INTO discord_2fa VALUES ('"+ playerUUID +"','kick');");
 			}
 		}
 	}

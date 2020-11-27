@@ -1,9 +1,15 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -14,6 +20,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.Yaml;
 
 public class Common_BlockHunt 
@@ -141,7 +148,6 @@ public class Common_BlockHunt
 		{
 			Common_BlockHunt.seekersTeam = Common_BlockHunt.board.getTeam("seekerteambhigsq");
 		}
-		
 	    Common_BlockHunt.seekersTeam.setAllowFriendlyFire(false);
 	    Common_BlockHunt.seekersTeam.setColor(ChatColor.RED);
 	    Common_BlockHunt.seekersTeam.setDisplayName("Seekers");
@@ -153,7 +159,7 @@ public class Common_BlockHunt
 	    Common_BlockHunt.hidersTeam.setAllowFriendlyFire(false);
 	    Common_BlockHunt.hidersTeam.setColor(ChatColor.AQUA);
 	    Common_BlockHunt.hidersTeam.setDisplayName("Hiders");
-	    Common_BlockHunt.hidersTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.FOR_OWN_TEAM);
+	    Common_BlockHunt.hidersTeam.setOption(Option.NAME_TAG_VISIBILITY, OptionStatus.NEVER);
 	    Common_BlockHunt.hidersTeam.setOption(Option.COLLISION_RULE, OptionStatus.NEVER);
 	    Common_BlockHunt.hidersTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY, OptionStatus.NEVER);
 	    Common_BlockHunt.hidersTeam.setCanSeeFriendlyInvisibles(true);
@@ -273,5 +279,44 @@ public class Common_BlockHunt
         }
         return arrayDepended;
     }
+	
+	public static Player[] getPlayersInGui()
+    {
+		Player[] players = {};
+		for(Player player : Bukkit.getOnlinePlayers()) 
+		{
+			if(isPlayerInGui(player)) players = Common.append(players, player);
+		}
+		return players;
+    }
+	public static boolean isPlayerInGui(Player player)
+    {
+		return player.getOpenInventory().getTitle().equals(Messaging.chatFormatter("&#00FFFFBlockHunt Games"));
+    }
+	public static Inventory updateGui() 
+	{
+		int slots = Game_BlockHunt.getGameInstanceCount()+1;
+		int requiredSlots = 0;
+		while(slots > requiredSlots) requiredSlots +=9;
+		Inventory gui = Bukkit.createInventory(null, requiredSlots, Messaging.chatFormatter("&#00FFFFBlockHunt Games"));
+		for(Game_BlockHunt game : Game_BlockHunt.getGameInstances()) 
+		{
+			gui.addItem(game.getItem());
+		}
+		ItemStack item = new ItemStack(Material.WHITE_CONCRETE);
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = new ArrayList<String>();
+		meta.setDisplayName(Messaging.chatFormatter("&#FFFFFFCREATE A GAME"));
+		lore.add(Messaging.chatFormatter("&#EEEEEECreate your own lobby"));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		gui.addItem(item);
+		for(Player selectedPlayer : getPlayersInGui()) selectedPlayer.openInventory(gui);
+		return gui;
+	}
+	public static void updateGui(Player player) 
+	{
+		player.openInventory(updateGui());
+	}
   
 }

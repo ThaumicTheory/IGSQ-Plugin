@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.blockhunt.Common_BlockHunt;
 import me.murrobby.igsq.spigot.blockhunt.EndReason;
 import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
 import me.murrobby.igsq.spigot.blockhunt.Stage;
@@ -93,6 +94,22 @@ public class BlockHunt_Command {
 					gameInstance.joinLobby(player);
 					return true;
 				}
+			}
+			else if(args[0].equalsIgnoreCase("testmode")) 
+			{
+				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
+				if(gameInstance != null) 
+				{
+					gameInstance.setTestMode(!gameInstance.isTestMode());
+					player.sendMessage(Messaging.chatFormatter("&#ccccccTest mode " + (gameInstance.isTestMode() ? "enabled" : "disabled") + "."));
+					return true;
+				}
+				return false;
+			}
+			else if(args[0].equalsIgnoreCase("gui")) 
+			{
+				Common_BlockHunt.updateGui(player);
+				return true;
 			}
 		}
 		return false;

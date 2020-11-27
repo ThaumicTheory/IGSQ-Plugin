@@ -20,7 +20,7 @@ public class PlayServerBlockChange_BlockHunt implements Listener
 		(
 			new PacketAdapter(Common.spigot, ListenerPriority.NORMAL,PacketType.Play.Server.BLOCK_CHANGE) 
 			{
-			    @Override
+				@Override
 			    public void onPacketSending(PacketEvent event) 
 			    {
 			        if (!event.isCancelled() && Common_BlockHunt.blockhuntCheck())

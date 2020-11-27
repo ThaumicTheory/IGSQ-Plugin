@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Messaging;
 
 public class InventoryClickEvent_BlockHunt implements Listener
 {
@@ -28,6 +29,31 @@ public class InventoryClickEvent_BlockHunt implements Listener
 					if(gameInstance != null) 
 					{
 						event.setCancelled(true);
+					}
+					else if(Common_BlockHunt.isPlayerInGui(player))
+					{
+						event.setCancelled(true);
+						if(event.getCurrentItem() != null) 
+						{
+							if(event.getCurrentItem().getItemMeta().getDisplayName().equals(Messaging.chatFormatter("&#FFFFFFCREATE A GAME"))) 
+							{
+								new Game_BlockHunt().joinLobby(player);
+								player.closeInventory();
+							}
+							else
+							{
+								for(Game_BlockHunt game : Game_BlockHunt.getGameInstances()) 
+								{
+									if(event.getCurrentItem().getItemMeta().getDisplayName().equals(Messaging.chatFormatter("&#00FF00" + game.getName())))
+									{
+										game.joinLobby(player);
+										player.closeInventory();
+										break;
+									}
+								}
+							}
+							
+						}
 					}
 				}
 			}
