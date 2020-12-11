@@ -26,7 +26,7 @@ public class Bungee extends Plugin
 		Common.bungee = this;
 		Yaml.createFiles();
 		Yaml.loadFile("@all");
-		Yaml.applyDefault();	
+		YamlWrapper.applyDefault();	
     	
     	this.getProxy().getScheduler().schedule(this, new Runnable() 
     	{
@@ -68,7 +68,7 @@ public class Bungee extends Plugin
 		getProxy().getPluginManager().registerCommand(this,new Link_Command());
 		getProxy().getPluginManager().registerCommand(this,new TwoFA_Command());
 		getProxy().getPluginManager().registerCommand(this,new Test_Command());
-		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && Yaml.getFieldString("SUPPORT.luckperms", "config").equalsIgnoreCase("true")) 
+		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && YamlWrapper.isLuckpermsSupported()) 
 		{
 			System.out.println("Luckperms Module Enabled.");
 			new Main_LP();

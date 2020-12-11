@@ -11,6 +11,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Dictionaries;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class PlayServerBlockChange_BlockHunt implements Listener
 {
@@ -23,7 +24,7 @@ public class PlayServerBlockChange_BlockHunt implements Listener
 				@Override
 			    public void onPacketSending(PacketEvent event) 
 			    {
-			        if (!event.isCancelled() && Common_BlockHunt.blockhuntCheck())
+			        if (!event.isCancelled() && YamlWrapper.isBlockHunt())
 			        {
 			        	for(Game_BlockHunt gameInstance : Game_BlockHunt.getGameInstances()) 
 			        	{

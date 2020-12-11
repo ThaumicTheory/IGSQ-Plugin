@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class LobbyCreateEvent_BlockHunt implements Listener
 {
@@ -21,7 +21,7 @@ public class LobbyCreateEvent_BlockHunt implements Listener
 		if(!event.isCancelled()) 
 		{
 			event.getGame().setStage(Stage.IN_LOBBY);
-			event.getGame().setTimer(Yaml.getFieldInt("lobbytime", "blockhunt"));
+			event.getGame().setTimer(YamlWrapper.getBlockHuntLobbyTime());
 			Main_BlockHunt.startBlockHunt();
 		}
 		else 

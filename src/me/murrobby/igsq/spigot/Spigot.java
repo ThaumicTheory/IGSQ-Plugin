@@ -26,7 +26,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		Common.spigot = this;
 		Yaml.createFiles();
 		Yaml.loadFile("@all");
-		Yaml.applyDefault();
+		YamlWrapper.applyDefault();
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
 		{
 
@@ -51,26 +51,28 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		new Main_Security();
 		new Main_Command();
 		Boolean nametagEdit = false;
+		/*
 		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Yaml.getFieldBool("SUPPORT.nametagedit", "config")) 
 		{
 			System.out.println("NametagEdit Hook in Luckperms Module Enabled.");
 			nametagEdit = true;
 		}
 		else System.out.println("NametagEdit Hook in Luckperms Module Disabled.");
-		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && Yaml.getFieldBool("SUPPORT.luckperms", "config")) 
+		*/
+		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && YamlWrapper.isLuckpermsSupported()) 
 		{
 			System.out.println("Luckperms Module Enabled.");
 			new Main_LP(this,nametagEdit);
-			Yaml.updateField("controller.chat", "internal", "mainlp");
-			Yaml.updateField("controller.tag", "internal", "main");
+			YamlWrapper.setDefaultChatController("mainlp");
+			YamlWrapper.setDefaultNameController("main");
 		}
 		else 
 		{
 			System.out.println("Luckperms Module Disabled.");
-			Yaml.updateField("controller.chat", "internal", "main");
-			Yaml.updateField("controller.tag", "internal", "none");
+			YamlWrapper.setDefaultChatController("main");
+			YamlWrapper.setDefaultNameController("none");
 		}
-		if(this.getServer().getPluginManager().getPlugin("ProtocolLib") != null && Yaml.getFieldBool("GAMEPLAY.blockhunt", "config")) 
+		if(this.getServer().getPluginManager().getPlugin("ProtocolLib") != null && YamlWrapper.isBlockHunt()) 
 		{
 			System.out.println("ProtocolLib Located, BlockHunt enabled.");
 			new Main_BlockHunt();

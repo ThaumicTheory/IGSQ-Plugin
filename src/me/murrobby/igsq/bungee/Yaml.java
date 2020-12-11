@@ -9,7 +9,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 public class Yaml 
 {
-	 public static String[] fileNames = {"config","player","internal","message"};
+	public static String[] fileNames = {"config","player","internal","message"};
     private static String[] syncedFiles = {"player"};
     private static File[] files;
     private static Configuration[] configurations;
@@ -40,32 +40,27 @@ public class Yaml
     	
     }
     //TODO Java Docs
-    public static void applyDefault()
-    {
-        addFieldDefault("MYSQL.username","config","username");
-        addFieldDefault("MYSQL.password","config","password");
-        addFieldDefault("MYSQL.database","config","jdbc:mysql://localhost:3306/database?useSSL=false");
-        
-        addFieldDefault("SUPPORT.luckperms","config","true");
-        addFieldDefault("SUPPORT.protocol.highest","config","-1");
-        addFieldDefault("SUPPORT.protocol.recommended","config","753");
-        addFieldDefault("SUPPORT.protocol.lowest","config","340");
-        
-        addFieldDefault("SERVER.backupredirect","config","hub");
-        
-        
-        
-        addFieldDefault("join","message","&#00FFFFWelcome <player>!");
-        addFieldDefault("joinvanilla","message","&#00FFFFNo extra data was found in handshake! Assuming vanilla.");
-        addFieldDefault("joinforge","message","&#ffb900You are using a forge client with the following mods: <modlist>");
-        addFieldDefault("commandwatch","message","&#ffb900<server> Command &#CD0000| &#ffb900<player> &#CD0000| &#FF0000<command>");
-        addFieldDefault("mention","message","&#FF00FF<mentioner> &#A900FFMentioned You In &#FF00FF<mentionerserver> &#A900FFSaying &#C8C8FF<message>");
-    }
-    //TODO Java Docs
     public static void addFieldDefault(String path,String fileName,String data) 
     {
     	String existingSetting = getFieldString(path,fileName);
-    	if(existingSetting.equals(""))
+    	if(existingSetting == null || existingSetting.equals(""))
+    	{
+    		updateField(path,fileName,data);
+    	}
+    }
+    //TODO Java Docs
+    public static void addFieldDefault(String path,String fileName,int data) 
+    {
+    	Integer existingSetting = getFieldInt(path,fileName);
+    	if(existingSetting == null)
+    	{
+    		updateField(path,fileName,data);
+    	}
+    }
+    public static void addFieldDefault(String path,String fileName,boolean data) 
+    {
+    	Boolean existingSetting = getFieldBool(path,fileName);
+    	if(existingSetting == null)
     	{
     		updateField(path,fileName,data);
     	}
@@ -92,7 +87,7 @@ public class Yaml
     	return null;
     }
     //TODO Java Docs
-    public static boolean getFieldBool(String path,String fileName) 
+    public static Boolean getFieldBool(String path,String fileName) 
     {
     	for(int i = 0; i < fileNames.length;i++) 
     	{
@@ -104,7 +99,7 @@ public class Yaml
     	return false;
     }
     //TODO Java Docs
-    public static int getFieldInt(String path,String fileName) 
+    public static Integer getFieldInt(String path,String fileName) 
     {
     	for(int i = 0; i < fileNames.length;i++) 
     	{
@@ -118,6 +113,46 @@ public class Yaml
     
     //TODO Java Docs
     public static void updateField(String path,String fileName,String data) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName))
+    		{
+    			
+    			configurations[i].set(path, data);
+    			for (String string : syncedFiles) 
+    			{
+    				if(string.equalsIgnoreCase(fileName)) 
+    				{
+    					Communication.sendConfigUpdate(path,fileName,data);
+            			break;
+    				}
+    			}
+    			break;
+    		}
+    	}
+    }
+    public static void updateField(String path,String fileName,int data) 
+    {
+    	for(int i = 0; i < fileNames.length;i++) 
+    	{
+    		if(fileNames[i].equalsIgnoreCase(fileName))
+    		{
+    			
+    			configurations[i].set(path, data);
+    			for (String string : syncedFiles) 
+    			{
+    				if(string.equalsIgnoreCase(fileName)) 
+    				{
+    					Communication.sendConfigUpdate(path,fileName,data);
+            			break;
+    				}
+    			}
+    			break;
+    		}
+    	}
+    }
+    public static void updateField(String path,String fileName,boolean data) 
     {
     	for(int i = 0; i < fileNames.length;i++) 
     	{

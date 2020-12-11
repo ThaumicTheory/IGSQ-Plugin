@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class Map_BlockHunt 
 {
@@ -21,7 +21,7 @@ public class Map_BlockHunt
 	private Location seekerSpawnLocation;
 	private Location seekerWaitLocation;
     
-	private static Location hubLocation = Common.parseLocationFromString(Yaml.getFieldString("maps.hub.location" , "blockhunt"));
+	private static Location hubLocation = Common.parseLocationFromString(YamlWrapper.getBlockHuntHubLocation());
 	private static Map_BlockHunt[] maps = {};
     
     public Map_BlockHunt(int mapID) 
@@ -38,12 +38,12 @@ public class Map_BlockHunt
     
 	private void loadMap() 
 	{
-		mapName = Yaml.getFieldString("maps."+ mapID +".name" , "blockhunt");
-		lobbyLocation = Common.parseLocationFromString(Yaml.getFieldString("maps."+ mapID +".prelobby" , "blockhunt"));
-		hiderSpawnLocation = Common.parseLocationFromString(Yaml.getFieldString("maps."+ mapID +".hider" , "blockhunt"));
-		seekerWaitLocation = Common.parseLocationFromString(Yaml.getFieldString("maps."+ mapID +".preseeker" , "blockhunt"));
-		seekerSpawnLocation = Common.parseLocationFromString(Yaml.getFieldString("maps."+ mapID +".seeker" , "blockhunt"));
-		blocks = Common.parseMaterialListFromString(Yaml.getFieldString("maps."+ mapID +".blocks" , "blockhunt"));
+		mapName = YamlWrapper.getBlockHuntMapName(mapID);
+		lobbyLocation = Common.parseLocationFromString(YamlWrapper.getBlockHuntMapPreLobby(mapID));
+		hiderSpawnLocation = Common.parseLocationFromString(YamlWrapper.getBlockHuntMapHider(mapID));
+		seekerWaitLocation = Common.parseLocationFromString(YamlWrapper.getBlockHuntMapPreSeeker(mapID));
+		seekerSpawnLocation = Common.parseLocationFromString(YamlWrapper.getBlockHuntMapSeeker(mapID));
+		blocks = Common.parseMaterialListFromString(YamlWrapper.getBlockHuntMapBlocks(mapID));
 		maps = append(maps, this);
 	}
 	
@@ -102,7 +102,7 @@ public class Map_BlockHunt
 		do 
 		{
 			mapCount++;
-			mapName = Yaml.getFieldString("maps."+ incrementer++ +".name", "blockhunt");
+			mapName = YamlWrapper.getBlockHuntMapName(incrementer++);
 		}while (mapName != null && !mapName.equals(""));
 		return mapCount;
 	}

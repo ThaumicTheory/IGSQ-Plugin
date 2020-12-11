@@ -3,7 +3,8 @@ package me.murrobby.igsq.bungee.security;
 import me.murrobby.igsq.bungee.Messaging;
 import me.murrobby.igsq.bungee.Common;
 import me.murrobby.igsq.bungee.Database;
-import me.murrobby.igsq.bungee.Yaml;
+import me.murrobby.igsq.bungee.YamlPlayerWrapper;
+import me.murrobby.igsq.bungee.YamlWrapper;
 import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,9 +24,11 @@ public class PostLoginEvent_Security implements Listener
 	{
 		//Runs on bungee connect complete
 		ProxiedPlayer player = event.getPlayer();
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 		String playerUUID = player.getUniqueId().toString();
 		int playerProtocol = player.getPendingConnection().getVersion();
-		Integer recomendedProtocol = Integer.parseInt(Yaml.getFieldString("SUPPORT.protocol.recommended", "config"));
+		int recomendedProtocol = YamlWrapper.getRecommendedProtocol();
+		//Integer recomendedProtocol = Integer.parseInt(Yaml.getFieldString("SUPPORT.protocol.recommended", "config"));
 		if(playerProtocol == recomendedProtocol) 
 		{
 			player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF00Your Minecraft is running the recommended version! :)")));
@@ -58,8 +61,8 @@ public class PostLoginEvent_Security implements Listener
 		}
 		
 		
-		String currentStatus = Yaml.getFieldString(playerUUID + ".discord.2fa.status", "player");
-		String id = Common_Shared.removeNull(Yaml.getFieldString(playerUUID + ".discord.id", "player"));
+		String currentStatus = yaml.getStatus();
+		String id = Common_Shared.removeNull(yaml.getID());
 		if((!id.equalsIgnoreCase(""))  && (currentStatus == null || currentStatus.equalsIgnoreCase(""))) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#a900ffYou can enable 2FA for increased account security! &#FFFF00 See /2fa for more details.")));
 	}
 	

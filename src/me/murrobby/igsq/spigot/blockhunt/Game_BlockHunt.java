@@ -7,15 +7,13 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.event.BeginSeekEvent;
 import me.murrobby.igsq.spigot.event.GameEndEvent;
 import me.murrobby.igsq.spigot.event.GameStartEvent;
@@ -41,7 +39,7 @@ public class Game_BlockHunt
 	{
 		map = new Map_BlockHunt();
 		this.name = name;
-		timer = Yaml.getFieldInt("lobbytime", "blockhunt");
+		timer = YamlWrapper.getBlockHuntLobbyTime();
 		games = Common_BlockHunt.append(games, this);
 		createLobby();
 	}
@@ -50,7 +48,7 @@ public class Game_BlockHunt
 	{
 		map = new Map_BlockHunt();
 		this.name = String.valueOf(System.currentTimeMillis());
-		timer = Yaml.getFieldInt("lobbytime", "blockhunt");
+		timer = YamlWrapper.getBlockHuntLobbyTime();
 		games = Common_BlockHunt.append(games, this);
 		createLobby();
 	}
@@ -462,7 +460,7 @@ public class Game_BlockHunt
 			lore.add(Messaging.chatFormatter("&#EEEEEE") + getMap().getName());
 			lore.add(Messaging.chatFormatter("&#66ccff") + getAliveHiderCount() +"/" + getHiderCount() +" &#FF0000" + getAliveSeekerCount() + "/" + getSeekerCount());
 			if(isStage(Stage.IN_GAME)) lore.add(Messaging.chatFormatter("&#FF0000Ends in ") + (getTimer()/20) + " Seconds");
-			else lore.add(Messaging.chatFormatter("&#FF0000Ends in ") + ((getTimer()+ Yaml.getFieldInt("gametime", "blockhunt"))/20) + " Seconds");
+			else lore.add(Messaging.chatFormatter("&#FF0000Ends in ") + ((getTimer()+ YamlWrapper.getBlockHuntGameTime())/20) + " Seconds");
 		}
 		else 
 		{

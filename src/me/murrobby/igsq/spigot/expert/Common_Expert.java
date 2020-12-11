@@ -18,6 +18,7 @@ public class Common_Expert {
     		player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,time,0,false));
     	}
     }
+    @Deprecated
     public static Boolean expertCheck() 
     {
     	return Yaml.getFieldBool("GAMEPLAY.expert", "config");

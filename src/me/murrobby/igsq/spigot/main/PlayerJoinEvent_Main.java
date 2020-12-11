@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
 public class PlayerJoinEvent_Main implements Listener
 {
@@ -18,6 +18,6 @@ public class PlayerJoinEvent_Main implements Listener
 	@EventHandler
 	public void PlayerJoin_Main(PlayerJoinEvent event) 
 	{
-		Yaml.applyDefault(event.getPlayer());
+		new YamlPlayerWrapper(event.getPlayer()).applyDefault();
 	}
 }

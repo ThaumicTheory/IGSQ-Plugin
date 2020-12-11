@@ -6,10 +6,12 @@ import java.util.Hashtable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.nametagedit.plugin.NametagEdit;
+//import com.nametagedit.plugin.NametagEdit;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Communication;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
 public class NametagEdit_LP
 {	
@@ -65,10 +67,13 @@ public class NametagEdit_LP
 	{
 		for (Player player : Bukkit.getOnlinePlayers())
 		{
-			if(Common.isCurrentTagController("main", player)) 
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+			if(Common.isCurrentNameController("main", player)) 
 			{
-				Common_LP.getRank(player);
-				NametagEdit.getApi().setNametag(player,Messaging.chatFormatter(nametagPrefixes.get(Common_LP.getRank(player))),nametagSuffixes.get(getHighestSubRank(player)));
+				String name = player.getName();
+				if(yaml.isLinked()) name = yaml.getNickname();
+				Communication.setTag(player, Messaging.chatFormatter(nametagPrefixes.get(Common_LP.getRank(player))) + name + Messaging.chatFormatter(nametagSuffixes.get(getHighestSubRank(player))));
+				//NametagEdit.getApi().setNametag(player,Messaging.chatFormatter(nametagPrefixes.get(Common_LP.getRank(player))),nametagSuffixes.get(getHighestSubRank(player)));
 			}
 		}
 		

@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
 public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 {
@@ -47,6 +48,9 @@ public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 			event.getPlayer().getPlayer().getInventory().setHeldItemSlot(0);
 			for (PotionEffect effect : event.getPlayer().getPlayer().getActivePotionEffects()) event.getPlayer().getPlayer().removePotionEffect(effect.getType());
 			event.getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer().getPlayer());
+			yaml.setNameController("blockhunt");
+			yaml.setChatController("blockhunt");
 			
 			event.getPlayer().getPlayer().teleport(event.getGame().getMap().getLobbyLocation());
 			event.getGame().updatePlayerLayering();

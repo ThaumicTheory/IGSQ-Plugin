@@ -1,6 +1,6 @@
 package me.murrobby.igsq.bungee.security;
 
-import me.murrobby.igsq.bungee.Yaml;
+import me.murrobby.igsq.bungee.YamlPlayerWrapper;
 import me.murrobby.igsq.bungee.Common;
 import me.murrobby.igsq.bungee.Database;
 import me.murrobby.igsq.shared.Common_Shared;
@@ -43,6 +43,7 @@ public class TwoFactorAuthentication_Security
 	{
 		for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers())
 		{
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 			if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '" + player.getUniqueId().toString() + "';") == 1) 
 			{
 				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() + "' AND current_status = 'linked';") == 1) 
@@ -57,8 +58,8 @@ public class TwoFactorAuthentication_Security
 							Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'pending' WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 							current_status = "pending";
 						}
-						Yaml.updateField(player.getUniqueId().toString() + ".discord.2fa.status", "player", current_status);
-						Yaml.updateField(player.getUniqueId().toString() + ".discord.2fa.code", "player", discord_2fa.getString(3));
+						yaml.setStatus(current_status);
+						yaml.setCode(discord_2fa.getString(3));
 						String[] socket = player.getPendingConnection().getSocketAddress().toString().split(":");
 						socket[0] = Common_Shared.removeBeforeCharacter(socket[0], '/');
 						String ip = Common_Shared.removeNull(discord_2fa.getString(4));
@@ -68,7 +69,7 @@ public class TwoFactorAuthentication_Security
 							Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'pending', ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 							ip = "";
 						}
-						Yaml.updateField(player.getUniqueId().toString() + ".discord.2fa.ip", "player", ip);
+						yaml.setLastLoginIP(ip);
 					}
 					catch (SQLException e)
 					{
@@ -80,9 +81,9 @@ public class TwoFactorAuthentication_Security
 			}
 			else
 			{
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.2fa.status", "player", "");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.2fa.code", "player", "");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.2fa.ip", "player", "");
+				yaml.setStatus("");
+				yaml.setCode("");
+				yaml.setLastLoginIP("");
 				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() + "' AND current_status = 'linked';") == 1) Database.UpdateCommand("INSERT INTO discord_2fa (uuid) VALUES('"+ player.getUniqueId().toString() +"');");//2FA record doesnt exist but should
 			}
 		}

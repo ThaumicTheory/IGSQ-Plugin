@@ -3,7 +3,9 @@ package me.murrobby.igsq.spigot.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
+import me.murrobby.igsq.spigot.YamlWrapper;
+import me.murrobby.igsq.spigot.ErrorLogging;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class Error_Command {
@@ -39,32 +41,34 @@ public class Error_Command {
 		{
 			if(args[0].equalsIgnoreCase("log")) 
 			{
-				if(args[1].equalsIgnoreCase("enabled")) 
+				if(args[1].equalsIgnoreCase("basic")) 
 				{
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
-						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FF00Enabled&#FF0000!"));
-						Yaml.updateField(player.getUniqueId().toString() + ".errorlog", "player", "enabled");
+						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FF00Basic&#FF0000!"));
+						yaml.setErrorLogSetting(ErrorLogging.BASIC);
 					}
 					else
 					{
-						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &aEnabled&c!"));
-						Yaml.updateField("console.errorlog", "internal", "enabled");
+						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &aBasic&c!"));
+						YamlWrapper.setErrorLogSetting(ErrorLogging.BASIC);
 					}
 				}
-				else if(args[1].equalsIgnoreCase("verbose"))
+				else if(args[1].equalsIgnoreCase("detailed"))
 				{
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
-						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FFFFEnabled & Verbose&#FF0000!"));
-						Yaml.updateField(player.getUniqueId().toString() + ".errorlog", "player", "verbose");
+						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FFFFDetailed&#FF0000!"));
+						yaml.setErrorLogSetting(ErrorLogging.DETAILED);
 					}
 					else
 					{
-						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &bEnabled & Verbose&c!"));
-						Yaml.updateField("console.errorlog", "internal", "verbose");
+						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &bDetailed&c!"));
+						YamlWrapper.setErrorLogSetting(ErrorLogging.DETAILED);
 					}
 				}
 				else
@@ -72,13 +76,14 @@ public class Error_Command {
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
+						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#C8C8C8Disabled&#FF0000!"));
-						Yaml.updateField(player.getUniqueId().toString() + ".errorlog", "player", "");
+						yaml.setErrorLogSetting(ErrorLogging.DISABLED);
 					}
 					else
 					{
 						sender.sendMessage(Messaging.chatFormatterConsole("&cError Logging &7Disabled&c!"));
-						Yaml.updateField("console.errorlog", "internal", "");
+						YamlWrapper.setErrorLogSetting(ErrorLogging.DISABLED);
 					}
 				}
 				return true;

@@ -1,6 +1,6 @@
 package me.murrobby.igsq.bungee.security;
 
-import me.murrobby.igsq.bungee.Yaml;
+import me.murrobby.igsq.bungee.YamlPlayerWrapper;
 import me.murrobby.igsq.bungee.Common;
 import me.murrobby.igsq.bungee.Database;
 import net.md_5.bungee.api.ProxyServer;
@@ -42,26 +42,22 @@ public class DiscordLink_Security
 	{
 		for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers())
 		{
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 			if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() + "' AND current_status = 'linked';") == 1) 
 			{
 				ResultSet discord_accounts = Database.QueryCommand("SELECT * FROM discord_accounts WHERE id = (SELECT id FROM linked_accounts WHERE uuid = '" +  player.getUniqueId().toString() +"');");
 				try
 				{
 					discord_accounts.next();
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.id", "player", discord_accounts.getString(1));
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.username", "player", discord_accounts.getString(2));
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.nickname", "player", discord_accounts.getString(3));
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.role", "player", discord_accounts.getString(4));
-					Boolean data = discord_accounts.getBoolean(5);
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.founder", "player", data.toString());
-					data = discord_accounts.getBoolean(6);
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.birthday", "player", data.toString());
-					data = discord_accounts.getBoolean(7);
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.nitroboost", "player", data.toString());
-					data = discord_accounts.getBoolean(8);
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.supporter", "player", data.toString());
-					data = discord_accounts.getBoolean(9);
-					Yaml.updateField(player.getUniqueId().toString() + ".discord.developer", "player", data.toString());
+					yaml.setID(discord_accounts.getString(1));
+					yaml.setUsername(discord_accounts.getString(2));
+					yaml.setNickname(discord_accounts.getString(3));
+					yaml.setRole(discord_accounts.getString(4));
+					yaml.setFounder(discord_accounts.getBoolean(5));
+					yaml.setBirthday(discord_accounts.getBoolean(6));
+					yaml.setBooster(discord_accounts.getBoolean(7));
+					yaml.setSupporter(discord_accounts.getBoolean(8));
+					yaml.setDeveloper(discord_accounts.getBoolean(9));
 				}
 				catch (SQLException e)
 				{
@@ -71,15 +67,15 @@ public class DiscordLink_Security
 			}
 			else 
 			{
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.id", "player", "");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.username", "player","");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.nickname", "player", "");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.role", "player", "default");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.founder", "player", "false");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.birthday", "player", "false");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.nitroboost", "player", "false");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.supporter", "player", "false");
-				Yaml.updateField(player.getUniqueId().toString() + ".discord.developer", "player", "false");
+				yaml.setID("");
+				yaml.setUsername("");
+				yaml.setNickname("");
+				yaml.setRole("default");
+				yaml.setFounder(false);
+				yaml.setBirthday(false);
+				yaml.setBooster(false);
+				yaml.setSupporter(false);
+				yaml.setDeveloper(false);
 			}
 		}
 	}

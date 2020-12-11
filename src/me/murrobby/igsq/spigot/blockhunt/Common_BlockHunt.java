@@ -86,6 +86,7 @@ public class Common_BlockHunt
     public static Team hidersTeam;
     public static Team seekersTeam;
 
+    @Deprecated
     public static Boolean blockhuntCheck() 
     {
     	return Yaml.getFieldBool("GAMEPLAY.blockhunt", "config");

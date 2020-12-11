@@ -8,7 +8,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
+import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class AsyncPlayerChatEvent_LP implements Listener
@@ -24,11 +25,13 @@ public class AsyncPlayerChatEvent_LP implements Listener
 		//Player Chat Capturing
 		if(!event.isCancelled()) 
 		{
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer());
 			if(Common.isCurrentChatController("mainlp", event.getPlayer())) 
 			{
-				String username = Yaml.getFieldString(event.getPlayer().getUniqueId() + ".discord.nickname", "player");
-				if (username.equals("")) username = event.getPlayer().getName();
-				event.setFormat((Messaging.getFormattedMessage("message", new String[] {"<server>",Yaml.getFieldString("server","internal"), "<prefix>",Common_LP.getPrefix(event.getPlayer()) , "<player>", username,"<suffix>",Common_Shared.removeNull(Common_LP.getSuffix(event.getPlayer())), "<message>", event.getMessage()})));
+				
+				String name = event.getPlayer().getName();
+				if(yaml.isLinked()) name = yaml.getNickname();
+				event.setFormat((Messaging.getFormattedMessage("message", new String[] {"<server>",YamlWrapper.getServerName(), "<prefix>",Common_LP.getPrefix(event.getPlayer()) , "<player>", name,"<suffix>",Common_Shared.removeNull(Common_LP.getSuffix(event.getPlayer())), "<message>", event.getMessage()})));
 			}
 		}
 	}

@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class EntitySpawnEvent_BlockHunt implements Listener
 {
@@ -22,7 +23,7 @@ public class EntitySpawnEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if(Common_BlockHunt.blockhuntCheck()) 
+			if(YamlWrapper.isBlockHunt()) 
 			{
 				if(event.getEntity() instanceof FallingBlock) 
 				{

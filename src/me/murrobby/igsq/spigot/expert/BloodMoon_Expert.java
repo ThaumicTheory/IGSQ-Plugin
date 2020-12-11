@@ -12,7 +12,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
+import me.murrobby.igsq.spigot.YamlWorldWrapper;
+import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class BloodMoon_Expert {
@@ -25,9 +27,9 @@ public class BloodMoon_Expert {
 	public BloodMoon_Expert(int taskID) 
 	{
 		this.taskID = taskID;
-		BloodMoonQuery();
+		bloodMoonQuery();
 	}
-	private void BloodMoonQuery() 
+	private void bloodMoonQuery() 
 	{
 		bloodMoonTask = Common.spigot.scheduler.scheduleSyncRepeatingTask(Common.spigot, new Runnable()
     	{
@@ -37,14 +39,15 @@ public class BloodMoon_Expert {
 			{
 				for(World selectedWorld : Common.spigot.getServer().getWorlds()) 
 				{
-					BloodMoonEnabler(selectedWorld);
-					if(Yaml.getFieldBool(selectedWorld.getUID() + ".event.bloodmoon", "internal")) 
+					bloodMoonEnabler(selectedWorld);
+					YamlWorldWrapper yaml = new YamlWorldWrapper(selectedWorld);
+					if(yaml.isExpertBloodMoon()) 
 					{
-						BloodMoonVisuals(selectedWorld);
+						bloodMoonVisuals(selectedWorld);
 					}
 				}
-				LuckEffects();
-				if(Main_Expert.taskID != taskID || !Common_Expert.expertCheck()) 
+				luckEffects();
+				if(Main_Expert.taskID != taskID || !YamlWrapper.isExpert())
 				{
 					Common.spigot.scheduler.cancelTask(bloodMoonTask);
 					System.out.println("Task: \"Blood Moon Expert\" Expired Closing Task To Save Resources.");
@@ -52,23 +55,23 @@ public class BloodMoon_Expert {
 			} 		
     	}, 0, 20);
 	}
-	private void BloodMoonEnabler(World world) 
+	private void bloodMoonEnabler(World world) 
 	{
-		
-	long worldTimeSecs = world.getTime()/20;
+		YamlWorldWrapper yaml = new YamlWorldWrapper(world);
+		long worldTimeSecs = world.getTime()/20;
 		if(worldTimeSecs == 600) //NightBegins
 		{
 			BloodMoonToggler(world,true);
 		}
 		else if(worldTimeSecs > 1150 || worldTimeSecs < 600) //Day
 		{
-			if(Yaml.getFieldBool(world.getUID() + ".event.bloodmoon", "internal")) 
+			if(yaml.isExpertBloodMoon()) 
 			{
 				BloodMoonToggler(world,false);
 			}
 		}
 	}
-	private void BloodMoonVisuals(World world) 
+	private void bloodMoonVisuals(World world) 
 	{
 		for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) 
 		{
@@ -104,9 +107,10 @@ public class BloodMoon_Expert {
 	}
 	public void BloodMoonToggler(World world,Boolean enabled) 
 	{
+		YamlWorldWrapper yaml = new YamlWorldWrapper(world);
 		if(!enabled) 
 		{
-			Yaml.updateField(world.getUID() + ".event.bloodmoon","internal",false);
+			yaml.setExpertBloodMoon(false);
 			world.setMonsterSpawnLimit(-1);
 			world.setTicksPerMonsterSpawns(-1);
 		}
@@ -114,7 +118,7 @@ public class BloodMoon_Expert {
 		{
 			if(random.nextInt(9) == 1 && world.getAllowMonsters()) 
 			{
-				Yaml.updateField(world.getUID() + ".event.bloodmoon","internal",true);
+				yaml.setExpertBloodMoon(true);
 				if(world.getEnvironment() == Environment.NORMAL) 
 				{
 					Bukkit.broadcastMessage(Messaging.chatFormatter("&#32FF82The Blood Moon is rising..."));
@@ -136,33 +140,32 @@ public class BloodMoon_Expert {
 			}
 		}
 	}
-	private void LuckEffects() 
+	private void luckEffects() 
 	{
 		for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) 
 		{
-			if(Common_Expert.expertCheck()) 
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer);
+			YamlWorldWrapper worldYaml = new YamlWorldWrapper(selectedPlayer.getWorld());
+			if(!selectedPlayer.hasPotionEffect(PotionEffectType.UNLUCK)) 
 			{
-				if(!selectedPlayer.hasPotionEffect(PotionEffectType.UNLUCK)) 
-				{
-					long timeSinceDamageSeconds = (selectedPlayer.getTicksLived() - Yaml.getFieldInt(selectedPlayer.getUniqueId() + ".damage.last","internal"))/20;
-					int bloodMoonBonus = Yaml.getFieldBool(selectedPlayer.getWorld().getUID() + ".event.bloodmoon", "internal") ? 1 : 0;
+				long timeSinceDamageSeconds = (selectedPlayer.getTicksLived() - yaml.getLastDamage())/20;
+				int bloodMoonBonus = worldYaml.isExpertBloodMoon() ? 1 : 0;
 
-					if(timeSinceDamageSeconds >= 1800) 
-					{
-						selectedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,39,2 + bloodMoonBonus ,true));
-					}
-					else if(timeSinceDamageSeconds >= 900) 
-					{
-						selectedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,39,1 + bloodMoonBonus,true));
-					}
-					else if(timeSinceDamageSeconds >= 300) 
-					{
-						selectedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,39,bloodMoonBonus,true));
-					}
-					else if(bloodMoonBonus == 1) 
-					{
-						selectedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,39,0,true));
-					}
+				if(timeSinceDamageSeconds >= 1800) 
+				{
+					selectedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,39,2 + bloodMoonBonus ,true));
+				}
+				else if(timeSinceDamageSeconds >= 900) 
+				{
+					selectedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,39,1 + bloodMoonBonus,true));
+				}
+				else if(timeSinceDamageSeconds >= 300) 
+				{
+					selectedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,39,bloodMoonBonus,true));
+				}
+				else if(bloodMoonBonus == 1) 
+				{
+					selectedPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LUCK,39,0,true));
 				}
 			}
 		}

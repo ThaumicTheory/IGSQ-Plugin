@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class EntityAirChangeEvent_Expert implements Listener
 {
@@ -20,7 +21,7 @@ public class EntityAirChangeEvent_Expert implements Listener
 	@EventHandler
 	public void EntityAirChange_Expert(org.bukkit.event.entity.EntityAirChangeEvent event) 
 	{
-		if(Common_Expert.expertCheck() && (!event.isCancelled())) 
+		if(YamlWrapper.isExpert() && (!event.isCancelled())) 
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{

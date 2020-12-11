@@ -1,7 +1,7 @@
 package me.murrobby.igsq.bungee.main;
 
 import me.murrobby.igsq.bungee.Common;
-import me.murrobby.igsq.bungee.Yaml;
+import me.murrobby.igsq.bungee.YamlWrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -20,10 +20,10 @@ public class ServerKickEvent_Bungee implements Listener
 		{
 			if(event.getPlayer().isConnected()) 
 			{
-				if (!event.getPlayer().getServer().getInfo().getName().equalsIgnoreCase(Yaml.getFieldString("SERVER.backupredirect", "config"))) 
+				if (!event.getPlayer().getServer().getInfo().getName().equalsIgnoreCase(YamlWrapper.getBackupRedirect())) 
 				{
 					event.setCancelled(true);
-					event.getPlayer().connect(ProxyServer.getInstance().getServerInfo(Yaml.getFieldString("SERVER.backupredirect", "config")));
+					event.getPlayer().connect(ProxyServer.getInstance().getServerInfo(YamlWrapper.getBackupRedirect()));
 				}
 			}
 		}

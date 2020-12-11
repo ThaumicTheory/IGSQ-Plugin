@@ -18,6 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 import java.util.Random;
 
@@ -35,7 +36,7 @@ public class EntityDamageByEntityEvent_Expert implements Listener
 	{
 		if(!event.isCancelled())
 		{
-			if(Common_Expert.expertCheck()) 
+			if(YamlWrapper.isExpert()) 
 			{
 				if(event.getEntityType() == EntityType.PLAYER) 
 				{

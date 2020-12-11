@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 
 public class SlimeSplitEvent_Expert implements Listener
@@ -19,7 +20,7 @@ public class SlimeSplitEvent_Expert implements Listener
 	@EventHandler
 	public void SlimeSplit_Expert(org.bukkit.event.entity.SlimeSplitEvent event) 
 	{
-		if(Common_Expert.expertCheck() && (!event.isCancelled())) 
+		if(YamlWrapper.isExpert() && (!event.isCancelled())) 
 		{
 			if(event.getEntity().getType() == EntityType.SLIME) 
 			{

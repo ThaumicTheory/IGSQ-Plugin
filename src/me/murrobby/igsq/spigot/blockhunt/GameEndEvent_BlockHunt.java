@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class GameEndEvent_BlockHunt implements Listener
 {
@@ -38,7 +38,7 @@ public class GameEndEvent_BlockHunt implements Listener
 		}
 		else 
 		{
-			if(event.getReason().equals(EndReason.TIME_UP)) event.getGame().setTimer(Yaml.getFieldInt("gametime", "blockhunt"));
+			if(event.getReason().equals(EndReason.TIME_UP)) event.getGame().setTimer(YamlWrapper.getBlockHuntGameTime());
 		}
 	}
 }

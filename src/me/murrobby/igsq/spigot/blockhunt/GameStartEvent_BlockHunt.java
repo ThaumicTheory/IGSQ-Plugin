@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class GameStartEvent_BlockHunt implements Listener
 {
@@ -27,11 +27,11 @@ public class GameStartEvent_BlockHunt implements Listener
 			Common_BlockHunt.setupTeams();
 			shufflePlayers(100,event.getGame());
 			allocatePlayers(event.getGame());
-			event.getGame().setTimer(Yaml.getFieldInt("hidetime", "blockhunt"));
+			event.getGame().setTimer(YamlWrapper.getBlockHuntHideTime());
 		}
 		else 
 		{
-			event.getGame().setTimer( Yaml.getFieldInt("lobbytime", "blockhunt"));
+			event.getGame().setTimer( YamlWrapper.getBlockHuntLobbyTime());
 		}
 	}
 	

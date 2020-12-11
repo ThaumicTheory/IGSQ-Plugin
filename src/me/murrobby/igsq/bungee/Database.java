@@ -14,9 +14,9 @@ public class Database
     static String password;
 	public Database()
 	{
-		url = Yaml.getFieldString("MYSQL.database", "config");
-		user = Yaml.getFieldString("MYSQL.username", "config");
-		password = Yaml.getFieldString("MYSQL.password", "config");
+		url = YamlWrapper.getMySQLLocation();
+		user = YamlWrapper.getMySQLUsername();
+		password = YamlWrapper.getMySQLPassword();
 		if(testDatabase()) 
 		{
 			UpdateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(link_number int PRIMARY KEY AUTO_INCREMENT,uuid VARCHAR(36),id VARCHAR(18),current_status VARCHAR(16));");

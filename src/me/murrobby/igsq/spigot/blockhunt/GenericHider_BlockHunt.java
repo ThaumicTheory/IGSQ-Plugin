@@ -17,7 +17,7 @@ import com.comphenix.protocol.events.PacketContainer;
 
 import me.murrobby.igsq.spigot.Dictionaries;
 import me.murrobby.igsq.spigot.Messaging;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
 {
@@ -171,10 +171,10 @@ public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
     	{
     		setBlock(material);
         	updateCloakItem();
-        	setBlockPickerCooldown(Yaml.getFieldInt("blockpickcooldown", "blockhunt"));
+        	setBlockPickerCooldown(YamlWrapper.getBlockHuntBlockPickCooldown());
         	updateBlockMetaPickerItem();
     	}
-    	else setBlockPickerCooldown(Yaml.getFieldInt("blockpickcooldown", "blockhunt")/Yaml.getFieldInt("failcooldown", "blockhunt"));
+    	else setBlockPickerCooldown(YamlWrapper.getBlockHuntBlockPickCooldown()/YamlWrapper.getBlockHuntFailCooldown());
     }
     public PacketContainer dynamicCloakPacket(int entityID,boolean isNotExact) 
     {

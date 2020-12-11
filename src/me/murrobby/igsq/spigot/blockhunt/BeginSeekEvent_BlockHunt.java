@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class BeginSeekEvent_BlockHunt implements Listener
 {
@@ -21,7 +21,7 @@ public class BeginSeekEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			event.getGame().setTimer(Yaml.getFieldInt("gametime", "blockhunt"));
+			event.getGame().setTimer(YamlWrapper.getBlockHuntGameTime());
 			event.getGame().setStage(Stage.IN_GAME);
 			
 			for (Seeker_BlockHunt seeker : event.getGame().getSeekers()) 
@@ -32,7 +32,7 @@ public class BeginSeekEvent_BlockHunt implements Listener
 		}
 		else 
 		{
-			event.getGame().setTimer(Yaml.getFieldInt("hidetime", "blockhunt"));
+			event.getGame().setTimer(YamlWrapper.getBlockHuntHideTime());
 		}
 	}
 }

@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
 public class PlayerCompassTask_Command
 {	
@@ -30,7 +30,11 @@ public class PlayerCompassTask_Command
 			public void run() 
 			{
 				Boolean expireTask = true;
-				for(Player selectedPlayer : Bukkit.getServer().getOnlinePlayers()) if(Yaml.getFieldString(selectedPlayer.getUniqueId().toString() + ".playercompass.target", "internal") != null && !Yaml.getFieldString(selectedPlayer.getUniqueId().toString() + ".playercompass.target", "internal").equalsIgnoreCase("")) expireTask = false;
+				for(Player selectedPlayer : Bukkit.getServer().getOnlinePlayers()) 
+				{
+					YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer);
+					if(yaml.getPlayerCompassTarget() != null && !yaml.getPlayerCompassTarget().equalsIgnoreCase("")) expireTask = false;
+				}
 				playerCompass();
 				if(Main_Command.taskID != taskID || expireTask) 
 				{
@@ -44,10 +48,11 @@ public class PlayerCompassTask_Command
 	{
 		for(Player selectedPlayer : Bukkit.getServer().getOnlinePlayers()) 
 		{
-			if(Yaml.getFieldString(selectedPlayer.getUniqueId().toString() + ".playercompass.target", "internal") != null && !Yaml.getFieldString(selectedPlayer.getUniqueId().toString() + ".playercompass.target", "internal").equalsIgnoreCase("")) 
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer);
+			if(yaml.getPlayerCompassTarget() != null && !yaml.getPlayerCompassTarget().equalsIgnoreCase("")) 
 			{
-				Player targetPlayer = Bukkit.getPlayer(UUID.fromString(Yaml.getFieldString(selectedPlayer.getUniqueId().toString() + ".playercompass.target", "internal")));
-				int accuracy = Yaml.getFieldInt(selectedPlayer.getUniqueId().toString() + ".playercompass.accuracy", "internal");
+				Player targetPlayer = Bukkit.getPlayer(UUID.fromString(yaml.getPlayerCompassTarget()));
+				int accuracy = yaml.getPlayerCompassAccuracy();
 				Location targetLocation = targetPlayer.getLocation();
 				if(accuracy != 0) 
 				{

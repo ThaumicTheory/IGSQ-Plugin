@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 import java.util.Random;
 
@@ -38,7 +39,7 @@ public class EnderDragon_Expert
 			public void run() 
 			{
 				EnderDragon();
-				if(Main_Expert.taskID != taskID || !Common_Expert.expertCheck()) 
+				if(Main_Expert.taskID != taskID || !YamlWrapper.isExpert()) 
 				{
 					Common.spigot.scheduler.cancelTask(enderDragonTask);
 					System.out.println("Task: \"Ender Dragon Expert\" Expired Closing Task To Save Resources.");
@@ -88,7 +89,7 @@ public class EnderDragon_Expert
 						}
 						else if(enderDragon.getCustomName().equalsIgnoreCase(Messaging.chatFormatter("&#FF5300True Expert Ender Dragon")))
 						{
-							if(!Common_Expert.expertCheck()) // Enderdragon name chage
+							if(!YamlWrapper.isExpert()) // Enderdragon name chage
 							{
 								Common_Expert.updateEnderDragon(enderDragon);
 							}

@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class PlayerQuitEvent_BlockHunt implements Listener
 {
@@ -16,7 +17,7 @@ public class PlayerQuitEvent_BlockHunt implements Listener
 	@EventHandler
 	public void PlayerQuit_BlockHunt(org.bukkit.event.player.PlayerQuitEvent event) 
 	{
-		if(Common_BlockHunt.blockhuntCheck()) 
+		if(YamlWrapper.isBlockHunt()) 
 		{
 			Player_BlockHunt player = Player_BlockHunt.getPlayer(event.getPlayer());
 			if(player != null) 

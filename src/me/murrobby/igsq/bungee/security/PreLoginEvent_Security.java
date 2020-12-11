@@ -2,7 +2,7 @@ package me.murrobby.igsq.bungee.security;
 
 import me.murrobby.igsq.bungee.Common;
 import me.murrobby.igsq.bungee.Messaging;
-import me.murrobby.igsq.bungee.Yaml;
+import me.murrobby.igsq.bungee.YamlWrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -18,8 +18,10 @@ public class PreLoginEvent_Security implements Listener
 	@EventHandler
 	public void PreLogin_Security(net.md_5.bungee.api.event.PreLoginEvent event) 
 	{
-		Integer highestProtocol = Integer.parseInt(Yaml.getFieldString("SUPPORT.protocol.highest", "config"));
-		Integer lowestProtocol = Integer.parseInt(Yaml.getFieldString("SUPPORT.protocol.lowest", "config"));
+		//Integer highestProtocol = Integer.parseInt(Yaml.getFieldString("SUPPORT.protocol.highest", "config"));
+		//Integer lowestProtocol = Integer.parseInt(Yaml.getFieldString("SUPPORT.protocol.lowest", "config"));
+		int highestProtocol = YamlWrapper.getHighestProtocol();
+		int lowestProtocol = YamlWrapper.getLowestProtocol();
 		int playerProtocol = event.getConnection().getVersion();
 		if(playerProtocol < lowestProtocol && lowestProtocol != -1) 
 		{

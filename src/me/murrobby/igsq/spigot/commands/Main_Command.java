@@ -173,7 +173,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("error") && args[1].equalsIgnoreCase("log")) 
 			{
-				String[] types = {"enabled","disabled","verbose"};
+				String[] types = {"basic","disabled","detailed"};
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("playercompass")) 

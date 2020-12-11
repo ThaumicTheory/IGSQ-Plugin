@@ -12,7 +12,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlWrapper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import me.murrobby.igsq.spigot.Messaging;
@@ -20,7 +20,7 @@ import me.murrobby.igsq.spigot.Messaging;
 public class GameTick_BlockHunt
 {	
 	int gameTickTask = -1;
-	int minPlayers = Yaml.getFieldInt("minimumplayers", "blockhunt");
+	int minPlayers = YamlWrapper.getBlockHuntMinimumPlayers();
 	Random random = new Random();
 	int second = 0;
 	final int taskID;
@@ -39,7 +39,7 @@ public class GameTick_BlockHunt
 			public void run() 
 			{
 				gameTick() ;
-				if(Main_BlockHunt.taskID != taskID || (!Common_BlockHunt.blockhuntCheck()) || Game_BlockHunt.getGameInstances().length == 0) 
+				if(Main_BlockHunt.taskID != taskID || (!YamlWrapper.isBlockHunt()) || Game_BlockHunt.getGameInstances().length == 0) 
 				{
 					Common.spigot.scheduler.cancelTask(gameTickTask);
 					System.out.println("Task: \"Game Tick BlockHunt\" Expired Closing Task To Save Resources.");
@@ -62,7 +62,7 @@ public class GameTick_BlockHunt
 				
 				if(!player.isDead()) 
 				{
-					if(player.getOutOfBoundsTime() > Yaml.getFieldInt("outofboundstime", "blockhunt") || (player.isHider() && player.getOutOfBoundsTime() > Yaml.getFieldInt("outofboundstime", "blockhunt")/2)) 
+					if(player.getOutOfBoundsTime() > YamlWrapper.getBlockHuntOutOfBoundsTime() || (player.isHider() && player.getOutOfBoundsTime() > YamlWrapper.getBlockHuntOutOfBoundsTime()/2)) 
 					{
 						player.kill();
 					}
@@ -70,8 +70,8 @@ public class GameTick_BlockHunt
 					{
 						if(player.isHider() && gameInstance.isStage(Stage.PRE_SEEKER) || gameInstance.isStage(Stage.IN_GAME))
 						{
-							if(player.isHider()) player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (Yaml.getFieldInt("outofboundstime", "blockhunt")/2 - (player.getOutOfBoundsTime()))/20),0,5,10);
-							else player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (Yaml.getFieldInt("outofboundstime", "blockhunt") - (player.getOutOfBoundsTime()))/20),0,5,10);
+							if(player.isHider()) player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (YamlWrapper.getBlockHuntOutOfBoundsTime()/2 - (player.getOutOfBoundsTime()))/20),0,5,10);
+							else player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000You will die if you remain in this area"),Messaging.chatFormatter("&#cc0000"+ (YamlWrapper.getBlockHuntOutOfBoundsTime() - (player.getOutOfBoundsTime()))/20),0,5,10);
 							player.setOutOfBoundsTime(player.getOutOfBoundsTime()+1);
 						}
 						else if(gameInstance.isStage(Stage.IN_LOBBY))
@@ -126,7 +126,7 @@ public class GameTick_BlockHunt
 				{
 					player.getPlayer().sendMessage(Messaging.chatFormatter("&#C8C8C8You are no longer hidden."));
 					player.toHider().setCloak(false);
-					player.toHider().getGeneric().setCloakCooldown(Yaml.getFieldInt("cloakcooldown", "blockhunt"));
+					player.toHider().getGeneric().setCloakCooldown(YamlWrapper.getBlockHuntCloakCooldown());
 				}
 				else 
 				{
@@ -141,7 +141,7 @@ public class GameTick_BlockHunt
 			}
 			
 			//Player visibility and sound
-			if(player.isPlayerVisible(Yaml.getFieldInt("visibilityrange", "blockhunt"))) gameInstance.showPlayer(player.getPlayer());
+			if(player.isPlayerVisible(YamlWrapper.getBlockHuntVisibilityRange())) gameInstance.showPlayer(player.getPlayer());
 			else
 			{
 				gameInstance.hidePlayer(player.getPlayer());
@@ -261,7 +261,7 @@ public class GameTick_BlockHunt
 			else 
 			{
 				player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000" + (minPlayers - gameInstance.getPlayerCount()) + " &#00FFFFPlayers until the Countdown Starts!"))));
-				gameInstance.setTimer(Yaml.getFieldInt("lobbytime", "blockhunt"));
+				gameInstance.setTimer(YamlWrapper.getBlockHuntLobbyTime());
 			}
 			
 			if(gameInstance.getTimer() <= 0) 

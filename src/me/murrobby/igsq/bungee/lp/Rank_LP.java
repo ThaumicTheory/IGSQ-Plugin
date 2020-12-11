@@ -1,6 +1,6 @@
 package me.murrobby.igsq.bungee.lp;
 
-import me.murrobby.igsq.bungee.Yaml;
+import me.murrobby.igsq.bungee.YamlPlayerWrapper;
 import me.murrobby.igsq.bungee.Common;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -40,13 +40,14 @@ public class Rank_LP
 		for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers())
 		{
 			String originalRank = Common_LP.GetRank(player);
-			String serverRank = Yaml.getFieldString(player.getUniqueId() + ".discord.role", "player");
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+			String serverRank = yaml.getRole();
 			if(serverRank != null && (!serverRank.equalsIgnoreCase("")) && (!originalRank.equalsIgnoreCase(serverRank))) Common_LP.SetRank(player, serverRank,originalRank);
-			CheckSecondary(player,"developer", Boolean.valueOf(Yaml.getFieldString(player.getUniqueId() + ".discord.developer", "player")));
-			CheckSecondary(player,"founder", Boolean.valueOf(Yaml.getFieldString(player.getUniqueId() + ".discord.founder", "player")));
-			CheckSecondary(player,"supporter", Boolean.valueOf(Yaml.getFieldString(player.getUniqueId() + ".discord.supporter", "player")));
-			CheckSecondary(player,"nitroboost", Boolean.valueOf(Yaml.getFieldString(player.getUniqueId() + ".discord.nitroboost", "player")));
-			CheckSecondary(player,"birthday", Boolean.valueOf(Yaml.getFieldString(player.getUniqueId() + ".discord.birthday", "player")));
+			CheckSecondary(player,"developer", yaml.isDeveloper());
+			CheckSecondary(player,"founder", yaml.isFounder());
+			CheckSecondary(player,"supporter", yaml.isSupporter());
+			CheckSecondary(player,"nitroboost", yaml.isBooster());
+			CheckSecondary(player,"birthday", yaml.isBirthday());
 		}
 	}
 	private void CheckSecondary(ProxiedPlayer player,String secondaryRole,Boolean hasRole) 

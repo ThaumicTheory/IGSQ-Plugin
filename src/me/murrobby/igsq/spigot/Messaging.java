@@ -169,12 +169,13 @@ public class Messaging {
     	String stackTrace = sw.toString();
     	for(Player player : Bukkit.getOnlinePlayers()) 
     	{
+    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
     		if(player.hasPermission("igsq.error")) 
     		{
-    			String errorLogStatus = Yaml.getFieldString(player.getUniqueId().toString()+".errorlog", "player");
-    			if(errorLogStatus != null && !errorLogStatus.equalsIgnoreCase("")) 
+    			ErrorLogging errorLogStatus = yaml.getErrorLogSetting();
+    			if(!errorLogStatus.equals(ErrorLogging.DISABLED)) 
     			{
-    	    		if(errorLogStatus.equalsIgnoreCase("verbose")) 
+    	    		if(errorLogStatus.equals(ErrorLogging.DETAILED)) 
     	    		{
     	    			player.sendMessage(chatFormatter("&#FF6161Verbose: " + stackTrace));
     	    		}
@@ -191,10 +192,10 @@ public class Messaging {
     			player.sendMessage(chatFormatter("&#FF0000Something went wrong. If you see a developer tell them this secret code &#ff00ff" + errorCode));
     		}
     	}
-    	String errorLogStatus = Yaml.getFieldString("console.errorlog", "internal");
-		if(errorLogStatus != null && !errorLogStatus.equalsIgnoreCase("")) 
+    	ErrorLogging errorLogStatus = YamlWrapper.getErrorLogSetting();
+		if(!errorLogStatus.equals(ErrorLogging.DISABLED)) 
 		{
-    		if(errorLogStatus.equalsIgnoreCase("verbose")) 
+    		if(errorLogStatus.equals(ErrorLogging.DETAILED)) 
     		{
     			System.out.println(chatFormatter("&cVerbose: " + stackTrace));
     		}

@@ -1,14 +1,13 @@
 package me.murrobby.igsq.spigot.blockhunt;
 
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class Player_BlockHunt extends GenericPlayer_BlockHunt
 {
@@ -68,6 +67,9 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 		Common_BlockHunt.hidersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		getPlayer().getInventory().clear();
 		for (PotionEffect effect : getPlayer().getActivePotionEffects()) getPlayer().removePotionEffect(effect.getType());
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(getPlayer());
+		yaml.setNameController("main");
+		yaml.setChatController("mainlp");
 	}
 	
 	public void hidePlayer() 
@@ -98,7 +100,7 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
     	if(getGame().isStage(Stage.PRE_SEEKER)) return true; //no one shall be heard when the seekers have not spawned
     	if(isDead()) return true;
     	if(getPlayer().isSneaking()) return true; //silent if sneaking
-    	if(getGame().isHider(getPlayer()) && isPlayerVisible(Yaml.getFieldInt("visibilityrange", "blockhunt"))) return false; //if player is revealed then the player is not silent
+    	if(getGame().isHider(getPlayer()) && isPlayerVisible(YamlWrapper.getBlockHuntVisibilityRange())) return false; //if player is revealed then the player is not silent
     	if(getPlayer().isSwimming()) return false; //we dont want to encourage people to swim
     	if(getPlayer().isSprinting()) return false; //no-one can sprint silently
     	if(getGame().isSeeker(getPlayer())) return true; //seekers are allowed to walk silently
@@ -190,6 +192,7 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 		}
 		return new Player_BlockHunt[]{};
 	}
+	/*
 	public void playSound(String sound,Location location,SoundTargets targets) 
 	{
 		Player_BlockHunt[] players = {};
@@ -218,4 +221,5 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 	{
 		playSound(Sound sound,SoundTargets targets) 
 	}
+	*/
 }

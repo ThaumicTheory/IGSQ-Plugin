@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.expert;
 
+import me.murrobby.igsq.spigot.YamlWrapper;
+
 public class Main_Expert 
 {
 	public static int taskID = 0;
@@ -19,7 +21,7 @@ public class Main_Expert
 	}
 	public static void Start_Expert() //Tasks will close if expert is turned off therefor they will need to be rerun for enabling expert
 	{
-		if(Common_Expert.expertCheck())
+		if(YamlWrapper.isExpert())
 		{
 			taskID++;
 			new BloodMoon_Expert(taskID);

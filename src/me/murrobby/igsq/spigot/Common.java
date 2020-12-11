@@ -143,13 +143,15 @@ public class Common {
     }
 	public static Boolean isCurrentChatController(String controller,Player player) 
 	{
-		String current = Common_Shared.removeNull(Yaml.getFieldString(player.getUniqueId().toString() + ".controller.chat", "internal"));
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		String current = Common_Shared.removeNull(yaml.getChatController());
 		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
 	}
-	public static Boolean isCurrentTagController(String controller,Player player) 
+	public static Boolean isCurrentNameController(String controller,Player player) 
 	{
-		String current = Common_Shared.removeNull(Yaml.getFieldString(player.getUniqueId().toString() + ".controller.tag", "internal"));
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		String current = Common_Shared.removeNull(yaml.getNameController());
 		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
 	}
@@ -182,5 +184,8 @@ public class Common {
 		}
 		return blocks;
 	}
-	
+	public static void setDisplayName(Player player,String displayName) 
+	{
+		
+	}
 }

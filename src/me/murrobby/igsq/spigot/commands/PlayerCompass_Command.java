@@ -3,7 +3,7 @@ package me.murrobby.igsq.spigot.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import me.murrobby.igsq.spigot.Yaml;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class PlayerCompass_Command {
@@ -20,10 +20,11 @@ public class PlayerCompass_Command {
 	private Boolean playerCompass() 
 	{
 		Player player = (Player) sender;
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 		if((args.length == 0)) 
 		{
-			Yaml.updateField(player.getUniqueId().toString() + ".playercompass.accuracy", "internal", 0);
-			Yaml.updateField(player.getUniqueId().toString() + ".playercompass.target","internal","");
+			yaml.setPlayerCompassAccuracy(0);
+			yaml.setPlayerCompassTarget("");
 			return false;
 		}
 		else 
@@ -47,8 +48,8 @@ public class PlayerCompass_Command {
 					return false;
 				}	
 			}
-			Yaml.updateField(player.getUniqueId().toString() + ".playercompass.target","internal",targetPlayer.getUniqueId().toString());
-			Yaml.updateField(player.getUniqueId().toString() + ".playercompass.accuracy", "internal", randomInt);
+			yaml.setPlayerCompassAccuracy(randomInt);
+			yaml.setPlayerCompassTarget(targetPlayer.getUniqueId().toString());
 			Main_Command.Start_Command();
 			return true;
 		}

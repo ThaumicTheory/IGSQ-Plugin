@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 
 public class EntityTargetEvent_Expert implements Listener
@@ -20,7 +21,7 @@ public class EntityTargetEvent_Expert implements Listener
 	@EventHandler
 	public void EntityTarget_Expert(org.bukkit.event.entity.EntityTargetEvent event) 
 	{
-		if(Common_Expert.expertCheck() && (!event.isCancelled()))
+		if(YamlWrapper.isExpert() && (!event.isCancelled()))
 		{
 			if(event.getEntity() instanceof Phantom) 
 			{

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class EntityDamageEvent_BlockHunt implements Listener
 {
@@ -17,7 +18,7 @@ public class EntityDamageEvent_BlockHunt implements Listener
 	@EventHandler
 	public void EntityDamage_BlockHunt(org.bukkit.event.entity.EntityDamageEvent event) 
 	{
-		if(Common_BlockHunt.blockhuntCheck() && (!event.isCancelled()))
+		if(YamlWrapper.isBlockHunt() && (!event.isCancelled()))
 		{
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{

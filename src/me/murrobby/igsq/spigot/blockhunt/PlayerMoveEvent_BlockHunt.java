@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class PlayerMoveEvent_BlockHunt implements Listener
 {
@@ -18,7 +19,7 @@ public class PlayerMoveEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if(Common_BlockHunt.blockhuntCheck()) 
+			if(YamlWrapper.isBlockHunt()) 
 			{
 				Game_BlockHunt playersGame = Game_BlockHunt.getPlayersGame(event.getPlayer());
 				if(playersGame == null && event.getTo().getBlock().getType().equals(Material.NETHER_PORTAL) && !Common_BlockHunt.isPlayerInGui(event.getPlayer())) 

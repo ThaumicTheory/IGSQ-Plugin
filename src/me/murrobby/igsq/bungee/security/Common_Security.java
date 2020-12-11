@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.murrobby.igsq.bungee.Messaging;
-import me.murrobby.igsq.bungee.Yaml;
+import me.murrobby.igsq.bungee.YamlPlayerWrapper;
 import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -53,9 +53,10 @@ public class Common_Security
     }
     public static boolean SecurityProtectionQuery(ProxiedPlayer player) //returning true means that twofa protection should be enabled false otherwise
     {
-		String player2FA = Yaml.getFieldString(player.getUniqueId().toString() + ".discord.2fa.status", "player");
-		String code2FA = Yaml.getFieldString(player.getUniqueId().toString() + ".discord.2fa.code", "player");
-		if(player2FA == null) return false;
+    	YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		String player2FA = yaml.getStatus();
+		String code2FA = yaml.getCode();
+		if(!yaml.is2fa()) return false;
 		else if((code2FA == null || code2FA.equalsIgnoreCase("")) && player2FA.equalsIgnoreCase("pending")) return false;
     	else if(player2FA.equalsIgnoreCase("")) return false;
     	else if(player2FA.equalsIgnoreCase("accepted")) return false;

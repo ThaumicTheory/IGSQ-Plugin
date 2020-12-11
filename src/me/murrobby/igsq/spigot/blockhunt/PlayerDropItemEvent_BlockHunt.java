@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.YamlWrapper;
 
 public class PlayerDropItemEvent_BlockHunt implements Listener
 {
@@ -18,7 +19,7 @@ public class PlayerDropItemEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if(Common_BlockHunt.blockhuntCheck()) 
+			if(YamlWrapper.isBlockHunt()) 
 			{
 				if(Game_BlockHunt.getPlayersGame(event.getPlayer()) != null) 
 				{

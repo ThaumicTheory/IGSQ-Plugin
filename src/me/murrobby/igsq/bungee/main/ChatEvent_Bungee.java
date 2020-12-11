@@ -3,7 +3,7 @@ package me.murrobby.igsq.bungee.main;
 import me.murrobby.igsq.bungee.Common;
 import me.murrobby.igsq.bungee.Communication;
 import me.murrobby.igsq.bungee.Messaging;
-import me.murrobby.igsq.bungee.Yaml;
+import me.murrobby.igsq.bungee.YamlPlayerWrapper;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -51,10 +51,11 @@ public class ChatEvent_Bungee implements Listener
 				
 				for(ProxiedPlayer selectedPlayer : Common.bungee.getProxy().getPlayers())
 				{
+					YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer);
 					if(player.getUniqueId().equals(selectedPlayer.getUniqueId())) continue;
 					Boolean sendmessage = false;
 					String[] message = event.getMessage().split(" ");
-					String discordUsername = Yaml.getFieldString(selectedPlayer.getUniqueId() + ".discord.username", "player");
+					String discordUsername = yaml.getUsername();
 					for(String string : message) 
 					{
 
