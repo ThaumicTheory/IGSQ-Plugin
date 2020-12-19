@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.murrobby.igsq.bungee.Messaging;
+import me.murrobby.igsq.bungee.security.Common_Security;
 import me.murrobby.igsq.bungee.Database;
-import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -67,33 +67,7 @@ public class TwoFA_Command extends Command implements TabExecutor
 			{
 				if(args.length == 2) 
 				{
-					ResultSet discord_2fa = Database.QueryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
-					try 
-					{
-						if(discord_2fa.next()) 
-						{
-							current_status = discord_2fa.getString(1);
-							String code = discord_2fa.getString(2);
-							String[] socket = player.getPendingConnection().getSocketAddress().toString().split(":");
-							socket[0] = Common_Shared.removeBeforeCharacter(socket[0], '/');
-							if(current_status != null && socket.length == 2 && current_status.equalsIgnoreCase("pending"))
-							{
-								if(code != null && args[1].equalsIgnoreCase(code)) 
-								{
-									Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'accepted', ip = '"+ socket[0] +"',code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
-									player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF002FA Code matched! 2FA Security standing down!")));
-								}
-								else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Code does not match try again!")));
-							}
-							else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#C8C8C8You dont need a 2FA code right now!")));
-
-						}
-					}
-					catch (SQLException e)
-					{
-						e.printStackTrace();
-						player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FF0000Something Went Wrong When Trying To Read Your 2FA code.")));
-					}
+					Common_Security.codeConfirm(player,args[1]);
 				} 
 			}
 			else if(args.length >= 1 && args[0].equalsIgnoreCase("logout")) 

@@ -39,6 +39,7 @@ public class EntityDamageEvent_BlockHunt implements Listener
 					}
 				}
 			}
+			else event.setCancelled(true);
 		}
 	}
 }

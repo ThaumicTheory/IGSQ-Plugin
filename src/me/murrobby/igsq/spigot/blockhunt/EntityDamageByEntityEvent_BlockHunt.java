@@ -31,6 +31,11 @@ public class EntityDamageByEntityEvent_BlockHunt implements Listener
 					else if(attacker.isDead()) event.setCancelled(true); //dead attacker cannot hurt players.
 					else if(attacker.isHider() == victim.isHider()) event.setCancelled(true); //Stop friendly fire if teams fail to do so
 					else if(attacker.isHider() && attacker.toHider().getGeneric().isCloaked()) event.setCancelled(true);
+					else 
+					{
+						attacker.setChaseState(200);
+						victim.setChaseState(200);
+					}
 				}
 			}
 			else if(event.getDamager() instanceof Player)

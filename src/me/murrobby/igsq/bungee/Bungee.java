@@ -7,6 +7,7 @@ import me.murrobby.igsq.bungee.commands.Test_Command;
 import me.murrobby.igsq.bungee.commands.TwoFA_Command;
 import me.murrobby.igsq.bungee.lp.Main_LP;
 import me.murrobby.igsq.bungee.main.ChatEvent_Bungee;
+import me.murrobby.igsq.bungee.main.PluginMessageEvent_Bungee;
 import me.murrobby.igsq.bungee.main.PostLoginEvent_Bungee;
 import me.murrobby.igsq.bungee.main.ServerKickEvent_Bungee;
 import me.murrobby.igsq.bungee.security.Main_Security;
@@ -20,6 +21,7 @@ public class Bungee extends Plugin
 	public void onEnable()
 	{
 		this.getProxy().registerChannel("igsq:yml");
+		this.getProxy().registerChannel("igsq:ymlreq");
 		this.getProxy().registerChannel("igsq:sound");
 		
 		
@@ -63,6 +65,7 @@ public class Bungee extends Plugin
 		new PostLoginEvent_Bungee();
 		new ChatEvent_Bungee();
 		new ServerKickEvent_Bungee();
+		new PluginMessageEvent_Bungee();
 		
 		new Main_Security();
 		getProxy().getPluginManager().registerCommand(this,new Link_Command());

@@ -1,8 +1,5 @@
 package me.murrobby.igsq.spigot.blockhunt;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.Common;
@@ -68,12 +65,4 @@ public class GenericPlayer_BlockHunt
     {
     	return dead;
     }
-	public void playSound(Sound sound,Location location) 
-	{
-		getPlayer().playSound(location, sound, SoundCategory.VOICE, 1, 1);
-	}
-	public void playSound(Sound sound) 
-	{
-		playSound(sound,getPlayer().getLocation());
-	}
 }

@@ -21,20 +21,61 @@ public class GameEndEvent_BlockHunt implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			event.getGame().setStage(Stage.NO_GAME);
-			for(Player_BlockHunt player : event.getGame().getPlayers()) player.outOfGame();
-			
-			
-			
-			Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
-	    	{
-
-				@Override
-				public void run() 
+			if(event.getReason().equals(EndReason.FORCED) || event.getReason().equals(EndReason.NOT_SPECIFIED)) 
+			{
+				for(Player_BlockHunt player : event.getGame().getPlayers()) 
 				{
-					event.getGame().delete();
+					player.delete();
 				}
-	    	},200);
+				event.getGame().delete();
+			}
+			else 
+			{
+				event.getGame().setStage(Stage.GAME_END);
+				for(Player_BlockHunt player : event.getGame().getPlayers()) 
+				{
+					player.outOfGame();
+					if(player.isHider()) 
+					{
+						if((event.getReason().equals(EndReason.TIME_UP) || event.getReason().equals(EndReason.SEEKERS_DEAD)))
+						{
+							player.getSoundSystem().playWin();
+							player.setWinner(true);
+						}
+						else 
+						{
+							player.getSoundSystem().playLoss();
+							player.setWinner(false);
+						}
+					}
+					else if(player.isSeeker())
+					{
+						if((event.getReason().equals(EndReason.HIDERS_DEAD)))
+						{
+							player.getSoundSystem().playWin();
+							player.setWinner(true);
+						}
+						else 
+						{
+							player.getSoundSystem().playLoss();
+							player.setWinner(false);
+						}
+					}
+				}
+				
+				
+				
+				Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
+		    	{
+
+					@Override
+					public void run() 
+					{
+						event.getGame().leaveItem();
+					}
+		    	},340);
+		    	
+			}
 		}
 		else 
 		{

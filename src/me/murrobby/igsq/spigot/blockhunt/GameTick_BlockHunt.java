@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -55,10 +57,12 @@ public class GameTick_BlockHunt
 			for(Player_BlockHunt player : gameInstance.getPlayers()) 
 			{
 				//Bukkit.broadcastMessage(gameInstance.getName() + " : " + player.getPlayer().getName());
+				player.getSoundSystem().soundSync();
 				inGame(player,gameInstance);
 				inGameAndPreSeeker(player,gameInstance);
 				preSeeker(player,gameInstance);
 				lobby(player,gameInstance);
+				endGame(player,gameInstance);
 				
 				if(!player.isDead()) 
 				{
@@ -106,12 +110,59 @@ public class GameTick_BlockHunt
 		}
 		else second++;
 	}
+	private void endGame(Player_BlockHunt player,Game_BlockHunt gameInstance) 
+	{
+		if(gameInstance.isStage(Stage.GAME_END))
+		{
+			if(player.isWinner()) player.getSoundSystem().playWinLoop();
+			else player.getSoundSystem().playLossLoop();
+			
+		}
+	}
 	private void inGame(Player_BlockHunt player,Game_BlockHunt gameInstance) 
 	{
 		if(gameInstance.isStage(Stage.IN_GAME))
 		{
-			if(gameInstance.getTimer() <= 0) gameInstance.end(EndReason.TIME_UP); 
+			player.getSoundSystem().playNeutral();
 			player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFF"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer()))));
+			if(gameInstance.getTimer() <= 0) gameInstance.end(EndReason.TIME_UP); 
+			else if(gameInstance.getTimer() <= 1200) 
+			{
+				if(player.isSeeker()) 
+				{
+					player.getSoundSystem().playImminentLoss();
+				}
+				else if(player.isHider()) 
+				{
+					player.getSoundSystem().playImminentWin();
+				}
+			}
+			else if(gameInstance.getTimer() <= 3000) 
+			{
+				if(player.isSeeker()) 
+				{
+					player.getSoundSystem().playLosing();
+				}
+				else if(player.isHider()) 
+				{
+					player.getSoundSystem().playWinning();
+				}
+			}
+			if(player.isChaseState()) 
+			{
+				if(player.getGame().getAliveHiderCount() == 1) player.getSoundSystem().playChaseFinal();
+				else player.getSoundSystem().playChase();
+				for (Entity entity : player.getPlayer().getNearbyEntities(YamlWrapper.getBlockHuntVisibilityRange(), YamlWrapper.getBlockHuntVisibilityRange()/2, YamlWrapper.getBlockHuntVisibilityRange())) 
+		    	{
+		    		if(entity instanceof Player && player.isHider() && !player.toHider().getGeneric().isCloaked()) 
+		    		{
+		    			Player selectedPlayer = (Player) entity;
+		    			if(player.getGame().isSeeker(selectedPlayer)) player.setChaseState(200);
+		    		}
+		    	}
+				player.setChaseState(player.getChaseState()-1);
+				if(!player.isChaseState()) player.getSoundSystem().stopMusic();
+			}
 			
 		}
 	} 
@@ -253,10 +304,16 @@ public class GameTick_BlockHunt
 	{
 		if (gameInstance.isStage(Stage.IN_LOBBY)) //Lobby
 		{
+			player.getSoundSystem().playLobby();
 			if(gameInstance.getPlayerCount() >= minPlayers || gameInstance.isTestMode()) 
 			{
 				if(gameInstance.getTimer() <= 200) player.getPlayer().sendTitle(Messaging.chatFormatter("&#00FF00" +gameInstance.getTimer()/20),Messaging.chatFormatter("&#00FFFFSeconds Until The Game Starts!"),0,5,10);
 				else player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FFFF00"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));
+				
+				if(gameInstance.getTimer() == 200) 
+				{
+					player.getSoundSystem().playRoleSelect();
+				}
 			}
 			else 
 			{

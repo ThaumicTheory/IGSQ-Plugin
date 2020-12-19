@@ -26,6 +26,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 			Player_BlockHunt player = Player_BlockHunt.getPlayer((event.getPlayer()));
 			if(player != null) 
 			{
+				/*
 				if(player.isDead()) event.setCancelled(true);
 				else if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock() != null && !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())) event.setCancelled(true); //only allows certain blocks to be right clicked
 				else if(player.isHider() && player.toHider().getGeneric().isCloaked()) event.setCancelled(true);
@@ -33,6 +34,8 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 				else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) event.setCancelled(true); //Stops interactions with blocks
 				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && player.isHider() && event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true); //stops use of ender eye
 				else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_PEARL && player.isHider() && event.getAction().equals(Action.RIGHT_CLICK_AIR)) event.setCancelled(true);
+				*/
+				event.setCancelled(true);
 				//Block Picker
 				if(player.isHider())
 				{
@@ -44,7 +47,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 						}
 					}
 					//Block Meta Picker
-					else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE && (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())))
+					else if(event.getItem() != null && event.getItem().getType() == Material.ENDER_EYE /*&& (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType()))*/)
 					{
 						if(player.getGame().isStage(Stage.IN_GAME) || player.getGame().isStage(Stage.PRE_SEEKER)) 
 						{
@@ -63,7 +66,7 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 						}
 					}
 					//Block Cloaker
-					else if(event.getItem() != null && player.getGame().isBlockPlayable(event.getItem().getType()) && player.toHider().getGeneric().getCloakCooldown() == 0 && (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType())))
+					else if(event.getItem() != null && player.getGame().isBlockPlayable(event.getItem().getType()) && player.toHider().getGeneric().getCloakCooldown() == 0 /*&& (event.getClickedBlock() == null || !Common_BlockHunt.isInteractWhitelisted(event.getClickedBlock().getType()))*/)
 					{
 						if(player.getGame().isStage(Stage.IN_GAME) || player.getGame().isStage(Stage.PRE_SEEKER)) 
 						{
@@ -94,11 +97,20 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 							if(hider != null) 
 							{
 			    				hider.getPlayer().sendMessage(Messaging.chatFormatter("&#FF0000You have been revealed by "+ event.getPlayer().getName() +"!"));
+			    				hider.setChaseState(200);
+			    				player.setChaseState(300);
 			    				event.getPlayer().sendMessage(Messaging.chatFormatter("&#00FF00Hider "+ hider.getPlayer().getName() +" located!" ));
 			    				hider.getGeneric().setCloakCooldown(YamlWrapper.getBlockHuntCloakCooldown());
 			    				hider.setCloak(false);
 							}
 						}
+					}
+				}
+				if(player.getGame().isStage(Stage.GAME_END)) 
+				{
+					if(event.getItem() != null && event.getItem().getType() == Material.BARREL)
+					{
+						player.delete();
 					}
 				}
 			}

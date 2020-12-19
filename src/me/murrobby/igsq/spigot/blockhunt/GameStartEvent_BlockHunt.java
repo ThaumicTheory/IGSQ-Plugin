@@ -28,6 +28,10 @@ public class GameStartEvent_BlockHunt implements Listener
 			shufflePlayers(100,event.getGame());
 			allocatePlayers(event.getGame());
 			event.getGame().setTimer(YamlWrapper.getBlockHuntHideTime());
+			for(Player_BlockHunt player : event.getGame().getPlayers())
+			{
+				player.getSoundSystem().playSeeker();
+			}
 		}
 		else 
 		{

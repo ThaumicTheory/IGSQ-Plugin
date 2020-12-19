@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import me.murrobby.igsq.spigot.expert.Main_Expert;
 import me.murrobby.igsq.spigot.lp.Main_LP;
 import me.murrobby.igsq.spigot.main.AsyncPlayerChatEvent_Main;
+import me.murrobby.igsq.spigot.main.EntityDamageEvent_Main;
 import me.murrobby.igsq.spigot.main.EntityDeathEvent_Main;
 import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
@@ -46,6 +47,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		new PlayerCommandPreprocessEvent_Main();
 		new EntityDeathEvent_Main();
 		new AsyncPlayerChatEvent_Main();
+		new EntityDamageEvent_Main();
 		
 		new Main_Expert();
 		new Main_Security();

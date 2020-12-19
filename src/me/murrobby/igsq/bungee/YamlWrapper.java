@@ -1,5 +1,7 @@
 package me.murrobby.igsq.bungee;
 
+import java.security.SecureRandom;
+
 public class YamlWrapper 
 {
 	public static String getMySQLUsername() 
@@ -71,6 +73,14 @@ public class YamlWrapper
 	{
 		Yaml.updateField("server.backupredirect", "config",data);
 	}
+	public static String getModList() 
+	{
+		return Yaml.getFieldString("modlist", "security");
+	}
+	public static void setModList(String data) 
+	{
+		Yaml.updateField("modlist", "security",data);
+	}
     //TODO Java Docs
     public static void applyDefault()
     {
@@ -84,6 +94,10 @@ public class YamlWrapper
         Yaml.addFieldDefault("support.protocol.lowest","config",340);
         
         Yaml.addFieldDefault("server.backupredirect","config","hub");
+        SecureRandom key= new SecureRandom();
+        key.nextBytes(new byte[256]);
+        Yaml.addFieldDefault("key","security",key.nextInt());
+        Yaml.addFieldDefault("modlist","security","");
         
         
         

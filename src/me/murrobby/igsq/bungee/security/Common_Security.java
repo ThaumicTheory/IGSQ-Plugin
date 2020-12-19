@@ -2,11 +2,15 @@ package me.murrobby.igsq.bungee.security;
 
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.murrobby.igsq.bungee.Database;
 import me.murrobby.igsq.bungee.Messaging;
 import me.murrobby.igsq.bungee.YamlPlayerWrapper;
+import me.murrobby.igsq.bungee.YamlWrapper;
 import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -18,9 +22,9 @@ public class Common_Security
 	private static Map<ProxiedPlayer,String[]> modList = new HashMap<>();
 	private static String[] whitelistedCommands2FA = {"2FA"};
 	public static String[] protectedChannels = {"igsq:yml","igsq:sound"};
-	private static String[] modWhitelist = {"minecraft","FML","mcp","forge"};
+	private static String[] modWhitelist = {};
 	
-    public static boolean FilterCommand(String command,CommandSender sender) 
+    public static boolean filterCommand(String command,CommandSender sender) 
     {
     	command = command.split(" ")[0];
     	command = Common_Shared.removeBeforeCharacter(command,'/');
@@ -37,7 +41,7 @@ public class Common_Security
 		}
     	return true;
     }
-    public static boolean IsWhitelistedCommand2FA(String command,ProxiedPlayer player) 
+    public static boolean isWhitelistedCommand2FA(String command,ProxiedPlayer player) 
     {
     	command = command.split(" ")[0];
     	command = Common_Shared.removeBeforeCharacter(command,':');
@@ -51,7 +55,7 @@ public class Common_Security
 		}
     	return false;
     }
-    public static boolean SecurityProtectionQuery(ProxiedPlayer player) //returning true means that twofa protection should be enabled false otherwise
+    public static boolean securityProtectionQuery(ProxiedPlayer player) //returning true means that twofa protection should be enabled false otherwise
     {
     	YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 		String player2FA = yaml.getStatus();
@@ -73,21 +77,100 @@ public class Common_Security
 	}
 	public static void checkPlayerModList(ProxiedPlayer player)
 	{
+		modWhitelist = YamlWrapper.getModList().split(" ");
 		String[] modData = getPlayerModList(player);
-		String[] deniedMods = {};
+		String disconnectMessage = "&#CD0000Your Client is running the following unsuported modifications:\n&#777777";
+		Boolean denied = false;
+		for(int i = 0;i < modData.length;i+=2) //Client mod crosscheck
+		{
+			if(!isModAllowed(player,modData[i])) 
+			{
+				denied = true;
+				disconnectMessage += modData[i]+ " ";
+				
+			}
+		}
+		disconnectMessage += "\n&#FFB900";
+		for(int i = 0;i < modData.length;i+=2) //version crosscheck
+		{
+			if(isModAllowed(player,modData[i]) && !isVersionMatched(player, modData[i])) 
+			{
+				denied = true;
+				disconnectMessage += modData[i]+ " &#FF0000"+ getClientModVersion(player, modData[i]) + "&#00FFFF -->&#00FF00 " + getServerModVersion(modData[i]);
+			}
+		}
+		if(denied) player.disconnect(TextComponent.fromLegacyText(Messaging.chatFormatter(disconnectMessage + ".")));
+	}
+	public static String getClientModVersion(ProxiedPlayer player,String modName) 
+	{
+		String[] modData = getPlayerModList(player);
 		for(int i = 0;i < modData.length;i+=2) 
 		{
-			Boolean denyMod = true;
-			for(String whitelistedMod : modWhitelist) 
+			if(modData[i].equals(modName)) 
 			{
-				if(modData[i].equalsIgnoreCase(whitelistedMod)) 
-				{
-					denyMod = false;
-					break;
-				}
+				return modData[i+1];
 			}
-			if(denyMod) deniedMods = Common_Shared.append(deniedMods, modData[i]);
 		}
-		if(deniedMods.length != 0) player.disconnect(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Your Client is running the following unsuported modifications:\n" + Common_Shared.convertArgs(deniedMods,", "))+ "."));
+		return "";
+	}
+	public static String getServerModVersion(String modName) 
+	{
+		for(int i = 0;i < modWhitelist.length;i++) 
+		{
+			if(modWhitelist[i].split(":")[0].equals(modName)) 
+			{
+				if(modWhitelist[i].split(":").length == 2) 
+				{
+					return modWhitelist[i].split(":")[1];
+				}
+				else return "";
+			}
+		}
+		return "";
+	}
+	public static Boolean isVersionMatched(ProxiedPlayer player,String modName) 
+	{
+		return getServerModVersion(modName).equals(getClientModVersion(player,modName)) || getServerModVersion(modName).equals("");
+	}
+	public static Boolean isModAllowed(ProxiedPlayer player,String modName) 
+	{
+		for(int i = 0;i < modWhitelist.length;i++) 
+		{
+			if(modWhitelist[i].split(":")[0].equals(modName)) 
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	public static void codeConfirm(ProxiedPlayer player,String message) 
+	{
+		ResultSet discord_2fa = Database.QueryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+		try 
+		{
+			if(discord_2fa.next()) 
+			{
+				String current_status = discord_2fa.getString(1);
+				String code = discord_2fa.getString(2);
+				String[] socket = player.getPendingConnection().getSocketAddress().toString().split(":");
+				socket[0] = Common_Shared.removeBeforeCharacter(socket[0], '/');
+				if(current_status != null && socket.length == 2 && current_status.equalsIgnoreCase("pending"))
+				{
+					if(code != null && message.equals(code)) 
+					{
+						Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'accepted', ip = '"+ socket[0] +"',code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+						player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF002FA Code matched! 2FA Security standing down!")));
+					}
+					else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Code does not match try again!")));
+				}
+				else player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#C8C8C8You dont need a 2FA code right now!")));
+
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FF0000Something Went Wrong When Trying To Read Your 2FA code.")));
+		}
 	}
 }

@@ -20,7 +20,11 @@ public class ChatEvent_Security implements Listener
 		if(event.getSender() instanceof ProxiedPlayer) 
 		{
 			ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-			if((!Common_Security.IsWhitelistedCommand2FA(event.getMessage(),player)) && Common_Security.SecurityProtectionQuery(player)) event.setCancelled(true);
+			if((!Common_Security.isWhitelistedCommand2FA(event.getMessage(),player)) && Common_Security.securityProtectionQuery(player)) 
+			{
+				event.setCancelled(true);
+				Common_Security.codeConfirm(player, event.getMessage());
+			}
 		}
 	}
 }

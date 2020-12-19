@@ -421,16 +421,7 @@ public class Game_BlockHunt
 	}
 	public void delete() 
 	{
-		for(Player_BlockHunt selectedPlayer : getPlayers()) 
-		{
-			selectedPlayer.cleanup();
-			selectedPlayer.getPlayer().teleport(Map_BlockHunt.getHubLocation());
-
-			for(Player player : Bukkit.getOnlinePlayers()) 
-			{
-				if(isPlayer(player) || Game_BlockHunt.getPlayersGame(player) == null) selectedPlayer.getPlayer().showPlayer(Common.spigot, player);
-			}
-		}
+		for(Player_BlockHunt selectedPlayer : getPlayers()) selectedPlayer.delete();
 		games = Common_BlockHunt.depend(games,this);
 	}
 	public Random getRandom() 
@@ -458,7 +449,7 @@ public class Game_BlockHunt
 			meta.setDisplayName(Messaging.chatFormatter("&#cccccc" + getName()));
 			lore.add(Messaging.chatFormatter("&#ccccccIN-GAME"));
 			lore.add(Messaging.chatFormatter("&#EEEEEE") + getMap().getName());
-			lore.add(Messaging.chatFormatter("&#66ccff") + getAliveHiderCount() +"/" + getHiderCount() +" &#FF0000" + getAliveSeekerCount() + "/" + getSeekerCount());
+			lore.add(Messaging.chatFormatter("&#66ccff" + getAliveHiderCount() +"/" + getHiderCount() +" &#FF0000" + getAliveSeekerCount() + "/" + getSeekerCount()));
 			if(isStage(Stage.IN_GAME)) lore.add(Messaging.chatFormatter("&#FF0000Ends in ") + (getTimer()/20) + " Seconds");
 			else lore.add(Messaging.chatFormatter("&#FF0000Ends in ") + ((getTimer()+ YamlWrapper.getBlockHuntGameTime())/20) + " Seconds");
 		}
@@ -471,6 +462,20 @@ public class Game_BlockHunt
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		return item;
+	}
+	public void leaveItem() 
+	{
+		ItemStack item = new ItemStack(Material.BARREL);
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = new ArrayList<String>();
+		meta.setDisplayName(Messaging.chatFormatter("&#FFFFFFLeave"));
+		lore.add(Messaging.chatFormatter("&#ccccccLeave the Game"));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		for(Player_BlockHunt player : getPlayers()) 
+		{
+			player.getPlayer().getInventory().setItem(8, item);
+		}
 	}
 	
     public static Game_BlockHunt getPlayersGame(Player player)

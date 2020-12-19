@@ -9,8 +9,8 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 public class Yaml 
 {
-	public static String[] fileNames = {"config","player","internal","message"};
-    private static String[] syncedFiles = {"player"};
+	public static String[] fileNames = {"config","player","internal","message","security"};
+    private static String[] syncedFiles = {"player","security"};
     private static File[] files;
     private static Configuration[] configurations;
     private static final ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
@@ -51,8 +51,8 @@ public class Yaml
     //TODO Java Docs
     public static void addFieldDefault(String path,String fileName,int data) 
     {
-    	Integer existingSetting = getFieldInt(path,fileName);
-    	if(existingSetting == null)
+    	int existingSetting = getFieldInt(path,fileName);
+    	if(existingSetting == 0)
     	{
     		updateField(path,fileName,data);
     	}
@@ -99,7 +99,7 @@ public class Yaml
     	return false;
     }
     //TODO Java Docs
-    public static Integer getFieldInt(String path,String fileName) 
+    public static int getFieldInt(String path,String fileName) 
     {
     	for(int i = 0; i < fileNames.length;i++) 
     	{

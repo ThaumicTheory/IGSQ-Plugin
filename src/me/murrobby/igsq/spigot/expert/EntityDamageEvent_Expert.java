@@ -15,7 +15,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.Messaging;
 
@@ -36,9 +35,7 @@ public class EntityDamageEvent_Expert implements Listener
 				if(event.getEntityType() == EntityType.PLAYER) 
 				{
 					Player player = (Player)event.getEntity();
-					YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 					player.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK,(int) (200*event.getDamage()*((1+player.getHealthScale())-player.getHealth())),0,true));
-					yaml.setLastDamage(player.getTicksLived());
 					if(player.hasPotionEffect(PotionEffectType.LUCK)) 
 					{
 						player.removePotionEffect(PotionEffectType.LUCK);

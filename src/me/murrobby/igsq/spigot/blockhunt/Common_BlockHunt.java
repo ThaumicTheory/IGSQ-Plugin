@@ -21,13 +21,13 @@ import com.comphenix.protocol.ProtocolManager;
 
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
-import me.murrobby.igsq.spigot.Yaml;
 
 public class Common_BlockHunt 
 {
 	public static int numberPerSeeker = 3;
 	
 	public static ProtocolManager protocol = ProtocolLibrary.getProtocolManager();
+	/*
 	public static Material[] interactWhitelist = 
 		{
 			Material.ACACIA_BUTTON,
@@ -79,6 +79,7 @@ public class Common_BlockHunt
 			Material.LEVER
 			
 		};
+	*/
 	
     public static ScoreboardManager manager;
     public static Scoreboard board;
@@ -86,11 +87,6 @@ public class Common_BlockHunt
     public static Team hidersTeam;
     public static Team seekersTeam;
 
-    @Deprecated
-    public static Boolean blockhuntCheck() 
-    {
-    	return Yaml.getFieldBool("GAMEPLAY.blockhunt", "config");
-    }
 	public static int getSeekerCount(Player_BlockHunt[] players) 
 	{
 		if(players.length <= 2) return 1;
@@ -101,6 +97,7 @@ public class Common_BlockHunt
 		if(players <= 2) return 1;
 		else return (int)(players/numberPerSeeker);
 	}
+	/*
     public static Boolean isInteractWhitelisted(Material material) 
     {
     	for (Material allowedMaterial : interactWhitelist) 
@@ -109,6 +106,7 @@ public class Common_BlockHunt
     	}
     	return false;
     }
+    */
 	public void hidePlayer() 
 	{
 		for(Player selectedPlayer : Bukkit.getOnlinePlayers()) 

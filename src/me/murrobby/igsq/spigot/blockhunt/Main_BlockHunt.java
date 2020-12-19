@@ -17,6 +17,9 @@ public class Main_BlockHunt
 		new PlayerMoveEvent_BlockHunt();
 		new PlayerJoinEvent_BlockHunt();
 		new PlayerInteractEntityEvent_BlockHunt();
+		new BlockDamageEvent_BlockHunt();
+		new PlayerHarvestBlockEvent_BlockHunt();
+		new PlayerArmorStandManipulateEvent_BlockHunt();
 		
 		new PlayServerBlockChange_BlockHunt();
 		
