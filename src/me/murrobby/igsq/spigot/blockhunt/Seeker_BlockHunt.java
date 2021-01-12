@@ -54,8 +54,8 @@ public class Seeker_BlockHunt extends Player_BlockHunt
 	private void setup() 
 	{
 		getPlayer().getInventory().clear();
-		Common_BlockHunt.seekersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		Common_BlockHunt.hidersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
+		Common_BlockHunt.seekersTeam.addEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		List<String> bootsLore = new ArrayList<String>();
 		List<String> leggingsLore = new ArrayList<String>();
 		List<String> chestplateLore = new ArrayList<String>();
@@ -111,7 +111,6 @@ public class Seeker_BlockHunt extends Player_BlockHunt
 		sword.setItemMeta(swordMeta);
 		getPlayer().getInventory().setItem(0,sword);
 		
-		Common_BlockHunt.seekersTeam.addEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 			
 		bootsMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 		bootsMeta.addItemFlags(ItemFlag.HIDE_DYE);

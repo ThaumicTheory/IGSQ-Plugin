@@ -31,6 +31,7 @@ public class Game_BlockHunt
     private int timer;
     private String name;
     private boolean testMode;
+    private GuiSystem_BlockHunt gui;
     
     private static Game_BlockHunt[] games = {};
     private Random random = new Random();
@@ -39,6 +40,7 @@ public class Game_BlockHunt
 	{
 		map = new Map_BlockHunt();
 		this.name = name;
+		gui = new GuiSystem_BlockHunt(this);
 		timer = YamlWrapper.getBlockHuntLobbyTime();
 		games = Common_BlockHunt.append(games, this);
 		createLobby();
@@ -48,6 +50,7 @@ public class Game_BlockHunt
 	{
 		map = new Map_BlockHunt();
 		this.name = String.valueOf(System.currentTimeMillis());
+		gui = new GuiSystem_BlockHunt(this);
 		timer = YamlWrapper.getBlockHuntLobbyTime();
 		games = Common_BlockHunt.append(games, this);
 		createLobby();
@@ -189,6 +192,10 @@ public class Game_BlockHunt
     public void decrementTimer() 
     {
     	timer--;
+    }
+    public void incrementTimer() 
+    {
+    	timer++;
     }
     
     public int getTimer() 
@@ -396,7 +403,7 @@ public class Game_BlockHunt
     	Player_BlockHunt selectedPlayer = getPlayer(player);
     	if(selectedPlayer != null) 
     	{
-    		setPlayers(Common_BlockHunt.depend(getPlayers(),selectedPlayer));
+    		setPlayers(Common_BlockHunt.depend(players,selectedPlayer));
     	}
     }
     public void removePlayer(Player_BlockHunt player) 
@@ -404,12 +411,16 @@ public class Game_BlockHunt
     	Player_BlockHunt selectedPlayer = getPlayer(player.getPlayer());
     	if(selectedPlayer != null) 
     	{
-    		setPlayers(Common_BlockHunt.depend(getPlayers(),selectedPlayer));
+    		setPlayers(Common_BlockHunt.depend(players,player));
     	}
     }
 	public int getPlayerCount() 
 	{
 		return getPlayers().length;
+	}
+	public GuiSystem_BlockHunt getGuiSystem() 
+	{
+		return gui;
 	}
 	public Player_BlockHunt getPlayer(Player player) 
 	{
@@ -465,7 +476,7 @@ public class Game_BlockHunt
 	}
 	public void leaveItem() 
 	{
-		ItemStack item = new ItemStack(Material.BARREL);
+		ItemStack item = new ItemStack(Material.IRON_DOOR);
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = new ArrayList<String>();
 		meta.setDisplayName(Messaging.chatFormatter("&#FFFFFFLeave"));
@@ -475,6 +486,20 @@ public class Game_BlockHunt
 		for(Player_BlockHunt player : getPlayers()) 
 		{
 			player.getPlayer().getInventory().setItem(8, item);
+		}
+	}
+	public void nextGameItem() 
+	{
+		ItemStack item = new ItemStack(Material.NETHER_STAR);
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = new ArrayList<String>();
+		meta.setDisplayName(Messaging.chatFormatter("&#00FFFFPlay Again"));
+		lore.add(Messaging.chatFormatter("&#00ccccPlay Another Game"));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		for(Player_BlockHunt player : getPlayers()) 
+		{
+			player.getPlayer().getInventory().setItem(0, item);
 		}
 	}
 	

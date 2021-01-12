@@ -10,6 +10,10 @@ public class YamlPlayerWrapper
 	{
 		uuid = player.getUniqueId().toString();
 	}
+	public YamlPlayerWrapper(String player)
+	{
+		uuid = player;
+	}
 	
 	//Discord
 	public String getID() 

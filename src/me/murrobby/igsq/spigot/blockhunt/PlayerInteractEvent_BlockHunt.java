@@ -106,11 +106,18 @@ public class PlayerInteractEvent_BlockHunt implements Listener
 						}
 					}
 				}
-				if(player.getGame().isStage(Stage.GAME_END)) 
+				if(player.getGame().isStage(Stage.GAME_END) || player.getGame().isStage(Stage.IN_LOBBY)) 
 				{
-					if(event.getItem() != null && event.getItem().getType() == Material.BARREL)
+					if(event.getItem() != null) 
 					{
-						player.delete();
+						if(event.getItem().getType() == Material.IRON_DOOR)
+						{
+							player.delete();
+						}
+						else if(event.getItem().getType() == Material.NETHER_STAR)
+						{
+							Common_BlockHunt.updateGui(event.getPlayer());
+						}
 					}
 				}
 			}

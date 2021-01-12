@@ -244,7 +244,6 @@ public class YamlWrapper
         Yaml.addFieldDefault("gameplay.blockhunt","config",false);
         
         Yaml.addFieldDefault("support.luckperms","config",true);
-        Yaml.addFieldDefault("support.nametagedit","config",true);
         
 
         Yaml.addFieldDefault("message","message","&#FFD000<server> &#685985| &#C8C8C8<prefix><player><suffix> &#685985| &#d256ff<message>");

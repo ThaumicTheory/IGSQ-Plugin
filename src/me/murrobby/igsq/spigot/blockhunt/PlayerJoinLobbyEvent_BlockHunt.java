@@ -47,6 +47,8 @@ public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 			event.getPlayer().getPlayer().getInventory().clear();
 			event.getPlayer().getPlayer().getInventory().setHeldItemSlot(0);
 			event.getPlayer().getPlayer().setInvulnerable(false);
+			event.getPlayer().getGame().leaveItem();
+			event.getPlayer().getGame().nextGameItem();
 			for (PotionEffect effect : event.getPlayer().getPlayer().getActivePotionEffects()) event.getPlayer().getPlayer().removePotionEffect(effect.getType());
 			event.getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
 			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer().getPlayer());

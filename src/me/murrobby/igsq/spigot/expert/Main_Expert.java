@@ -15,6 +15,7 @@ public class Main_Expert
 		new EntityTargetEvent_Expert();
 		new PlayerBedEnterEvent_Expert();
 		new SlimeSplitEvent_Expert();
+		new EntityExplodeEvent_Expert();
 		//new ThunderChangeEvent_Expert();
 		//Tasks
 		Start_Expert();

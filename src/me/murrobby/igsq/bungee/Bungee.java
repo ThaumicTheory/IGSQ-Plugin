@@ -2,6 +2,7 @@ package me.murrobby.igsq.bungee;
 
 import java.util.concurrent.TimeUnit;
 
+import me.murrobby.igsq.bungee.commands.Generate_Command;
 import me.murrobby.igsq.bungee.commands.Link_Command;
 import me.murrobby.igsq.bungee.commands.Test_Command;
 import me.murrobby.igsq.bungee.commands.TwoFA_Command;
@@ -71,6 +72,7 @@ public class Bungee extends Plugin
 		getProxy().getPluginManager().registerCommand(this,new Link_Command());
 		getProxy().getPluginManager().registerCommand(this,new TwoFA_Command());
 		getProxy().getPluginManager().registerCommand(this,new Test_Command());
+		getProxy().getPluginManager().registerCommand(this,new Generate_Command());
 		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && YamlWrapper.isLuckpermsSupported()) 
 		{
 			System.out.println("Luckperms Module Enabled.");

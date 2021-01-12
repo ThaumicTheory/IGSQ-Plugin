@@ -32,7 +32,6 @@ public class EntityDamageEvent_BlockHunt implements Listener
 					{
 						if (player.getPlayer().getHealth() - event.getDamage() <= 0) //Player Would Die
 						{
-							System.out.println(player.getPlayer().getHealth() + " - " + event.getDamage() + " = " + (player.getPlayer().getHealth() - event.getDamage()));
 							player.kill();
 							event.setCancelled(true);
 						}

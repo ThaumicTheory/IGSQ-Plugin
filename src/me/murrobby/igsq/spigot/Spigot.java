@@ -1,5 +1,6 @@
 package me.murrobby.igsq.spigot;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -13,6 +14,7 @@ import me.murrobby.igsq.spigot.main.EntityDeathEvent_Main;
 import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
+import me.murrobby.igsq.spigot.main.PlayerQuitEvent_Main;
 import me.murrobby.igsq.spigot.security.Main_Security;
 import me.murrobby.igsq.spigot.blockhunt.Main_BlockHunt;
 import me.murrobby.igsq.spigot.commands.Main_Command;
@@ -24,10 +26,6 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 	{ 
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:yml", this);
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:sound", this);
-		Common.spigot = this;
-		Yaml.createFiles();
-		Yaml.loadFile("@all");
-		YamlWrapper.applyDefault();
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
 		{
 
@@ -48,11 +46,11 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		new EntityDeathEvent_Main();
 		new AsyncPlayerChatEvent_Main();
 		new EntityDamageEvent_Main();
+		new PlayerQuitEvent_Main();
 		
 		new Main_Expert();
 		new Main_Security();
 		new Main_Command();
-		Boolean nametagEdit = false;
 		/*
 		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Yaml.getFieldBool("SUPPORT.nametagedit", "config")) 
 		{
@@ -64,7 +62,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && YamlWrapper.isLuckpermsSupported()) 
 		{
 			System.out.println("Luckperms Module Enabled.");
-			new Main_LP(this,nametagEdit);
+			new Main_LP(this);
 			YamlWrapper.setDefaultChatController("mainlp");
 			YamlWrapper.setDefaultNameController("main");
 		}
@@ -74,23 +72,30 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 			YamlWrapper.setDefaultChatController("main");
 			YamlWrapper.setDefaultNameController("none");
 		}
-		if(this.getServer().getPluginManager().getPlugin("ProtocolLib") != null && YamlWrapper.isBlockHunt()) 
+		if(YamlWrapper.isBlockHunt()) 
 		{
-			System.out.println("ProtocolLib Located, BlockHunt enabled.");
+			System.out.println("BlockHunt enabled.");
 			new Main_BlockHunt();
 		}
 		else 
 		{
-			System.out.println("BlockHunt disabled! (Either this was set in config or protocolLib was not located!)");
+			System.out.println("BlockHunt disabled!");
 		}
 	}
 
 	public void onLoad()
 	{
+		Common.spigot = this;
+		Yaml.createFiles();
+		Yaml.loadFile("@all");
+		YamlWrapper.applyDefault();
+		for(Player player : Bukkit.getOnlinePlayers()) Communication.setDefaultTagData(player);
 	}
 	
 	public void onDisable()
 	{
+		for(Player player : Bukkit.getOnlinePlayers()) Communication.deletePlayer(player);
+		BlockCluster.cleanup();
 		this.getServer().getScheduler().cancelTasks(this);
 		Yaml.saveFileChanges("@all");
 		Yaml.disgardAndCloseFile("@all");

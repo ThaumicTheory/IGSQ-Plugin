@@ -39,6 +39,8 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
     	getSoundSystem().playKilled();
     	for(Player_BlockHunt teamMember : getTeamMembers()) teamMember.getSoundSystem().playEliminatedFriendly();
     	for(Player_BlockHunt teamMember : getEnemies()) teamMember.getSoundSystem().playEliminatedEnemy();
+    	if(isSeeker()) getGame().getGuiSystem().setFocus("seekers", 60);
+    	else if(isHider()) getGame().getGuiSystem().setFocus("hiders", 60);
     }
 	public void outOfGame() 
 	{
@@ -298,6 +300,5 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 	public void setChaseState(int chaseState) 
 	{
 		this.chaseState = chaseState;
-		System.out.println(getPlayer().getName() + " : " + chaseState);
 	}
 }

@@ -22,7 +22,7 @@ public class Common_Shared
         }
         return arrayBetween;
     }
-	
+	@Deprecated
     public static String[] append(String[] array, String value)
     {
     	String[] arrayAppended = new String[array.length+1];
@@ -33,6 +33,7 @@ public class Common_Shared
     	arrayAppended[array.length] = value;
     	return arrayAppended;
     }
+    @Deprecated
     public static String[] arrayAppend(String[] array, String[] array2) 
     {
     	String[] appendedArray = array;
@@ -42,6 +43,7 @@ public class Common_Shared
     	}
     	return appendedArray;
     }
+    @Deprecated
 	public static String[] depend(String[] array, int location)
     {
         String[] arrayDepended = new String[array.length-1];
@@ -101,18 +103,6 @@ public class Common_Shared
 			}
 		}
 		return input;
-	}
-	public static String getTimeFromTicks(int ticks) 
-	{
-		int seconds = ticks/20;
-		int minutes = 0;
-		while(seconds >= 60) 
-		{
-			seconds-=60;
-			minutes++;
-		}
-		if(minutes == 0) return "" + seconds;
-		return minutes + " : " + seconds;
 	}
 	
 }

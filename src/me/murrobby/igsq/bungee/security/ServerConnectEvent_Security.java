@@ -24,6 +24,7 @@ public class ServerConnectEvent_Security implements Listener
 			Common_Security.setPlayerModList(new String[]{}, event.getPlayer());
 			if(event.getPlayer().getPendingConnection().getVersion() <= 340) //Legacy
 			{
+				event.setTarget(ProxyServer.getInstance().getServerInfo("modded"));
 				Common.bungee.getProxy().registerChannel("FML|HS");
 				Common.bungee.getProxy().getScheduler().schedule(Common.bungee, new Runnable() 
 		    	{
@@ -34,7 +35,7 @@ public class ServerConnectEvent_Security implements Listener
 						event.getPlayer().sendData("FML|HS", new byte[] {-2, 0});
 						event.getPlayer().sendData("FML|HS", new byte[] {0, 2, 0, 0, 0, 0});
 					} 		
-		    	}, 150, TimeUnit.MILLISECONDS);
+		    	}, 450, TimeUnit.MILLISECONDS);
 			}
 			else //1.13 +
 			{

@@ -79,7 +79,7 @@ public class Common_Security
 	{
 		modWhitelist = YamlWrapper.getModList().split(" ");
 		String[] modData = getPlayerModList(player);
-		String disconnectMessage = "&#CD0000Your Client is running the following unsuported modifications:\n&#777777";
+		String disconnectMessage = "&cYour Client is running the following unsuported modifications:\n&4";
 		Boolean denied = false;
 		for(int i = 0;i < modData.length;i+=2) //Client mod crosscheck
 		{
@@ -90,16 +90,19 @@ public class Common_Security
 				
 			}
 		}
-		disconnectMessage += "\n&#FFB900";
+		disconnectMessage += "\n&4";
+		int j = 0;
 		for(int i = 0;i < modData.length;i+=2) //version crosscheck
 		{
 			if(isModAllowed(player,modData[i]) && !isVersionMatched(player, modData[i])) 
 			{
 				denied = true;
-				disconnectMessage += modData[i]+ " &#FF0000"+ getClientModVersion(player, modData[i]) + "&#00FFFF -->&#00FF00 " + getServerModVersion(modData[i]);
+				
+				disconnectMessage += "&e"+ modData[i]+ " &4"+ getClientModVersion(player, modData[i]) + "&6 -->&a " + getServerModVersion(modData[i]) +" ";
+				if(++j % 3 == 0) disconnectMessage += "\n";
 			}
 		}
-		if(denied) player.disconnect(TextComponent.fromLegacyText(Messaging.chatFormatter(disconnectMessage + ".")));
+		if(denied) player.disconnect(TextComponent.fromLegacyText(Messaging.chatFormatterConsole(disconnectMessage)));
 	}
 	public static String getClientModVersion(ProxiedPlayer player,String modName) 
 	{
@@ -117,11 +120,11 @@ public class Common_Security
 	{
 		for(int i = 0;i < modWhitelist.length;i++) 
 		{
-			if(modWhitelist[i].split(":")[0].equals(modName)) 
+			if(modWhitelist[i].split("~")[0].equals(modName)) 
 			{
-				if(modWhitelist[i].split(":").length == 2) 
+				if(modWhitelist[i].split("~").length == 2) 
 				{
-					return modWhitelist[i].split(":")[1];
+					return modWhitelist[i].split("~")[1];
 				}
 				else return "";
 			}
@@ -136,7 +139,7 @@ public class Common_Security
 	{
 		for(int i = 0;i < modWhitelist.length;i++) 
 		{
-			if(modWhitelist[i].split(":")[0].equals(modName)) 
+			if(modWhitelist[i].split("~")[0].equals(modName)) 
 			{
 				return true;
 			}

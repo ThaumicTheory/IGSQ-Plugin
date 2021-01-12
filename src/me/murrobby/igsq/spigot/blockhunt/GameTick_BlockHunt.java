@@ -12,11 +12,8 @@ import org.bukkit.potion.PotionEffectType;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.YamlWrapper;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class GameTick_BlockHunt
@@ -53,6 +50,7 @@ public class GameTick_BlockHunt
 	{
 		for(Game_BlockHunt gameInstance : Game_BlockHunt.getGameInstances()) 
 		{
+			gameInstance.getGuiSystem().updateGui();
 			//Bukkit.broadcastMessage(gameInstance.getName());
 			for(Player_BlockHunt player : gameInstance.getPlayers()) 
 			{
@@ -116,6 +114,7 @@ public class GameTick_BlockHunt
 		{
 			if(player.isWinner()) player.getSoundSystem().playWinLoop();
 			else player.getSoundSystem().playLossLoop();
+			gameInstance.incrementTimer();
 			
 		}
 	}
@@ -124,9 +123,9 @@ public class GameTick_BlockHunt
 		if(gameInstance.isStage(Stage.IN_GAME))
 		{
 			player.getSoundSystem().playNeutral();
-			player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFF"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer()))));
+			//player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFF"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer()))));
 			if(gameInstance.getTimer() <= 0) gameInstance.end(EndReason.TIME_UP); 
-			else if(gameInstance.getTimer() <= 1200) 
+			else if(gameInstance.getTimer() <= YamlWrapper.getBlockHuntGameTime()/5) 
 			{
 				if(player.isSeeker()) 
 				{
@@ -137,7 +136,7 @@ public class GameTick_BlockHunt
 					player.getSoundSystem().playImminentWin();
 				}
 			}
-			else if(gameInstance.getTimer() <= 3000) 
+			else if(gameInstance.getTimer() <= YamlWrapper.getBlockHuntGameTime()/5*2) 
 			{
 				if(player.isSeeker()) 
 				{
@@ -148,6 +147,10 @@ public class GameTick_BlockHunt
 					player.getSoundSystem().playWinning();
 				}
 			}
+			if(gameInstance.getAliveHiderCount() == 1 && !(gameInstance.getHiderCount() == 1) && second == 20) gameInstance.getGuiSystem().setFocus("hiders", 40);
+			else if(gameInstance.getTimer() == YamlWrapper.getBlockHuntGameTime()/5*2) gameInstance.getGuiSystem().setFocus("time", 100);
+			else if(gameInstance.getTimer() == YamlWrapper.getBlockHuntGameTime()/5) gameInstance.getGuiSystem().setFocus("time", 200);
+			
 			if(player.isChaseState()) 
 			{
 				if(player.getGame().getAliveHiderCount() == 1) player.getSoundSystem().playChaseFinal();
@@ -296,7 +299,7 @@ public class GameTick_BlockHunt
 				player.getPlayer().sendTitle(Messaging.chatFormatter("&#FF0000Seekers have been released"),Messaging.chatFormatter(subTitle),20,120,10);
 				
 			}
-			player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));
+			//player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));
 				
 		} 
 	}
@@ -308,7 +311,7 @@ public class GameTick_BlockHunt
 			if(gameInstance.getPlayerCount() >= minPlayers || gameInstance.isTestMode()) 
 			{
 				if(gameInstance.getTimer() <= 200) player.getPlayer().sendTitle(Messaging.chatFormatter("&#00FF00" +gameInstance.getTimer()/20),Messaging.chatFormatter("&#00FFFFSeconds Until The Game Starts!"),0,5,10);
-				else player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FFFF00"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));
+				//else player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FFFF00"+ Common_Shared.getTimeFromTicks(gameInstance.getTimer())))));
 				
 				if(gameInstance.getTimer() == 200) 
 				{
@@ -317,7 +320,7 @@ public class GameTick_BlockHunt
 			}
 			else 
 			{
-				player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000" + (minPlayers - gameInstance.getPlayerCount()) + " &#00FFFFPlayers until the Countdown Starts!"))));
+				//player.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText((Messaging.chatFormatter("&#FF0000" + (minPlayers - gameInstance.getPlayerCount()) + " &#00FFFFPlayers until the Countdown Starts!"))));
 				gameInstance.setTimer(YamlWrapper.getBlockHuntLobbyTime());
 			}
 			

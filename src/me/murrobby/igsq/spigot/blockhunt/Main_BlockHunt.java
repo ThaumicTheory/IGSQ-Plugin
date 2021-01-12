@@ -20,22 +20,22 @@ public class Main_BlockHunt
 		new BlockDamageEvent_BlockHunt();
 		new PlayerHarvestBlockEvent_BlockHunt();
 		new PlayerArmorStandManipulateEvent_BlockHunt();
+		new AsyncPlayerChatEvent_BlockHunt();
 		
 		new PlayServerBlockChange_BlockHunt();
+		new PlayServerPlayerInfo_BlockHunt();
 		
 		new LobbyCreateEvent_BlockHunt();
 		new PlayerJoinLobbyEvent_BlockHunt();
 		new GameStartEvent_BlockHunt();
 		new GameEndEvent_BlockHunt();
 		new BeginSeekEvent_BlockHunt();
-		
-		startBlockHunt();
 	}
 	public static void startBlockHunt() //Tasks will close if the game is turned off therefor they will need to be rerun for enabling the game
 	{
 		taskID++;
 		Common_BlockHunt.setupTeams();
 		new GameTick_BlockHunt(taskID);
-		new NametagEdit_BlockHunt(taskID);
+		new CustomTag_BlockHunt(taskID);
 	}
 }

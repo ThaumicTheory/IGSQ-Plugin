@@ -18,13 +18,16 @@ import org.bukkit.scoreboard.Team.OptionStatus;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.Communication;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
 public class Common_BlockHunt 
 {
-	public static int numberPerSeeker = 3;
+	public static int numberPerSeeker = 2;
 	
 	public static ProtocolManager protocol = ProtocolLibrary.getProtocolManager();
 	/*
@@ -296,7 +299,7 @@ public class Common_BlockHunt
 	{
 		int slots = Game_BlockHunt.getGameInstanceCount()+1;
 		int requiredSlots = 0;
-		while(slots > requiredSlots) requiredSlots +=9;
+		while(slots > requiredSlots && requiredSlots < 54) requiredSlots +=9;
 		Inventory gui = Bukkit.createInventory(null, requiredSlots, Messaging.chatFormatter("&#00FFFFBlockHunt Games"));
 		for(Game_BlockHunt game : Game_BlockHunt.getGameInstances()) 
 		{
@@ -316,6 +319,39 @@ public class Common_BlockHunt
 	public static void updateGui(Player player) 
 	{
 		player.openInventory(updateGui());
+	}
+	
+	public static void tag() 
+	{
+		for (Player player : Bukkit.getOnlinePlayers())
+		{
+			Game_BlockHunt playersGame =  Game_BlockHunt.getPlayersGame(player);
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+			if(Common.isCurrentNameController("blockhunt", player) && playersGame != null) 
+			{
+				String name = player.getName();
+				if(yaml.isLinked()) name = yaml.getNickname();
+				if(playersGame.isStage(Stage.IN_LOBBY)) Communication.setTag(player,Messaging.chatFormatter("&e[&6I&e] &6"),ChatColor.YELLOW,name,"");
+				else if(playersGame.isHider(player)) Communication.setTag(player, Messaging.chatFormatter("&3[&bH&3] &b"),ChatColor.AQUA,name,"");
+				else if(playersGame.isSeeker(player)) Communication.setTag(player, Messaging.chatFormatter("&4[&cS&4] &c"),ChatColor.RED,name,"");
+				else Communication.setTag(player, Messaging.chatFormatter("&8[&7Sp&8] &7"),ChatColor.GRAY,name,"");
+			}
+		}
+	}
+	public static PacketContainer tagEvent(Player player) 
+	{
+		Game_BlockHunt playersGame =  Game_BlockHunt.getPlayersGame(player);
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		if(Common.isCurrentNameController("blockhunt", player) && playersGame != null) 
+		{
+			String name = player.getName();
+			if(yaml.isLinked()) name = yaml.getNickname();
+			if(playersGame.isStage(Stage.IN_LOBBY)) return Communication.setTagAsPacket(player,Messaging.chatFormatter("&e[&6I&e] &6"),ChatColor.YELLOW,name,"");
+			else if(playersGame.isHider(player)) return Communication.setTagAsPacket(player, Messaging.chatFormatter("&3[&bH&3] &b"),ChatColor.AQUA,name,"");
+			else if(playersGame.isSeeker(player)) return Communication.setTagAsPacket(player, Messaging.chatFormatter("&4[&cS&4] &c"),ChatColor.RED,name,"");
+			else return Communication.setTagAsPacket(player, Messaging.chatFormatter("&8[&7Sp&8] &7"),ChatColor.GRAY,name,"");
+		}
+		return null;
 	}
   
 }

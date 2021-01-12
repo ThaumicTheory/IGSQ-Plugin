@@ -22,7 +22,7 @@ public class LobbyCreateEvent_BlockHunt implements Listener
 		{
 			event.getGame().setStage(Stage.IN_LOBBY);
 			event.getGame().setTimer(YamlWrapper.getBlockHuntLobbyTime());
-			Main_BlockHunt.startBlockHunt();
+			if(Game_BlockHunt.getGameInstanceCount() == 1) Main_BlockHunt.startBlockHunt();
 		}
 		else 
 		{

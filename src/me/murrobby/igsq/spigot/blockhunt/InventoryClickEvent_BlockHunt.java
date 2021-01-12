@@ -27,17 +27,14 @@ public class InventoryClickEvent_BlockHunt implements Listener
 				{
 					Player player = (Player) event.getWhoClicked();
 					Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
-					if(gameInstance != null) 
-					{
-						event.setCancelled(true);
-					}
-					else if(Common_BlockHunt.isPlayerInGui(player))
+					if(Common_BlockHunt.isPlayerInGui(player))
 					{
 						event.setCancelled(true);
 						if(event.getCurrentItem() != null) 
 						{
 							if(event.getCurrentItem().getItemMeta().getDisplayName().equals(Messaging.chatFormatter("&#FFFFFFCREATE A GAME"))) 
 							{
+								if(gameInstance != null) gameInstance.getPlayer(player).delete();
 								new Game_BlockHunt().joinLobby(player);
 								player.closeInventory();
 							}
@@ -47,6 +44,7 @@ public class InventoryClickEvent_BlockHunt implements Listener
 								{
 									if(event.getCurrentItem().getItemMeta().getDisplayName().equals(Messaging.chatFormatter("&#00FF00" + game.getName())))
 									{
+										if(gameInstance != null) gameInstance.getPlayer(player).delete();
 										game.joinLobby(player);
 										player.closeInventory();
 										break;

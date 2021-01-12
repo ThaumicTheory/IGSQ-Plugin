@@ -32,6 +32,7 @@ public class GameEndEvent_BlockHunt implements Listener
 			else 
 			{
 				event.getGame().setStage(Stage.GAME_END);
+				event.getGame().setTimer(0);
 				for(Player_BlockHunt player : event.getGame().getPlayers()) 
 				{
 					player.outOfGame();
@@ -72,8 +73,9 @@ public class GameEndEvent_BlockHunt implements Listener
 					public void run() 
 					{
 						event.getGame().leaveItem();
+						event.getGame().nextGameItem();
 					}
-		    	},340);
+		    	},360);
 		    	
 			}
 		}

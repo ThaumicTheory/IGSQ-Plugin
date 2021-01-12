@@ -25,7 +25,8 @@ public class PluginMessageEvent_Security implements Listener
 			{
 		        if(event.getData()[0] == 2 && event.getSender() instanceof ProxiedPlayer) //Modlist
 				{
-					applyModList(event.getData(),(ProxiedPlayer)event.getSender());
+		        	ProxiedPlayer player = (ProxiedPlayer) event.getSender();
+					applyModList(event.getData(),player);
 				}
 			}
 			else if(event.getTag().equalsIgnoreCase("fml:handshake")) 
