@@ -1,7 +1,7 @@
 package me.murrobby.igsq.spigot.lp;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 
 import com.comphenix.protocol.events.PacketContainer;
 
+import me.murrobby.igsq.shared.Ranks;
+import me.murrobby.igsq.shared.SubRanks;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Communication;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
@@ -24,14 +26,11 @@ public class Common_LP {
 	private final static LuckPerms luckPerms = LuckPermsProvider.get();
 	private final static ContextManager contextManager = luckPerms.getContextManager();
 	
+	public static final Pattern COLOR_PATTERN = Pattern.compile("/(&[0-9a-f])/i");
+	
 	private static CachedMetaData metaData;
 	private static QueryOptions queryOptions;
-	static Dictionary<String, String> nametagPrefixes = new Hashtable<String, String>();
-	static Dictionary<String, String> nametagSuffixes = new Hashtable<String, String>();
-	static Dictionary<String, ChatColor> nametagColor = new Hashtable<String, ChatColor>();
-	public Common_LP() 
-	{
-	}
+	
 	private static void getUserData(User user) 
 	{
 	    queryOptions = contextManager.getQueryOptions(user).orElse(contextManager.getStaticQueryOptions());
@@ -55,11 +54,12 @@ public class Common_LP {
      * @see net.luckperms.api.cacheddata.CachedMetaData#getPrimaryGroup()
      * @return <b>String</b>
      */
-    public static String getRank(Player player)
+    public static Ranks getRank(Player player)
     {
     	User user = luckPerms.getUserManager().getUser(player.getUniqueId());
     	getUserData(user);
-    	return metaData.getPrimaryGroup();
+    	if(Ranks.getRank("group." + metaData.getPrimaryGroup()) == null) return Ranks.getRank(1);
+    	return Ranks.getRank("group." + metaData.getPrimaryGroup());
     }
     public static void tag() 
     {
@@ -70,8 +70,9 @@ public class Common_LP {
 			{
 				String name = player.getName();
 				if(yaml.isLinked()) name = yaml.getNickname();
-				Communication.setTag(player, nametagPrefixes.get(Common_LP.getRank(player)),nametagColor.get(Common_LP.getRank(player)),name,nametagSuffixes.get(getHighestSubRank(player)));
-				//NametagEdit.getApi().setNametag(player,Messaging.chatFormatter(nametagPrefixes.get(Common_LP.getRank(player))),nametagSuffixes.get(getHighestSubRank(player)));
+				Ranks rank = getRank(player);
+				SubRanks subRank = getSubRank(player);
+				Communication.setTag(player, rank.getTag(),getRankColor(rank) ,name,subRank.getTag());
 			}
 		}
     }
@@ -82,18 +83,28 @@ public class Common_LP {
 		{
 			String name = player.getName();
 			if(yaml.isLinked()) name = yaml.getNickname();
-			return Communication.setTagAsPacket(player, nametagPrefixes.get(Common_LP.getRank(player)),nametagColor.get(Common_LP.getRank(player)),name,nametagSuffixes.get(getHighestSubRank(player)));
-			//NametagEdit.getApi().setNametag(player,Messaging.chatFormatter(nametagPrefixes.get(Common_LP.getRank(player))),nametagSuffixes.get(getHighestSubRank(player)));
+			Ranks rank = getRank(player);
+			SubRanks subRank = getSubRank(player);
+			return Communication.setTagAsPacket(player, rank.getTag(),getRankColor(rank) ,name,subRank.getTag());
 		}
 		return null;
     }
-    private static String getHighestSubRank(Player player) 
+    private static SubRanks getSubRank(Player player) 
 	{
-		if(player.hasPermission("group.developer")) return "developer";
-		else if(player.hasPermission("group.founder")) return "founder";
-		else if(player.hasPermission("group.birthday")) return "birthday";
-		else if(player.hasPermission("group.nitroboost")) return "nitroboost";
-		else if(player.hasPermission("group.supporter")) return "supporter";
-		else return "none";
+    	int highestRank = 0;
+		for(SubRanks rank : SubRanks.values()) if(player.hasPermission(rank.getPermission()) && highestRank < rank.getPosition()) highestRank = rank.getPosition();
+		return SubRanks.getRank(highestRank);
 	}
+    
+    private static ChatColor getRankColor(Ranks rank) 
+    {
+    	Pattern pattern = Pattern.compile("'(.*?)'");
+    	Matcher matcher = pattern.matcher("/(&[0-9a-f])/gi");
+    	if (matcher.find())
+    	{
+    	    String colorCodes = matcher.group();
+    	    return ChatColor.getByChar(colorCodes.charAt(colorCodes.length() - 1));
+    	}
+    	else return ChatColor.WHITE;
+    }
 }

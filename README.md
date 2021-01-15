@@ -59,6 +59,7 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #ffd100 mod2
 - #eb913a mod
 
+- #5cffda Celestial
 - #cbb1ff elite3
 - #a183e6 elite2
 - #7e65be elite
@@ -75,7 +76,6 @@ Official Repo of the IGSQ Minecraft server plugin.
 - #ffcbcb birthday
 - #ff61f4 nitroboost
 - #ff899f supporter
-
 - #67fd67 Developer
 
 - #ec8d00 mod (Trial Staff LEGACY)

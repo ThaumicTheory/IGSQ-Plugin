@@ -1,6 +1,7 @@
 package me.murrobby.igsq.bungee.security;
 
 import me.murrobby.igsq.bungee.YamlPlayerWrapper;
+import me.murrobby.igsq.shared.Ranks;
 import me.murrobby.igsq.bungee.Common;
 import me.murrobby.igsq.bungee.Database;
 import net.md_5.bungee.api.ProxyServer;
@@ -36,7 +37,7 @@ public class DiscordLink_Security
 					System.out.println("Task: \"Discord Link Security\" Expired Closing Task To Save Resources.");
 				}
 			} 		
-    	}, 5, 5, TimeUnit.SECONDS);
+    	}, 5, 1, TimeUnit.SECONDS);
 	}
 	private void DiscordLink() 
 	{
@@ -70,7 +71,7 @@ public class DiscordLink_Security
 				yaml.setID("");
 				yaml.setUsername("");
 				yaml.setNickname("");
-				yaml.setRole("default");
+				yaml.setRole(Ranks.getRank(1).getPermission());
 				yaml.setFounder(false);
 				yaml.setBirthday(false);
 				yaml.setBooster(false);
