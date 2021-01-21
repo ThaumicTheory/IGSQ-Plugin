@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -11,9 +13,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Error_Command {
 
 	private CommandSender sender;
-	private String[] args = new String[0];
+	private ArrayList<String> args = new ArrayList<>();
 	public Boolean result;
-	public Error_Command(CommandSender sender,String[] args) 
+	public Error_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		
 		this.sender = sender;
@@ -22,9 +24,9 @@ public class Error_Command {
 	}
 	private Boolean Error() 
 	{
-		if(args.length == 1) 
+		if(args.size() == 1) 
 		{
-			if(args[0].equalsIgnoreCase("test")) 
+			if(args.get(0).equalsIgnoreCase("test")) 
 			{
 		    	try 
 		    	{
@@ -37,11 +39,11 @@ public class Error_Command {
 		    	}
 			}
 		}
-		else if (args.length == 2) 
+		else if (args.size() == 2) 
 		{
-			if(args[0].equalsIgnoreCase("log")) 
+			if(args.get(0).equalsIgnoreCase("log")) 
 			{
-				if(args[1].equalsIgnoreCase("basic")) 
+				if(args.get(1).equalsIgnoreCase("basic")) 
 				{
 					if(sender instanceof Player) 
 					{
@@ -56,7 +58,7 @@ public class Error_Command {
 						YamlWrapper.setErrorLogSetting(ErrorLogging.BASIC);
 					}
 				}
-				else if(args[1].equalsIgnoreCase("detailed"))
+				else if(args.get(1).equalsIgnoreCase("detailed"))
 				{
 					if(sender instanceof Player) 
 					{

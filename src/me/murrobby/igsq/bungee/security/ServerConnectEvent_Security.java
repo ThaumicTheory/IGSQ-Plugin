@@ -1,5 +1,6 @@
 package me.murrobby.igsq.bungee.security;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import me.murrobby.igsq.bungee.Common;
@@ -21,7 +22,7 @@ public class ServerConnectEvent_Security implements Listener
 	{
 		if(event.getReason().equals(Reason.JOIN_PROXY)) 
 		{
-			Common_Security.setPlayerModList(new String[]{}, event.getPlayer());
+			Common_Security.setPlayerModList(new ArrayList<String>(), event.getPlayer());
 			if(event.getPlayer().getPendingConnection().getVersion() <= 340) //Legacy
 			{
 				event.setTarget(ProxyServer.getInstance().getServerInfo("modded"));

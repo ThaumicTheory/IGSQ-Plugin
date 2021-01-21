@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
 import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.Messaging;
@@ -8,9 +10,9 @@ import me.murrobby.igsq.spigot.expert.Main_Expert;
 public class Expert_Command {
 
 	private CommandSender sender;
-	private String[] args = new String[0];
+	private ArrayList<String> args = new ArrayList<>();
 	public Boolean result;
-	public Expert_Command(CommandSender sender,String[] args) 
+	public Expert_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;
@@ -19,20 +21,20 @@ public class Expert_Command {
 	private Boolean expert() 
 	{
 		Boolean currentSetting = YamlWrapper.isExpert();
-		if((args.length == 0 || args[0].equalsIgnoreCase("true")) && !currentSetting) 
+		if((args.size() == 0 || args.get(0).equalsIgnoreCase("true")) && !currentSetting) 
 		{
 			YamlWrapper.setExpert(true);
      		sender.sendMessage(Messaging.chatFormatter("&#84FF00Expert Mode &#00FF00Enabled&#84FF00!"));
 			Main_Expert.Start_Expert();
 			return true;
 		}
-		else if((args.length == 0 || args[0].equalsIgnoreCase("false")) && currentSetting) 
+		else if((args.size() == 0 || args.get(0).equalsIgnoreCase("false")) && currentSetting) 
 		{
 			YamlWrapper.setExpert(false);
      		sender.sendMessage(Messaging.chatFormatter("&#84FF00Expert Mode &#C8C8C8Disabled&#84FF00!"));
 			return true;
 		}
-		else if(args[0].equalsIgnoreCase("false") || args[0].equalsIgnoreCase("true")) 
+		else if(args.get(0).equalsIgnoreCase("false") || args.get(0).equalsIgnoreCase("true")) 
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#FFb900Expert is already " + (currentSetting ? "on" : "off") + "."));
 			return true;

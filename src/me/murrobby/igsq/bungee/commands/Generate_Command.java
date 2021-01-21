@@ -34,7 +34,7 @@ public class Generate_Command  extends Command implements TabExecutor
 			ProxiedPlayer player = (ProxiedPlayer) sender;
 			if(player.hasPermission("igsq.generate")) 
 			{
-				String[] modList = Common_Security.getPlayerModList(player);
+				ArrayList<String> modList = Common_Security.getPlayerModList(player);
 				boolean isMod = true;
 				String message = "";
 				int modCount = 0;

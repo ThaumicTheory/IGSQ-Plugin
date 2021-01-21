@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -19,9 +20,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Test_Command {
 
 	private CommandSender sender;
-	private String[] args = new String[0];
+	private ArrayList<String> args = new ArrayList<>();
 	public Boolean result;
-	public Test_Command(CommandSender sender,String[] args) 
+	public Test_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		
 		this.sender = sender;
@@ -31,10 +32,10 @@ public class Test_Command {
 	private Boolean test() 
 	{
 		int id = 0;
-		if(sender instanceof Player && args.length >= 1) 
+		if(sender instanceof Player && args.size() >= 1) 
 		{
 			Player player = (Player) sender;
-			if(args[0].equalsIgnoreCase("generate")) 
+			if(args.get(0).equalsIgnoreCase("generate")) 
 			{
 				Location location = player.getLocation();
 				location.setY(70);
@@ -83,7 +84,7 @@ public class Test_Command {
 			{
 				try 
 				{
-					id = Integer.parseInt(args[0]);
+					id = Integer.parseInt(args.get(0));
 					player.sendMessage(Messaging.chatFormatter("&#CCCCCCSpawning block with id &#00FF00"+ id + "."));
 				}
 				catch(Exception exception) 

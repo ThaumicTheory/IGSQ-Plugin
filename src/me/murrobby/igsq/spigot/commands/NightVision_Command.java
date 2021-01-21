@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,10 +14,10 @@ public class NightVision_Command {
 	
 	private CommandSender sender;
 	public Boolean result;
-	private String[] args;
+	private ArrayList<String> args = new ArrayList<>();
 	private Player player;
 	
-	public NightVision_Command(CommandSender sender,String[] args) 
+	public NightVision_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;
@@ -25,7 +27,7 @@ public class NightVision_Command {
 	private Boolean NightVision() 
 	{
 	String display;
-	if(args.length == 0) 
+	if(args.size() == 0) 
 	{
 		display = "Yourself";
 		player = (Player)sender;
@@ -34,7 +36,7 @@ public class NightVision_Command {
 	{
 		try
 		{
-			player = Bukkit.getPlayer(args[0]);
+			player = Bukkit.getPlayer(args.get(0));
 			display = player.getName();
 		}
 		catch(Exception exception) 

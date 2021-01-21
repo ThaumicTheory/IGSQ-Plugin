@@ -1,5 +1,8 @@
 package me.murrobby.igsq.spigot;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,7 +23,7 @@ public class Common {
      * illegalChats is a String array of all of the banned words for {@link #filterChat(String, Player) Filter Chat} to compare to.
      * @see #filterChat(String, Player)
      */
-	public static String[] illegalChats = {"NIGGER","NOGGER","COON","NIGGA"};
+	public static  ArrayList<String> illegalChats = new ArrayList<>(Arrays.asList("NIGGER","NOGGER","COON","NIGGA"));
 	
     // TODO commenting
     public static Player[] append(Player[] array, Player value)

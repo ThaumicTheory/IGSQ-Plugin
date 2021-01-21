@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -11,9 +13,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class RealTime_Command {
 
 	private CommandSender sender;
-	private String[] args = new String[0];
+	private ArrayList<String> args = new ArrayList<>();
 	public Boolean result;
-	public RealTime_Command(CommandSender sender,String[] args) 
+	public RealTime_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;
@@ -24,7 +26,7 @@ public class RealTime_Command {
 		World world = ((Player)sender).getWorld();
 		YamlWorldWrapper yaml = new YamlWorldWrapper(world);
 		Boolean currentSetting = yaml.isRealtime();
-		if((args.length == 0 || args[0].equalsIgnoreCase("true")) && !currentSetting) 
+		if((args.size() == 0 || args.get(0).equalsIgnoreCase("true")) && !currentSetting) 
 		{
 			yaml.setRealtime(true);
 			sender.sendMessage(Messaging.chatFormatter("&#00FFFFRealtime mode Turned On!"));
@@ -33,14 +35,14 @@ public class RealTime_Command {
 			Main_Command.Start_Command();
 			return true;
 		}
-		else if((args.length == 0 || args[0].equalsIgnoreCase("false")) && currentSetting) 
+		else if((args.size() == 0 || args.get(0).equalsIgnoreCase("false")) && currentSetting) 
 		{
 			yaml.setRealtime(false);
 			sender.sendMessage(Messaging.chatFormatter("&#0000FFRealtime mode Turned Off!"));
 			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, yaml.getRealtimeStoredCycle());
 			return true;
 		}
-		else if(args[0].equalsIgnoreCase("false") || args[0].equalsIgnoreCase("true")) 
+		else if(args.get(0).equalsIgnoreCase("false") || args.get(0).equalsIgnoreCase("true")) 
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#FFb900Realtime is already " + (currentSetting ? "on" : "off") + "."));
 			return true;

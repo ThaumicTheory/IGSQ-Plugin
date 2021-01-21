@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,12 +16,12 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Block_Command {
 	private CommandSender sender;
 	public Boolean result;
-	private String[] args;
+	private ArrayList<String> args = new ArrayList<>();
 	private Player player;
-	private Player[] players = null;
+	private ArrayList<Player> players = new ArrayList<>();
 	private String display = "Yourself";
 	
-	public Block_Command(CommandSender sender,String[] args) 
+	public Block_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;
@@ -30,44 +32,28 @@ public class Block_Command {
 	private boolean Block() {
 		player = (Player) sender;
 		Location location = player.getLocation();
-		String[] playerArgs = new String[0];
+		ArrayList<String> playerArgs = new ArrayList<>();
 		Material material;
-		players = new Player[1];
-		players[0] = player;
+		players.add(player);
 		try 
 		{
-			material = Material.valueOf(args[0].toUpperCase());
+			material = Material.valueOf(args.get(0).toUpperCase());
 			playerArgs = Common_Shared.getBetween(args, 2, -1);
-			if(args.length >=3) 
+			if(args.size() >=3) 
 			{
-				if(args[2].equalsIgnoreCase("@all")) 
+				if(args.get(2).equalsIgnoreCase("@all")) 
 				{
 					display = "Everyone";
-					for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) 
-					{
-						players = Common.append(players,selectedPlayer);
-					}
+					for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) players.add(selectedPlayer);
 				}
-//				depracated code
-//				else if(args[2].equalsIgnoreCase("@others")) 
-//				{
-//					display = "Everyone Else";
-//					for(Player selectedPlayer : plugin.getServer().getOnlinePlayers()) 
-//					{
-//						if(!(selectedPlayer.equals(player))) 
-//						{
-//							players = Common_Spigot.Append(players,selectedPlayer);
-//						}
-//					}
-//				}
 				else 
 				{
-					players = new Player[0];
+					players.clear();
 					display = "";
 					for (String selectedPlayer : playerArgs) 
 					{ 
-						players = Common.append(players,Bukkit.getPlayer(selectedPlayer));
-						display += players[players.length-1].getName() + " ";
+						players.add(Bukkit.getPlayer(selectedPlayer));
+						display += players.get(players.size()-1).getName() + " ";
 					}
 				}
 			}
@@ -78,22 +64,22 @@ public class Block_Command {
 			return false;
 		}
 		Block block = location.getBlock();
-		if(args.length == 1 || args[1].equalsIgnoreCase("fake")) 
+		if(args.size() == 1 || args.get(1).equalsIgnoreCase("fake")) 
 		{
 			for (Player selectedPlayer : players) 
 			{ 
 				selectedPlayer.sendBlockChange(location, material.createBlockData());
 			}
-			sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#C8C8C8FAKE &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+			sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#C8C8C8FAKE &#00FFC7"+ args.get(0).toLowerCase() +" &#58FFFFto " + display));
 			return true;
 		}
-		else if(args[1].equalsIgnoreCase("real"))
+		else if(args.get(1).equalsIgnoreCase("real"))
 		{
-			block.setType(Material.valueOf(args[0].toUpperCase()));
-			sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+			block.setType(Material.valueOf(args.get(0).toUpperCase()));
+			sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#00FFC7"+ args.get(0).toLowerCase() +" &#58FFFFto " + display));
 			return true;
 		}
-		else if(args[1].equalsIgnoreCase("trap")) 
+		else if(args.get(1).equalsIgnoreCase("trap")) 
 		{
 			block.setBlockData(Bukkit.createBlockData("minecraft:tnt[unstable=true]"));
 			Bukkit.getScheduler().runTaskLater(Common.spigot, () -> {
@@ -101,7 +87,7 @@ public class Block_Command {
 				{ 
 					selectedPlayer.sendBlockChange(location, material.createBlockData());
 				}
-				sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#FFD700TRAP &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+				sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#FFD700TRAP &#00FFC7"+ args.get(0).toLowerCase() +" &#58FFFFto " + display));
 			}, 2);
 			return true;
 		}

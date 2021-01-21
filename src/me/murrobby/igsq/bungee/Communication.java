@@ -3,6 +3,7 @@ package me.murrobby.igsq.bungee;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.ProxyServer;
@@ -47,7 +48,7 @@ public class Communication
     	}
     public static void sendConfigUpdate(String path,String fileName,String data) 
     {
-    	String[] servers = new String[0];
+    	ArrayList<String> servers = new ArrayList<>();
     	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
     	{
     		Boolean serverChecked = false;
@@ -61,7 +62,7 @@ public class Communication
     		}
     		if((!serverChecked) && player.getServer() != null) 
     		{
-				servers = Common_Shared.append(servers, player.getServer().getInfo().getName());
+    			servers.add(player.getServer().getInfo().getName());
     			ByteArrayOutputStream stream = new ByteArrayOutputStream();
         		DataOutputStream out = new DataOutputStream(stream);
         		try
@@ -82,7 +83,7 @@ public class Communication
     }
     public static void sendConfigUpdate(String path,String fileName,int data) 
     {
-    	String[] servers = new String[0];
+    	ArrayList<String> servers = new ArrayList<>();
     	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
     	{
     		Boolean serverChecked = false;
@@ -96,7 +97,7 @@ public class Communication
     		}
     		if((!serverChecked) && player.getServer() != null) 
     		{
-				servers = Common_Shared.append(servers, player.getServer().getInfo().getName());
+				servers.add(player.getServer().getInfo().getName());
     			ByteArrayOutputStream stream = new ByteArrayOutputStream();
         		DataOutputStream out = new DataOutputStream(stream);
         		try
@@ -117,7 +118,7 @@ public class Communication
     }
     public static void sendConfigUpdate(String path,String fileName,boolean data) 
     {
-    	String[] servers = new String[0];
+    	ArrayList<String> servers = new ArrayList<>();
     	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
     	{
     		Boolean serverChecked = false;
@@ -131,7 +132,7 @@ public class Communication
     		}
     		if((!serverChecked) && player.getServer() != null) 
     		{
-				servers = Common_Shared.append(servers, player.getServer().getInfo().getName());
+    			servers.add(player.getServer().getInfo().getName());
     			ByteArrayOutputStream stream = new ByteArrayOutputStream();
         		DataOutputStream out = new DataOutputStream(stream);
         		try

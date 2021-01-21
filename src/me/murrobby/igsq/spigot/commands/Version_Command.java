@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
 
 import me.murrobby.igsq.spigot.Common;
@@ -8,9 +10,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Version_Command {
 
 	private CommandSender sender;
-	private String[] args = new String[0];
+	private ArrayList<String> args = new ArrayList<>();
 	public Boolean result;
-	public Version_Command(CommandSender sender,String[] args) 
+	public Version_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;
@@ -21,22 +23,22 @@ public class Version_Command {
 		String version = Common.spigot.getDescription().getVersion();
 		String forBuild = Common.spigot.getDescription().getAPIVersion();
 		String description = Common.spigot.getDescription().getDescription();
-		if(args.length == 0) 
+		if(args.size() == 0) 
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#00FFFFIGSQ Version " + version + " for " + forBuild + "!"));
 			return true;
 		}
-		else if(args[0].equalsIgnoreCase("version")) 
+		else if(args.get(0).equalsIgnoreCase("version")) 
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#00FFFFIGSQ Version " + version + "!"));
 			return true;
 		}
-		else if(args[0].equalsIgnoreCase("build"))
+		else if(args.get(0).equalsIgnoreCase("build"))
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#00FFFFIGSQ for " + forBuild + "!"));
 			return true;
 		}
-		else if(args[0].equalsIgnoreCase("description"))
+		else if(args.get(0).equalsIgnoreCase("description"))
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#00FFFF" + description + "!"));
 			return true;

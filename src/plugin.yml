@@ -10,5 +10,8 @@ api-version: 1.16
 commands:
   igsq:
    aliases: [sq]
-   description: Holds Every igsq command.
+   description: Holds Almost Every igsq command.
+  team:
+   aliases: [faction,power,allegiance,group]
+   description: Igsq Expert Team Commands
    

@@ -1,6 +1,8 @@
 package me.murrobby.igsq.spigot.commands;
 
 
+import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -11,10 +13,10 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Entity_Command {
 	private CommandSender sender;
 	public Boolean result;
-	private String[] args;
+	private ArrayList<String> args = new ArrayList<>();
 	private String display = "Yourself";
 	
-	public Entity_Command(CommandSender sender,String[] args) 
+	public Entity_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;
@@ -26,7 +28,7 @@ public class Entity_Command {
         Player player = (Player) sender;
         try
         {
-            entitytype = EntityType.valueOf(args[0].toUpperCase());
+            entitytype = EntityType.valueOf(args.get(0).toUpperCase());
         }
         catch(Exception exception)
         {
@@ -34,7 +36,7 @@ public class Entity_Command {
             return false;
         }
         Common.spigot.getServer().getPlayer(player.getUniqueId()).getWorld().spawnEntity(player.getLocation(), entitytype);
-        sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#00FFC7"+ args[0].toLowerCase() +" &#58FFFFto " + display));
+        sender.sendMessage(Messaging.chatFormatter("&#58FFFFGave &#00FFC7"+ args.get(0).toLowerCase() +" &#58FFFFto " + display));
         return true;
 
     }

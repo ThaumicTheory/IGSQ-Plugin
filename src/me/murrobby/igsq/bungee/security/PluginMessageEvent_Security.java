@@ -1,9 +1,9 @@
 package me.murrobby.igsq.bungee.security;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import me.murrobby.igsq.bungee.Common;
-import me.murrobby.igsq.shared.Common_Shared;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -42,12 +42,12 @@ public class PluginMessageEvent_Security implements Listener
 	}
 	private void applyModList(byte[] modList,ProxiedPlayer player)
     {
-        String[] modData = new String[0];  
+        ArrayList<String> modData = new ArrayList<>();  
         for (int i=2; i < modList.length;)
         {
             int skipTo =  i+modList[i]+1;
         	String string = new String(Arrays.copyOfRange(modList,i+1,skipTo));
-            modData = Common_Shared.append(modData,string);
+            modData.add(string);
             i = skipTo;
         }
         Common_Security.setPlayerModList(modData, player);

@@ -4,6 +4,7 @@ package me.murrobby.igsq.bungee.commands;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.murrobby.igsq.bungee.Messaging;
@@ -23,14 +24,16 @@ public class Link_Command extends Command implements TabExecutor
 	}
 
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, String[] args) 
+	{
+		ArrayList<String> arguments = new ArrayList<>(Arrays.asList(args));
 		if(sender instanceof ProxiedPlayer) 
 		{
 			ProxiedPlayer player = (ProxiedPlayer) sender;
 			
 			if(args.length >= 1 && args[0].equalsIgnoreCase("add")) 
 			{
-				String input = Common_Shared.convertArgs(Common_Shared.depend(args, 0)," ");
+				String input = Common_Shared.convertArgs(arguments," ");
 				if(Database.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") >= 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Your Account Is Already Linked!"))); //Checks If Mc Account Is Linked First (linked accounts cannot attempt link)
 				else if(input.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FFFF00Use /link add [discord_username]"))); //If input was empty
 				else //Valid input
@@ -42,7 +45,7 @@ public class Link_Command extends Command implements TabExecutor
 			}
 			else if(args.length >= 1 && args[0].equalsIgnoreCase("remove")) 
 			{
-				String input = Common_Shared.convertArgs(Common_Shared.depend(args, 0)," ");
+				String input = Common_Shared.convertArgs(arguments," ");
 				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"'") == 0) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000You Have No Accounts To Remove!")));
 				else if(input.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FFFF00Use /link remove [discord_username]"))); //If input was empty
 				else //Valid input

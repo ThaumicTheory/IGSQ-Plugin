@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -12,14 +13,13 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
 
 public class Main_Command implements CommandExecutor, TabCompleter{
 	private CommandSender sender;
-	private String[] args = new String[0];
+	private ArrayList<String> args = new ArrayList<>();
 	
 	public static int taskID;
 	
@@ -42,15 +42,15 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 	
 	public boolean onCommand(CommandSender sender,Command command,String label,String[] args) 
 	{
+		this.args = (ArrayList<String>) Arrays.asList(args);
 		this.sender = sender;
-		if(args.length == 0) 
+		if(this.args.size() == 0) 
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#CD0000Please Specify a command! Type &#FF0000/igsq Help &#CD0000to see available commands"));
 			return false;
 		}
 		//Detect which arguments are used in the /igsq command
-		this.args = Common_Shared.depend(args, 0);
-    	switch(args[0].toLowerCase()) 
+    	switch(this.args.get(0).toLowerCase()) 
     	{
   	  		case "version":
   	  			return new Version_Command(sender,this.args).result;
@@ -106,7 +106,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		List<String> options = new ArrayList<String>();
 		if(args.length == 1) 
 		{
-			String[] types = {"help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass","test"};
+			ArrayList<String> types = (ArrayList<String>) Arrays.asList("help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass","test");
 			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		else if(args.length == 2) 
@@ -127,12 +127,12 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("version")) 
 			{
-				String[] types = {"build","version","description"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("build","version","description");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("expert")) 
 			{
-				String[] types = {"true","false"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("true","false");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("nightvision") || args[0].equalsIgnoreCase("nv")) 
@@ -141,17 +141,17 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("error")) 
 			{
-				String[] types = {"test","log"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("test","log");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("blockhunt")) 
 			{
-				String[] types = {"start","forceseeker","forcehider","end","joinlobby","testmode","gui"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("start","forceseeker","forcehider","end","joinlobby","testmode","gui");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("realtime")) 
 			{
-				String[] types = {"true","false"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("true","false");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("playercompass")) 
@@ -160,7 +160,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("test")) 
 			{
-				String[] types = {"generate"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("generate");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 		}
@@ -168,26 +168,23 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		{
 			if(args[0].equalsIgnoreCase("block")) 
 			{
-				String[] types = {"trap","fake","real"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("trap","fake","real");
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("error") && args[1].equalsIgnoreCase("log")) 
 			{
-				String[] types = {"basic","disabled","detailed"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("basic","disabled","detailed");
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("playercompass")) 
 			{
-				String[] types = {"0","10","20","30","40","50","60","70","80","90","100","150","200","300","400","500","1000"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("0","10","20","30","40","50","60","70","80","90","100","150","200","300","400","500","1000");
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("blockhunt") && args[1].equalsIgnoreCase("joinlobby")) 
 			{
-				String[] types = {};
-				for(Game_BlockHunt game : Game_BlockHunt.getGameInstances()) 
-				{
-					types = Common_Shared.append(types, game.getName());
-				}
+				ArrayList<String> types = new ArrayList<String>();
+				for(Game_BlockHunt game : Game_BlockHunt.getGameInstances()) types.add(game.getName());
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 		}
@@ -195,7 +192,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		{
 			if(args[0].equalsIgnoreCase("block")) 
 			{
-				String[] types = {"@all"};
+				ArrayList<String> types = (ArrayList<String>) Arrays.asList("@all");
 				for (String commands : types) if(commands.contains(args[3].toLowerCase())) options.add(commands);
 				for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[3])) options.add(selectedPlayer.getName());
 			}
@@ -207,7 +204,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		{
 			for (Player selectedPlayer : Bukkit.getOnlinePlayers()) 
 			{
-				Boolean alreadySelected = false;
+				boolean alreadySelected = false;
 				for(String arg : args) 
 				{
 					if(arg.equals(selectedPlayer.getName())) 

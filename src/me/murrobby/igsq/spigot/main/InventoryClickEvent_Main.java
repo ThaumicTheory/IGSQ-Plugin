@@ -1,12 +1,13 @@
 package me.murrobby.igsq.spigot.main;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 
-import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 
@@ -16,8 +17,8 @@ public class InventoryClickEvent_Main implements Listener
 	{
 		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
-	String[] illegalNameTagWords = {};
-	String[] illegalWords;
+	ArrayList<String> illegalNameTagWords = new ArrayList<>();
+	ArrayList<String> illegalWords = new ArrayList<>();
 	@EventHandler
 	public void InventoryClick_Main(org.bukkit.event.inventory.InventoryClickEvent event) 
 	{
@@ -29,11 +30,12 @@ public class InventoryClickEvent_Main implements Listener
 				{
 					if(event.getCurrentItem().getType() == Material.NAME_TAG) 
 					{
-						illegalWords = Common_Shared.arrayAppend(illegalNameTagWords, Common.illegalChats);
+						//illegalWords = Common_Shared.arrayAppend(illegalNameTagWords, Common.illegalChats);
+						illegalWords.addAll(illegalNameTagWords);
 					}
 					else 
 					{
-						illegalWords = Common.illegalChats;
+						illegalWords.addAll(Common.illegalChats);
 					}
 					for(String illegalWord : illegalWords)
 					{

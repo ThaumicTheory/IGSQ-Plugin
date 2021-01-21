@@ -4,6 +4,7 @@ package me.murrobby.igsq.bungee.security;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 public class Common_Security 
 {
 	public static String[] illegalCommands = {};
-	private static Map<ProxiedPlayer,String[]> modList = new HashMap<>();
+	private static Map<ProxiedPlayer,ArrayList<String>> modList = new HashMap<>();
 	private static String[] whitelistedCommands2FA = {"2FA"};
 	public static String[] protectedChannels = {"igsq:yml","igsq:sound"};
 	private static String[] modWhitelist = {};
@@ -66,11 +67,11 @@ public class Common_Security
     	else if(player2FA.equalsIgnoreCase("accepted")) return false;
     	else return true;
     }
-	public static String[] getPlayerModList(ProxiedPlayer player)
+	public static ArrayList<String> getPlayerModList(ProxiedPlayer player)
 	{
 		return modList.get(player);
 	}
-	public static void setPlayerModList(String[] modData,ProxiedPlayer player)
+	public static void setPlayerModList(ArrayList<String> modData,ProxiedPlayer player)
 	{
 		modList.put(player, modData);
 		checkPlayerModList(player); //ModList Denied
@@ -78,27 +79,27 @@ public class Common_Security
 	public static void checkPlayerModList(ProxiedPlayer player)
 	{
 		modWhitelist = YamlWrapper.getModList().split(" ");
-		String[] modData = getPlayerModList(player);
+		ArrayList<String> modData = getPlayerModList(player);
 		String disconnectMessage = "&cYour Client is running the following unsuported modifications:\n&4";
 		Boolean denied = false;
-		for(int i = 0;i < modData.length;i+=2) //Client mod crosscheck
+		for(int i = 0;i < modData.size();i+=2) //Client mod crosscheck
 		{
-			if(!isModAllowed(player,modData[i])) 
+			if(!isModAllowed(player,modData.get(i))) 
 			{
 				denied = true;
-				disconnectMessage += modData[i]+ " ";
+				disconnectMessage += modData.get(i)+ " ";
 				
 			}
 		}
 		disconnectMessage += "\n&4";
 		int j = 0;
-		for(int i = 0;i < modData.length;i+=2) //version crosscheck
+		for(int i = 0;i < modData.size();i+=2) //version crosscheck
 		{
-			if(isModAllowed(player,modData[i]) && !isVersionMatched(player, modData[i])) 
+			if(isModAllowed(player,modData.get(i)) && !isVersionMatched(player, modData.get(i))) 
 			{
 				denied = true;
 				
-				disconnectMessage += "&e"+ modData[i]+ " &4"+ getClientModVersion(player, modData[i]) + "&6 -->&a " + getServerModVersion(modData[i]) +" ";
+				disconnectMessage += "&e"+ modData.get(i)+ " &4"+ getClientModVersion(player, modData.get(i)) + "&6 -->&a " + getServerModVersion(modData.get(i)) +" ";
 				if(++j % 3 == 0) disconnectMessage += "\n";
 			}
 		}
@@ -106,12 +107,12 @@ public class Common_Security
 	}
 	public static String getClientModVersion(ProxiedPlayer player,String modName) 
 	{
-		String[] modData = getPlayerModList(player);
-		for(int i = 0;i < modData.length;i+=2) 
+		ArrayList<String> modData = getPlayerModList(player);
+		for(int i = 0;i < modData.size();i+=2) 
 		{
-			if(modData[i].equals(modName)) 
+			if(modData.get(i).equals(modName)) 
 			{
-				return modData[i+1];
+				return modData.get(i+1);
 			}
 		}
 		return "";

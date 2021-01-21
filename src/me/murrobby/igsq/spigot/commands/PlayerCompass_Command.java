@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,9 +11,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class PlayerCompass_Command {
 
 	private CommandSender sender;
-	private String[] args = new String[0];
+	private ArrayList<String> args = new ArrayList<>();
 	public Boolean result;
-	public PlayerCompass_Command(CommandSender sender,String[] args) 
+	public PlayerCompass_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;
@@ -21,7 +23,7 @@ public class PlayerCompass_Command {
 	{
 		Player player = (Player) sender;
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
-		if((args.length == 0)) 
+		if((args.size() == 0)) 
 		{
 			yaml.setPlayerCompassAccuracy(0);
 			yaml.setPlayerCompassTarget("");
@@ -29,18 +31,18 @@ public class PlayerCompass_Command {
 		}
 		else 
 		{
-			Player targetPlayer = Bukkit.getPlayer(args[0]);
+			Player targetPlayer = Bukkit.getPlayer(args.get(0));
 			if(targetPlayer == null) 
 			{
 				player.sendMessage(Messaging.chatFormatter("&#FF0000Player could not be found!"));
 				return false;
 			}
 			int randomInt = 0;
-			if(args.length == 2) 
+			if(args.size() == 2) 
 			{
 				try 
 				{
-					randomInt = Integer.parseInt(args[1]);
+					randomInt = Integer.parseInt(args.get(1));
 				}
 				catch(Exception exception) 
 				{

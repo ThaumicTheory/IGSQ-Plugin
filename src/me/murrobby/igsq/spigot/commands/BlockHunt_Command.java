@@ -1,5 +1,6 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.command.CommandSender;
@@ -14,10 +15,10 @@ import me.murrobby.igsq.spigot.blockhunt.Stage;
 public class BlockHunt_Command {
 
 	private CommandSender sender;
-	private String[] args;
+	private ArrayList<String> args = new ArrayList<>();
 	public Boolean result;
 	private static Random random = new Random();
-	public BlockHunt_Command(CommandSender sender,String[] args) 
+	public BlockHunt_Command(CommandSender sender,ArrayList<String> args) 
 	{
 		this.args = args;
 		
@@ -26,10 +27,10 @@ public class BlockHunt_Command {
 	}
 	private Boolean BlockHunt() 
 	{
-		if(args.length <= 2 && args.length >= 1 && sender instanceof Player) 
+		if(args.size() <= 2 && args.size() >= 1 && sender instanceof Player) 
 		{
 			Player player = (Player) sender;
-			if(args[0].equalsIgnoreCase("start")) 
+			if(args.get(0).equalsIgnoreCase("start")) 
 			{
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
 				if(gameInstance != null) 
@@ -39,7 +40,7 @@ public class BlockHunt_Command {
 				}
 				return false;
 			}
-			else if(args[0].equalsIgnoreCase("forceseeker")) 
+			else if(args.get(0).equalsIgnoreCase("forceseeker")) 
 			{
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
 				if(gameInstance != null && (gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER))) 
@@ -49,7 +50,7 @@ public class BlockHunt_Command {
 				}
 				return false;
 			}
-			else if(args[0].equalsIgnoreCase("forcehider")) 
+			else if(args.get(0).equalsIgnoreCase("forcehider")) 
 			{
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
 				if(gameInstance != null && (gameInstance.isStage(Stage.IN_GAME) || gameInstance.isStage(Stage.PRE_SEEKER))) 
@@ -59,7 +60,7 @@ public class BlockHunt_Command {
 				}
 				return false;
 			}
-			else if(args[0].equalsIgnoreCase("end")) 
+			else if(args.get(0).equalsIgnoreCase("end")) 
 			{
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
 				if(gameInstance != null) 
@@ -69,10 +70,10 @@ public class BlockHunt_Command {
 				}
 				return false;
 			}
-			else if(args[0].equalsIgnoreCase("joinlobby")) 
+			else if(args.get(0).equalsIgnoreCase("joinlobby")) 
 			{
 				Game_BlockHunt.removePlayerFromGames(player);
-				if(args.length == 1) 
+				if(args.size() == 1) 
 				{
 					if(Game_BlockHunt.getGameInstances().length >= 1) 
 					{
@@ -86,16 +87,16 @@ public class BlockHunt_Command {
 				}
 				else 
 				{
-					Game_BlockHunt gameInstance = Game_BlockHunt.getInstanceByName(args[1]);
+					Game_BlockHunt gameInstance = Game_BlockHunt.getInstanceByName(args.get(1));
 					if(gameInstance == null) 
 					{
-						gameInstance = new Game_BlockHunt(args[1]);
+						gameInstance = new Game_BlockHunt(args.get(1));
 					}
 					gameInstance.joinLobby(player);
 					return true;
 				}
 			}
-			else if(args[0].equalsIgnoreCase("testmode")) 
+			else if(args.get(0).equalsIgnoreCase("testmode")) 
 			{
 				Game_BlockHunt gameInstance = Game_BlockHunt.getPlayersGame(player);
 				if(gameInstance != null) 
@@ -106,7 +107,7 @@ public class BlockHunt_Command {
 				}
 				return false;
 			}
-			else if(args[0].equalsIgnoreCase("gui")) 
+			else if(args.get(0).equalsIgnoreCase("gui")) 
 			{
 				Common_BlockHunt.updateGui(player);
 				return true;

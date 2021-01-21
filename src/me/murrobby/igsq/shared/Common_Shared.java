@@ -1,27 +1,15 @@
 package me.murrobby.igsq.shared;
 
+import java.util.ArrayList;
+
 public class Common_Shared 
 {
-	 //Appends a value to the end of array
-	public static String[] getBetween(String[] array, int leftSide,int rightSide)
+	public static <T> ArrayList<T> getBetween(ArrayList<T> args, int leftSide,int rightSide)
     {
-        String[] arrayBetween = new String[0];
-        if(rightSide == -1) 
-        {
-        	rightSide = array.length;
-        }
-        for (int i = 0;i < array.length;i++)
-        {
-            if(i >= leftSide && i <= rightSide){
-            	arrayBetween = append(arrayBetween, array[i]);
-            }
-            else if(i > rightSide)
-            {
-            	break;
-            }
-        }
-        return arrayBetween;
+        return (ArrayList<T>) args.subList(leftSide, rightSide);
     }
+	
+	 //Appends a value to the end of array
 	@Deprecated
     public static String[] append(String[] array, String value)
     {
@@ -91,18 +79,9 @@ public class Common_Shared
     	else return string;
     }
     
-	public static String convertArgs(String[] args,String seperator) 
+	public static String convertArgs(ArrayList<String> args,String seperator) 
 	{
-		String input = "";
-		for (int i = 0;args.length > i;i++) 
-		{
-			input += args[i];
-			if(args.length > i+1) 
-			{
-				input +=seperator;
-			}
-		}
-		return input;
+		return String.join(" ", args);
 	}
 	
 }
