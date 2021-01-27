@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -13,9 +14,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class RealTime_Command {
 
 	private CommandSender sender;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	public Boolean result;
-	public RealTime_Command(CommandSender sender,ArrayList<String> args) 
+	public RealTime_Command(CommandSender sender,List<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;

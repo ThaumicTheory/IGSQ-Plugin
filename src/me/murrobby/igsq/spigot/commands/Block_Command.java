@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,12 +17,12 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Block_Command {
 	private CommandSender sender;
 	public Boolean result;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	private Player player;
-	private ArrayList<Player> players = new ArrayList<>();
+	private List<Player> players = new ArrayList<>();
 	private String display = "Yourself";
 	
-	public Block_Command(CommandSender sender,ArrayList<String> args) 
+	public Block_Command(CommandSender sender,List<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;
@@ -32,13 +33,13 @@ public class Block_Command {
 	private boolean Block() {
 		player = (Player) sender;
 		Location location = player.getLocation();
-		ArrayList<String> playerArgs = new ArrayList<>();
+		List<String> playerArgs = new ArrayList<>();
 		Material material;
 		players.add(player);
 		try 
 		{
 			material = Material.valueOf(args.get(0).toUpperCase());
-			playerArgs = Common_Shared.getBetween(args, 2, -1);
+			playerArgs = Common_Shared.getBetween(args, 2, args.size());
 			if(args.size() >=3) 
 			{
 				if(args.get(2).equalsIgnoreCase("@all")) 
@@ -61,6 +62,7 @@ public class Block_Command {
 		catch(Exception exception) 
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#CD0000This Block, or a Player cound not be found!"));
+			exception.printStackTrace();
 			return false;
 		}
 		Block block = location.getBlock();

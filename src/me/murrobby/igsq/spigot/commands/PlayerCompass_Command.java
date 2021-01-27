@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -11,9 +12,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class PlayerCompass_Command {
 
 	private CommandSender sender;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	public Boolean result;
-	public PlayerCompass_Command(CommandSender sender,ArrayList<String> args) 
+	public PlayerCompass_Command(CommandSender sender,List<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;

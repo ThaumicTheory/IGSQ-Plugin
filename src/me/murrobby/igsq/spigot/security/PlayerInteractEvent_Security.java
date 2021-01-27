@@ -16,7 +16,7 @@ public class PlayerInteractEvent_Security implements Listener
 	@EventHandler
 	public void PlayerInteract_Security(org.bukkit.event.player.PlayerInteractEvent event) 
 	{
-		if (Common_Security.SecurityProtectionQuery(event.getPlayer())) event.setCancelled(true);
+		if (Common_Security.isLocked(event.getPlayer())) event.setCancelled(true);
 	}
 	
 }

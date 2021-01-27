@@ -22,7 +22,7 @@ public class EntityAirChangeEvent_Security implements Listener
 			if(event.getEntity() instanceof Player) 
 			{
 				Player player = (Player) event.getEntity();
-				if (Common_Security.SecurityProtectionQuery(player)) event.setAmount(300);
+				if (Common_Security.isLocked(player)) event.setAmount(300);
 			}
 		}
 	}

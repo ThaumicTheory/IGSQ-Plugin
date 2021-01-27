@@ -18,7 +18,7 @@ public class PlayerMoveEvent_Security implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if (Common_Security.SecurityProtectionQuery(event.getPlayer())) event.setTo(Common.getHighestBlock(event.getPlayer().getLocation(),(int) event.getPlayer().getLocation().getY()).getLocation().add(.5f, 1, .5f));
+			if (Common_Security.isLocked(event.getPlayer())) event.setTo(Common.getHighestBlock(event.getPlayer().getLocation(),(int) event.getPlayer().getLocation().getY()).getLocation().add(.5f, 1, .5f));
 		}
 	}
 	

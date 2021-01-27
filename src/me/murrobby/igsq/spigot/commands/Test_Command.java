@@ -2,6 +2,7 @@ package me.murrobby.igsq.spigot.commands;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -20,9 +21,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Test_Command {
 
 	private CommandSender sender;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	public Boolean result;
-	public Test_Command(CommandSender sender,ArrayList<String> args) 
+	public Test_Command(CommandSender sender,List<String> args) 
 	{
 		
 		this.sender = sender;

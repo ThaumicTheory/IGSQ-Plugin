@@ -22,7 +22,7 @@ public class EntityTargetEvent_Security implements Listener
 			if(event.getTarget() instanceof Player) 
 			{
 				Player player = (Player) event.getTarget();
-				if(Common_Security.SecurityProtectionQuery(player)) event.setTarget(null);
+				if(Common_Security.isLocked(player)) event.setTarget(null);
 			}
 		}
 	}

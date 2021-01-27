@@ -270,6 +270,7 @@ public class YamlWrapper
         Yaml.addFieldDefault("maps.1.blocks","blockhunt","");
         
         Yaml.addFieldDefault("server","internal","unknown");
+        Yaml.addFieldDefault("console.errorlog", "internal",ErrorLogging.DETAILED.toString());
         for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
     }
 }

@@ -1,5 +1,8 @@
 package me.murrobby.igsq.spigot;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -34,7 +37,9 @@ public class YamlPlayerWrapper
 	}
 	public String getNickname() 
 	{
-		return Yaml.getFieldString(uuid + ".discord.nickname", "player");
+		String discordName = Yaml.getFieldString(uuid + ".discord.nickname", "player");
+		if(discordName != null && !discordName.equals("")) return discordName;
+		else return Bukkit.getPlayer(UUID.fromString(uuid)).getName();
 	}
 	public void setNickname(String data) 
 	{
@@ -186,6 +191,7 @@ public class YamlPlayerWrapper
     	Yaml.addFieldDefault(uuid + ".controller.tag", "internal", YamlWrapper.getDefaultNameController());
     	Yaml.addFieldDefault(uuid + ".playercompass.target","internal","");
     	Yaml.addFieldDefault(uuid + ".playercompass.accuracy", "internal",0);
+    	Yaml.addFieldDefault(uuid + ".errorlog", "internal",ErrorLogging.DISABLED.toString());
 		
 		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
     }

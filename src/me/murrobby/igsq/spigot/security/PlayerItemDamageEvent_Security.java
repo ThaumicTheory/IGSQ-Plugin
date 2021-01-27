@@ -18,7 +18,7 @@ public class PlayerItemDamageEvent_Security implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if (Common_Security.SecurityProtectionQuery(event.getPlayer())) event.setCancelled(true);
+			if (Common_Security.isLocked(event.getPlayer())) event.setCancelled(true);
 		}
 	}
 	

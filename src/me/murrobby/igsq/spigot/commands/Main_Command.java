@@ -3,6 +3,7 @@ package me.murrobby.igsq.spigot.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,7 +20,7 @@ import me.murrobby.igsq.spigot.blockhunt.Game_BlockHunt;
 
 public class Main_Command implements CommandExecutor, TabCompleter{
 	private CommandSender sender;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	
 	public static int taskID;
 	
@@ -42,7 +43,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 	
 	public boolean onCommand(CommandSender sender,Command command,String label,String[] args) 
 	{
-		this.args = (ArrayList<String>) Arrays.asList(args);
+		this.args = Arrays.stream(args).collect(Collectors.toList());
 		this.sender = sender;
 		if(this.args.size() == 0) 
 		{
@@ -50,7 +51,8 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			return false;
 		}
 		//Detect which arguments are used in the /igsq command
-    	switch(this.args.get(0).toLowerCase()) 
+		this.args.remove(0);
+    	switch(args[0].toLowerCase()) 
     	{
   	  		case "version":
   	  			return new Version_Command(sender,this.args).result;
@@ -103,10 +105,10 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		{
 			player = (Player) sender;
 		}
-		List<String> options = new ArrayList<String>();
+		List<String> options = new ArrayList<>();
 		if(args.length == 1) 
 		{
-			ArrayList<String> types = (ArrayList<String>) Arrays.asList("help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass","test");
+			List<String> types =  Arrays.asList("help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass","test");
 			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		else if(args.length == 2) 
@@ -127,12 +129,12 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("version")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("build","version","description");
+				List<String> types = Arrays.asList("build","version","description");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("expert")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("true","false");
+				List<String> types =  Arrays.asList("true","false");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("nightvision") || args[0].equalsIgnoreCase("nv")) 
@@ -141,17 +143,17 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("error")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("test","log");
+				List<String> types =  Arrays.asList("test","log");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("blockhunt")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("start","forceseeker","forcehider","end","joinlobby","testmode","gui");
+				List<String> types =  Arrays.asList("start","forceseeker","forcehider","end","joinlobby","testmode","gui");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("realtime")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("true","false");
+				List<String> types =  Arrays.asList("true","false");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("playercompass")) 
@@ -160,7 +162,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 			}
 			else if(args[0].equalsIgnoreCase("test")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("generate");
+				List<String> types =  Arrays.asList("generate");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
 		}
@@ -168,22 +170,22 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		{
 			if(args[0].equalsIgnoreCase("block")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("trap","fake","real");
+				List<String> types =  Arrays.asList("trap","fake","real");
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("error") && args[1].equalsIgnoreCase("log")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("basic","disabled","detailed");
+				List<String> types =  Arrays.asList("basic","disabled","detailed");
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("playercompass")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("0","10","20","30","40","50","60","70","80","90","100","150","200","300","400","500","1000");
+				List<String> types =  Arrays.asList("0","10","20","30","40","50","60","70","80","90","100","150","200","300","400","500","1000");
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
 			else if(args[0].equalsIgnoreCase("blockhunt") && args[1].equalsIgnoreCase("joinlobby")) 
 			{
-				ArrayList<String> types = new ArrayList<String>();
+				List<String> types = new ArrayList<>();
 				for(Game_BlockHunt game : Game_BlockHunt.getGameInstances()) types.add(game.getName());
 				for (String commands : types) if(commands.contains(args[2].toLowerCase())) options.add(commands);
 			}
@@ -192,7 +194,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		{
 			if(args[0].equalsIgnoreCase("block")) 
 			{
-				ArrayList<String> types = (ArrayList<String>) Arrays.asList("@all");
+				List<String> types =  Arrays.asList("@all");
 				for (String commands : types) if(commands.contains(args[3].toLowerCase())) options.add(commands);
 				for (Player selectedPlayer : Bukkit.getOnlinePlayers()) if(player.canSee(selectedPlayer) && selectedPlayer.getName().contains(args[3])) options.add(selectedPlayer.getName());
 			}

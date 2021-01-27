@@ -22,7 +22,7 @@ public class InventoryClickEvent_Security implements Listener
 			if(event.getWhoClicked() instanceof Player) 
 			{
 				Player player = (Player) event.getWhoClicked();
-				if (Common_Security.SecurityProtectionQuery(player)) event.setCancelled(true);
+				if (Common_Security.isLocked(player)) event.setCancelled(true);
 			}
 		}
 	}

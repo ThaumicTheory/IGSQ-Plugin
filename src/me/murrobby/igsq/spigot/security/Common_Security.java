@@ -28,7 +28,7 @@ public class Common_Security
 		}
     	return true;
     }
-    public static boolean SecurityProtectionQuery(Player player) //returning true means that 2fa protection should be enabled false otherwise
+    public static boolean isLocked(Player player) //returning true means that 2fa protection should be enabled false otherwise
     {
     	YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 		String player2FA = yaml.getStatus();

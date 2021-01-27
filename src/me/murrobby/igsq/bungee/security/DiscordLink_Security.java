@@ -30,7 +30,7 @@ public class DiscordLink_Security
 			@Override
 			public void run() 
 			{
-				DiscordLink();
+				discordLink();
 				if(Main_Security.taskID != taskID) 
 				{
 					discordLinkTask.cancel();
@@ -39,7 +39,7 @@ public class DiscordLink_Security
 			} 		
     	}, 5, 1, TimeUnit.SECONDS);
 	}
-	private void DiscordLink() 
+	private void discordLink() 
 	{
 		for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers())
 		{

@@ -1,12 +1,12 @@
 package me.murrobby.igsq.shared;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Common_Shared 
 {
-	public static <T> ArrayList<T> getBetween(ArrayList<T> args, int leftSide,int rightSide)
+	public static <T> List<T> getBetween(List<T> args, int leftSide,int rightSide)
     {
-        return (ArrayList<T>) args.subList(leftSide, rightSide);
+        return args.subList(leftSide, rightSide);
     }
 	
 	 //Appends a value to the end of array
@@ -79,7 +79,7 @@ public class Common_Shared
     	else return string;
     }
     
-	public static String convertArgs(ArrayList<String> args,String seperator) 
+	public static String convertArgs(List<String> args,String seperator) 
 	{
 		return String.join(" ", args);
 	}

@@ -2,6 +2,7 @@ package me.murrobby.igsq.spigot.commands;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -13,10 +14,10 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Entity_Command {
 	private CommandSender sender;
 	public Boolean result;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	private String display = "Yourself";
 	
-	public Entity_Command(CommandSender sender,ArrayList<String> args) 
+	public Entity_Command(CommandSender sender,List<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;

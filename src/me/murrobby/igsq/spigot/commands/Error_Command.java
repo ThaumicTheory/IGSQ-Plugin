@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,9 +14,9 @@ import me.murrobby.igsq.spigot.Messaging;
 public class Error_Command {
 
 	private CommandSender sender;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	public Boolean result;
-	public Error_Command(CommandSender sender,ArrayList<String> args) 
+	public Error_Command(CommandSender sender,List<String> args) 
 	{
 		
 		this.sender = sender;
@@ -28,15 +29,8 @@ public class Error_Command {
 		{
 			if(args.get(0).equalsIgnoreCase("test")) 
 			{
-		    	try 
-		    	{
-		    		throw null;
-		    	}
-		    	catch(Exception e) 
-		    	{
-		    		Messaging.sendException(e,"Manually initiated error","DIRT",sender);
-		    		return true;
-		    	}
+	    		Messaging.sendException(new NullPointerException(),"Manually initiated error","DIRT",sender);
+		    	return true;
 			}
 		}
 		else if (args.size() == 2) 

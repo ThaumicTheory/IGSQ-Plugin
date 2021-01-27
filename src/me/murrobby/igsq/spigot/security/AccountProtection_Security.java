@@ -43,7 +43,7 @@ public class AccountProtection_Security
 	{
 		for (Player player : Bukkit.getOnlinePlayers())
 		{
-			if(Common_Security.SecurityProtectionQuery(player)) 
+			if(Common_Security.isLocked(player)) 
 			{
 				String header = "&#FF00002FA &#CD0000Enabled!";
 				if(player.hasPermission("igsq.require2fa")) header = "&#FFFF00Staff &#FF00002FA!";

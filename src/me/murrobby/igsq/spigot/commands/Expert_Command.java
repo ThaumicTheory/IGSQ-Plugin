@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import me.murrobby.igsq.spigot.YamlWrapper;
@@ -10,9 +11,9 @@ import me.murrobby.igsq.spigot.expert.Main_Expert;
 public class Expert_Command {
 
 	private CommandSender sender;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	public Boolean result;
-	public Expert_Command(CommandSender sender,ArrayList<String> args) 
+	public Expert_Command(CommandSender sender,List<String> args) 
 	{
 		this.sender = sender;
 		this.args = args;

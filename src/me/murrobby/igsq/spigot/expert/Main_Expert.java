@@ -24,6 +24,7 @@ public class Main_Expert
 	{
 		if(YamlWrapper.isExpert())
 		{
+			Team_Expert.longBuild();
 			taskID++;
 			new BloodMoon_Expert(taskID);
 			new EnderDragon_Expert(taskID);

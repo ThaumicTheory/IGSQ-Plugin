@@ -1,6 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.command.CommandSender;
@@ -15,10 +16,10 @@ import me.murrobby.igsq.spigot.blockhunt.Stage;
 public class BlockHunt_Command {
 
 	private CommandSender sender;
-	private ArrayList<String> args = new ArrayList<>();
+	private List<String> args = new ArrayList<>();
 	public Boolean result;
 	private static Random random = new Random();
-	public BlockHunt_Command(CommandSender sender,ArrayList<String> args) 
+	public BlockHunt_Command(CommandSender sender,List<String> args) 
 	{
 		this.args = args;
 		
