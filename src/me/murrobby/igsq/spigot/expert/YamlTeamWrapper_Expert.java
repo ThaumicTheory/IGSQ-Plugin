@@ -35,6 +35,15 @@ public class YamlTeamWrapper_Expert
 	{ 
 		Yaml.updateField(uid + ".members", "teams",name);
 	}
+	
+	public String getRanks() 
+	{ 
+		return Yaml.getFieldString(uid + ".ranks", "teams");
+	}
+	public void setRanks(String ranks)
+	{ 
+		Yaml.updateField(uid + ".ranks", "teams",ranks);
+	}
 	public static String getTeams() 
 	{ 
 		return Yaml.getFieldString("teams", "teams");
@@ -52,5 +61,6 @@ public class YamlTeamWrapper_Expert
 		Yaml.addFieldDefault(uid + ".members", "teams", "");
 		Yaml.addFieldDefault(uid + ".name", "teams", "");
 		Yaml.addFieldDefault(uid + ".owner", "teams", "");
+		Yaml.addFieldDefault(uid + ".ranks", "teams", "");
 	}
 }

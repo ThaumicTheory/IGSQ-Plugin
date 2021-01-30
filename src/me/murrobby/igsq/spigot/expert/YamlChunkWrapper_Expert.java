@@ -57,5 +57,6 @@ public class YamlChunkWrapper_Expert
 		Yaml.addFieldDefault(uid + ".owner", "chunks", "");
 		Yaml.addFieldDefault(uid + ".location", "chunks", "");
 		Yaml.addFieldDefault(uid + ".world", "chunks", "");
+		Yaml.addFieldDefault(uid + ".ranks", "chunks", "");
 	}
 }

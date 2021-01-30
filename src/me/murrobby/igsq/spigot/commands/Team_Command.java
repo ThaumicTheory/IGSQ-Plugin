@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,6 +14,8 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.expert.TeamPermissions_Expert;
+import me.murrobby.igsq.spigot.expert.TeamRank_Expert;
 import me.murrobby.igsq.spigot.expert.Team_Expert;
 
 public class Team_Command implements CommandExecutor, TabCompleter{
@@ -33,15 +36,11 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		Player player = (Player) sender;
 		if(args.get(0).equalsIgnoreCase("found")) //create team
 		{
+			if(!requireNoFaction(player)) return true;
 			if(args.size() == 1) 
 			{
 				sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name your faction!"));
 				return false;
-			}
-			if(Team_Expert.getPlayersTeam(player) != null) 
-			{
-				sender.sendMessage(Messaging.chatFormatter("&#CC0000You are already in a faction!"));
-				return true;
 			}
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
 			System.out.println(name);
@@ -82,33 +81,51 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.get(0).equalsIgnoreCase("disband")) //request team delete
 		{
-			Team_Expert team = Team_Expert.getPlayersTeam(player);
-			if(team == null) player.sendMessage(Messaging.chatFormatter("&#FF0000You are not in a faction!"));
-			else team.deleteTeam(player);
+			if(!requirePermission(player, TeamPermissions_Expert.OWNER)) return true;
+			Team_Expert.getPlayersTeam(player).deleteTeam(player);
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("defect")) //forcefully leave team straight into another
 		{
+			if(!requireFaction(player)) return true;
 			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("transferowner")) //change the owner of the faction
 		{
-			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
+			if(!requirePermission(player, TeamPermissions_Expert.OWNER)) return true;
+			if(args.size() == 1) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name the person you are transfering ownership to!"));
+				return true;
+			}
+			OfflinePlayer target = null;
+			for(OfflinePlayer selectedTarget : Team_Expert.getPlayersTeam(player).getMembers()) 
+			{
+				if(selectedTarget.getName().equals(args.get(1))) 
+				{
+					target = selectedTarget;
+					break;
+				}
+			}
+			if(target == null) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#CC0000That player could not be found in your faction!"));
+				return true;
+			}
+			Team_Expert.getPlayersTeam(player).setOwner(target, player);
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("claim")) //claim a chunk of land
 		{
-			Team_Expert team = Team_Expert.getPlayersTeam(player);
-			if(team == null) player.sendMessage(Messaging.chatFormatter("&#FF0000You are not in a faction!"));
-			else team.addChunk(player);
+			if(!requirePermission(player, TeamPermissions_Expert.CLAIM)) return true;
+			Team_Expert.getPlayersTeam(player).addChunk(player);
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("unclaim")) //unclaim a chunk of land
 		{
-			Team_Expert team = Team_Expert.getPlayersTeam(player);
-			if(team == null) player.sendMessage(Messaging.chatFormatter("&#FF0000You are not in a faction!"));
-			else team.removeChunk(player);
+			if(!requirePermission(player, TeamPermissions_Expert.UNCLAIM)) return true;
+			Team_Expert.getPlayersTeam(player).removeChunk(player);
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("invites")) //look at current invites
@@ -116,7 +133,43 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			Team_Expert team = Team_Expert.getPlayersTeam(player);
 			if(team != null) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! To join another you will have to defect!\nThis may cause backlash from your current faction!"));
 			
+			
+			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
 			return true;
+		}
+		else if(args.get(0).equalsIgnoreCase("rank")) //Rank Settings
+		{
+			if(!requirePermission(player, TeamPermissions_Expert.MODIFY_RANKS)) return true;
+			Team_Expert team = Team_Expert.getPlayersTeam(player);
+			if(args.size() == 1) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#ccccccPlease type a sub command [add/remove/modify/list]"));
+				return true;
+			}
+			if(args.get(1).equalsIgnoreCase("add")) 
+			{
+				if(args.size() == 2) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name your rank!"));
+					return true;
+				}
+				String name =  Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+				if(TeamRank_Expert.getRankFromName(name, team) != null) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000Your faction already has a rank named " + team));
+					return true;
+				}
+				team.addRank(new TeamRank_Expert(team, name));
+				return true;
+			}
+			else if(args.get(1).equalsIgnoreCase("list")) 
+			{
+				if(args.size() == 2) 
+				{
+					for(TeamRank_Expert rank : team.getRanks()) rank.display(player);
+				}
+			}
+			return false;
 		}
 		
 	
@@ -168,7 +221,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		List<String> options = new ArrayList<>();
 		if(args.length == 1) 
 		{
-			List<String> types = Arrays.asList("found","pledge","leave","invite","kick","banish","disband","defect","transferowner","claim","unclaim");
+			List<String> types = Arrays.asList("found","pledge","leave","invite","kick","banish","disband","defect","transferowner","claim","unclaim","rank");
 			for (String commands : types) 
 			{
 				if(commands.contains(args[0].toLowerCase())) 
@@ -177,6 +230,40 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				}
 			}
 		}
+		else if(args.length == 2) 
+		{
+			if(args[1].equalsIgnoreCase("rank")) 
+			{
+				List<String> types = Arrays.asList("add","remove","modify");
+				for (String commands : types) 
+				{
+					if(commands.contains(args[0].toLowerCase())) 
+					{
+						options.add(commands);
+					}
+				}
+			}
+		}
 		return options;
+	}
+	private boolean requireFaction(Player player) 
+	{
+		boolean inTeam = Team_Expert.isInATeam(player);
+		if(!inTeam) player.sendMessage(Messaging.chatFormatter("&#FF0000You are not in a faction! This command is for factions only!"));
+		return inTeam;
+	}
+	private boolean requireNoFaction(Player player) 
+	{
+		boolean inTeam = Team_Expert.isInATeam(player);
+		if(inTeam) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! This command is for the factionless only!"));
+		return !inTeam;
+	}
+	private boolean requirePermission(Player player,TeamPermissions_Expert permission) 
+	{
+		if(!requireFaction(player)) return false;
+		Team_Expert team = Team_Expert.getPlayersTeam(player);
+		boolean hasPermission = team.hasPermission(player, permission);
+		if(!hasPermission) player.sendMessage(Messaging.chatFormatter("&#FF0000You are missing permission &#FFb900" + permission.toString() + " &#FF0000to run this command!"));
+		return hasPermission;
 	}
 }

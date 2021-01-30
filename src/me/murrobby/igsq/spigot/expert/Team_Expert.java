@@ -14,7 +14,7 @@ import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
 public class Team_Expert 
 {
-	private static ArrayList<Team_Expert> teams = new ArrayList<Team_Expert>();
+	private static List<Team_Expert> teams = new ArrayList<>();
 	private final UUID UID;
 	private final YamlTeamWrapper_Expert yaml;
 	
@@ -215,11 +215,56 @@ public class Team_Expert
 		for(UUID offline : getRawMembers()) if(player.getUniqueId().equals(offline)) return true;
 		return false;
 	}
-	public boolean setRank(OfflinePlayer player,R) 
+	public List<UUID> getRawRanks() 
 	{
-		for(UUID offline : getRawMembers()) if(player.getUniqueId().equals(offline)) return true;
-		return false;
+		List<UUID> ranks = new ArrayList<>();
+		for(String rankString : yaml.getRanks().split(" ")) if (!rankString.equals("")) ranks.add(UUID.fromString(rankString));
+		return ranks;
 	}
+	public List<TeamRank_Expert> getRanks() 
+	{
+		List<TeamRank_Expert> ranks = new ArrayList<>();
+		for(UUID rankUID : getRawRanks()) ranks.add(TeamRank_Expert.getRankFromID(rankUID));
+		return ranks;
+	}
+	private void setRanks(List<TeamRank_Expert> ranks) 
+	{
+		if(ranks.size() == 0) 
+		{
+			yaml.setRanks("");
+			return;
+		}
+		String ranksString = ranks.get(0).getUID().toString();
+		for(int i = 1; i < ranks.size();i++) ranksString += " " + ranks.get(i).getUID().toString();
+		yaml.setRanks(ranksString);
+	}
+	public void removeRank(TeamRank_Expert rank) 
+	{
+		List<TeamRank_Expert> ranks = getRanks();
+		ranks.remove(rank);
+		setRanks(ranks);
+	}
+	public void addRank(TeamRank_Expert rank) 
+	{
+		List<TeamRank_Expert> ranks = getRanks();
+		ranks.add(rank);
+		setRanks(ranks);
+	}
+	public TeamRank_Expert getPlayersRank(OfflinePlayer player) 
+	{
+		if(!isInTeam(player)) return null;
+		return TeamRank_Expert.getPlayersRank(player);
+	}
+	public boolean hasPermission(OfflinePlayer player,TeamPermissions_Expert permission) 
+	{
+		if(getOwner().getUniqueId().equals(player.getUniqueId())) return true; //Owners can always do anything
+		return getPlayersRank(player).hasPermission(permission);
+	}
+	
+	
+	
+	
+	
 	public static Team_Expert getPlayersTeam(OfflinePlayer player) 
 	{
 		for(Team_Expert team : teams) if(team.isInTeam(player)) return team;
@@ -253,6 +298,10 @@ public class Team_Expert
 			YamlTeamWrapper_Expert.setTeams("");
 			return;
 		}
-		for(String team : teams.split(" ")) new Team_Expert(UUID.fromString(team));
+		for(String teamString : teams.split(" ")) 
+		{
+			Team_Expert team = new Team_Expert(UUID.fromString(teamString));
+			for(UUID rankUID : team.getRawRanks()) new TeamRank_Expert(rankUID);
+		}
 	}
 }
