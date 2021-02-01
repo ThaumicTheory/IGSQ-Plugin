@@ -18,7 +18,7 @@ public class Team_Expert
 	private final UUID UID;
 	private final YamlTeamWrapper_Expert yaml;
 	
-	public Team_Expert() 
+	public Team_Expert(String name,OfflinePlayer owner) 
 	{
 		UUID uid = null;
 		do 
@@ -30,6 +30,19 @@ public class Team_Expert
 		teams.add(this);
 		this.yaml = new YamlTeamWrapper_Expert(this);
 		yaml.applyDefault();
+		addMember(owner);
+		TeamRank_Expert ownerRank = new TeamRank_Expert(this, "founder");
+		ownerRank.setGivable(false);
+		ownerRank.addPermission(TeamPermissions_Expert.OWNER);
+		ownerRank.addMember(owner);
+		addRank(ownerRank);
+		yaml.setOwner(owner.getUniqueId().toString());
+		TeamRank_Expert defaultRank = new TeamRank_Expert(this, "member");
+		defaultRank.setDefault();
+		defaultRank.addPermission(TeamPermissions_Expert.INVITE);
+		defaultRank.addPermission(TeamPermissions_Expert.READ_PERMISSIONS);
+		addRank(defaultRank);
+		yaml.setName(name);
 		longStore();
 	}
 	public Team_Expert(UUID uid) 
@@ -51,11 +64,13 @@ public class Team_Expert
 	
 	public OfflinePlayer getOwner() 
 	{
+		if(yaml.getOwner() == null || yaml.getOwner().equals("")) return null;
 		return Bukkit.getOfflinePlayer(UUID.fromString(yaml.getOwner()));
 	}
 	
 	public boolean isOwner(OfflinePlayer player) 
 	{
+		if(yaml.getOwner() == null || yaml.getOwner().equals("")) return false;
 		return UUID.fromString(yaml.getOwner()).equals(player.getUniqueId());
 	}
 	
@@ -119,6 +134,8 @@ public class Team_Expert
 		if(getRawMembers().size() == 1 || changer == null) 
 		{
 			if (changer != null) changer.sendMessage(Messaging.chatFormatter("&#00FF00Faction disbanded successfully."));
+			for(TeamRank_Expert rank : getRanks()) rank.delete();
+			Chunk_Expert.deleteChunk(this);
 			yaml.delete(getUID().toString());
 			teams.remove(this);
 			longStore();
@@ -139,9 +156,19 @@ public class Team_Expert
 	
 	public void setOwner(OfflinePlayer player,Player changer) 
 	{
-		if(changer != null && !isOwner(changer)) //Can the changer change the name
+		if(changer != null && !isOwner(changer)) //Can the changer change the leader
 		{
 			changer.sendMessage(Messaging.chatFormatter("&#FF0000You need to be the current leader to transfer leadership!"));
+			return;
+		}
+		if(changer != null && player.getUniqueId().equals(changer.getUniqueId())) 
+		{
+			changer.sendMessage(Messaging.chatFormatter("&#cccccc" + player.getName() + " hurt itself in confusion."));
+			return;
+		}
+		if(isOwner(player)) 
+		{
+			System.out.println("The code hurt itself in confusion.");
 			return;
 		}
 		if(!isInATeam(player)) // is the new owner in the team
@@ -149,7 +176,11 @@ public class Team_Expert
 			if(changer != null) changer.sendMessage(Messaging.chatFormatter("&#FF0000That person needs to be in the faction to transfer leadership!"));
 			return;
 		}
+		TeamRank_Expert ownerRank = getPlayersRank(getOwner());
+		ownerRank.removeMember(getOwner());
+		getDefaultRank().addMember(getOwner());
 		yaml.setOwner(player.getUniqueId().toString());
+		ownerRank.addMember(player);
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId().toString());
 		if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#00cc00" + yaml.getNickname() + " &#00FF00is the captain now!"));
 	}
@@ -199,7 +230,7 @@ public class Team_Expert
 			{
 				if(changer == null || isOwner(changer)) 
 				{
-					chunk.deleteChunk(changer);
+					chunk.deleteChunk();
 					if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#FF0000" + new YamlPlayerWrapper(changer).getNickname() + " has unclaimed a chunk at " + chunk.getLocation().get(0) + ", " + chunk.getLocation().get(1) + " in " + chunk.getWorld().getName() + "."));
 				}
 				else changer.sendMessage(Messaging.chatFormatter("&#FF0000You need to be the current leader to remove a chunk!"));
@@ -259,6 +290,12 @@ public class Team_Expert
 	{
 		if(getOwner().getUniqueId().equals(player.getUniqueId())) return true; //Owners can always do anything
 		return getPlayersRank(player).hasPermission(permission);
+	}
+	
+	public TeamRank_Expert getDefaultRank() 
+	{
+		for(TeamRank_Expert rank : getRanks()) if(rank.isDefault()) return rank;
+		return null;
 	}
 	
 	

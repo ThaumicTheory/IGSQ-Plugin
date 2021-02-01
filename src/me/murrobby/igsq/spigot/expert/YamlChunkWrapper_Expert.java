@@ -2,6 +2,8 @@ package me.murrobby.igsq.spigot.expert;
 
 import java.util.UUID;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import me.murrobby.igsq.spigot.Yaml;
 
 public class YamlChunkWrapper_Expert 
@@ -37,8 +39,6 @@ public class YamlChunkWrapper_Expert
 	{ 
 		Yaml.updateField(uid + ".owner", "chunks",faction.toString());
 	}
-	
-	
 	public static String getChunks() 
 	{ 
 		return Yaml.getFieldString("chunks", "chunks");
@@ -57,6 +57,7 @@ public class YamlChunkWrapper_Expert
 		Yaml.addFieldDefault(uid + ".owner", "chunks", "");
 		Yaml.addFieldDefault(uid + ".location", "chunks", "");
 		Yaml.addFieldDefault(uid + ".world", "chunks", "");
-		Yaml.addFieldDefault(uid + ".ranks", "chunks", "");
+		
+		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
 	}
 }

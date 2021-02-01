@@ -8,9 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
-
-import me.murrobby.igsq.spigot.Messaging;
 
 public class Chunk_Expert 
 {
@@ -81,17 +78,15 @@ public class Chunk_Expert
 	{
 		return team.getUID().equals(getOwner().getUID());
 	}
-	public void deleteChunk(Player changer) 
+	public void deleteChunk() 
 	{
-		if(changer != null && !getOwner().isOwner(changer)) 
-		{
-			changer.sendMessage(Messaging.chatFormatter("&#FF0000Only the owner can remove a chunk"));
-			return;
-		}
-		if (changer != null) changer.sendMessage(Messaging.chatFormatter("&#00FF00Chunk removed successfully."));
-		yaml.delete(getUID().toString());
 		chunks.remove(this);
+		yaml.delete(getUID().toString());
 		longStore();
+	}
+	public static void deleteChunk(Team_Expert team) 
+	{
+		for(Chunk_Expert chunk : chunks) if(chunk.getOwner().equals(team)) chunk.deleteChunk();
 	}
 	
 	

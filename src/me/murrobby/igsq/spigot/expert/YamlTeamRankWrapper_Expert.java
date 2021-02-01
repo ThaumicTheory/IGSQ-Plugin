@@ -2,6 +2,8 @@ package me.murrobby.igsq.spigot.expert;
 
 import java.util.UUID;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import me.murrobby.igsq.spigot.Yaml;
 
 public class YamlTeamRankWrapper_Expert 
@@ -35,6 +37,14 @@ public class YamlTeamRankWrapper_Expert
 	{
 		Yaml.updateField(uid + ".default", "teamranks",def);
 	}
+	public Boolean getGivable() 
+	{ 
+		return Yaml.getFieldBool(uid + ".givable", "teamranks");
+	}
+	public void setGivable(boolean givable)
+	{
+		Yaml.updateField(uid + ".givable", "teamranks",givable);
+	}
 	public String getPermissions() 
 	{ 
 		return Yaml.getFieldString(uid + ".permissions", "teamranks");
@@ -51,7 +61,7 @@ public class YamlTeamRankWrapper_Expert
 	{ 
 		Yaml.updateField(uid + ".members", "teamranks",name);
 	}
-	public void delete(String name) 
+	public void delete() 
 	{ 
 		Yaml.deleteField(uid, "teamranks");
 	}
@@ -63,5 +73,8 @@ public class YamlTeamRankWrapper_Expert
 		Yaml.addFieldDefault(uid + ".name", "teamranks", "");
 		Yaml.addFieldDefault(uid + ".permissions", "teamranks", "");
 		Yaml.addFieldDefault(uid + ".default", "teamranks", false);
+		Yaml.addFieldDefault(uid + ".givable", "teamranks", true);
+		
+		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
 	}
 }

@@ -9,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
 public class TeamRank_Expert 
 {
@@ -25,7 +26,9 @@ public class TeamRank_Expert
 		while(isRank(uid));
 		this.UID = uid;
 		yaml = new YamlTeamRankWrapper_Expert(uid);
-		yaml.setOwner(owner.getUID());
+		yaml.applyDefault();
+		setName(rankName);
+		setOwner(owner);
 		ranks.add(this);
 		
 	}
@@ -65,8 +68,17 @@ public class TeamRank_Expert
 		for(TeamRank_Expert rank : ranks) 
 		{
 			if(rank.equals(this)) yaml.setDefault(true);
-			else yaml.setDefault(false);
+			else rank.yaml.setDefault(false);
 		}
+	}
+	
+	public boolean isGivable() 
+	{
+		return yaml.getGivable();
+	}
+	public void setGivable(boolean givable)
+	{
+		yaml.setGivable(givable);
 	}
 	
 	public List<UUID> getRawMembers() 
@@ -184,6 +196,27 @@ public class TeamRank_Expert
 		for(TeamRank_Expert rank : ranks) for(UUID member : rank.getRawMembers()) if(member.equals(player.getUniqueId())) return rank;
 		return null;
 	}
+	public boolean canModify(OfflinePlayer player) 
+	{
+		TeamRank_Expert modifier = getPlayersRank(player);
+		TeamRank_Expert modified = this;
+		if(modifier.equals(modified)) return false; //you cant change your own role
+		if(modifier.hasPermission(TeamPermissions_Expert.OWNER)) return true;
+		int score = 0;
+		List<TeamPermissions_Expert> modifierPermissions = modifier.getPermissions();
+		List<TeamPermissions_Expert> modifiedPermissions = modified.getPermissions();
+		for(TeamPermissions_Expert perm : modifierPermissions) 
+		{
+			score += (modifiedPermissions.remove(perm) ? 0 : 1);
+		}
+		if(modifiedPermissions.size() == 0 && score > 0) return true;
+		return false;
+	}
+	public boolean canDelete(OfflinePlayer player) 
+	{
+		if(!canModify(player) || isDefault() || !isGivable()) return false;	
+		return true;
+	}
 	public void display(Player player) 
 	{
 		String message = "&l&#00FFFF"+ getName() + "\n&r&#00FF00Permissions\n";
@@ -196,15 +229,19 @@ public class TeamRank_Expert
 			if(++number != getPermissions().size()) message += ", ";
 		}
 		
-		message += "\n&#FFFF00Is " + (isDefault() ? "" : "&#cc0000not ") + "&#FFFF00Default\n&##00FFFF";
+		message += "\n&#FFFF00Is " + (isDefault() ? "" : "&#cc0000not ") + "&#FFFF00Default\n&#a900FFMembers\n";
 		
 		number = 0;
 		for(OfflinePlayer selectedPlayer : getMembers()) 
 		{
 			if(player.getUniqueId().equals(selectedPlayer.getUniqueId())) message += "&l";
-			message += selectedPlayer.getName() +"&r&#00FFFF";
+			message += new YamlPlayerWrapper(selectedPlayer).getNickname() +"&r&#a900FF";
 			if(++number != getPermissions().size()) message += ", ";
 		}
 		player.sendMessage(Messaging.chatFormatter(message));
+	}
+	public void delete() 
+	{
+		yaml.delete();
 	}
 }

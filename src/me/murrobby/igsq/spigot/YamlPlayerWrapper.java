@@ -3,13 +3,14 @@ package me.murrobby.igsq.spigot;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class YamlPlayerWrapper
 {
 	private String uuid;
-	public YamlPlayerWrapper(Player player)
+	public YamlPlayerWrapper(OfflinePlayer player)
 	{
 		uuid = player.getUniqueId().toString();
 	}

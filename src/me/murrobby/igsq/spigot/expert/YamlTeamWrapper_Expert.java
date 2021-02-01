@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.expert;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import me.murrobby.igsq.spigot.Yaml;
 
 public class YamlTeamWrapper_Expert 
@@ -41,7 +43,7 @@ public class YamlTeamWrapper_Expert
 		return Yaml.getFieldString(uid + ".ranks", "teams");
 	}
 	public void setRanks(String ranks)
-	{ 
+	{
 		Yaml.updateField(uid + ".ranks", "teams",ranks);
 	}
 	public static String getTeams() 
@@ -58,9 +60,11 @@ public class YamlTeamWrapper_Expert
 	}
 	public void applyDefault() 
 	{
+		Yaml.addFieldDefault(uid + ".ranks", "teams", "");
 		Yaml.addFieldDefault(uid + ".members", "teams", "");
 		Yaml.addFieldDefault(uid + ".name", "teams", "");
 		Yaml.addFieldDefault(uid + ".owner", "teams", "");
-		Yaml.addFieldDefault(uid + ".ranks", "teams", "");
+		
+		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
 	}
 }

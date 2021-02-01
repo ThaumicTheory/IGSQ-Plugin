@@ -9,7 +9,7 @@ public enum TeamPermissions_Expert
 	UNCLAIM_OTHERS(false,30),
 	KICK(false,40),
 	BAN(false,60),
-	READ_PERMISSIONS_OTHERS(false,10),
+	READ_PERMISSIONS(false,10),
 	ENEMY(false,50),
 	ALLY(false,50),
 	MODIFY_RANKS(false,100),
@@ -36,4 +36,5 @@ public enum TeamPermissions_Expert
 	public int getScore() {
 		return score;
 	}
+	
 }

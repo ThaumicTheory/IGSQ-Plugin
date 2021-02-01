@@ -40,16 +40,13 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			if(args.size() == 1) 
 			{
 				sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name your faction!"));
-				return false;
+				return true;
 			}
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
-			System.out.println(name);
 			if(Team_Expert.getTeamFromName(name) == null) 
 			{
-				Team_Expert newTeam = new Team_Expert();
-				newTeam.setName(name, player);
-				newTeam.addMember(player);
-				newTeam.setOwner(player);
+				new Team_Expert(name,player);
+				sender.sendMessage(Messaging.chatFormatter("&#00FF00Faction " + name + " has been created!"));
 			}
 			else sender.sendMessage(Messaging.chatFormatter("&#FF0000This faction already exists!"));
 			return true;
@@ -139,7 +136,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.get(0).equalsIgnoreCase("rank")) //Rank Settings
 		{
-			if(!requirePermission(player, TeamPermissions_Expert.MODIFY_RANKS)) return true;
+			if(!requireFaction(player)) return true;
 			Team_Expert team = Team_Expert.getPlayersTeam(player);
 			if(args.size() == 1) 
 			{
@@ -148,6 +145,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			if(args.get(1).equalsIgnoreCase("add")) 
 			{
+				if(!requirePermission(player, TeamPermissions_Expert.MODIFY_RANKS)) return true;
 				if(args.size() == 2) 
 				{
 					sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name your rank!"));
@@ -156,18 +154,178 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				String name =  Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
 				if(TeamRank_Expert.getRankFromName(name, team) != null) 
 				{
-					sender.sendMessage(Messaging.chatFormatter("&#CC0000Your faction already has a rank named " + team));
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000Your faction already has a rank named " + name));
 					return true;
 				}
-				team.addRank(new TeamRank_Expert(team, name));
+				TeamRank_Expert teamRank = new TeamRank_Expert(team, name);
+				teamRank.setPermissions(team.getDefaultRank().getPermissions());
+				team.addRank(teamRank);
+				sender.sendMessage(Messaging.chatFormatter("&#00FF00Rank &#00cc00" + name + " &#00FF00was successfully created!"));
+				return true;
+			}
+			else if(args.get(1).equalsIgnoreCase("remove")) 
+			{
+				if(!requirePermission(player, TeamPermissions_Expert.MODIFY_RANKS)) return true;
+				if(args.size() == 2) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name the rank!"));
+					return true;
+				}
+				String name =  Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+				TeamRank_Expert rank = TeamRank_Expert.getRankFromName(name, team);
+				if(rank == null) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000Your faction doesn't have a rank named " + name));
+					return true;
+				}
+				if(!rank.canDelete(player)) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000You cannot delete this rank! Its either a protected rank, the current default rank or has a permission you dont have!"));
+					return true;
+				}
+				team.removeRank(rank);
+				sender.sendMessage(Messaging.chatFormatter("&#00FF00Rank &#00cc00" + rank.getName() + " &#00FF00was successfully removed!"));
 				return true;
 			}
 			else if(args.get(1).equalsIgnoreCase("list")) 
 			{
+				if(!requirePermission(player, TeamPermissions_Expert.READ_PERMISSIONS)) return true;
 				if(args.size() == 2) 
 				{
 					for(TeamRank_Expert rank : team.getRanks()) rank.display(player);
+					return true;
 				}
+				String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+				TeamRank_Expert rank = TeamRank_Expert.getRankFromName(name, team);
+				if(rank == null) sender.sendMessage(Messaging.chatFormatter("&#CC0000Could not find the rank named " + name));
+				else rank.display(player);
+				return true;
+			}
+			else if(args.get(1).equalsIgnoreCase("default")) 
+			{
+				if(args.size() == 2) 
+				{
+					if(!requirePermission(player, TeamPermissions_Expert.READ_PERMISSIONS)) return true;
+					for(TeamRank_Expert rank : team.getRanks()) 
+					{
+						if(rank.isDefault()) 
+						{
+							sender.sendMessage(Messaging.chatFormatter("&#FFFF00The default rank is " + rank.getName() + "!"));
+							break;
+						}
+					}
+					return true;
+				}
+				if(!requirePermission(player, TeamPermissions_Expert.OWNER)) return true;
+				String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+				TeamRank_Expert rank = TeamRank_Expert.getRankFromName(name, team);
+				if(rank == null) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000Could not find the rank named " + name));
+					return true;
+				}
+				else if(rank.isDefault()) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#cccccc" +rank.getName() +" is already the default rank!"));
+					return true;
+				}
+				else if(!rank.isGivable()) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000The rank " + rank.getName() + " is protected!"));
+					return true;
+				}
+				rank.setDefault();
+				return true;
+			}
+			else if(args.get(1).equalsIgnoreCase("addpermission")) 
+			{
+				if(args.size() == 2) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000Please select the permission to add and the rank to add it to!"));
+					return true;
+				}
+				if(args.size() == 3) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000Please select the rank to modify also!"));
+					return true;
+				}
+				String permissionString = args.get(2).toUpperCase();
+				TeamPermissions_Expert permission = TeamPermissions_Expert.valueOf(permissionString);
+				String rankName = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' '),' ');
+				TeamRank_Expert rank = TeamRank_Expert.getRankFromName(rankName, team);
+				if(permission == null)
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000Could not find the permission named " + permissionString));
+					return true;
+				}
+				if(rank == null) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000Could not find the rank named " + rankName));
+					return true;
+				}
+				if(rank.getPermissions().contains(permission))
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#cccccc"+ rank.getName() +" already has " + permissionString));
+					return true;
+				}
+				if(permission.isHidden())
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000" +permissionString+ " is a protected permission!"));
+					return true;
+				}
+				if(!rank.isGivable())
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000" +rank.getName()+ " is a protected rank!"));
+					return true;
+				}
+				rank.addPermission(permission);
+				sender.sendMessage(Messaging.chatFormatter("&#00FF00Permission " + permissionString + " Was added to " + rank.getName()));
+				return true;
+			}
+			else if(args.get(1).equalsIgnoreCase("removepermission")) 
+			{
+				if(args.size() == 2) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000Please select the permission to remove and the rank to remove it from!"));
+					return true;
+				}
+				if(args.size() == 3) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000Please select the rank to modify also!"));
+					return true;
+				}
+				String permissionString = args.get(2).toUpperCase();
+				TeamPermissions_Expert permission = TeamPermissions_Expert.valueOf(permissionString);
+				String rankName = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' '),' ');
+				TeamRank_Expert rank = TeamRank_Expert.getRankFromName(rankName, team);
+				if(permission == null)
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000Could not find the permission named " + permissionString));
+					return true;
+				}
+				if(rank == null) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#CC0000Could not find the rank named " + rankName));
+					return true;
+				}
+				if(!rank.getPermissions().contains(permission))
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#cccccc"+ rank.getName() +" does not have " + permissionString));
+					return true;
+				}
+				if(permission.isHidden())
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000" +permissionString+ " is a protected permission!"));
+					return true;
+				}
+				if(!rank.isGivable())
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000" +rank.getName()+ " is a protected rank!"));
+					return true;
+				}
+				rank.removePermission(permission);
+				sender.sendMessage(Messaging.chatFormatter("&#00FF00Permission " + permissionString + " removed from " + rank.getName()));
+				return true;
 			}
 			return false;
 		}
@@ -211,13 +369,13 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
 	{
-		/*
 		Player player= null;
+		Team_Expert team = null;
 		if(sender instanceof Player) 
 		{
 			player = (Player) sender;
+			team = Team_Expert.getPlayersTeam(player);
 		}
-		*/
 		List<String> options = new ArrayList<>();
 		if(args.length == 1) 
 		{
@@ -232,12 +390,56 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.length == 2) 
 		{
-			if(args[1].equalsIgnoreCase("rank")) 
+			if(args[0].equalsIgnoreCase("rank")) 
 			{
-				List<String> types = Arrays.asList("add","remove","modify");
+				List<String> types = Arrays.asList("add","remove","default","list","addpermission","removepermission");
 				for (String commands : types) 
 				{
-					if(commands.contains(args[0].toLowerCase())) 
+					if(commands.contains(args[1].toLowerCase())) 
+					{
+						options.add(commands);
+					}
+				}
+			}
+		}
+		else if(args.length == 3) 
+		{
+			if(args[0].equalsIgnoreCase("rank") && (args[1].equalsIgnoreCase("list") || args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("default")) && team != null) 
+			{
+				List<TeamRank_Expert> ranks = team.getRanks();
+				List<String> types = new ArrayList<>();
+				for(TeamRank_Expert rank : ranks) types.add(rank.getName());
+				for (String commands : types) 
+				{
+					if(commands.contains(args[2].toLowerCase())) 
+					{
+						options.add(commands);
+					}
+				}
+			}
+			else if(args[0].equalsIgnoreCase("rank") && (args[1].equalsIgnoreCase("addpermission") || args[1].equalsIgnoreCase("removepermission")) && team != null) 
+			{
+				List<String> types = new ArrayList<>();
+				for(TeamPermissions_Expert rank : TeamPermissions_Expert.values()) types.add(rank.toString());
+				for (String commands : types) 
+				{
+					if(commands.contains(args[2].toUpperCase())) 
+					{
+						options.add(commands);
+					}
+				}
+			}
+		}
+		else if(args.length == 4) 
+		{
+			if(args[0].equalsIgnoreCase("rank") && (args[1].equalsIgnoreCase("addpermission") || args[1].equalsIgnoreCase("removepermission")) && team != null) 
+			{
+				List<TeamRank_Expert> ranks = team.getRanks();
+				List<String> types = new ArrayList<>();
+				for(TeamRank_Expert rank : ranks) types.add(rank.getName());
+				for (String commands : types) 
+				{
+					if(commands.contains(args[3].toLowerCase())) 
 					{
 						options.add(commands);
 					}
