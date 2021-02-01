@@ -297,10 +297,114 @@ public class Team_Expert
 		for(TeamRank_Expert rank : getRanks()) if(rank.isDefault()) return rank;
 		return null;
 	}
+
+	public boolean isAlly(Team_Expert team)
+	{
+		for(Team_Expert ally : getAllies()) if(ally.equals(team)) return true;
+		return false;
+	}
+	public boolean isAllyPending(Team_Expert team)
+	{
+		if(isAllyInPending(team) || isAllyOutPending(team)) return true;
+		return false;
+	}
+	public boolean isAllyInPending(Team_Expert team)
+	{
+		for(Team_Expert ally : getAlliesPending()) if(ally.equals(team)) return true;
+		return false;	
+	}
+	public boolean isAllyOutPending(Team_Expert team)
+	{
+		for(Team_Expert ally : team.getAlliesPending()) if(ally.equals(team)) return true;
+		return false;	
+	}
 	
 	
+	public List<UUID> getRawAllies() 
+	{
+		List<UUID> allies = new ArrayList<>();
+		for(String alliesString : yaml.getAlly().split(" ")) if (!alliesString.equals("")) allies.add(UUID.fromString(alliesString));
+		return allies;
+	}
 	
+	public List<Team_Expert> getAllies() 
+	{
+		List<Team_Expert> allies = new ArrayList<>();
+		for(UUID allyUID : getRawAllies()) allies.add(Team_Expert.getTeamFromID(allyUID));
+		return allies;
+	}
+	private void setAlly(List<Team_Expert> allies) 
+	{
+		if(allies.size() == 0) 
+		{
+			yaml.setAlly("");
+			return;
+		}
+		String alliesString = allies.get(0).getUID().toString();
+		for(int i = 1; i < allies.size();i++) alliesString += " " + allies.get(i).getUID().toString();
+		yaml.setAlly(alliesString);
+	}
+	public void removeAlly(Team_Expert ally) 
+	{
+		List<Team_Expert> allies = getAllies();
+		allies.remove(ally);
+		setAlly(allies);
+		
+		List<Team_Expert> alliesAllies = ally.getAllies();
+		alliesAllies.remove(this);
+		ally.setAlly(alliesAllies);
+	}
+	public void addAlly(Team_Expert ally) 
+	{
+		List<Team_Expert> allies = getAllies();
+		allies.add(ally);
+		setAlly(allies);
+		
+		List<Team_Expert> alliesAllies = ally.getAllies();
+		alliesAllies.add(this);
+		ally.setAlly(alliesAllies);
+	}
 	
+	public List<UUID> getRawAlliesPending() 
+	{
+		List<UUID> allies = new ArrayList<>();
+		for(String alliesString : yaml.getAllyPending().split(" ")) if (!alliesString.equals("")) allies.add(UUID.fromString(alliesString));
+		return allies;
+	}
+	
+	public List<Team_Expert> getAlliesPending() 
+	{
+		List<Team_Expert> allies = new ArrayList<>();
+		for(UUID allyUID : getRawAlliesPending()) allies.add(Team_Expert.getTeamFromID(allyUID));
+		return allies;
+	}
+	private void setAllyPending(List<Team_Expert> allies) 
+	{
+		if(allies.size() == 0) 
+		{
+			yaml.setAllyPending("");
+			return;
+		}
+		String alliesString = allies.get(0).getUID().toString();
+		for(int i = 1; i < allies.size();i++) alliesString += " " + allies.get(i).getUID().toString();
+		yaml.setAllyPending(alliesString);
+	}
+	public void removeAllyPending(Team_Expert ally) 
+	{
+		List<Team_Expert> allies = getAlliesPending();
+		allies.remove(ally);
+		setAllyPending(allies);
+		
+		List<Team_Expert> alliesAllies = ally.getAlliesPending();
+		alliesAllies.remove(this);
+		ally.setAllyPending(alliesAllies);
+	}
+	public void addAllyPending(Team_Expert ally) 
+	{
+		List<Team_Expert> allies = getAlliesPending();
+		allies.add(ally);
+		setAllyPending(allies);
+	}
 	
 	public static Team_Expert getPlayersTeam(OfflinePlayer player) 
 	{

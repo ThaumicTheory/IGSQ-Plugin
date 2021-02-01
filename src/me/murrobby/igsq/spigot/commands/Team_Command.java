@@ -66,6 +66,59 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
 			return true;
 		}
+		else if(args.get(0).equalsIgnoreCase("ally")) //ally another faction
+		{	
+			if(!requirePermission(player, TeamPermissions_Expert.ALLY)) return true;
+			Team_Expert team = Team_Expert.getPlayersTeam(player);
+			if(args.size() == 2) {
+				//list of allies
+				return true;
+			}
+			String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+			Team_Expert ally = Team_Expert.getTeamFromName(name);
+			if(ally == null) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000Could not find " + name));
+				return true;
+			}
+			if(ally.equals(team)) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000Are you not friends with yourself? ;( "));
+				return true;
+			}
+			
+
+			//add ally request
+			if(args.get(1).equalsIgnoreCase("add")) {
+				if(team.isAlly(ally)) return true;
+
+				if(!team.isAllyPending(ally)) {
+					team.addAllyPending(ally);
+					sender.sendMessage(Messaging.chatFormatter("&#ff61f4You sent a request for an Alliance with " + name + "!"));
+					return true;
+				}
+				if(team.isAllyPending(ally)) {
+					team.addAlly(ally);
+					sender.sendMessage(Messaging.chatFormatter("&#ff61f4You are now Allied with " + name + "!"));
+					team.removeAllyPending(ally);
+					return true;
+				}
+			}
+			//remove pending ally request
+			if(args.get(1).equalsIgnoreCase("remove")) {
+				if(team.isAlly(ally)) {
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000You can't just do that!"));
+					return true;
+				}
+				if(team.isAllyPending(ally)) {
+					team.removeAllyPending(ally);
+					sender.sendMessage(Messaging.chatFormatter("&#ff61f4You have removed the request for an Alliance with " + name + "."));
+					return true;
+				}
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000You are not allied, or pending allies, with " + ally.getName()));
+			}
+			return true;
+		}
 		else if(args.get(0).equalsIgnoreCase("kick")) //remove someone from the team
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
