@@ -14,4 +14,7 @@ commands:
   team:
    aliases: [faction,power,allegiance,group]
    description: Igsq Expert Team Commands
+  cowabunga:
+   aliases: [julian, aaaaaaaaaaaaaaaaaaa]
+   description: fuck you man
    

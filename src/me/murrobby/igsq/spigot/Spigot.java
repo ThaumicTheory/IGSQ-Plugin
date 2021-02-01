@@ -18,6 +18,7 @@ import me.murrobby.igsq.spigot.main.PlayerQuitEvent_Main;
 import me.murrobby.igsq.spigot.security.Main_Security;
 import me.murrobby.igsq.spigot.blockhunt.Main_BlockHunt;
 import me.murrobby.igsq.spigot.commands.Main_Command;
+import me.murrobby.igsq.spigot.commands.Pro_Command;
 import me.murrobby.igsq.spigot.commands.Team_Command;
 
 public class Spigot extends JavaPlugin implements PluginMessageListener{
@@ -53,6 +54,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		new Main_Security();
 		new Main_Command();
 		new Team_Command();
+		new Pro_Command();
 		/*
 		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Yaml.getFieldBool("SUPPORT.nametagedit", "config")) 
 		{
