@@ -83,7 +83,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			if(ally.equals(team)) 
 			{
-				sender.sendMessage(Messaging.chatFormatter("&#FF0000Are you not friends with yourself? ;( "));
+				sender.sendMessage(Messaging.chatFormatter("&#CCCCCCAre you not friends with yourself? ;( "));
 				return true;
 			}
 			

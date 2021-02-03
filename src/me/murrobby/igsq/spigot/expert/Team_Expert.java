@@ -406,6 +406,56 @@ public class Team_Expert
 		setAllyPending(allies);
 	}
 	
+	public boolean isEnemy(Team_Expert team)
+	{
+		for(Team_Expert enemy : getEnemies()) if(enemy.equals(team)) return true;
+		return false;
+	}
+	public List<UUID> getRawEnemies() 
+	{
+		List<UUID> enemies = new ArrayList<>();
+		for(String enemiesString : yaml.getEnemy().split(" ")) if (!enemiesString.equals("")) enemies.add(UUID.fromString(enemiesString));
+		return enemies;
+	}
+	
+	public List<Team_Expert> getEnemies() 
+	{
+		List<Team_Expert> enemies = new ArrayList<>();
+		for(UUID allyUID : getRawEnemies()) enemies.add(Team_Expert.getTeamFromID(allyUID));
+		return enemies;
+	}
+	private void setEnemy(List<Team_Expert> enemies) 
+	{
+		if(enemies.size() == 0) 
+		{
+			yaml.setEnemy("");
+			return;
+		}
+		String enemiesString = enemies.get(0).getUID().toString();
+		for(int i = 1; i < enemies.size();i++) enemiesString += " " + enemies.get(i).getUID().toString();
+		yaml.setEnemy(enemiesString);
+	}
+	public void removeEnemy(Team_Expert enemy) 
+	{
+		List<Team_Expert> enemies = getEnemies();
+		enemies.remove(enemy);
+		setEnemy(enemies);
+		
+		List<Team_Expert> enemiesEnemies = enemy.getEnemies();
+		enemiesEnemies.remove(this);
+		enemy.setEnemy(enemiesEnemies);
+	}
+	public void addEnemy(Team_Expert enemy) 
+	{
+		List<Team_Expert> enemies = getEnemies();
+		enemies.add(enemy);
+		setEnemy(enemies);
+		
+		List<Team_Expert> enemiesEnemies = enemy.getEnemies();
+		enemiesEnemies.add(this);
+		enemy.setEnemy(enemiesEnemies);
+	}
+	
 	public static Team_Expert getPlayersTeam(OfflinePlayer player) 
 	{
 		for(Team_Expert team : teams) if(team.isInTeam(player)) return team;
