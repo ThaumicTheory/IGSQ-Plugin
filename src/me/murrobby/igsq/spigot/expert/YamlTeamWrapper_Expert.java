@@ -70,6 +70,14 @@ public class YamlTeamWrapper_Expert
 	{ 
 		Yaml.updateField(uid + ".allypending", "teams", ally);
 	}
+	public String getEnemy() 
+	{ 
+		return Yaml.getFieldString(uid + ".enemy", "teams");
+	}
+	public void setEnemy(String ally) 
+	{ 
+		Yaml.updateField(uid + ".enemy", "teams", ally);
+	}
 	public void delete(String name) 
 	{ 
 		Yaml.deleteField(uid, "teams");
@@ -82,6 +90,7 @@ public class YamlTeamWrapper_Expert
 		Yaml.addFieldDefault(uid + ".owner", "teams", "");
 		Yaml.addFieldDefault(uid + ".ally", "teams", "");
 		Yaml.addFieldDefault(uid + ".allypending", "teams", "");
+		Yaml.addFieldDefault(uid + ".enemy", "teams", "");
 		
 		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
 	}

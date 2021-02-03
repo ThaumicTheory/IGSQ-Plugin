@@ -119,6 +119,47 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			return true;
 		}
+		else if(args.get(0).equalsIgnoreCase("enemy")) //enemy another faction
+		{	
+			if(!requirePermission(player, TeamPermissions_Expert.ALLY)) return true;
+			Team_Expert team = Team_Expert.getPlayersTeam(player);
+			if(args.size() == 2) {
+				//list of enemies
+				return true;
+			}
+			String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+			Team_Expert enemy = Team_Expert.getTeamFromName(name);
+			if(enemy == null) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000Could not find " + name));
+				return true;
+			}
+			if(enemy.equals(team)) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#CCCCCCYou dont like yourself? ;( "));
+				return true;
+			}
+			
+
+			//add enemy
+			if(args.get(1).equalsIgnoreCase("add")) {
+				if(team.isEnemy(enemy)) return true;
+				team.addEnemy(enemy);
+				if(!enemy.isEnemy(team)) enemy.addEnemy(team);
+				sender.sendMessage(Messaging.chatFormatter("&#ff61f4You are now Enemies with " + name + "!"));
+				return true;
+
+			}
+			//remove enemy
+			if(args.get(1).equalsIgnoreCase("remove")) {
+				if(team.isEnemy(enemy)) {
+					team.removeEnemy(enemy);
+					return true;
+				}
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000You are not Enemies with " + enemy.getName()));
+			}
+			return true;
+		}
 		else if(args.get(0).equalsIgnoreCase("kick")) //remove someone from the team
 		{
 			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
