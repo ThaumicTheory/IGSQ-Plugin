@@ -173,7 +173,22 @@ public class YamlPlayerWrapper
 	{
 		Yaml.updateField(uuid + ".damage.last", "internal", data);
 	}
-	
+	public String getExpertInvites() 
+	{
+		return Yaml.getFieldString(uuid + ".expert.invites", "player");
+	}
+	public void setExpertInvites(String data) 
+	{
+		Yaml.updateField(uuid + ".expert.invites", "player", data);
+	}
+	public int getExpertCurrency() 
+	{
+		return Yaml.getFieldInt(uuid + ".expert.currency", "player");
+	}
+	public void setExpertCurrency(int data) 
+	{
+		Yaml.updateField(uuid + ".expert.currency", "player", data);
+	}
 	public ErrorLogging getErrorLogSetting() 
 	{
 		return ErrorLogging.valueOf(Yaml.getFieldString(uuid + ".errorlog", "player"));
@@ -193,6 +208,8 @@ public class YamlPlayerWrapper
     	Yaml.addFieldDefault(uuid + ".playercompass.target","internal","");
     	Yaml.addFieldDefault(uuid + ".playercompass.accuracy", "internal",0);
     	Yaml.addFieldDefault(uuid + ".errorlog", "internal",ErrorLogging.DISABLED.toString());
+    	Yaml.addFieldDefault(uuid + ".expert.invites", "player", "");
+    	Yaml.addFieldDefault(uuid + ".expert.currency", "player", 0);
 		
 		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -63,7 +64,23 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.get(0).equalsIgnoreCase("invite")) //invite others to the team
 		{
-			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
+			if(!requirePermission(player, TeamPermissions_Expert.INVITE)) return true;
+			if(args.size() == 2) {
+				return true;
+			}
+			String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+			Player invPlayer = Bukkit.getPlayer(name);
+			if(invPlayer == null) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000Could not find " + name));
+				return true;
+			}
+			if(Team_Expert.getPlayersTeam(invPlayer).equals(Team_Expert.getPlayersTeam(player))){
+				sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThey are already here, didn't you see?"));
+				return true;
+			}
+			if(Team_Expert.isInATeam(player) && !requirePermission(player, TeamPermissions_Expert.INVITE_FACTIONED)) return true;
+			Team_Expert.getPlayersTeam(player).addInvite(invPlayer);
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("ally")) //ally another faction

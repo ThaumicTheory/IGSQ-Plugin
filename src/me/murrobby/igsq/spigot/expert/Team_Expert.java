@@ -455,6 +455,38 @@ public class Team_Expert
 		enemiesEnemies.add(this);
 		enemy.setEnemy(enemiesEnemies);
 	}
+	public List<UUID> getRawInvite(Player player) {
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		List<UUID> rawinvites = new ArrayList<>();
+		for(String invitesString : yaml.getExpertInvites().split(" ")) if (!invitesString.equals("")) rawinvites.add(UUID.fromString(invitesString));
+		return rawinvites;
+	}
+	public List<Team_Expert> getInvites(Player player) {
+		List<Team_Expert> invites = new ArrayList<>();
+		for(UUID allyUID : getRawInvite(player)) invites.add(Team_Expert.getTeamFromID(allyUID));
+		return invites;
+	}
+	public void setInvite(List<Team_Expert> invites, Player player) {
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		if(invites.size() == 0) 
+		{
+			yaml.setExpertInvites("");
+			return;
+		}
+		String invitesString = invites.get(0).getUID().toString();
+		for(int i = 1; i < invites.size();i++) invitesString += " " + invites.get(i).getUID().toString();
+		yaml.setExpertInvites(invitesString);
+	}
+	public void removeInvite(Player player) {
+		List<Team_Expert> invites = getInvites(player);
+		invites.remove(this);
+		setInvite(invites, player);
+	}
+	public void addInvite(Player player) {
+		List<Team_Expert> invites = getInvites(player);
+		invites.add(this);
+		setInvite(invites, player);
+	}
 	
 	public static Team_Expert getPlayersTeam(OfflinePlayer player) 
 	{
