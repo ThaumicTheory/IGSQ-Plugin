@@ -65,7 +65,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		else if(args.get(0).equalsIgnoreCase("invite")) //invite others to the team
 		{
 			if(!requirePermission(player, TeamPermissions_Expert.INVITE)) return true;
-			if(args.size() == 2) {
+			if(args.size() == 1) {
 				return true;
 			}
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
@@ -75,12 +75,18 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				sender.sendMessage(Messaging.chatFormatter("&#FF0000Could not find " + name));
 				return true;
 			}
-			if(Team_Expert.getPlayersTeam(invPlayer).equals(Team_Expert.getPlayersTeam(player))){
+			if(Team_Expert.getPlayersTeam(player).equals(Team_Expert.getPlayersTeam(invPlayer))){
 				sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThey are already here, didn't you see?"));
 				return true;
 			}
-			if(Team_Expert.isInATeam(player) && !requirePermission(player, TeamPermissions_Expert.INVITE_FACTIONED)) return true;
+			for(Team_Expert team : Team_Expert.getInvites(invPlayer)) {
+				if(team.equals(Team_Expert.getPlayersTeam(player))) {
+					sender.sendMessage(Messaging.chatFormatter("&#CCCCCCYou already invited this person!"));
+				}
+			}
+			if(!requirePermission(player, TeamPermissions_Expert.INVITE_FACTIONED)) return true;
 			Team_Expert.getPlayersTeam(player).addInvite(invPlayer);
+			sender.sendMessage(Messaging.chatFormatter("&#00FF00Invited " + invPlayer.getName() + "!"));
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("ally")) //ally another faction
@@ -88,7 +94,16 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			if(!requirePermission(player, TeamPermissions_Expert.ALLY)) return true;
 			Team_Expert team = Team_Expert.getPlayersTeam(player);
 			if(args.size() == 2) {
-				//list of allies
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000----------------Lists of allies----------------" ));
+				if(!(team.getAllies().size() == 0)) {
+					for(Team_Expert ally : team.getAllies()) {
+						sender.sendMessage(Messaging.chatFormatter("&#FF0000" + ally.getName() ));
+					}
+				}
+				else {
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000You dont have Allies... go get some by doing /faction ally add [FactionName]" ));
+				}
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000-----------------------------------------------" ));
 				return true;
 			}
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');

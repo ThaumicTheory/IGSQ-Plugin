@@ -455,13 +455,13 @@ public class Team_Expert
 		enemiesEnemies.add(this);
 		enemy.setEnemy(enemiesEnemies);
 	}
-	public List<UUID> getRawInvite(Player player) {
+	public static List<UUID> getRawInvite(Player player) {
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 		List<UUID> rawinvites = new ArrayList<>();
 		for(String invitesString : yaml.getExpertInvites().split(" ")) if (!invitesString.equals("")) rawinvites.add(UUID.fromString(invitesString));
 		return rawinvites;
 	}
-	public List<Team_Expert> getInvites(Player player) {
+	public static List<Team_Expert> getInvites(Player player) {
 		List<Team_Expert> invites = new ArrayList<>();
 		for(UUID allyUID : getRawInvite(player)) invites.add(Team_Expert.getTeamFromID(allyUID));
 		return invites;
