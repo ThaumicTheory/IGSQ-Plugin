@@ -3,6 +3,7 @@ package me.murrobby.igsq.spigot.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -15,9 +16,15 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
+import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 import me.murrobby.igsq.spigot.expert.TeamPermissions_Expert;
 import me.murrobby.igsq.spigot.expert.TeamRank_Expert;
 import me.murrobby.igsq.spigot.expert.Team_Expert;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 public class Team_Command implements CommandExecutor, TabCompleter{
 
@@ -37,7 +44,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		Player player = (Player) sender;
 		if(args.get(0).equalsIgnoreCase("found")) //create team
 		{
-			if(!requireNoFaction(player)) return true;
+			if(!requireNoTeam(player)) return true;
 			if(args.size() == 1) 
 			{
 				sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name your faction!"));
@@ -53,9 +60,36 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("pledge")) //join team
-		{
-			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
-			return true;
+		{	
+			if(!(args.size() > 1)) {
+				if(!requireNoTeam(player)) return true;
+				Team_Expert team = Team_Expert.getPlayersTeam(player);
+				if(Team_Expert.isInATeam(player)) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! To join another you will have to defect!\nThis may cause backlash from your current faction!"));
+				
+				player.sendMessage(Messaging.chatFormatter("&#00FF00----------------Lists of Invites----------------"));
+					String expertInvites = new YamlPlayerWrapper(player).getExpertInvites();
+					if(expertInvites == null || expertInvites.equals("")) player.sendMessage(Messaging.chatFormatter("&#FF0000You don't have any invites... Create your own by doing /faction found [FactionName] !"));
+					
+					for(String invites : expertInvites.split(" ")){
+						Team_Expert teamInv = Team_Expert.getTeamFromID(UUID.fromString(invites));
+						// player.sendMessage(Messaging.chatFormatter("&#00FF00" + teamInv.getName()));
+						TextComponent message = new TextComponent(teamInv.getName());
+						message.setColor(net.md_5.bungee.api.ChatColor.of("#00FF00"));
+						message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/faction pledge " + teamInv.getName()));
+						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Joint team" + teamInv.getName())));
+						player.spigot().sendMessage(message);
+					}
+				player.sendMessage(Messaging.chatFormatter("&#00FF00------------------------------------------------"));
+				
+				
+				return true;
+			}
+			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
+			Team_Expert team = Team_Expert.getTeamFromName(name);
+			team.addMember(player);
+			team.rank
+			team.getDefaultRank();
+			
 		}
 		else if(args.get(0).equalsIgnoreCase("leave")) //request to leave team peacefully
 		{
@@ -68,7 +102,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			if(args.size() == 1) {
 				return true;
 			}
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
 			Player invPlayer = Bukkit.getPlayer(name);
 			if(invPlayer == null) 
 			{
@@ -82,6 +116,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			for(Team_Expert team : Team_Expert.getInvites(invPlayer)) {
 				if(team.equals(Team_Expert.getPlayersTeam(player))) {
 					sender.sendMessage(Messaging.chatFormatter("&#CCCCCCYou already invited this person!"));
+					return true;
 				}
 			}
 			if(!requirePermission(player, TeamPermissions_Expert.INVITE_FACTIONED)) return true;
@@ -94,7 +129,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			if(!requirePermission(player, TeamPermissions_Expert.ALLY)) return true;
 			Team_Expert team = Team_Expert.getPlayersTeam(player);
 			if(args.size() == 2) {
-				sender.sendMessage(Messaging.chatFormatter("&#FF0000----------------Lists of allies----------------" ));
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000----------------Lists of Allies----------------" ));
 				if(!(team.getAllies().size() == 0)) {
 					for(Team_Expert ally : team.getAllies()) {
 						sender.sendMessage(Messaging.chatFormatter("&#FF0000" + ally.getName() ));
@@ -124,7 +159,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			if(args.get(1).equalsIgnoreCase("add")) {
 				if(team.isAlly(ally)) return true;
 
-				if(!team.isAllyPending(ally)) {
+				if(!team.isAllyPending(ally) ) {
 					team.addAllyPending(ally);
 					sender.sendMessage(Messaging.chatFormatter("&#ff61f4You sent a request for an Alliance with " + name + "!"));
 					return true;
@@ -210,7 +245,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.get(0).equalsIgnoreCase("defect")) //forcefully leave team straight into another
 		{
-			if(!requireFaction(player)) return true;
+			if(!requireTeam(player)) return true;
 			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
 			return true;
 		}
@@ -253,16 +288,28 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.get(0).equalsIgnoreCase("invites")) //look at current invites
 		{
+			if(!requireTeam(player)) return true;
 			Team_Expert team = Team_Expert.getPlayersTeam(player);
-			if(team != null) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! To join another you will have to defect!\nThis may cause backlash from your current faction!"));
+			player.sendMessage(Messaging.chatFormatter("&#00FF00----------------Lists of Invites----------------"));
+			for(OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+				String expertInvites = new YamlPlayerWrapper(offlinePlayer).getExpertInvites();
+				if(expertInvites == null || expertInvites.equals("")) continue;
+				
+				for(String invites : expertInvites.split(" ")){
+					Team_Expert teamInv = Team_Expert.getTeamFromID(UUID.fromString(invites));
+					if(teamInv.equals(team)) {
+						player.sendMessage(Messaging.chatFormatter("&#00FF00" + offlinePlayer.getName()));
+					}
+				}
+			}
+			player.sendMessage(Messaging.chatFormatter("&#00FF00------------------------------------------------"));
 			
-			
-			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
+
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("rank")) //Rank Settings
 		{
-			if(!requireFaction(player)) return true;
+			if(!requireTeam(player)) return true;
 			Team_Expert team = Team_Expert.getPlayersTeam(player);
 			if(args.size() == 1) 
 			{
@@ -574,13 +621,13 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		return options;
 	}
-	private boolean requireFaction(Player player) 
+	private boolean requireTeam(Player player) 
 	{
 		boolean inTeam = Team_Expert.isInATeam(player);
 		if(!inTeam) player.sendMessage(Messaging.chatFormatter("&#FF0000You are not in a faction! This command is for factions only!"));
 		return inTeam;
 	}
-	private boolean requireNoFaction(Player player) 
+	private boolean requireNoTeam(Player player) 
 	{
 		boolean inTeam = Team_Expert.isInATeam(player);
 		if(inTeam) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! This command is for the factionless only!"));
@@ -588,7 +635,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 	}
 	private boolean requirePermission(Player player,TeamPermissions_Expert permission) 
 	{
-		if(!requireFaction(player)) return false;
+		if(!requireTeam(player)) return false;
 		Team_Expert team = Team_Expert.getPlayersTeam(player);
 		boolean hasPermission = team.hasPermission(player, permission);
 		if(!hasPermission) player.sendMessage(Messaging.chatFormatter("&#FF0000You are missing permission &#FFb900" + permission.toString() + " &#FF0000to run this command!"));
