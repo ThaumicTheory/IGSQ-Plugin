@@ -17,11 +17,11 @@ import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
+import me.murrobby.igsq.spigot.expert.Common_Expert;
 import me.murrobby.igsq.spigot.expert.TeamPermissions_Expert;
 import me.murrobby.igsq.spigot.expert.TeamRank_Expert;
 import me.murrobby.igsq.spigot.expert.Team_Expert;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -53,6 +53,11 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
 			if(Team_Expert.getTeamFromName(name) == null) 
 			{
+				if(Common_Expert.isProtectedName(name)) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000This name is not allowed!"));
+					return true;
+				}
 				new Team_Expert(name,player);
 				sender.sendMessage(Messaging.chatFormatter("&#00FF00Faction " + name + " has been created!"));
 			}
@@ -63,7 +68,6 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		{	
 			if(!(args.size() > 1)) {
 				if(!requireNoTeam(player)) return true;
-				Team_Expert team = Team_Expert.getPlayersTeam(player);
 				if(Team_Expert.isInATeam(player)) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! To join another you will have to defect!\nThis may cause backlash from your current faction!"));
 				
 				player.sendMessage(Messaging.chatFormatter("&#00FF00----------------Lists of Invites----------------"));
@@ -72,7 +76,6 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					
 					for(String invites : expertInvites.split(" ")){
 						Team_Expert teamInv = Team_Expert.getTeamFromID(UUID.fromString(invites));
-						// player.sendMessage(Messaging.chatFormatter("&#00FF00" + teamInv.getName()));
 						TextComponent message = new TextComponent(teamInv.getName());
 						message.setColor(net.md_5.bungee.api.ChatColor.of("#00FF00"));
 						message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/faction pledge " + teamInv.getName()));
@@ -87,8 +90,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
 			Team_Expert team = Team_Expert.getTeamFromName(name);
 			team.addMember(player);
-			team.rank
-			team.getDefaultRank();
+			team.getDefaultRank().addMember(player);
 			
 		}
 		else if(args.get(0).equalsIgnoreCase("leave")) //request to leave team peacefully

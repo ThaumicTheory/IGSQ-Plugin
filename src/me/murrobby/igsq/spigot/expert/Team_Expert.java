@@ -230,8 +230,8 @@ public class Team_Expert
 			{
 				if(changer == null || isOwner(changer)) 
 				{
-					chunk.deleteChunk();
 					if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#FF0000" + new YamlPlayerWrapper(changer).getNickname() + " has unclaimed a chunk at " + chunk.getLocation().get(0) + ", " + chunk.getLocation().get(1) + " in " + chunk.getWorld().getName() + "."));
+					chunk.deleteChunk();
 				}
 				else changer.sendMessage(Messaging.chatFormatter("&#FF0000You need to be the current leader to remove a chunk!"));
 			}
