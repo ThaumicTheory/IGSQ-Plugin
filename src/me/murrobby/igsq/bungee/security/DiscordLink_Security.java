@@ -49,16 +49,18 @@ public class DiscordLink_Security
 				ResultSet discord_accounts = Database.QueryCommand("SELECT * FROM discord_accounts WHERE id = (SELECT id FROM linked_accounts WHERE uuid = '" +  player.getUniqueId().toString() +"');");
 				try
 				{
-					discord_accounts.next();
-					yaml.setID(discord_accounts.getString(1));
-					yaml.setUsername(discord_accounts.getString(2));
-					yaml.setNickname(discord_accounts.getString(3));
-					yaml.setRole(discord_accounts.getString(4));
-					yaml.setFounder(discord_accounts.getBoolean(5));
-					yaml.setBirthday(discord_accounts.getBoolean(6));
-					yaml.setBooster(discord_accounts.getBoolean(7));
-					yaml.setSupporter(discord_accounts.getBoolean(8));
-					yaml.setDeveloper(discord_accounts.getBoolean(9));
+					if(discord_accounts.next()) 
+					{
+						yaml.setID(discord_accounts.getString(1));
+						yaml.setUsername(discord_accounts.getString(2));
+						yaml.setNickname(discord_accounts.getString(3));
+						yaml.setRole(discord_accounts.getString(4));
+						yaml.setFounder(discord_accounts.getBoolean(5));
+						yaml.setBirthday(discord_accounts.getBoolean(6));
+						yaml.setBooster(discord_accounts.getBoolean(7));
+						yaml.setSupporter(discord_accounts.getBoolean(8));
+						yaml.setDeveloper(discord_accounts.getBoolean(9));
+					}
 				}
 				catch (SQLException e)
 				{
