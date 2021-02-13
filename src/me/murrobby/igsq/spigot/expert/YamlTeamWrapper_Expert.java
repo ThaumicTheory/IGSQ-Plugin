@@ -78,7 +78,23 @@ public class YamlTeamWrapper_Expert
 	{ 
 		Yaml.updateField(uid + ".enemy", "teams", ally);
 	}
+<<<<<<< Updated upstream
 	public void delete() 
+=======
+<<<<<<< HEAD
+	public String getLeavePending() 
+	{ 
+		return Yaml.getFieldString(uid + ".leavepending", "teams");
+	}
+	public void setLeavePending(String ally) 
+	{ 
+		Yaml.updateField(uid + ".leavepending", "teams", ally);
+	}
+	public void delete(String name) 
+=======
+	public void delete() 
+>>>>>>> 8627d8e21b613f2eb01bfc1bb94df1fb60657470
+>>>>>>> Stashed changes
 	{ 
 		Yaml.deleteField(uid, "teams");
 	}
@@ -91,6 +107,7 @@ public class YamlTeamWrapper_Expert
 		Yaml.addFieldDefault(uid + ".ally", "teams", "");
 		Yaml.addFieldDefault(uid + ".allypending", "teams", "");
 		Yaml.addFieldDefault(uid + ".enemy", "teams", "");
+		Yaml.addFieldDefault(uid + ".leavepending", "teams", "");
 		
 		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
 	}

@@ -96,7 +96,10 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.get(0).equalsIgnoreCase("leave")) //request to leave team peacefully
 		{
-			sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis command is not coded yet!"));
+			if(!requireTeam(player)) return true;
+			for(Team_Expert leavePending : Team_Expert.getPlayersTeam(player).getLeavePending()) {
+				if(leavePending.equals())	return true;//enter player id in bracket, i forgot
+			}
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("invite")) //invite others to the team

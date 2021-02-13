@@ -9,6 +9,7 @@ import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import me.murrobby.igsq.bungee.Yaml;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
@@ -487,6 +488,37 @@ public class Team_Expert
 		List<Team_Expert> invites = getInvites(offlinePlayer);
 		invites.add(this);
 		setInvite(invites, offlinePlayer);
+	}
+	
+	public List<UUID> getRawLeavePending() {
+		List<UUID> rawleavependings = new ArrayList<>();
+		for(String leavependingsString : yaml.getLeavePending().split(" ")) if (!leavependingsString.equals("")) rawleavependings.add(UUID.fromString(leavependingsString));
+		return rawleavependings;
+	}
+	public List<Team_Expert> getLeavePending() {
+		List<Team_Expert> leavependings = new ArrayList<>();
+		for(UUID userUID : getRawLeavePending()) leavependings.add(Team_Expert.getTeamFromID(userUID));
+		return leavependings;
+	}
+	public void setLeavePending(List<Team_Expert> leavePending) {
+		if(leavePending.size() == 0) 
+		{
+			yaml.setLeavePending("");
+			return;
+		}
+		String leavePendingString = leavePending.get(0).getUID().toString();
+		for(int i = 1; i < leavePending.size();i++) leavePendingString += " " + leavePending.get(i).getUID().toString();
+		yaml.setLeavePending(leavePendingString);
+	}
+	public void removeLeavePending() {
+		List<Team_Expert> leavePending = getLeavePending();
+		leavePending.remove(this);
+		setLeavePending(leavePending);
+	}
+	public void addLeavePending() {
+		List<Team_Expert> leavePending = getLeavePending();
+		leavePending.add(this);
+		setLeavePending(leavePending);
 	}
 	
 	public static Team_Expert getPlayersTeam(OfflinePlayer player) 
