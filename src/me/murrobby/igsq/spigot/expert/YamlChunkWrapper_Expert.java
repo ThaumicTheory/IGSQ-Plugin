@@ -47,7 +47,7 @@ public class YamlChunkWrapper_Expert
 	{
 		Yaml.updateField("chunks", "chunks",chunks);
 	}
-	public void delete(String name) 
+	public void delete() 
 	{ 
 		Yaml.deleteField(uid, "chunks");
 	}

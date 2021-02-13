@@ -136,7 +136,7 @@ public class Team_Expert
 			if (changer != null) changer.sendMessage(Messaging.chatFormatter("&#00FF00Faction disbanded successfully."));
 			for(TeamRank_Expert rank : getRanks()) rank.delete();
 			Chunk_Expert.deleteChunk(this);
-			yaml.delete(getUID().toString());
+			yaml.delete();
 			teams.remove(this);
 			longStore();
 		}
@@ -273,6 +273,7 @@ public class Team_Expert
 	{
 		List<TeamRank_Expert> ranks = getRanks();
 		ranks.remove(rank);
+		rank.delete();
 		setRanks(ranks);
 	}
 	public void addRank(TeamRank_Expert rank) 

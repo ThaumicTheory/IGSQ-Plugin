@@ -11,8 +11,8 @@ commands:
   igsq:
    aliases: [sq]
    description: Holds Almost Every igsq command.
-  team:
-   aliases: [faction,power,allegiance,group]
+  faction:
+   aliases: [power,allegiance,group]
    description: Igsq Expert Team Commands
   cowabunga:
    aliases: [julian, aaaaaaaaaaaaaaaaaaa]

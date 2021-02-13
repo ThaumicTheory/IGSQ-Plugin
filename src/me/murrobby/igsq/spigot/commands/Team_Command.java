@@ -34,8 +34,8 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 	private String label;
 	public Team_Command() 
 	{
-		Common.spigot.getCommand("team").setExecutor(this);
-		Common.spigot.getCommand("team").setTabCompleter(this);
+		Common.spigot.getCommand("faction").setExecutor(this);
+		Common.spigot.getCommand("faction").setTabCompleter(this);
 	}
 	private Boolean team() 
 	{
@@ -71,17 +71,18 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				if(Team_Expert.isInATeam(player)) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! To join another you will have to defect!\nThis may cause backlash from your current faction!"));
 				
 				player.sendMessage(Messaging.chatFormatter("&#00FF00----------------Lists of Invites----------------"));
-					String expertInvites = new YamlPlayerWrapper(player).getExpertInvites();
-					if(expertInvites == null || expertInvites.equals("")) player.sendMessage(Messaging.chatFormatter("&#FF0000You don't have any invites... Create your own by doing /faction found [FactionName] !"));
-					
-					for(String invites : expertInvites.split(" ")){
-						Team_Expert teamInv = Team_Expert.getTeamFromID(UUID.fromString(invites));
-						TextComponent message = new TextComponent(teamInv.getName());
-						message.setColor(net.md_5.bungee.api.ChatColor.of("#00FF00"));
-						message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/faction pledge " + teamInv.getName()));
-						message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Joint team" + teamInv.getName())));
-						player.spigot().sendMessage(message);
-					}
+				String expertInvites = new YamlPlayerWrapper(player).getExpertInvites();
+				if(expertInvites == null || expertInvites.equals("")) player.sendMessage(Messaging.chatFormatter("&#FF0000You don't have any invites... Create your own by doing /faction found [FactionName] !"));
+				
+				for(String invites : expertInvites.split(" "))
+				{
+					Team_Expert teamInv = Team_Expert.getTeamFromID(UUID.fromString(invites));
+					TextComponent message = new TextComponent(teamInv.getName());
+					message.setColor(net.md_5.bungee.api.ChatColor.of("#00FF00"));
+					message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/faction pledge " + teamInv.getName()));
+					message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Joint team" + teamInv.getName())));
+					player.spigot().sendMessage(message);
+				}
 				player.sendMessage(Messaging.chatFormatter("&#00FF00------------------------------------------------"));
 				
 				
@@ -358,8 +359,8 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					sender.sendMessage(Messaging.chatFormatter("&#CC0000You cannot delete this rank! Its either a protected rank, the current default rank or has a permission you dont have!"));
 					return true;
 				}
-				team.removeRank(rank);
 				sender.sendMessage(Messaging.chatFormatter("&#00FF00Rank &#00cc00" + rank.getName() + " &#00FF00was successfully removed!"));
+				team.removeRank(rank);
 				return true;
 			}
 			else if(args.get(1).equalsIgnoreCase("list")) 

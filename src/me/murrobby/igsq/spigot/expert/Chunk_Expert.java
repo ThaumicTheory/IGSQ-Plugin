@@ -80,13 +80,17 @@ public class Chunk_Expert
 	}
 	public void deleteChunk() 
 	{
+		yaml.delete();
 		chunks.remove(this);
-		yaml.delete(getUID().toString());
 		longStore();
 	}
 	public static void deleteChunk(Team_Expert team) 
 	{
-		for(Chunk_Expert chunk : chunks) if(chunk.getOwner().equals(team)) chunk.deleteChunk();
+		for(Chunk_Expert chunk : chunks) if(chunk.getOwner().equals(team)) 
+		{
+			chunk.deleteChunk();
+			break;
+		}
 	}
 	
 	

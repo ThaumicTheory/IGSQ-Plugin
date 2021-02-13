@@ -26,7 +26,7 @@ public class Expert_Command {
 		{
 			YamlWrapper.setExpert(true);
      		sender.sendMessage(Messaging.chatFormatter("&#84FF00Expert Mode &#00FF00Enabled&#84FF00!"));
-			Main_Expert.Start_Expert();
+			Main_Expert.startExpert();
 			return true;
 		}
 		else if((args.size() == 0 || args.get(0).equalsIgnoreCase("false")) && currentSetting) 

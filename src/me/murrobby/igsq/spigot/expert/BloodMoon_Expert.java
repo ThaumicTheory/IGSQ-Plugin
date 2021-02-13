@@ -61,13 +61,13 @@ public class BloodMoon_Expert {
 		long worldTimeSecs = world.getTime()/20;
 		if(worldTimeSecs == 600) //NightBegins
 		{
-			BloodMoonToggler(world,true);
+			bloodMoonToggler(world,true);
 		}
 		else if(worldTimeSecs > 1150 || worldTimeSecs < 600) //Day
 		{
 			if(yaml.isExpertBloodMoon()) 
 			{
-				BloodMoonToggler(world,false);
+				bloodMoonToggler(world,false);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ public class BloodMoon_Expert {
 			}
 		}
 	}
-	public void BloodMoonToggler(World world,Boolean enabled) 
+	public void bloodMoonToggler(World world,Boolean enabled) 
 	{
 		YamlWorldWrapper yaml = new YamlWorldWrapper(world);
 		if(!enabled) 

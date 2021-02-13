@@ -78,7 +78,7 @@ public class YamlTeamWrapper_Expert
 	{ 
 		Yaml.updateField(uid + ".enemy", "teams", ally);
 	}
-	public void delete(String name) 
+	public void delete() 
 	{ 
 		Yaml.deleteField(uid, "teams");
 	}

@@ -35,8 +35,9 @@ public class Common_Expert {
     {
     	List<String> protectedNames = new ArrayList<>();
     	protectedNames.add("WILDERNESS");
+    	protectedNames.add("&");
     	protectedNames.addAll(Common.illegalChats);
-    	for(String protectedName : protectedNames) if(protectedName.contains(name.toUpperCase())) return true;
+    	for(String protectedName : protectedNames) if(name.contains(protectedName.toUpperCase())) return true;
     	return false;
     }
 }

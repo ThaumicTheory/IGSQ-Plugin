@@ -3,6 +3,8 @@ package me.murrobby.igsq.spigot;
 import java.io.File;
 import java.io.IOException;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -154,14 +156,22 @@ public class Yaml
     //TODO Java Docs
     public static void deleteField(String path,String fileName) 
     {
-    	for(int i = 0; i < FILE_NAMES.length;i++) 
+    	Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
     	{
-    		if(FILE_NAMES[i].equalsIgnoreCase(fileName))
-    		{
-    			getConfigurations()[i].set(path, null);
-    			break;
-    		}
-    	}
+
+			@Override
+			public void run() 
+			{
+		    	for(int i = 0; i < FILE_NAMES.length;i++) 
+		    	{
+		    		if(FILE_NAMES[i].equalsIgnoreCase(fileName))
+		    		{
+		    			getConfigurations()[i].set(path, null);
+		    			break;
+		    		}
+		    	}
+			}
+    	},600);
     }
   //TODO Java Docs
     public static void loadFile(String fileName) 

@@ -242,6 +242,7 @@ public class TeamRank_Expert
 	}
 	public void delete() 
 	{
+		ranks.remove(this);
 		yaml.delete();
 	}
 }

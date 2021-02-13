@@ -3,27 +3,26 @@ Official Repo of the IGSQ Minecraft server plugin.
 
 <img src="https://cdn.discordapp.com/attachments/741648211164528661/746779896038293574/logo.png" alt="IGSQ Logo" width="512"/>
 
-## Tasks
+## To Do (Listed from highest priority per category)
 
-**bungeecord:**
-- [x] change join commands to bungee join.
+**Cleaning Technical Debt**
+- [ ] Messaging overhaul (including colour and message standardisation, Hex Enums and logos)
+- [ ] Command system overhaul (Tab complete, help menu and commands)
+- [ ] documentation is heavily outdated and needs to be updated
+- [ ] More caught error types and bungeecord error support
+**QOL**
 - [ ] Add option for per server login locations.
+- [ ] Hub system (/hub command,per server login locations,)
 
-**Commands:**
-- [x] Move Commands to seperate files
-- [ ] Fix and implement a better help menu and system.
-- [ ] More usefull errors
-- [x] tab completion
-
-**Chat:**
-- [x] Change Message Support to support custom inputs rather than halfs.
-- [x] Hex Support
-- [x] Chat Prefix
-- [x] Chat Suffix
-
-**Cleanup, optimisation and commenting:**
-- [x] Remove mc_accounts lookup in spigot it is only required in 1 server bungee can handle this
-- [ ] Major commenting required
+**SMP (Expert Mode)**
+- [ ] Basic Faction system (invites and claims and claim power)
+- [ ] Claim Protection System (protecting claimed chunks from damage)
+- [ ] Advanced Factions (Ranks, alliances,enemies, UI)
+- [ ] Primative Economy
+- [ ] Faction Raiding (temporary tnt, with tiers)
+- [ ] text proximity chat
+**BlockHunt**
+- On the backburner for now
 
 ## Developer Notes
 
