@@ -133,7 +133,7 @@ public class Chunk_Expert
 	{
 		List<String> names = new ArrayList<>();
 		for(Chunk_Expert chunk : chunks) names.add(chunk.getUID().toString());
-		YamlTeamWrapper_Expert.setTeams(String.join(" ", names));
+		YamlChunkWrapper_Expert.setChunks(String.join(" ", names));
 	}
 	public static void longBuild()
 	{

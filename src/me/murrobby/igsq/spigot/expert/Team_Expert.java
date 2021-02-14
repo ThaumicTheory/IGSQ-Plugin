@@ -557,7 +557,7 @@ public class Team_Expert
 		for(String teamString : teams.split(" ")) 
 		{
 			Team_Expert team = new Team_Expert(UUID.fromString(teamString));
-			for(UUID rankUID : team.getRawRanks()) new TeamRank_Expert(rankUID);
+			for(UUID rankUID : team.getRawRanks()) if(!TeamRank_Expert.isRank(rankUID)) new TeamRank_Expert(rankUID);
 		}
 	}
 }
