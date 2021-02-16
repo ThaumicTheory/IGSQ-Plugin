@@ -18,8 +18,8 @@ public class Messaging {
      */
     public static String chatFormatter(String textToFormat) //CF
     {
-    	String textToColour = textToFormat.replaceAll("[(\\r]", ""); //Replaces Windows Enter Chars to what minecraft supports
-    	textToColour = textToColour.replaceAll("[(\\t]", "        "); //Replaces Windows tab Chars to what minecraft supports
+    	String textToColour = textToFormat.replaceAll("[\\r]", ""); //Replaces Windows Enter Chars to what minecraft supports
+    	textToColour = textToColour.replaceAll("[\\t]", "        "); //Replaces Windows tab Chars to what minecraft supports
     	String[] textToColourChars = textToColour.split("");
     	String rebuiltText = "";
     	for(int i = 0;i < textToColourChars.length;i++) if(textToColourChars.length > i + 7 && textToColourChars[i].equals("&") && textToColourChars[i+1].equals("#")) 
