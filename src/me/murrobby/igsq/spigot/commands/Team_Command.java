@@ -17,6 +17,7 @@ import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
+import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.expert.Common_Expert;
 import me.murrobby.igsq.spigot.expert.TeamPermissions_Expert;
 import me.murrobby.igsq.spigot.expert.TeamRank_Expert;
@@ -80,7 +81,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					TextComponent message = new TextComponent(teamInv.getName());
 					message.setColor(net.md_5.bungee.api.ChatColor.of("#00FF00"));
 					message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/faction pledge " + teamInv.getName()));
-					message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Joint team" + teamInv.getName())));
+					message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Join team" + teamInv.getName())));
 					player.spigot().sendMessage(message);
 				}
 				player.sendMessage(Messaging.chatFormatter("&#00FF00------------------------------------------------"));
@@ -92,13 +93,15 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			Team_Expert team = Team_Expert.getTeamFromName(name);
 			team.addMember(player);
 			team.getDefaultRank().addMember(player);
+			team.removeInvite(player);
 			
 		}
 		else if(args.get(0).equalsIgnoreCase("leave")) //request to leave team peacefully
 		{
 			if(!requireTeam(player)) return true;
-			for(Team_Expert leavePending : Team_Expert.getPlayersTeam(player).getLeavePending()) {
-				//if(leavePending.equals())	return true;//enter player id in bracket, i forgot
+			for(UUID leavePending : Team_Expert.getPlayersTeam(player).getLeavePending()) {
+				if(leavePending.equals(player.getUniqueId())) return true;
+				Team_Expert.getPlayersTeam(player).addLeavePending(player);
 			}
 			return true;
 		}
@@ -120,14 +123,20 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				return true;
 			}
 			for(Team_Expert team : Team_Expert.getInvites(invPlayer)) {
-				if(team.equals(Team_Expert.getPlayersTeam(player))) {
+				if(team != null && team.equals(Team_Expert.getPlayersTeam(player))) {
 					sender.sendMessage(Messaging.chatFormatter("&#CCCCCCYou already invited this person!"));
 					return true;
 				}
 			}
 			if(!requirePermission(player, TeamPermissions_Expert.INVITE_FACTIONED)) return true;
-			Team_Expert.getPlayersTeam(player).addInvite(invPlayer);
+			Team_Expert team = Team_Expert.getPlayersTeam(player);
+			team.addInvite(invPlayer);
 			sender.sendMessage(Messaging.chatFormatter("&#00FF00Invited " + invPlayer.getName() + "!"));
+			TextComponent message = new TextComponent("You have been invited to join " + team.getName());
+			message.setColor(net.md_5.bungee.api.ChatColor.of("#00FF00"));
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/faction pledge " + team.getName()));
+			message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Join team" + team.getName())));
+			invPlayer.spigot().sendMessage(message);
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("ally")) //ally another faction
@@ -514,8 +523,8 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		
 	}
 	private Boolean teamQuery() 
-	{
-			if(Common_Command.requirePermission("igsq.team",sender) && sender instanceof Player) 
+	{		
+			if(Common_Command.requirePermission("igsq.team",sender) && sender instanceof Player && YamlWrapper.isExpert()) 
 			{
 				if(team()) 
 				{

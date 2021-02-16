@@ -470,11 +470,12 @@ public class Team_Expert
 	}
 	public void setInvite(List<Team_Expert> invites, OfflinePlayer offlinePlayer) {
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer);
-		if(invites.size() == 0) 
+		if(invites.size() == 0 || invites == null) 
 		{
 			yaml.setExpertInvites("");
 			return;
 		}
+		if(invites.get(0) == null) return;
 		String invitesString = invites.get(0).getUID().toString();
 		for(int i = 1; i < invites.size();i++) invitesString += " " + invites.get(i).getUID().toString();
 		yaml.setExpertInvites(invitesString);
@@ -490,34 +491,30 @@ public class Team_Expert
 		setInvite(invites, offlinePlayer);
 	}
 	
-	public List<UUID> getRawLeavePending() {
+	public List<UUID> getLeavePending() {
 		List<UUID> rawleavependings = new ArrayList<>();
 		for(String leavependingsString : yaml.getLeavePending().split(" ")) if (!leavependingsString.equals("")) rawleavependings.add(UUID.fromString(leavependingsString));
 		return rawleavependings;
 	}
-	public List<Team_Expert> getLeavePending() {
-		List<Team_Expert> leavependings = new ArrayList<>();
-		for(UUID userUID : getRawLeavePending()) leavependings.add(Team_Expert.getTeamFromID(userUID));
-		return leavependings;
-	}
-	public void setLeavePending(List<Team_Expert> leavePending) {
+
+	public void setLeavePending(List<UUID> leavePending) {
 		if(leavePending.size() == 0) 
 		{
 			yaml.setLeavePending("");
 			return;
 		}
-		String leavePendingString = leavePending.get(0).getUID().toString();
-		for(int i = 1; i < leavePending.size();i++) leavePendingString += " " + leavePending.get(i).getUID().toString();
+		String leavePendingString = leavePending.get(0).toString();
+		for(int i = 1; i < leavePending.size();i++) leavePendingString += " " + leavePending.get(i).toString();
 		yaml.setLeavePending(leavePendingString);
 	}
-	public void removeLeavePending() {
-		List<Team_Expert> leavePending = getLeavePending();
-		leavePending.remove(this);
+	public void removeLeavePending(Player player) {
+		List<UUID> leavePending = getLeavePending();
+		leavePending.remove(player.getUniqueId());
 		setLeavePending(leavePending);
 	}
-	public void addLeavePending() {
-		List<Team_Expert> leavePending = getLeavePending();
-		leavePending.add(this);
+	public void addLeavePending(Player player) {
+		List<UUID> leavePending = getLeavePending();
+		leavePending.add(player.getUniqueId());
 		setLeavePending(leavePending);
 	}
 	

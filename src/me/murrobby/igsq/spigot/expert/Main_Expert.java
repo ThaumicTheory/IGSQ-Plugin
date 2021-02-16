@@ -46,9 +46,10 @@ public class Main_Expert
 	{
 		if(YamlWrapper.isExpert())
 		{
+			refreshExpert();
 			Team_Expert.longBuild();
 			for(Player player : Bukkit.getOnlinePlayers()) new UI_Expert(player);
-			refreshExpert();
+			
 		}
 	}
 	public static void refreshExpert() //Tasks will close if expert is turned off therefor they will need to be rerun for enabling expert
