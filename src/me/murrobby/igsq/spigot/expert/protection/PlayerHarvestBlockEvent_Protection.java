@@ -19,7 +19,7 @@ public class PlayerHarvestBlockEvent_Protection implements Listener
 	{
 		if(!event.isCancelled() && YamlWrapper.isExpert()) 
 		{
-			if(Common_Protection.isProtected(event.getPlayer())) event.setCancelled(true);
+			if(Common_Protection.isProtected(event.getPlayer(),event.getHarvestedBlock().getLocation())) event.setCancelled(true);
 		}
 	}
 	

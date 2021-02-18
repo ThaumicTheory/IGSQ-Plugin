@@ -143,6 +143,6 @@ public class Chunk_Expert
 			YamlChunkWrapper_Expert.setChunks("");
 			return;
 		}
-		for(String team : chunks.split(" ")) new Team_Expert(UUID.fromString(team));
+		for(String team : chunks.split(" ")) new Chunk_Expert(UUID.fromString(team));
 	}
 }

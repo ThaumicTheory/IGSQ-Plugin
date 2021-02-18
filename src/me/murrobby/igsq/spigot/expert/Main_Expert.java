@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.expert.protection.BlockDamageEvent_Protection;
+import me.murrobby.igsq.spigot.expert.protection.BlockPlaceEvent_Protection;
 import me.murrobby.igsq.spigot.expert.protection.EntityDamageByEntityEvent_Protection;
 import me.murrobby.igsq.spigot.expert.protection.EntityPickupItemEvent_Protection;
 import me.murrobby.igsq.spigot.expert.protection.PlayerArmorStandManipulateEvent_Protection;
@@ -39,6 +40,7 @@ public class Main_Expert
 		new PlayerHarvestBlockEvent_Protection();
 		new PlayerInteractEntityEvent_Protection();
 		new PlayerInteractEvent_Protection();
+		new BlockPlaceEvent_Protection();
 		//Tasks
 		startExpert();
 	}
@@ -48,6 +50,7 @@ public class Main_Expert
 		{
 			refreshExpert();
 			Team_Expert.longBuild();
+			Chunk_Expert.longBuild();
 			for(Player player : Bukkit.getOnlinePlayers()) new UI_Expert(player);
 			
 		}

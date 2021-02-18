@@ -19,7 +19,7 @@ public class PlayerInteractEntityEvent_Protection implements Listener
 	{
 		if(!event.isCancelled() && YamlWrapper.isExpert()) 
 		{
-			if(Common_Protection.isProtected(event.getPlayer())) event.setCancelled(true);
+			if(event.getRightClicked() != null  && Common_Protection.isProtected(event.getPlayer(),event.getRightClicked().getLocation())) event.setCancelled(true);
 		}
 	}
 	

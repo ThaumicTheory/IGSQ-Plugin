@@ -17,7 +17,7 @@ public class PlayerInteractEvent_Protection implements Listener
 	@EventHandler
 	public void PlayerInteract_Expert(org.bukkit.event.player.PlayerInteractEvent event) 
 	{
-		if(Common_Protection.isProtected(event.getPlayer())) 
+		if(Common_Protection.isProtected(event.getPlayer(),event.getClickedBlock().getLocation())) 
 		{
 			if(event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) event.setCancelled(true);
 		}

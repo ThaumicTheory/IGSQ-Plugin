@@ -72,7 +72,7 @@ public class Common_LP {
 				if(yaml.isLinked()) name = yaml.getNickname();
 				Ranks rank = getRank(player);
 				SubRanks subRank = getSubRank(player);
-				Communication.setTag(player, rank.getTag(),getRankColor(rank) ,name,subRank.getTag());
+				Communication.setTag(player, rank.getTag(),rank.getColor() ,name,subRank.getTag());
 			}
 		}
     }
@@ -85,7 +85,7 @@ public class Common_LP {
 			if(yaml.isLinked()) name = yaml.getNickname();
 			Ranks rank = getRank(player);
 			SubRanks subRank = getSubRank(player);
-			return Communication.setTagAsPacket(player, rank.getTag(),getRankColor(rank) ,name,subRank.getTag());
+			return Communication.setTagAsPacket(player, rank.getTag(),rank.getColor() ,name,subRank.getTag());
 		}
 		return null;
     }
@@ -95,16 +95,4 @@ public class Common_LP {
 		for(SubRanks rank : SubRanks.values()) if(player.hasPermission(rank.getPermission()) && highestRank < rank.getPosition()) highestRank = rank.getPosition();
 		return SubRanks.getRank(highestRank);
 	}
-    
-    private static ChatColor getRankColor(Ranks rank) 
-    {
-    	Pattern pattern = Pattern.compile("'(.*?)'");
-    	Matcher matcher = pattern.matcher("/(&[0-9a-f])/gi");
-    	if (matcher.find())
-    	{
-    	    String colorCodes = matcher.group();
-    	    return ChatColor.getByChar(colorCodes.charAt(colorCodes.length() - 1));
-    	}
-    	else return ChatColor.WHITE;
-    }
 }

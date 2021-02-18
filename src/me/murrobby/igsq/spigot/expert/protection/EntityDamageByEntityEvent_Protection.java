@@ -44,7 +44,7 @@ public class EntityDamageByEntityEvent_Protection implements Listener
 						}
 					}
 				}
-				else if(Common_Protection.isProtected(damager)) event.setCancelled(true);
+				else if(Common_Protection.isProtected(damager,event.getEntity().getLocation())) event.setCancelled(true);
 			}
 		}
 	}

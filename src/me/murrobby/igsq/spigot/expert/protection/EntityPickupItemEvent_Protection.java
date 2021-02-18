@@ -22,7 +22,7 @@ public class EntityPickupItemEvent_Protection implements Listener
 		{
 			if(event.getEntity() instanceof Player) 
 			{
-				if(Common_Protection.isProtected((Player) event.getEntity())) event.setCancelled(true);
+				if(Common_Protection.isProtected((Player) event.getEntity(),event.getItem().getLocation())) event.setCancelled(true);
 			}
 		}
 	}

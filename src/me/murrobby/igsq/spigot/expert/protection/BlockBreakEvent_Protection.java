@@ -7,15 +7,15 @@ import org.bukkit.event.Listener;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.YamlWrapper;
 
-public class BlockDamageEvent_Protection implements Listener
+public class BlockBreakEvent_Protection implements Listener
 {
-	public BlockDamageEvent_Protection()
+	public BlockBreakEvent_Protection()
 	{
 		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
-	public void BlockDamage_Expert(org.bukkit.event.block.BlockDamageEvent event) 
+	public void BlockBreak_Expert(org.bukkit.event.block.BlockBreakEvent event) 
 	{
 		if(!event.isCancelled() && YamlWrapper.isExpert()) 
 		{

@@ -242,7 +242,7 @@ public class Communication
 			fakeTeam.getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat")).write(0, nameColor);
 			fakeTeam.getChatComponents().write( 0, WrappedChatComponent.fromText(player.getName()));
 			fakeTeam.getChatComponents().write( 1,  WrappedChatComponent.fromText(Messaging.chatFormatter(prefix)));
-			fakeTeam.getChatComponents().write( 2,  WrappedChatComponent.fromText(Messaging.chatFormatter(suffix + " &8(" + player.getName() +")")));
+			fakeTeam.getChatComponents().write( 2,  WrappedChatComponent.fromText(Messaging.chatFormatter(suffix + " &8" + player.getName())));
 			for(Player selectedPlayer : Bukkit.getOnlinePlayers())
 			{
 				 ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, fakeTeam);
