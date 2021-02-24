@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert;
+package me.murrobby.igsq.spigot.smp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +9,12 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-public class Chunk_Expert 
+public class Chunk_SMP 
 {
-	private static List<Chunk_Expert> chunks = new ArrayList<>();
+	private static List<Chunk_SMP> chunks = new ArrayList<>();
 	private final UUID UID;
-	private final YamlChunkWrapper_Expert yaml;
-	public Chunk_Expert(Chunk chunk) 
+	private final YamlChunkWrapper_SMP yaml;
+	public Chunk_SMP(Chunk chunk) 
 	{
 		UUID uid = null;
 		do 
@@ -24,18 +24,18 @@ public class Chunk_Expert
 		while(getChunkFromID(uid) != null);
 		this.UID = uid;
 		chunks.add(this);
-		this.yaml = new YamlChunkWrapper_Expert(UID);
+		this.yaml = new YamlChunkWrapper_SMP(UID);
 		yaml.applyDefault();
 		setWorld(chunk.getWorld());
 		setLocation(chunk.getX(), chunk.getZ());
 		longStore();
 		
 	}
-	public Chunk_Expert(UUID uid) 
+	public Chunk_SMP(UUID uid) 
 	{
 		this.UID = uid;
 		chunks.add(this);
-		this.yaml = new YamlChunkWrapper_Expert(UID);
+		this.yaml = new YamlChunkWrapper_SMP(UID);
 	}
 	public UUID getUID() 
 	{
@@ -45,11 +45,11 @@ public class Chunk_Expert
 	{
 		yaml.setWorld(world.getUID());
 	}
-	public Team_Expert getOwner() 
+	public Team_SMP getOwner() 
 	{
-		return Team_Expert.getTeamFromID(UUID.fromString(yaml.getOwner()));
+		return Team_SMP.getTeamFromID(UUID.fromString(yaml.getOwner()));
 	}
-	public void setOwner(Team_Expert team) 
+	public void setOwner(Team_SMP team) 
 	{
 		yaml.setOwner(team.getUID());
 	}
@@ -74,7 +74,7 @@ public class Chunk_Expert
 		List<Integer> location = getLocation();
 		return getWorld().getChunkAt(location.get(0),location.get(1));
 	}
-	public boolean isOwnedBy(Team_Expert team) 
+	public boolean isOwnedBy(Team_SMP team) 
 	{
 		return team.getUID().equals(getOwner().getUID());
 	}
@@ -84,9 +84,9 @@ public class Chunk_Expert
 		chunks.remove(this);
 		longStore();
 	}
-	public static void deleteChunk(Team_Expert team) 
+	public static void deleteChunk(Team_SMP team) 
 	{
-		for(Chunk_Expert chunk : chunks) if(chunk.getOwner().equals(team)) 
+		for(Chunk_SMP chunk : chunks) if(chunk.getOwner().equals(team)) 
 		{
 			chunk.deleteChunk();
 			break;
@@ -99,17 +99,17 @@ public class Chunk_Expert
 	
 	
 	
-	public static Chunk_Expert getChunkFromLocation(Location location) 
+	public static Chunk_SMP getChunkFromLocation(Location location) 
 	{
 		return getChunkFromLocation(location.getChunk().getX(), location.getChunk().getZ(),location.getWorld());
 	}
-	public static Chunk_Expert getChunkFromLocation(Chunk chunk) 
+	public static Chunk_SMP getChunkFromLocation(Chunk chunk) 
 	{
 		return getChunkFromLocation(chunk.getX(), chunk.getZ(),chunk.getWorld());
 	}
-	public static Chunk_Expert getChunkFromLocation(int x, int z,World world) 
+	public static Chunk_SMP getChunkFromLocation(int x, int z,World world) 
 	{
-		for(Chunk_Expert chunk : chunks) if(chunk.getLocation().get(0).equals(x) && chunk.getLocation().get(1).equals(z) && chunk.getWorld().equals(world)) return chunk;
+		for(Chunk_SMP chunk : chunks) if(chunk.getLocation().get(0).equals(x) && chunk.getLocation().get(1).equals(z) && chunk.getWorld().equals(world)) return chunk;
 		return null;
 	}
 	public static boolean isChunkOwned(Chunk chunk) 
@@ -124,25 +124,25 @@ public class Chunk_Expert
 	{
 		return getChunkFromLocation(x,z,world) != null;
 	}
-	public static Chunk_Expert getChunkFromID(UUID uid) 
+	public static Chunk_SMP getChunkFromID(UUID uid) 
 	{
-		for(Chunk_Expert chunk : chunks) if(chunk.getUID().equals(uid)) return chunk;
+		for(Chunk_SMP chunk : chunks) if(chunk.getUID().equals(uid)) return chunk;
 		return null;
 	}
 	public static void longStore()
 	{
 		List<String> names = new ArrayList<>();
-		for(Chunk_Expert chunk : chunks) names.add(chunk.getUID().toString());
-		YamlChunkWrapper_Expert.setChunks(String.join(" ", names));
+		for(Chunk_SMP chunk : chunks) names.add(chunk.getUID().toString());
+		YamlChunkWrapper_SMP.setChunks(String.join(" ", names));
 	}
 	public static void longBuild()
 	{
-		String chunks = YamlChunkWrapper_Expert.getChunks();
+		String chunks = YamlChunkWrapper_SMP.getChunks();
 		if(chunks == null || chunks.equalsIgnoreCase("")) 
 		{
-			YamlChunkWrapper_Expert.setChunks("");
+			YamlChunkWrapper_SMP.setChunks("");
 			return;
 		}
-		for(String team : chunks.split(" ")) new Chunk_Expert(UUID.fromString(team));
+		for(String team : chunks.split(" ")) new Chunk_SMP(UUID.fromString(team));
 	}
 }

@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert.protection;
+package me.murrobby.igsq.spigot.smp.protection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -15,9 +15,9 @@ public class BlockDamageEvent_Protection implements Listener
 	}
 	
 	@EventHandler
-	public void BlockDamage_Expert(org.bukkit.event.block.BlockDamageEvent event) 
+	public void BlockDamage_Protection(org.bukkit.event.block.BlockDamageEvent event) 
 	{
-		if(!event.isCancelled() && YamlWrapper.isExpert()) 
+		if(!event.isCancelled() && YamlWrapper.isSMP()) 
 		{
 			if(Common_Protection.isProtected(event.getPlayer(),event.getBlock().getLocation())) event.setCancelled(true);
 		}

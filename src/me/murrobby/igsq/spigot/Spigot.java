@@ -16,28 +16,20 @@ import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerQuitEvent_Main;
 import me.murrobby.igsq.spigot.security.Main_Security;
+import me.murrobby.igsq.spigot.smp.Main_SMP;
 import me.murrobby.igsq.spigot.blockhunt.Main_BlockHunt;
 import me.murrobby.igsq.spigot.commands.Main_Command;
-import me.murrobby.igsq.spigot.commands.Pro_Command;
 import me.murrobby.igsq.spigot.commands.Team_Command;
 
-public class Spigot extends JavaPlugin implements PluginMessageListener{
+public class Spigot extends JavaPlugin implements PluginMessageListener
+{
 	public BukkitScheduler scheduler = getServer().getScheduler();
 	@Override
 	public void onEnable()
 	{ 
+		System.out.println("Plugin Starting!");
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:yml", this);
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:sound", this);
-		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
-		{
-
-			@Override
-			public void run() 
-			{
-					Yaml.saveFileChanges("@all");
-					Yaml.loadFile("@all");
-			} 		
-    	}, 20, 600);
 		
 		new Database(this);
 		
@@ -51,18 +43,10 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		new PlayerQuitEvent_Main();
 		
 		new Main_Expert();
+		new Main_SMP();
 		new Main_Security();
 		new Main_Command();
 		new Team_Command();
-		new Pro_Command();
-		/*
-		if(this.getServer().getPluginManager().getPlugin("NametagEdit") != null && Yaml.getFieldBool("SUPPORT.nametagedit", "config")) 
-		{
-			System.out.println("NametagEdit Hook in Luckperms Module Enabled.");
-			nametagEdit = true;
-		}
-		else System.out.println("NametagEdit Hook in Luckperms Module Disabled.");
-		*/
 		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && YamlWrapper.isLuckpermsSupported()) 
 		{
 			System.out.println("Luckperms Module Enabled.");
@@ -85,15 +69,27 @@ public class Spigot extends JavaPlugin implements PluginMessageListener{
 		{
 			System.out.println("BlockHunt disabled!");
 		}
+		
+		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
+		{
+
+			@Override
+			public void run() 
+			{
+					Yaml.saveFileChanges("@all");
+					Yaml.loadFile("@all");
+			} 		
+    	}, 600, 600);
+		for(Player player : Bukkit.getOnlinePlayers()) Communication.setDefaultTagData(player);
 	}
 
 	public void onLoad()
 	{
+		System.out.println("Plugin Booting!");
 		Common.spigot = this;
 		Yaml.createFiles();
 		Yaml.loadFile("@all");
 		YamlWrapper.applyDefault();
-		for(Player player : Bukkit.getOnlinePlayers()) Communication.setDefaultTagData(player);
 	}
 	
 	public void onDisable()

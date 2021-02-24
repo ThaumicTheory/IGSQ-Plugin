@@ -75,6 +75,8 @@ public class Main_Command implements CommandExecutor, TabCompleter{
   	  			return new PlayerCompass_Command(sender,this.args).result;
   	  		case "test":
   	  			return new Test_Command(sender,this.args).result;
+  	  		case "smp":
+  	  			return new SMP_Command(sender,this.args).result;
   	  		default:
   	  			help();
   	  			return false;
@@ -108,7 +110,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 		List<String> options = new ArrayList<>();
 		if(args.length == 1) 
 		{
-			List<String> types =  Arrays.asList("help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass","test");
+			List<String> types =  Arrays.asList("help","block","nightvision","nv","entity","expert","realtime","version","error","blockhunt","playercompass","test","smp");
 			for (String commands : types) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		else if(args.length == 2) 
@@ -132,7 +134,7 @@ public class Main_Command implements CommandExecutor, TabCompleter{
 				List<String> types = Arrays.asList("build","version","description");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);
 			}
-			else if(args[0].equalsIgnoreCase("expert")) 
+			else if(args[0].equalsIgnoreCase("expert") || args[0].equalsIgnoreCase("smp")) 
 			{
 				List<String> types =  Arrays.asList("true","false");
 				for (String commands : types) if(commands.contains(args[1].toLowerCase())) options.add(commands);

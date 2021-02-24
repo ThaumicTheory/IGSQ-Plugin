@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert;
+package me.murrobby.igsq.spigot.smp;
 
 import java.util.UUID;
 
@@ -6,10 +6,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import me.murrobby.igsq.spigot.Yaml;
 
-public class YamlTeamRankWrapper_Expert 
+public class YamlTeamRankWrapper_SMP 
 {
 	private String uid;
-	public YamlTeamRankWrapper_Expert(UUID uid)
+	public YamlTeamRankWrapper_SMP(UUID uid)
 	{
 		this.uid = uid.toString();
 	}

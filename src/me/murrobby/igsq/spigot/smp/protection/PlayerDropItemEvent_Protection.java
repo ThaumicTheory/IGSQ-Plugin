@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert.protection;
+package me.murrobby.igsq.spigot.smp.protection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -15,9 +15,9 @@ public class PlayerDropItemEvent_Protection implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerDropItem_Expert(org.bukkit.event.player.PlayerDropItemEvent event) 
+	public void PlayerDropItem_Protection(org.bukkit.event.player.PlayerDropItemEvent event) 
 	{
-		if(!event.isCancelled() && YamlWrapper.isExpert()) 
+		if(!event.isCancelled() && YamlWrapper.isSMP()) 
 		{
 			if(Common_Protection.isProtected(event.getPlayer())) event.setCancelled(true);
 		}

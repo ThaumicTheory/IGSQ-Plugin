@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert;
+package me.murrobby.igsq.spigot.smp;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -8,21 +8,22 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.YamlWrapper;
 
-public class PlayerJoinEvent_Expert implements Listener
+public class PlayerJoinEvent_SMP implements Listener
 {
-	public PlayerJoinEvent_Expert()
+	public PlayerJoinEvent_SMP()
 	{
 		Bukkit.getPluginManager().registerEvents(this, Common.spigot);
 	}
 	
 	@EventHandler
-	public void PlayerJoin_Expert(PlayerJoinEvent event) 
+	public void PlayerJoin_SMP(PlayerJoinEvent event) 
 	{
-		if(YamlWrapper.isExpert())
+		if(YamlWrapper.isSMP())
 		{
+			new UI_SMP(event.getPlayer());
 			if(Bukkit.getOnlinePlayers().size() == 1)
 			{
-				Main_Expert.refreshExpert();
+				Main_SMP.refreshSMP();
 			}
 		}
 	}

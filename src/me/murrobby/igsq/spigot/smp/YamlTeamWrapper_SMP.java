@@ -1,13 +1,13 @@
-package me.murrobby.igsq.spigot.expert;
+package me.murrobby.igsq.spigot.smp;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.murrobby.igsq.spigot.Yaml;
 
-public class YamlTeamWrapper_Expert 
+public class YamlTeamWrapper_SMP 
 {
 	private String uid;
-	public YamlTeamWrapper_Expert(Team_Expert team)
+	public YamlTeamWrapper_SMP(Team_SMP team)
 	{
 		uid = team.getUID().toString();
 	}

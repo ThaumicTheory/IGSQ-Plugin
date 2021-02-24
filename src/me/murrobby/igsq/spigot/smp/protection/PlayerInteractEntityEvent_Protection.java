@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert.protection;
+package me.murrobby.igsq.spigot.smp.protection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -15,9 +15,9 @@ public class PlayerInteractEntityEvent_Protection implements Listener
 	}
 	
 	@EventHandler
-	public void PlayerInteractEntity_Expert(org.bukkit.event.player.PlayerInteractEntityEvent event) 
+	public void PlayerInteractEntity_Protection(org.bukkit.event.player.PlayerInteractEntityEvent event) 
 	{
-		if(!event.isCancelled() && YamlWrapper.isExpert()) 
+		if(!event.isCancelled() && YamlWrapper.isSMP()) 
 		{
 			if(event.getRightClicked() != null  && Common_Protection.isProtected(event.getPlayer(),event.getRightClicked().getLocation())) event.setCancelled(true);
 		}

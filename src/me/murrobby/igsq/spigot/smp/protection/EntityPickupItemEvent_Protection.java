@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert.protection;
+package me.murrobby.igsq.spigot.smp.protection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,9 +16,9 @@ public class EntityPickupItemEvent_Protection implements Listener
 	}
 	
 	@EventHandler
-	public void EntityPickupItem_Security(org.bukkit.event.entity.EntityPickupItemEvent event) 
+	public void EntityPickupItem_Protection(org.bukkit.event.entity.EntityPickupItemEvent event) 
 	{
-		if(!event.isCancelled() && YamlWrapper.isExpert()) 
+		if(!event.isCancelled() && YamlWrapper.isSMP()) 
 		{
 			if(event.getEntity() instanceof Player) 
 			{

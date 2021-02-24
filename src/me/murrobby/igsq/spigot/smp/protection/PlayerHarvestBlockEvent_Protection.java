@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert.protection;
+package me.murrobby.igsq.spigot.smp.protection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -17,7 +17,7 @@ public class PlayerHarvestBlockEvent_Protection implements Listener
 	@EventHandler
 	public void PlayerHarvestBlock_Protection(org.bukkit.event.player.PlayerHarvestBlockEvent event) 
 	{
-		if(!event.isCancelled() && YamlWrapper.isExpert()) 
+		if(!event.isCancelled() && YamlWrapper.isSMP()) 
 		{
 			if(Common_Protection.isProtected(event.getPlayer(),event.getHarvestedBlock().getLocation())) event.setCancelled(true);
 		}

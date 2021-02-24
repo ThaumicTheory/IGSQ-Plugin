@@ -44,6 +44,14 @@ public class YamlWrapper
 	{
 		Yaml.updateField("gameplay.expert", "config",data);
 	}
+	public static boolean isSMP() 
+	{
+		return Yaml.getFieldBool("gameplay.smp", "config");
+	} 
+	public static void setSMP(boolean data) 
+	{
+		Yaml.updateField("gameplay.smp", "config",data);
+	}
 	public static boolean isEggRespawn() 
 	{
 		return Yaml.getFieldBool("gameplay.dragoneggrespawn", "config");
@@ -240,6 +248,7 @@ public class YamlWrapper
         Yaml.addFieldDefault("mysql.database","config","jdbc:mysql://localhost:3306/database?useSSL=false");
         
         Yaml.addFieldDefault("gameplay.expert","config",false);
+        Yaml.addFieldDefault("gameplay.smp","config",false);
         Yaml.addFieldDefault("gameplay.dragoneggrespawn","config",true);
         Yaml.addFieldDefault("gameplay.blockhunt","config",false);
         

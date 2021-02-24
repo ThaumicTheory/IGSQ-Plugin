@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert;
+package me.murrobby.igsq.spigot.smp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +9,9 @@ import me.murrobby.igsq.spigot.Messaging;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class UI_Expert 
+public class UI_SMP 
 {
-	public static List<UI_Expert> uis = new ArrayList<>();
+	public static List<UI_SMP> uis = new ArrayList<>();
 	enum Relationship 
 	{
 	    NONE("&#009900"),
@@ -41,7 +41,7 @@ public class UI_Expert
 	private Relationship relationship = Relationship.NONE;
 	private State state = State.CHUNK;
 
-	public UI_Expert(Player player) 
+	public UI_SMP(Player player) 
 	{
 		this.player = player;
 		uis.add(this);
@@ -60,7 +60,7 @@ public class UI_Expert
 	
 	private void chunk() 
 	{
-		Chunk_Expert chunk = Chunk_Expert.getChunkFromLocation(player.getLocation());
+		Chunk_SMP chunk = Chunk_SMP.getChunkFromLocation(player.getLocation());
 		if(chunk == null) 
 		{
 			chunkName = "Wilderness";
@@ -68,27 +68,27 @@ public class UI_Expert
 			return;
 		}
 		chunkName = chunk.getOwner().getName();
-		if(!Team_Expert.isInATeam(player)) 
+		if(!Team_SMP.isInATeam(player)) 
 		{
 			relationship = Relationship.NONE;
 			return;
 		}
-		if(chunk.getOwner().equals(Team_Expert.getPlayersTeam(player))) 
+		if(chunk.getOwner().equals(Team_SMP.getPlayersTeam(player))) 
 		{
 			relationship = Relationship.FACTION;
 			return;
 		}
-		if(chunk.getOwner().isAlly(Team_Expert.getPlayersTeam(player))) 
+		if(chunk.getOwner().isAlly(Team_SMP.getPlayersTeam(player))) 
 		{
 			relationship = Relationship.ALLIED;
 			return;
 		}
-		if(Team_Expert.getPlayersTeam(player).isEnemy(chunk.getOwner())) 
+		if(Team_SMP.getPlayersTeam(player).isEnemy(chunk.getOwner())) 
 		{
 			relationship = Relationship.ENEMY;
 			return;
 		}
-		if(chunk.getOwner().isEnemy(Team_Expert.getPlayersTeam(player))) 
+		if(chunk.getOwner().isEnemy(Team_SMP.getPlayersTeam(player))) 
 		{
 			relationship = Relationship.CONSIDERED_ENEMY;
 			return;
@@ -105,13 +105,13 @@ public class UI_Expert
 		uis.remove(this);
 	}
 	
-	public static UI_Expert getUIFromPlayer(Player player) 
+	public static UI_SMP getUIFromPlayer(Player player) 
 	{
-		for(UI_Expert ui : uis) if(ui.getPlayer().getUniqueId().equals(player.getUniqueId())) return ui;
+		for(UI_SMP ui : uis) if(ui.getPlayer().getUniqueId().equals(player.getUniqueId())) return ui;
 		return null;
 	}
 	
-	public static List<UI_Expert> getUIs() 
+	public static List<UI_SMP> getUIs() 
 	{
 		return uis;
 	}

@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert;
+package me.murrobby.igsq.spigot.smp;
 
 import java.util.UUID;
 
@@ -6,10 +6,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import me.murrobby.igsq.spigot.Yaml;
 
-public class YamlChunkWrapper_Expert 
+public class YamlChunkWrapper_SMP 
 {
 	private String uid;
-	public YamlChunkWrapper_Expert(UUID UID)
+	public YamlChunkWrapper_SMP(UUID UID)
 	{
 		this.uid = UID.toString();
 	}

@@ -1,6 +1,6 @@
-package me.murrobby.igsq.spigot.expert;
+package me.murrobby.igsq.spigot.smp;
 
-public enum TeamPermissions_Expert 
+public enum TeamPermissions_SMP 
 {
 	INVITE(false,10),
 	READ_PERMISSIONS(false,10),
@@ -18,7 +18,7 @@ public enum TeamPermissions_Expert
 	private boolean hidden;
 	private int score;
 
-	TeamPermissions_Expert(boolean hidden,int score)
+	TeamPermissions_SMP(boolean hidden,int score)
 	{
 		this.hidden = hidden;
 		this.score = score;

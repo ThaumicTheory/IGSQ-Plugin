@@ -1,4 +1,4 @@
-package me.murrobby.igsq.spigot.expert;
+package me.murrobby.igsq.spigot.smp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +11,12 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
-public class TeamRank_Expert 
+public class TeamRank_SMP 
 {
 	private final UUID UID;
-	private final YamlTeamRankWrapper_Expert yaml;
-	private static List<TeamRank_Expert> ranks = new ArrayList<>();
-	public TeamRank_Expert(Team_Expert owner,String rankName) 
+	private final YamlTeamRankWrapper_SMP yaml;
+	private static List<TeamRank_SMP> ranks = new ArrayList<>();
+	public TeamRank_SMP(Team_SMP owner,String rankName) 
 	{
 		UUID uid = null;
 		do 
@@ -25,17 +25,17 @@ public class TeamRank_Expert
 		}
 		while(isRank(uid));
 		this.UID = uid;
-		yaml = new YamlTeamRankWrapper_Expert(uid);
+		yaml = new YamlTeamRankWrapper_SMP(uid);
 		yaml.applyDefault();
 		setName(rankName);
 		setOwner(owner);
 		ranks.add(this);
 		
 	}
-	public TeamRank_Expert(UUID uid) 
+	public TeamRank_SMP(UUID uid) 
 	{
 		this.UID = uid;
-		yaml = new YamlTeamRankWrapper_Expert(uid);
+		yaml = new YamlTeamRankWrapper_SMP(uid);
 		ranks.add(this);
 	}
 	public UUID getUID() 
@@ -50,11 +50,11 @@ public class TeamRank_Expert
 	{
 		yaml.setName(name);
 	}
-	public Team_Expert getOwner() 
+	public Team_SMP getOwner() 
 	{
-		return Team_Expert.getTeamFromID(UUID.fromString(yaml.getOwner()));
+		return Team_SMP.getTeamFromID(UUID.fromString(yaml.getOwner()));
 	}
-	public void setOwner(Team_Expert faction) 
+	public void setOwner(Team_SMP faction) 
 	{
 		yaml.setOwner(faction.getUID());
 	}
@@ -65,7 +65,7 @@ public class TeamRank_Expert
 	}
 	public void setDefault()
 	{
-		for(TeamRank_Expert rank : ranks) 
+		for(TeamRank_SMP rank : ranks) 
 		{
 			if(rank.equals(this)) yaml.setDefault(true);
 			else rank.yaml.setDefault(false);
@@ -128,13 +128,13 @@ public class TeamRank_Expert
 		setMembers(members);
 	}
 	
-	public List<TeamPermissions_Expert> getPermissions() 
+	public List<TeamPermissions_SMP> getPermissions() 
 	{
-		List<TeamPermissions_Expert> permissions = new ArrayList<>();
-		for(String permissionString : yaml.getPermissions().split(" ")) if(!permissionString.equals("")) permissions.add(TeamPermissions_Expert.valueOf(permissionString));
+		List<TeamPermissions_SMP> permissions = new ArrayList<>();
+		for(String permissionString : yaml.getPermissions().split(" ")) if(!permissionString.equals("")) permissions.add(TeamPermissions_SMP.valueOf(permissionString));
 		return permissions;
 	}
-	public void setPermissions(List<TeamPermissions_Expert> permissions) 
+	public void setPermissions(List<TeamPermissions_SMP> permissions) 
 	{
 		if(permissions.size() == 0) 
 		{
@@ -145,22 +145,22 @@ public class TeamRank_Expert
 		for(int i = 1; i < permissions.size();i++) permissionsString += " " + permissions.get(i).toString();
 		yaml.setPermissions(permissionsString);
 	}
-	public void removePermission(TeamPermissions_Expert permission) 
+	public void removePermission(TeamPermissions_SMP permission) 
 	{
-		List<TeamPermissions_Expert> permissions = getPermissions();
+		List<TeamPermissions_SMP> permissions = getPermissions();
 		permissions.remove(permission);
 		setPermissions(permissions);
 	}
-	public void addPermission(TeamPermissions_Expert permission) 
+	public void addPermission(TeamPermissions_SMP permission) 
 	{
-		List<TeamPermissions_Expert> permissions = getPermissions();
+		List<TeamPermissions_SMP> permissions = getPermissions();
 		permissions.add(permission);
 		setPermissions(permissions);
 	}
 	
-	public boolean hasPermission(TeamPermissions_Expert permission) 
+	public boolean hasPermission(TeamPermissions_SMP permission) 
 	{
-		for(TeamPermissions_Expert perm : getPermissions()) if(perm.equals(permission)) return true;
+		for(TeamPermissions_SMP perm : getPermissions()) if(perm.equals(permission)) return true;
 		return false;
 	}
 	
@@ -171,17 +171,17 @@ public class TeamRank_Expert
 	
 	
 	
-	public static TeamRank_Expert getRankFromName(String name,Team_Expert team) 
+	public static TeamRank_SMP getRankFromName(String name,Team_SMP team) 
 	{
-		for(TeamRank_Expert rank : ranks) 
+		for(TeamRank_SMP rank : ranks) 
 		{
 			if(rank.getName().equalsIgnoreCase(name) && team.getUID().equals(rank.getOwner().getUID())) return rank;
 		}
 		return null;
 	}
-	public static TeamRank_Expert getRankFromID(UUID uid) 
+	public static TeamRank_SMP getRankFromID(UUID uid) 
 	{
-		for(TeamRank_Expert rank : ranks) 
+		for(TeamRank_SMP rank : ranks) 
 		{
 			if(rank.getUID().equals(uid)) return rank;
 		}
@@ -191,21 +191,21 @@ public class TeamRank_Expert
 	{
 		return getRankFromID(uid) != null;
 	}
-	public static TeamRank_Expert getPlayersRank(OfflinePlayer player) 
+	public static TeamRank_SMP getPlayersRank(OfflinePlayer player) 
 	{
-		for(TeamRank_Expert rank : ranks) for(UUID member : rank.getRawMembers()) if(member.equals(player.getUniqueId())) return rank;
+		for(TeamRank_SMP rank : ranks) for(UUID member : rank.getRawMembers()) if(member.equals(player.getUniqueId())) return rank;
 		return null;
 	}
 	public boolean canModify(OfflinePlayer player) 
 	{
-		TeamRank_Expert modifier = getPlayersRank(player);
-		TeamRank_Expert modified = this;
+		TeamRank_SMP modifier = getPlayersRank(player);
+		TeamRank_SMP modified = this;
 		if(modifier.equals(modified)) return false; //you cant change your own role
-		if(modifier.hasPermission(TeamPermissions_Expert.OWNER)) return true;
+		if(modifier.hasPermission(TeamPermissions_SMP.OWNER)) return true;
 		int score = 0;
-		List<TeamPermissions_Expert> modifierPermissions = modifier.getPermissions();
-		List<TeamPermissions_Expert> modifiedPermissions = modified.getPermissions();
-		for(TeamPermissions_Expert perm : modifierPermissions) 
+		List<TeamPermissions_SMP> modifierPermissions = modifier.getPermissions();
+		List<TeamPermissions_SMP> modifiedPermissions = modified.getPermissions();
+		for(TeamPermissions_SMP perm : modifierPermissions) 
 		{
 			score += (modifiedPermissions.remove(perm) ? 0 : 1);
 		}
@@ -221,7 +221,7 @@ public class TeamRank_Expert
 	{
 		String message = "&l&#00FFFF"+ getName() + "\n&r&#00FF00Permissions\n";
 		int number = 0;
-		for(TeamPermissions_Expert permission : getPermissions()) 
+		for(TeamPermissions_SMP permission : getPermissions()) 
 		{
 			if(permission.isImportant()) message += "&l";
 			
