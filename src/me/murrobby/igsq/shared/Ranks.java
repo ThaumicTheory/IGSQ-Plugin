@@ -20,7 +20,7 @@ public enum Ranks
 	MOD(12,"group.mod","&#a25710[&#eb913aHelpful&#a25710] &#eb913a","&e[&6H&e] &6",ChatColor.GOLD),
 	MOD2(13,"group.mod2","&#997d00[&#ffd100Staff&#997d00] &#ffd100","&6[&eS&6] &e",ChatColor.YELLOW),
 	MOD3(14,"group.mod3","&#999600[&#fffa00Senior Staff&#999600] &#fffa00","&6[&dS&eS&6] &e",ChatColor.YELLOW),
-	COUNCIL(15,"group.council","&#99003d[&#ff0065Council&#99003d] &#ff0065","&5[&dC&5] &d",ChatColor.DARK_PURPLE);
+	COUNCIL(15,"group.council","&#99003d[&#ff0065Council&#99003d] &#ff0065","&5[&dC&5] &d",ChatColor.LIGHT_PURPLE);
 	
 	private String permission;
 	private String tag;
