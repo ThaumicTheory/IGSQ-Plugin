@@ -18,7 +18,8 @@ public class UI_SMP
 	    FACTION("&#00FF00"),
 	    ALLIED("&#ff61f4"),
 	    NEUTRAL("&#AAAAAA"),
-	    CONSIDERED_ENEMY("&#444444"),
+	    ADMIN_CLAIM("&#FFFF00"),
+	    ADMIN_CLAIM_ACCESS("&#FFFFFF"),
 	    ENEMY("&#FF0000");
 
 		private String colour;
@@ -68,11 +69,14 @@ public class UI_SMP
 			return;
 		}
 		chunkName = chunk.getOwner().getName();
-		if(!Team_SMP.isInATeam(player)) 
+		if(chunk.getOwner().equals(Common_SMP.getAdminTeam())) 
 		{
-			relationship = Relationship.NONE;
+			relationship = Relationship.ADMIN_CLAIM;
+			chunkName = "Spawn";
+			if(player.hasPermission("igsq.adminclaim")) relationship = Relationship.ADMIN_CLAIM_ACCESS;
 			return;
 		}
+		if(Chunk_SMP.isChunkClaimable(player))
 		if(chunk.getOwner().equals(Team_SMP.getPlayersTeam(player))) 
 		{
 			relationship = Relationship.FACTION;
@@ -86,11 +90,6 @@ public class UI_SMP
 		if(Team_SMP.getPlayersTeam(player).isEnemy(chunk.getOwner())) 
 		{
 			relationship = Relationship.ENEMY;
-			return;
-		}
-		if(chunk.getOwner().isEnemy(Team_SMP.getPlayersTeam(player))) 
-		{
-			relationship = Relationship.CONSIDERED_ENEMY;
 			return;
 		}
 		relationship = Relationship.NEUTRAL;

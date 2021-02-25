@@ -1,7 +1,6 @@
 package me.murrobby.igsq.spigot.expert;
 
 import me.murrobby.igsq.spigot.YamlWrapper;
-import me.murrobby.igsq.spigot.smp.PlayerQuitEvent_SMP;
 
 public class Main_Expert 
 {
@@ -17,7 +16,6 @@ public class Main_Expert
 		new PlayerBedEnterEvent_Expert();
 		new SlimeSplitEvent_Expert();
 		new PlayerJoinEvent_Expert();
-		new PlayerQuitEvent_SMP();
 		
 		
 		//Tasks

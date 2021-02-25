@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.smp.Chunk_SMP;
+import me.murrobby.igsq.spigot.smp.Common_SMP;
 import me.murrobby.igsq.spigot.smp.Team_SMP;
 
 public class Common_Protection 
@@ -29,6 +30,7 @@ public class Common_Protection
 		Chunk_SMP chunk = Chunk_SMP.getChunkFromLocation(location);
 		Team_SMP team = Team_SMP.getPlayersTeam(player);
 		if(chunk == null) return false;
+		if(chunk.getOwner().equals(Common_SMP.getAdminTeam()) && player.hasPermission("igsq.adminclaim")) return false;
 		if(team == null) return true;
 		if(chunk.isOwnedBy(team)) return false;
 		if(chunk.getOwner().isAlly(team)) return false;
@@ -75,7 +77,7 @@ public class Common_Protection
 		if(entity instanceof Tameable) 
 		{
 			Tameable tameableEntity = (Tameable) entity;
-			if(tameableEntity.getOwner() == null || !tameableEntity.getOwner().getUniqueId().equals(player.getUniqueId()))
+			if(tameableEntity.getOwner() != null && !tameableEntity.getOwner().getUniqueId().equals(player.getUniqueId()))
 			{
 				return true;
 			}

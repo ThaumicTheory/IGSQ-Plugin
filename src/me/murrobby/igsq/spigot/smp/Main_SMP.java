@@ -25,6 +25,7 @@ public class Main_SMP
 	{
 		//Events run forever and cannot be turned off they must induvidualy have checks for expert mode
 		new BlockExplodeEvent_SMP();
+		new EntityExplodeEvent_SMP();
 		new PlayerJoinEvent_SMP();
 		new PlayerQuitEvent_SMP();
 		
