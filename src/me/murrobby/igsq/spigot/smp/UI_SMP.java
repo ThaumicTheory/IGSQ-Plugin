@@ -62,6 +62,12 @@ public class UI_SMP
 	
 	private void chunk() 
 	{
+		if(!Chunk_SMP.isChunkClaimable(player)) 
+		{
+			chunkName = "Protected";
+			relationship = Relationship.PROTECTED;
+			return;
+		}
 		Chunk_SMP chunk = Chunk_SMP.getChunkFromLocation(player.getLocation());
 		if(chunk == null) 
 		{
@@ -76,11 +82,6 @@ public class UI_SMP
 			chunkName = "Spawn";
 			if(player.hasPermission("igsq.adminclaim")) relationship = Relationship.ADMIN_CLAIM_ACCESS;
 			return;
-		}
-		if(!Chunk_SMP.isChunkClaimable(player)) 
-		{
-			chunkName = "Protected";
-			relationship = Relationship.PROTECTED;
 		}
 		if(chunk.getOwner().equals(Team_SMP.getPlayersTeam(player))) 
 		{
