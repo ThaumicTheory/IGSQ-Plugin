@@ -62,7 +62,7 @@ public class UI_SMP
 	
 	private void chunk() 
 	{
-		if(!Chunk_SMP.isChunkClaimable(player)) 
+		if(!Chunk_SMP.isChunkClaimable(player.getLocation())) 
 		{
 			chunkName = "Protected";
 			relationship = Relationship.PROTECTED;
