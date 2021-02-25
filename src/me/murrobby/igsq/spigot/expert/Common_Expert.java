@@ -1,15 +1,11 @@
 package me.murrobby.igsq.spigot.expert;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 
 public class Common_Expert {
@@ -30,14 +26,5 @@ public class Common_Expert {
 			enderDragon.setCustomName(null);
 			enderDragon.getBossBar().setColor(BarColor.PINK);
 		}
-    }
-    public static boolean isProtectedName(String name) 
-    {
-    	List<String> protectedNames = new ArrayList<>();
-    	protectedNames.add("WILDERNESS");
-    	protectedNames.add("&");
-    	protectedNames.addAll(Common.illegalChats);
-    	for(String protectedName : protectedNames) if(name.contains(protectedName.toUpperCase())) return true;
-    	return false;
     }
 }

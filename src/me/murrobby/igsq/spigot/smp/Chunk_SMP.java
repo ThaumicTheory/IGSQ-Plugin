@@ -8,6 +8,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.entity.Player;
+
+import me.murrobby.igsq.spigot.Messaging;
 
 public class Chunk_SMP 
 {
@@ -91,6 +95,30 @@ public class Chunk_SMP
 			chunk.deleteChunk();
 			break;
 		}
+	}
+	public static boolean isChunkClaimable(Player player) 
+	{
+		int x = player.getLocation().getBlockX();
+		int z = player.getLocation().getBlockZ();
+		if(player.getWorld().getEnvironment().equals(Environment.THE_END)) 
+		{
+			if(x < 256 && x >= -256 && z < 256 && z >= -256) 
+			{
+				player.sendMessage(Messaging.chatFormatter("&#FF0000The centre of the end cannot be claimed!"));
+				return false;
+			}
+		}
+		return true;
+	}
+	public static boolean isChunkClaimable(Location location) 
+	{
+		int x = location.getBlockX();
+		int z = location.getBlockZ();
+		if(location.getWorld().getEnvironment().equals(Environment.THE_END)) 
+		{
+			if(x < 256 && x >= -256 && z < 256 && z >= -256) return false;
+		}
+		return true;
 	}
 	
 	

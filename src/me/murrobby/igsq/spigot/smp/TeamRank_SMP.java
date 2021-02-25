@@ -115,6 +115,7 @@ public class TeamRank_SMP
 	}
 	public void addMember(OfflinePlayer newMember) 
 	{
+		if(newMember == null) return;
 		if(!getOwner().isInTeam(newMember)) return;
 		List<UUID> members = getRawMembers();
 		members.add(newMember.getUniqueId());

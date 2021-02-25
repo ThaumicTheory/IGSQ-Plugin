@@ -18,7 +18,8 @@ import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 import me.murrobby.igsq.spigot.YamlWrapper;
-import me.murrobby.igsq.spigot.expert.Common_Expert;
+import me.murrobby.igsq.spigot.smp.Chunk_SMP;
+import me.murrobby.igsq.spigot.smp.Common_SMP;
 import me.murrobby.igsq.spigot.smp.TeamPermissions_SMP;
 import me.murrobby.igsq.spigot.smp.TeamRank_SMP;
 import me.murrobby.igsq.spigot.smp.Team_SMP;
@@ -57,7 +58,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
 			if(Team_SMP.getTeamFromName(name) == null) 
 			{
-				if(Common_Expert.isProtectedName(name)) 
+				if(Common_SMP.isProtectedName(name)) 
 				{
 					sender.sendMessage(Messaging.chatFormatter("&#FF0000This name is not allowed!"));
 					return true;
@@ -193,7 +194,13 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			
 
 			//add ally request
-			if(args.get(1).equalsIgnoreCase("add")) {
+			if(args.get(1).equalsIgnoreCase("add")) 
+			{
+				if(Common_SMP.isProtectedName(ally.getName())) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000You cant ally with an internal faction."));
+					return true;
+				}
 				if(team.isAlly(ally)) {
 					sender.sendMessage(Messaging.chatFormatter("&#FF0000You are already allied!"));
 					return true;
@@ -261,7 +268,13 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			
 
 			//add enemy
-			if(args.get(1).equalsIgnoreCase("add")) {
+			if(args.get(1).equalsIgnoreCase("add")) 
+			{
+				if(Common_SMP.isProtectedName(enemy.getName())) 
+				{
+					sender.sendMessage(Messaging.chatFormatter("&#FF0000You cant enemy with an internal faction."));
+					return true;
+				}
 				if(team.isEnemy(enemy)) {
 					sender.sendMessage(Messaging.chatFormatter("&#FF0000You are enemies already!"));
 					return true;
@@ -364,6 +377,20 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			Team_SMP.getPlayersTeam(player).addChunk(player);
 			return true;
 		}
+		else if(args.get(0).equalsIgnoreCase("adminclaim")) //claim a chunk of land
+		{
+			if(!Common_Command.requirePermission("igsq.adminclaim", player)) {
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000You do not have access to admin claims"));
+				return true;
+			}
+			Chunk_SMP currentChunk = Chunk_SMP.getChunkFromLocation(player.getLocation());
+			if(currentChunk != null) 
+			{
+				currentChunk.deleteChunk();
+			}
+			Common_SMP.getAdminTeam().addChunk(player.getLocation());
+			return true;
+		}
 		else if(args.get(0).equalsIgnoreCase("unclaim")) //unclaim a chunk of land
 		{
 			if(!requirePermission(player, TeamPermissions_SMP.UNCLAIM)) {
@@ -371,6 +398,19 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				return true;
 			}
 			Team_SMP.getPlayersTeam(player).removeChunk(player);
+			return true;
+		}
+		else if(args.get(0).equalsIgnoreCase("adminunclaim")) //unclaim a chunk of land
+		{
+			if(!Common_Command.requirePermission("igsq.adminclaim", player)) {
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000You do not have access to admin claims"));
+				return true;
+			}
+			Chunk_SMP currentChunk = Chunk_SMP.getChunkFromLocation(player.getLocation());
+			if(currentChunk != null) 
+			{
+				currentChunk.deleteChunk();
+			}
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("invites")) //look at current invites
@@ -617,7 +657,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 	}
 	private Boolean teamQuery() 
 	{		
-			if(Common_Command.requirePermission("igsq.team",sender) && sender instanceof Player && YamlWrapper.isExpert()) 
+			if(Common_Command.requirePermission("igsq.team",sender) && sender instanceof Player && YamlWrapper.isSMP()) 
 			{
 				if(team()) 
 				{
@@ -660,7 +700,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		List<String> options = new ArrayList<>();
 		if(args.length == 1) 
 		{
-			List<String> types = Arrays.asList("found","pledge","leave","invite","kick","banish","disband","defect","transferowner","claim","unclaim","rank");
+			List<String> types = Arrays.asList("found","pledge","leave","invite","kick","banish","disband","defect","transferowner","claim","unclaim","rank","adminunclaim","adminclaim");
 			for (String commands : types) 
 			{
 				if(commands.contains(args[0].toLowerCase())) 

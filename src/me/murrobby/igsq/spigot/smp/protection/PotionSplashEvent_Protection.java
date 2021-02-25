@@ -23,6 +23,7 @@ public class PotionSplashEvent_Protection implements Listener
 		if(!event.isCancelled() && YamlWrapper.isSMP()) 
 		{
 			boolean badPotion = Common_Protection.isBadPotion(event.getPotion().getEffects());
+			Bukkit.broadcastMessage("Potion is" + (badPotion ? " " : " not") + " bad!");
 			if(event.getEntity().getShooter() != null && event.getEntity().getShooter() instanceof Player)
 			{
 				Player shooter = (Player) event.getEntity().getShooter();
@@ -31,27 +32,30 @@ public class PotionSplashEvent_Protection implements Listener
 				{
 					if(Common_Protection.isProtected(shooter,entity.getLocation())) 
 					{
-						if(entity instanceof Player) 
-						{
-							//Stop bad potions from hurting allies or faction members
-							Player affectedPlayer = (Player) entity;
-							Team_SMP affectedPlayersTeam = Team_SMP.getPlayersTeam(affectedPlayer);
-							if(badPotion && shootersTeam != null && (shootersTeam.equals(affectedPlayersTeam) || shootersTeam.isAlly(affectedPlayersTeam))) 
-							{
-								event.setIntensity(affectedPlayer, 0);
-							}
-						}
-						else if(entity instanceof Tameable) 
-						{
-							//Allow potions to work on your pets no matter where you are
-							Tameable tameableEntity = (Tameable) entity;
-							if(tameableEntity.getOwner() == null || !tameableEntity.getOwner().getUniqueId().equals(shooter.getUniqueId()))
-							{
-								event.setIntensity(entity, 0);
-							}
-						}
-						else event.setIntensity(entity, 0);
 						
+						event.setIntensity(entity, 0);
+						
+					}
+					else if(entity instanceof Player) 
+					{
+						//Stop bad potions from hurting allies or faction members
+						Player affectedPlayer = (Player) entity;
+						Team_SMP affectedPlayersTeam = Team_SMP.getPlayersTeam(affectedPlayer);
+						if(badPotion && shootersTeam != null && (shootersTeam.equals(affectedPlayersTeam) || shootersTeam.isAlly(affectedPlayersTeam)) && !affectedPlayer.getUniqueId().equals(shooter.getUniqueId())) 
+						{
+							Bukkit.broadcastMessage("protecting " + affectedPlayer.getName());
+							event.setIntensity(affectedPlayer, 0);
+						}
+					}
+					else if(entity instanceof Tameable) 
+					{
+						//Allow potions to work on your pets no matter where you are
+						Tameable tameableEntity = (Tameable) entity;
+						if(tameableEntity.getOwner() != null && !tameableEntity.getOwner().getUniqueId().equals(shooter.getUniqueId()))
+						{
+							Bukkit.broadcastMessage("protecting " + entity.getName());
+							event.setIntensity(entity, 0);
+						}
 					}
 				}
 			}

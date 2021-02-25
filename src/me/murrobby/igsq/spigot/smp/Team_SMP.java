@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -30,18 +31,21 @@ public class Team_SMP
 		teams.add(this);
 		this.yaml = new YamlTeamWrapper_SMP(this);
 		yaml.applyDefault();
-		addMember(owner);
-		TeamRank_SMP ownerRank = new TeamRank_SMP(this, "founder");
-		ownerRank.setGivable(false);
-		ownerRank.addPermission(TeamPermissions_SMP.OWNER);
-		ownerRank.addMember(owner);
-		addRank(ownerRank);
-		yaml.setOwner(owner.getUniqueId().toString());
-		TeamRank_SMP defaultRank = new TeamRank_SMP(this, "member");
-		defaultRank.setDefault();
-		defaultRank.addPermission(TeamPermissions_SMP.INVITE);
-		defaultRank.addPermission(TeamPermissions_SMP.READ_PERMISSIONS);
-		addRank(defaultRank);
+		if(owner != null) 
+		{
+			addMember(owner);
+			TeamRank_SMP ownerRank = new TeamRank_SMP(this, "founder");
+			ownerRank.setGivable(false);
+			ownerRank.addPermission(TeamPermissions_SMP.OWNER);
+			ownerRank.addMember(owner);
+			addRank(ownerRank);
+			yaml.setOwner(owner.getUniqueId().toString());
+			TeamRank_SMP defaultRank = new TeamRank_SMP(this, "member");
+			defaultRank.setDefault();
+			defaultRank.addPermission(TeamPermissions_SMP.INVITE);
+			defaultRank.addPermission(TeamPermissions_SMP.READ_PERMISSIONS);
+			addRank(defaultRank);
+		}
 		yaml.setName(name);
 		longStore();
 	}
@@ -108,6 +112,7 @@ public class Team_SMP
 	}
 	public void addMember(OfflinePlayer newMember) 
 	{
+		if(newMember == null) return;
 		if(isInATeam(newMember)) return;
 		List<UUID> members = getRawMembers();
 		members.add(newMember.getUniqueId());
@@ -203,21 +208,28 @@ public class Team_SMP
 	}
 	public boolean addChunk(Player changer) 
 	{
+		if(changer == null) return false;
 		Chunk selectedChunk = changer.getLocation().getChunk();
 		if(Chunk_SMP.isChunkOwned(selectedChunk)) 
 		{
 			Chunk_SMP ownedChunk = Chunk_SMP.getChunkFromLocation(selectedChunk);
 			if(ownedChunk.isOwnedBy(this)) changer.sendMessage(Messaging.chatFormatter("&#FFb900Chunk at" + ownedChunk.getLocation().get(0) + ", " + ownedChunk.getLocation().get(1) + " in " + ownedChunk.getWorld().getName() + " is already owned by your faction!"));
 			else changer.sendMessage(Messaging.chatFormatter("&#FF0000Chunk at" + ownedChunk.getLocation().get(0) + ", " + ownedChunk.getLocation().get(1) + " in " + ownedChunk.getWorld().getName() + " is already owned by the faction &#CD0000" + ownedChunk.getOwner().getName()));
-			return true;
+			return false;
 		}
-		if(changer == null || isOwner(changer)) 
-		{
-			Chunk_SMP chunk = new Chunk_SMP(selectedChunk);
-			chunk.setOwner(this);
-			if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#00FF00" + new YamlPlayerWrapper(changer).getNickname()+ " has claimed a new chunk at " + chunk.getLocation().get(0) + ", " + chunk.getLocation().get(1) + " in " + chunk.getWorld().getName() + "."));
-		}
-		else changer.sendMessage(Messaging.chatFormatter("&#FF0000You need to be the current leader to add a chunk!"));
+		if(!Chunk_SMP.isChunkClaimable(changer)) return false;
+		Chunk_SMP chunk = new Chunk_SMP(selectedChunk);
+		chunk.setOwner(this);
+		if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#00FF00" + new YamlPlayerWrapper(changer).getNickname()+ " has claimed a new chunk at " + chunk.getLocation().get(0) + ", " + chunk.getLocation().get(1) + " in " + chunk.getWorld().getName() + "."));
+		return true;
+	}
+	public boolean addChunk(Location location) 
+	{
+		if(location == null) return false;
+		Chunk selectedChunk = location.getChunk();
+		if(Chunk_SMP.isChunkOwned(selectedChunk)) return false;
+		Chunk_SMP chunk = new Chunk_SMP(selectedChunk);
+		chunk.setOwner(this);
 		return true;
 	}
 	public boolean removeChunk(Player changer) 
@@ -243,6 +255,7 @@ public class Team_SMP
 	}
 	public boolean isInTeam(OfflinePlayer player) 
 	{
+		if(player == null) return false;
 		for(UUID offline : getRawMembers()) if(player.getUniqueId().equals(offline)) return true;
 		return false;
 	}
