@@ -1,10 +1,14 @@
 package me.murrobby.igsq.spigot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import me.murrobby.igsq.spigot.smp.Team_SMP;
 
 public class YamlPlayerWrapper
 {
@@ -172,13 +176,52 @@ public class YamlPlayerWrapper
 	{
 		Yaml.updateField(uuid + ".damage.last", "internal", data);
 	}
-	public String getExpertInvites() 
+	public String getSmpInvitesField() 
 	{
 		return Yaml.getFieldString(uuid + ".expert.invites", "player");
 	}
-	public void setExpertInvites(String data) 
+	public void setSmpInvitesField(String data) 
 	{
 		Yaml.updateField(uuid + ".expert.invites", "player", data);
+	}
+	
+	public List<UUID> getRawSmpInvites() 
+	{
+		List<UUID> rawInvites = new ArrayList<>();
+		for(String invite : getSmpInvitesField().split(" ")) if (!invite.equals("")) rawInvites.add(UUID.fromString(invite));
+		return rawInvites;
+	}
+	
+	public List<Team_SMP> getSmpInvites() 
+	{
+		List<UUID> rawInvites = getRawSmpInvites();
+		List<Team_SMP> invites = new ArrayList<>();
+		for(UUID invite : rawInvites) invites.add(Team_SMP.getTeamFromID(invite));
+		return invites;
+	}
+	
+	private void setSmpInvites(List<Team_SMP> teams) 
+	{
+		if(teams.size() == 0) 
+		{
+			setSmpInvitesField("");
+			return;
+		}
+		String teamsstring = teams.get(0).toString();
+		for(int i = 1; i < teams.size();i++) teamsstring += " " + teams.get(i).toString();
+		setSmpInvitesField(teamsstring);
+	}
+	public void addSmpInvite(Team_SMP team) 
+	{
+		List<Team_SMP> invites = getSmpInvites();
+		invites.add(team);
+		setSmpInvites(invites);
+	}
+	public void removeSmpInvite(Team_SMP team) 
+	{
+		List<Team_SMP> invites = getSmpInvites();
+		invites.remove(team);
+		setSmpInvites(invites);
 	}
 	public int getExpertCurrency() 
 	{

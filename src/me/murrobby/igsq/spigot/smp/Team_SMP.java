@@ -113,13 +113,55 @@ public class Team_SMP
 		members.add(newMember.getUniqueId());
 		setMembers(members);
 	}
-	public void removeMember(OfflinePlayer newMember) 
+	public void removeMember(OfflinePlayer removeMember) 
 	{
-		if(!isInTeam(newMember)) return;
+		if(!isInTeam(removeMember)) return;
 		List<UUID> members = getRawMembers();
-		members.remove(newMember.getUniqueId());
+		members.remove(removeMember.getUniqueId());
 		setMembers(members);
 	}
+
+	public List<UUID> getRawBanMembers() 
+	{
+		List<UUID> rawPlayers = new ArrayList<>();
+		for(String member : yaml.getBanned().split(" ")) if (!member.equals("")) rawPlayers.add(UUID.fromString(member));
+		return rawPlayers;
+	}
+	
+	public List<OfflinePlayer> getBanMembers() 
+	{
+		List<UUID> rawPlayers = getRawBanMembers();
+		List<OfflinePlayer> players = new ArrayList<>();
+		for(UUID member : rawPlayers) players.add(Bukkit.getOfflinePlayer(member));
+		return players;
+	}
+	private void setBanMembers(List<UUID> newMembers) 
+	{
+		if(newMembers.size() == 0) 
+		{
+			yaml.setBanned("");
+			return;
+		}
+		String membersString = newMembers.get(0).toString();
+		for(int i = 1; i < newMembers.size();i++) membersString += " " + newMembers.get(i).toString();
+		yaml.setBanned(membersString);
+	}
+	public void addBanMember(OfflinePlayer newMember) 
+	{
+		if(isInATeam(newMember)) return;
+		List<UUID> members = getRawBanMembers();
+		members.add(newMember.getUniqueId());
+		setBanMembers(members);
+	}
+	public void removeBanMember(OfflinePlayer removeMember) 
+	{
+		if(!isInTeam(removeMember)) return;
+		List<UUID> members = getRawBanMembers();
+		members.remove(removeMember.getUniqueId());
+		setBanMembers(members);
+	}
+	
+	
 	public void deleteTeam() 
 	{
 		deleteTeam(null);
@@ -462,7 +504,7 @@ public class Team_SMP
 	public static List<UUID> getRawInvite(OfflinePlayer offlinePlayer) {
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer);
 		List<UUID> rawinvites = new ArrayList<>();
-		for(String invitesString : yaml.getExpertInvites().split(" ")) if (!invitesString.equals("")) rawinvites.add(UUID.fromString(invitesString));
+		for(String invitesString : yaml.getSmpInvitesField().split(" ")) if (!invitesString.equals("")) rawinvites.add(UUID.fromString(invitesString));
 		return rawinvites;
 	}
 	public static List<Team_SMP> getInvites(OfflinePlayer offlinePlayer) {
@@ -474,13 +516,13 @@ public class Team_SMP
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer);
 		if(invites.size() == 0 || invites == null) 
 		{
-			yaml.setExpertInvites("");
+			yaml.setSmpInvitesField("");
 			return;
 		}
 		if(invites.get(0) == null) return;
 		String invitesString = invites.get(0).getUID().toString();
 		for(int i = 1; i < invites.size();i++) invitesString += " " + invites.get(i).getUID().toString();
-		yaml.setExpertInvites(invitesString);
+		yaml.setSmpInvitesField(invitesString);
 	}
 	public void removeInvite(Player player) {
 		List<Team_SMP> invites = getInvites(player);
