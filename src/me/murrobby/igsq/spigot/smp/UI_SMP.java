@@ -20,6 +20,7 @@ public class UI_SMP
 	    NEUTRAL("&#AAAAAA"),
 	    ADMIN_CLAIM("&#FFFF00"),
 	    ADMIN_CLAIM_ACCESS("&#FFFFFF"),
+	    PROTECTED("&#FF00FF"),
 	    ENEMY("&#FF0000");
 
 		private String colour;
@@ -76,7 +77,11 @@ public class UI_SMP
 			if(player.hasPermission("igsq.adminclaim")) relationship = Relationship.ADMIN_CLAIM_ACCESS;
 			return;
 		}
-		if(Chunk_SMP.isChunkClaimable(player))
+		if(!Chunk_SMP.isChunkClaimable(player)) 
+		{
+			chunkName = "Protected";
+			relationship = Relationship.PROTECTED;
+		}
 		if(chunk.getOwner().equals(Team_SMP.getPlayersTeam(player))) 
 		{
 			relationship = Relationship.FACTION;
