@@ -132,7 +132,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				return true;
 			}
 			for(OfflinePlayer bannedPlayer : Team_SMP.getPlayersTeam(player).getBanMembers()) {
-				if(bannedPlayer.equals(invPlayer)) {
+				if(bannedPlayer.getUniqueId().equals(invPlayer.getUniqueId())) {
 					sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis person has been banned!"));
 					return true;
 				}
@@ -325,9 +325,9 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			if(Team_SMP.getPlayersTeam(player).equals(Team_SMP.getPlayersTeam(banPlayer))){
 				Team_SMP.getPlayersTeam(player).removeMember(banPlayer);
-				sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + "has been banned from your Faction!"));
 				return true;
 			}
+			sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + "has been banned from your Faction!"));
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("disband")) //request team delete
