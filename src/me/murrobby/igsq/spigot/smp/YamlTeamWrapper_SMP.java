@@ -66,25 +66,33 @@ public class YamlTeamWrapper_SMP
 	{ 
 		return Yaml.getFieldString(uid + ".allypending", "teams");
 	}
-	public void setAllyPending(String ally) 
+	public void setAllyPending(String allypending) 
 	{ 
-		Yaml.updateField(uid + ".allypending", "teams", ally);
+		Yaml.updateField(uid + ".allypending", "teams", allypending);
 	}
 	public String getEnemy() 
 	{ 
 		return Yaml.getFieldString(uid + ".enemy", "teams");
 	}
-	public void setEnemy(String ally) 
+	public void setEnemy(String enemy) 
 	{ 
-		Yaml.updateField(uid + ".enemy", "teams", ally);
+		Yaml.updateField(uid + ".enemy", "teams", enemy);
 	} 
 	public String getLeavePending() 
 	{ 
 		return Yaml.getFieldString(uid + ".leavepending", "teams");
 	}
-	public void setLeavePending(String ally) 
+	public void setLeavePending(String leavepending) 
 	{ 
-		Yaml.updateField(uid + ".leavepending", "teams", ally);
+		Yaml.updateField(uid + ".leavepending", "teams", leavepending);
+	}
+	public String getBanned() 
+	{ 
+		return Yaml.getFieldString(uid + ".leavepending", "teams");
+	}
+	public void setBanned(String banned) 
+	{ 
+		Yaml.updateField(uid + ".leavepending", "teams", banned);
 	}
 	public void delete() 
 	{ 
@@ -100,6 +108,7 @@ public class YamlTeamWrapper_SMP
 		Yaml.addFieldDefault(uid + ".allypending", "teams", "");
 		Yaml.addFieldDefault(uid + ".enemy", "teams", "");
 		Yaml.addFieldDefault(uid + ".leavepending", "teams", "");
+		Yaml.addFieldDefault(uid + ".banned", "teams", "");
 		
 		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
 	}
