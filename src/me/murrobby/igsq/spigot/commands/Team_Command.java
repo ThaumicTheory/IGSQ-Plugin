@@ -94,9 +94,14 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
 			Team_SMP team = Team_SMP.getTeamFromName(name);
-			team.addMember(player);
-			team.getDefaultRank().addMember(player);
-			team.removeInvite(player);
+			for(Team_SMP invites : new YamlPlayerWrapper(player).getSmpInvites()) {
+				if(team.equals(invites)) {
+					team.addMember(player);
+					team.getDefaultRank().addMember(player);
+					team.removeInvite(player);
+				}
+			}
+			
 			
 		}
 		else if(args.get(0).equalsIgnoreCase("leave")) //request to leave team peacefully
