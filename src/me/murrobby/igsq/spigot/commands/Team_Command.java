@@ -132,7 +132,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				return true;
 			}
 			for(OfflinePlayer bannedPlayer : Team_SMP.getPlayersTeam(player).getBanMembers()) {
-				if(bannedPlayer.equals(invPlayer)) {
+				if(bannedPlayer.getUniqueId().equals(invPlayer.getUniqueId())) {
 					sender.sendMessage(Messaging.chatFormatter("&#CCCCCCThis person has been banned!"));
 					return true;
 				}
@@ -319,15 +319,15 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			Team_SMP.getPlayersTeam(player).addBanMember(banPlayer);
 			YamlPlayerWrapper yaml = new YamlPlayerWrapper(banPlayer);
-			for(String expertInvite : yaml.getSmpInvitesField().split("")){
+			for(String expertInvite : yaml.getSmpInvitesField().split(" ")){
 				Team_SMP teamInv = Team_SMP.getTeamFromID(UUID.fromString(expertInvite));
-				if(teamInv.equals(Team_SMP.getPlayersTeam(player))) yaml.removeSmpInvite(Team_SMP.getPlayersTeam(player));
+				if(Team_SMP.getPlayersTeam(player).equals(teamInv)) yaml.removeSmpInvite(Team_SMP.getPlayersTeam(player));
 			}
 			if(Team_SMP.getPlayersTeam(player).equals(Team_SMP.getPlayersTeam(banPlayer))){
 				Team_SMP.getPlayersTeam(player).removeMember(banPlayer);
-				sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + "has been banned from your Faction!"));
 				return true;
 			}
+			sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + "has been banned from your Faction!"));
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("disband")) //request team delete
