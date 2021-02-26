@@ -17,7 +17,7 @@ public class PlayServerBlockChange_BlockHunt implements Listener
 {
 	public PlayServerBlockChange_BlockHunt()
 	{
-		Common_BlockHunt.protocol.addPacketListener
+		Common.protocol.addPacketListener
 		(
 			new PacketAdapter(Common.spigot, ListenerPriority.NORMAL,PacketType.Play.Server.BLOCK_CHANGE) 
 			{

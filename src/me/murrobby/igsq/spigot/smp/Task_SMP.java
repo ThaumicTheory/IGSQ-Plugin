@@ -4,13 +4,13 @@ import org.bukkit.Bukkit;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.YamlWrapper;
 
-public class UITask_SMP {
+public class Task_SMP {
 	
 	final int taskID;
 	
 	private int uiTask = -1;
 	
-	public UITask_SMP(int taskID) 
+	public Task_SMP(int taskID) 
 	{
 		this.taskID = taskID;
 		uiQuery();
@@ -27,13 +27,17 @@ public class UITask_SMP {
 				if(Main_SMP.taskID != taskID || !YamlWrapper.isSMP() || Bukkit.getOnlinePlayers().size() == 0)
 				{
 					Common.spigot.scheduler.cancelTask(uiTask);
-					System.out.println("Task: \"UI SMP\" Expired Closing Task To Save Resources.");
+					System.out.println("Task: \"Task SMP\" Expired Closing Task To Save Resources.");
 				}
 			} 		
     	}, 0, 5);
 	}
 	private void ui()
 	{
-		for(UI_SMP ui : UI_SMP.getUIs()) ui.display();
+		for(Player_SMP player : Player_SMP.getPlayers()) 
+		{
+			if(player.isUIAccessable()) player.getUI().display();
+			if(player.isAspectAccessable()) player.getAspect().run();
+		}
 	}
 }

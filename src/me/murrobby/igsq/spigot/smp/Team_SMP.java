@@ -518,7 +518,7 @@ public class Team_SMP
 	public static List<UUID> getRawInvite(OfflinePlayer offlinePlayer) {
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer);
 		List<UUID> rawinvites = new ArrayList<>();
-		for(String invitesString : yaml.getSmpInvitesField().split(" ")) if (!invitesString.equals("")) rawinvites.add(UUID.fromString(invitesString));
+		for(String invitesString : yaml.getSmpInvites().split(" ")) if (!invitesString.equals("")) rawinvites.add(UUID.fromString(invitesString));
 		return rawinvites;
 	}
 	public static List<Team_SMP> getInvites(OfflinePlayer offlinePlayer) {
@@ -530,13 +530,13 @@ public class Team_SMP
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer);
 		if(invites.size() == 0 || invites == null) 
 		{
-			yaml.setSmpInvitesField("");
+			yaml.setSmpInvites("");
 			return;
 		}
 		if(invites.get(0) == null) return;
 		String invitesString = invites.get(0).getUID().toString();
 		for(int i = 1; i < invites.size();i++) invitesString += " " + invites.get(i).getUID().toString();
-		yaml.setSmpInvitesField(invitesString);
+		yaml.setSmpInvites(invitesString);
 	}
 	public void removeInvite(Player player) {
 		List<Team_SMP> invites = getInvites(player);

@@ -1,14 +1,10 @@
 package me.murrobby.igsq.spigot;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import me.murrobby.igsq.spigot.smp.Team_SMP;
 
 public class YamlPlayerWrapper
 {
@@ -176,23 +172,31 @@ public class YamlPlayerWrapper
 	{
 		Yaml.updateField(uuid + ".damage.last", "internal", data);
 	}
-	public String getSmpInvitesField() 
+	public String getSmpInvites() 
 	{
-		return Yaml.getFieldString(uuid + ".expert.invites", "player");
+		return Yaml.getFieldString(uuid + ".smp.invites", "player");
 	}
-	public void setSmpInvitesField(String data) 
+	public void setSmpInvites(String data) 
 	{
-		Yaml.updateField(uuid + ".expert.invites", "player", data);
+		Yaml.updateField(uuid + ".smp.invites", "player", data);
 	}
 	
 	
-	public int getExpertCurrency() 
+	public int getSMPCurrency() 
 	{
-		return Yaml.getFieldInt(uuid + ".expert.currency", "player");
+		return Yaml.getFieldInt(uuid + ".smp.currency", "player");
 	}
-	public void setExpertCurrency(int data) 
+	public void setSMPCurrency(int data) 
 	{
-		Yaml.updateField(uuid + ".expert.currency", "player", data);
+		Yaml.updateField(uuid + ".smp.currency", "player", data);
+	}
+	public String getSmpAspect() 
+	{
+		return Yaml.getFieldString(uuid + ".smp.aspect", "player");
+	}
+	public void setSmpAspect(String data) 
+	{
+		Yaml.updateField(uuid + ".smp.invites", "player", data);
 	}
 	public ErrorLogging getErrorLogSetting() 
 	{
@@ -211,8 +215,9 @@ public class YamlPlayerWrapper
     	Yaml.addFieldDefault(uuid + ".playercompass.target","internal","");
     	Yaml.addFieldDefault(uuid + ".playercompass.accuracy", "internal",0);
     	Yaml.addFieldDefault(uuid + ".errorlog", "internal",ErrorLogging.DISABLED.toString());
-    	Yaml.addFieldDefault(uuid + ".expert.invites", "player", "");
-    	Yaml.addFieldDefault(uuid + ".expert.currency", "player", 0);
+    	Yaml.addFieldDefault(uuid + ".smp.invites", "player", "");
+    	Yaml.addFieldDefault(uuid + ".smp.currency", "player", 0);
+    	Yaml.addFieldDefault(uuid + ".smp.aspect", "player", "");
 		
 		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
     }

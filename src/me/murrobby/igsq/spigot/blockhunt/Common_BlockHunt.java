@@ -16,8 +16,6 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 
 import me.murrobby.igsq.spigot.Common;
@@ -29,62 +27,7 @@ public class Common_BlockHunt
 {
 	public static int numberPerSeeker = 2;
 	
-	public static ProtocolManager protocol = ProtocolLibrary.getProtocolManager();
-	/*
-	public static Material[] interactWhitelist = 
-		{
-			Material.ACACIA_BUTTON,
-			Material.ACACIA_DOOR,
-			Material.ACACIA_FENCE_GATE,
-			Material.ACACIA_TRAPDOOR,
-			
-			Material.OAK_BUTTON,
-			Material.OAK_DOOR,
-			Material.OAK_FENCE_GATE,
-			Material.OAK_TRAPDOOR,
-			
-			Material.BIRCH_BUTTON,
-			Material.BIRCH_DOOR,
-			Material.BIRCH_FENCE_GATE,
-			Material.BIRCH_TRAPDOOR,
-			
-			Material.SPRUCE_TRAPDOOR,
-			Material.SPRUCE_BUTTON,
-			Material.SPRUCE_DOOR,
-			Material.SPRUCE_FENCE_GATE,
-			
-			Material.DARK_OAK_TRAPDOOR,
-			Material.DARK_OAK_BUTTON,
-			Material.DARK_OAK_DOOR,
-			Material.DARK_OAK_FENCE_GATE,
-			
-			Material.JUNGLE_TRAPDOOR,
-			Material.JUNGLE_BUTTON,
-			Material.JUNGLE_DOOR,
-			Material.JUNGLE_FENCE_GATE,
-			
-			Material.JUNGLE_TRAPDOOR,
-			Material.JUNGLE_BUTTON,
-			Material.JUNGLE_DOOR,
-			Material.JUNGLE_FENCE_GATE,
-			
-			Material.CRIMSON_TRAPDOOR,
-			Material.CRIMSON_BUTTON,
-			Material.CRIMSON_DOOR,
-			Material.CRIMSON_FENCE_GATE,
-			
-			Material.WARPED_TRAPDOOR,
-			Material.WARPED_BUTTON,
-			Material.WARPED_DOOR,
-			Material.WARPED_FENCE_GATE,
-			
-			Material.STONE_BUTTON,
-			Material.LEVER
-			
-		};
-	*/
-	
-    public static ScoreboardManager manager;
+	public static ScoreboardManager manager;
     public static Scoreboard board;
     
     public static Team hidersTeam;

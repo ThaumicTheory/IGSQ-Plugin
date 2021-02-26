@@ -77,7 +77,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				if(Team_SMP.isInATeam(player)) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! To join another you will have to defect!\nThis may cause backlash from your current faction!"));
 				
 				player.sendMessage(Messaging.chatFormatter("&#00FF00----------------Lists of Invites----------------"));
-				String expertInvites = new YamlPlayerWrapper(player).getSmpInvitesField();
+				String expertInvites = new YamlPlayerWrapper(player).getSmpInvites();
 				if(expertInvites == null || expertInvites.equals("")) player.sendMessage(Messaging.chatFormatter("&#FF0000You don't have any invites... Create your own by doing /faction found [FactionName] !"));
 				
 				for(String invites : expertInvites.split(" "))
@@ -96,6 +96,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
 			Team_SMP team = Team_SMP.getTeamFromName(name);
+			/*
 			for(Team_SMP invites : new YamlPlayerWrapper(player).getSmpInvites()) {
 				if(team.equals(invites)) {
 					team.addMember(player);
@@ -103,7 +104,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					team.removeInvite(player);
 				}
 			}
-			
+			*/
 			
 		}
 		else if(args.get(0).equalsIgnoreCase("leave")) //request to leave team peacefully
@@ -326,9 +327,9 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			Team_SMP.getPlayersTeam(player).addBanMember(banPlayer);
 			YamlPlayerWrapper yaml = new YamlPlayerWrapper(banPlayer);
-			for(String expertInvite : yaml.getSmpInvitesField().split(" ")){
+			for(String expertInvite : yaml.getSmpInvites().split(" ")){
 				Team_SMP teamInv = Team_SMP.getTeamFromID(UUID.fromString(expertInvite));
-				if(Team_SMP.getPlayersTeam(player).equals(teamInv)) yaml.removeSmpInvite(Team_SMP.getPlayersTeam(player));
+				//if(Team_SMP.getPlayersTeam(player).equals(teamInv)) yaml.removeSmpInvite(Team_SMP.getPlayersTeam(player));
 			}
 			if(Team_SMP.getPlayersTeam(player).equals(Team_SMP.getPlayersTeam(banPlayer))){
 				Team_SMP.getPlayersTeam(player).removeMember(banPlayer);
@@ -437,15 +438,15 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.get(0).equalsIgnoreCase("invites")) //look at current invites
 		{
-			
+			/*
 			
 			
 			if(!requireTeam(player)) {
 				try {
 				player.sendMessage(Messaging.chatFormatter("&#00FF00----------------List of Invites----------------"));
-				player.sendMessage(Messaging.chatFormatter("&#FF0000" + playerYaml.getSmpInvitesField()));
 				player.sendMessage(Messaging.chatFormatter("&#FF0000" + playerYaml.getSmpInvites()));
-				if(Team_SMP.getPlayersTeam(player) == null || playerYaml.getSmpInvitesField().equals("") || playerYaml.getSmpInvites() == null) {
+				player.sendMessage(Messaging.chatFormatter("&#FF0000" + playerYaml.getSmpInvites()));
+				if(Team_SMP.getPlayersTeam(player) == null || playerYaml.getSmpInvites().equals("") || playerYaml.getSmpInvites() == null) {
 					player.sendMessage(Messaging.chatFormatter("&#FF0000You dont have any invites"));
 					player.sendMessage(Messaging.chatFormatter("&#00FF00-----------------------------------------------"));
 					return true;
@@ -476,7 +477,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			player.sendMessage(Messaging.chatFormatter("&#FF0000Trying to get invites"));
 			for(OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
 				player.sendMessage(Messaging.chatFormatter("&#FF0000Trying to get invites part 2"));
-				String expertInvites = new YamlPlayerWrapper(offlinePlayer).getSmpInvitesField();
+				String expertInvites = new YamlPlayerWrapper(offlinePlayer).getSmpInvites();
 				player.sendMessage(Messaging.chatFormatter("&#FF0000got the invites"));
 				if(expertInvites == null || expertInvites.equals("")) continue;
 				player.sendMessage(Messaging.chatFormatter("&#FF0000they arent null"));
@@ -491,6 +492,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			
 
 			return true;
+			*/
 		}
 		else if(args.get(0).equalsIgnoreCase("rank")) //Rank Settings
 		{

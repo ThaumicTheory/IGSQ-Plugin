@@ -13,7 +13,7 @@ public class PlayServerPlayerInfo_BlockHunt implements Listener
 {
 	public PlayServerPlayerInfo_BlockHunt()
 	{
-		Common_BlockHunt.protocol.addPacketListener
+		Common.protocol.addPacketListener
 		(
 			new PacketAdapter(Common.spigot, ListenerPriority.NORMAL,PacketType.Play.Server.PLAYER_INFO) 
 			{
