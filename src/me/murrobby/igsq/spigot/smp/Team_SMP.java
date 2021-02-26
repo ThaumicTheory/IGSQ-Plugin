@@ -167,6 +167,7 @@ public class Team_SMP
 	}
 	
 	
+	
 	public void deleteTeam() 
 	{
 		deleteTeam(null);

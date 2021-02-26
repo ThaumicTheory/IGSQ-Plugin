@@ -10,15 +10,24 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 
 public class Player_SMP {
+	private YamlPlayerWrapper yaml;
 	private OfflinePlayer player;
+	public Player_SMP(OfflinePlayer player) {
+		this.player = player;
+		yaml = new YamlPlayerWrapper(player);
+	}
 	public OfflinePlayer getOfflinePlayer()
 	{
 		return player;
 	}
+	public YamlPlayerWrapper getYaml()
+	{
+		return yaml;
+	}
 	public List<UUID> getRawSmpInvites() 
 	{
 		List<UUID> rawInvites = new ArrayList<>();
-		for(String invite : new YamlPlayerWrapper(player).getSmpInvitesField().split(" ")) if (!invite.equals("")) rawInvites.add(UUID.fromString(invite));
+		for(String invite : getYaml().getSmpInvitesField().split(" ")) if (!invite.equals("")) rawInvites.add(UUID.fromString(invite));
 		return rawInvites;
 	}
 	
@@ -32,15 +41,14 @@ public class Player_SMP {
 	
 	private void setSmpInvites(List<Team_SMP> teams) 
 	{
-		YamlPlayerWrapper playerYaml = new YamlPlayerWrapper(player);
 		if(teams.size() == 0) 
 		{
-			playerYaml.setSmpInvitesField("");
+			getYaml().setSmpInvitesField("");
 			return;
 		}
 		String teamsstring = teams.get(0).toString();
 		for(int i = 1; i < teams.size();i++) teamsstring += " " + teams.get(i).toString();
-		playerYaml.setSmpInvitesField(teamsstring);
+		getYaml().setSmpInvitesField(teamsstring);
 	}
 	public void addSmpInvite(Team_SMP team) 
 	{
