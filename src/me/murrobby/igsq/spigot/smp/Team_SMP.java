@@ -180,12 +180,12 @@ public class Team_SMP
 		}
 		if(getRawMembers().size() == 1 || changer == null) 
 		{
-			if (changer != null) changer.sendMessage(Messaging.chatFormatter("&#00FF00Faction disbanded successfully."));
 			for(TeamRank_SMP rank : getRanks()) rank.delete();
 			Chunk_SMP.deleteChunk(this);
 			yaml.delete();
 			teams.remove(this);
 			longStore();
+			if (changer != null) changer.sendMessage(Messaging.chatFormatter("&#00FF00Faction disbanded successfully."));
 		}
 		else 
 		{

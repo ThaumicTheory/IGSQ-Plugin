@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -305,10 +307,10 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			if(Team_SMP.getPlayersTeam(player).equals(Team_SMP.getPlayersTeam(kickPlayer))){
 				Team_SMP.getPlayersTeam(player).removeMember(kickPlayer);
-				sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + "has been kicked from your Faction!"));
+				sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + " has been kicked from your Faction!"));
 				return true;
 			}
-			sender.sendMessage(Messaging.chatFormatter("&#FF0000" + name + "is not in your Faction!"));
+			sender.sendMessage(Messaging.chatFormatter("&#FF0000" + name + " is not in your Faction!"));
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("banish")) //remove someone from the team and ban them from ever joining again
@@ -332,7 +334,22 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				Team_SMP.getPlayersTeam(player).removeMember(banPlayer);
 				return true;
 			}
-			sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + "has been banned from your Faction!"));
+			sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + " has been banned from your Faction!"));
+			return true;
+		}
+		else if(args.get(0).equalsIgnoreCase("unbanish")) //remove someone from the team and ban them from ever joining again
+		{
+			if(!requirePermission(player, TeamPermissions_SMP.BAN)) return true;
+			
+			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
+			Player banPlayer = Bukkit.getPlayer(name);
+			if(banPlayer == null) 
+			{
+				sender.sendMessage(Messaging.chatFormatter("&#FF0000Could not find " + name));
+				return true;
+			}
+			Team_SMP.getPlayersTeam(player).removeBanMember(banPlayer);
+			sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + " has been unbanned from your Faction!"));
 			return true;
 		}
 		else if(args.get(0).equalsIgnoreCase("disband")) //request team delete
@@ -420,21 +437,57 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		}
 		else if(args.get(0).equalsIgnoreCase("invites")) //look at current invites
 		{
-			if(!requireTeam(player)) return true;
+			
+			
+			
+			if(!requireTeam(player)) {
+				try {
+				player.sendMessage(Messaging.chatFormatter("&#00FF00----------------List of Invites----------------"));
+				player.sendMessage(Messaging.chatFormatter("&#FF0000" + playerYaml.getSmpInvitesField()));
+				player.sendMessage(Messaging.chatFormatter("&#FF0000" + playerYaml.getSmpInvites()));
+				if(Team_SMP.getPlayersTeam(player) == null || playerYaml.getSmpInvitesField().equals("") || playerYaml.getSmpInvites() == null) {
+					player.sendMessage(Messaging.chatFormatter("&#FF0000You dont have any invites"));
+					player.sendMessage(Messaging.chatFormatter("&#00FF00-----------------------------------------------"));
+					return true;
+				}
+
+				for(Team_SMP invite : playerYaml.getSmpInvites()) {
+					TextComponent message = new TextComponent("You have been invited to join " + invite.getName());
+					message.setColor(net.md_5.bungee.api.ChatColor.of("#00FF00"));
+					message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/faction pledge " + invite.getName()));
+					message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Join team" + invite.getName())));
+					player.spigot().sendMessage(message);
+				}
+				player.sendMessage(Messaging.chatFormatter("&#00FF00-----------------------------------------------"));
+				return true;
+				}
+				catch(Exception e){
+					StringWriter sw = new StringWriter();
+			    	PrintWriter pw = new PrintWriter(sw);
+			    	e.printStackTrace(pw);
+			    	String stackTrace = sw.toString();
+					player.sendMessage(Messaging.chatFormatter("&#FF0000" + stackTrace));
+					return true;
+				}
+			}
+			
 			Team_SMP team = Team_SMP.getPlayersTeam(player);
-			player.sendMessage(Messaging.chatFormatter("&#00FF00----------------Lists of Invites----------------"));
+			player.sendMessage(Messaging.chatFormatter("&#00FF00----------------List of Faction Invites----------------"));
+			player.sendMessage(Messaging.chatFormatter("&#FF0000Trying to get invites"));
 			for(OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+				player.sendMessage(Messaging.chatFormatter("&#FF0000Trying to get invites part 2"));
 				String expertInvites = new YamlPlayerWrapper(offlinePlayer).getSmpInvitesField();
+				player.sendMessage(Messaging.chatFormatter("&#FF0000got the invites"));
 				if(expertInvites == null || expertInvites.equals("")) continue;
-				
+				player.sendMessage(Messaging.chatFormatter("&#FF0000they arent null"));
 				for(String invites : expertInvites.split(" ")){
 					Team_SMP teamInv = Team_SMP.getTeamFromID(UUID.fromString(invites));
-					if(teamInv.equals(team)) {
+					if(team.equals(teamInv)) {
 						player.sendMessage(Messaging.chatFormatter("&#00FF00" + offlinePlayer.getName()));
 					}
 				}
 			}
-			player.sendMessage(Messaging.chatFormatter("&#00FF00------------------------------------------------"));
+			player.sendMessage(Messaging.chatFormatter("&#00FF00-----------------------------------------------------"));
 			
 
 			return true;

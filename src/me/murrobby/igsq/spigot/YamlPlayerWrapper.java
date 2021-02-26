@@ -185,44 +185,7 @@ public class YamlPlayerWrapper
 		Yaml.updateField(uuid + ".expert.invites", "player", data);
 	}
 	
-	public List<UUID> getRawSmpInvites() 
-	{
-		List<UUID> rawInvites = new ArrayList<>();
-		for(String invite : getSmpInvitesField().split(" ")) if (!invite.equals("")) rawInvites.add(UUID.fromString(invite));
-		return rawInvites;
-	}
 	
-	public List<Team_SMP> getSmpInvites() 
-	{
-		List<UUID> rawInvites = getRawSmpInvites();
-		List<Team_SMP> invites = new ArrayList<>();
-		for(UUID invite : rawInvites) invites.add(Team_SMP.getTeamFromID(invite));
-		return invites;
-	}
-	
-	private void setSmpInvites(List<Team_SMP> teams) 
-	{
-		if(teams.size() == 0) 
-		{
-			setSmpInvitesField("");
-			return;
-		}
-		String teamsstring = teams.get(0).toString();
-		for(int i = 1; i < teams.size();i++) teamsstring += " " + teams.get(i).toString();
-		setSmpInvitesField(teamsstring);
-	}
-	public void addSmpInvite(Team_SMP team) 
-	{
-		List<Team_SMP> invites = getSmpInvites();
-		invites.add(team);
-		setSmpInvites(invites);
-	}
-	public void removeSmpInvite(Team_SMP team) 
-	{
-		List<Team_SMP> invites = getSmpInvites();
-		invites.remove(team);
-		setSmpInvites(invites);
-	}
 	public int getExpertCurrency() 
 	{
 		return Yaml.getFieldInt(uuid + ".expert.currency", "player");
@@ -239,8 +202,6 @@ public class YamlPlayerWrapper
 	{
 		Yaml.updateField(uuid + ".errorlog", "player", data.toString());
 	}
-	
-	
 	
     public void applyDefault() 
     {
