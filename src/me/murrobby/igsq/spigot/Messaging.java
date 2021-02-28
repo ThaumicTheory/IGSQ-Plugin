@@ -2,6 +2,7 @@ package me.murrobby.igsq.spigot;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -163,6 +164,7 @@ public class Messaging {
      */
     public static void sendException(Exception exception,String reason,String errorCode,CommandSender cause) 
     {
+    	if(exception == null) return;
     	StringWriter sw = new StringWriter();
     	PrintWriter pw = new PrintWriter(sw);
     	exception.printStackTrace(pw);
@@ -206,5 +208,73 @@ public class Messaging {
     			System.out.println(chatFormatterConsole("&eCaused by: " + cause.getName()));
     		}
 		}
+    }
+    public static void sendException(Throwable exception,String message) 
+    {
+    	String stackTrace = null;
+    	if(exception != null) 
+    	{
+        	StringWriter sw = new StringWriter();
+        	PrintWriter pw = new PrintWriter(sw);
+        	exception.printStackTrace(pw);
+        	stackTrace = sw.toString();
+    	}
+    	for(Player player : Bukkit.getOnlinePlayers()) 
+    	{
+    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+    		if(player.hasPermission("igsq.error")) 
+    		{
+    			ErrorLogging errorLogStatus = yaml.getErrorLogSetting();
+    			if(!errorLogStatus.equals(ErrorLogging.DISABLED)) 
+    			{
+    				if(message != null) player.sendMessage(chatFormatter("&#FF0000Spigot Error: " + message));
+    	    		if(errorLogStatus.equals(ErrorLogging.DETAILED)) 
+    	    		{
+    	    			if(stackTrace != null) player.sendMessage(chatFormatter("&#FF6161Verbose: " + stackTrace));
+    	    		}
+    			}
+    		}
+    	}
+    }
+    public static void sendLog(String message) 
+    {
+    	for(Player player : Bukkit.getOnlinePlayers()) 
+    	{
+    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+    		if(player.hasPermission("igsq.error")) 
+    		{
+    			ErrorLogging errorLogStatus = yaml.getErrorLogSetting();
+    			if(!errorLogStatus.equals(ErrorLogging.DISABLED)) 
+    			{
+    				if(errorLogStatus.equals(ErrorLogging.DETAILED)) 
+    	    		{
+    					if(message != null) player.sendMessage(chatFormatter(message));
+    	    		}
+    			}
+    		}
+    	}
+    }
+    public static String getLogColour(Level level) 
+    {
+    	if(level.equals(Level.WARNING)) return "&e";
+    	if(level.equals(Level.SEVERE)) return "&c";
+    	return "&7";
+    }
+    public static void createLog(Level level,String message) 
+    {
+    	Common.spigot.getLogger().logp(level, Common.spigot.getName(), null, message);
+    }
+    public static void createLog(String message) 
+    {
+    	createLog(Level.INFO, message);
+    }
+    
+    public static void createSafeLog(Level level,String message) 
+    {
+    	createLog(level, "[UNSAFE] " + message);
+    }
+    public static void createSafeLog(String message) 
+    {
+    	createSafeLog(Level.INFO, message);
     }
 }

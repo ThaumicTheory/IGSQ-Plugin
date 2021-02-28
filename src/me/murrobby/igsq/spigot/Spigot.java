@@ -1,5 +1,8 @@
 package me.murrobby.igsq.spigot;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,6 +15,7 @@ import me.murrobby.igsq.spigot.main.AsyncPlayerChatEvent_Main;
 import me.murrobby.igsq.spigot.main.EntityDamageEvent_Main;
 import me.murrobby.igsq.spigot.main.EntityDeathEvent_Main;
 import me.murrobby.igsq.spigot.main.InventoryClickEvent_Main;
+import me.murrobby.igsq.spigot.main.LoggerHandler_Main;
 import me.murrobby.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerJoinEvent_Main;
 import me.murrobby.igsq.spigot.main.PlayerQuitEvent_Main;
@@ -27,7 +31,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 	@Override
 	public void onEnable()
 	{ 
-		System.out.println("Plugin Starting!");
+		Messaging.createLog("Plugin Starting!");
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:yml", this);
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:sound", this);
 		
@@ -41,6 +45,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 		new AsyncPlayerChatEvent_Main();
 		new EntityDamageEvent_Main();
 		new PlayerQuitEvent_Main();
+		new LoggerHandler_Main();
 		
 		new Main_Expert();
 		new Main_SMP();
@@ -49,25 +54,26 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 		new Team_Command();
 		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && YamlWrapper.isLuckpermsSupported()) 
 		{
-			System.out.println("Luckperms Module Enabled.");
+			Messaging.createLog("Luckperms Module Enabled.");
 			new Main_LP(this);
 			YamlWrapper.setDefaultChatController("mainlp");
 			YamlWrapper.setDefaultNameController("main");
 		}
 		else 
 		{
-			System.out.println("Luckperms Module Disabled.");
+			if(YamlWrapper.isLuckpermsSupported()) Messaging.createLog(Level.WARNING,"Luckperms Support is on but the plugin cannot be located.");
+			Messaging.createLog("Luckperms Module Disabled.");
 			YamlWrapper.setDefaultChatController("main");
 			YamlWrapper.setDefaultNameController("none");
 		}
 		if(YamlWrapper.isBlockHunt()) 
 		{
-			System.out.println("BlockHunt enabled.");
+			Messaging.createLog("BlockHunt enabled.");
 			new Main_BlockHunt();
 		}
 		else 
 		{
-			System.out.println("BlockHunt disabled!");
+			Messaging.createLog("BlockHunt disabled.");
 		}
 		
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable()
@@ -81,25 +87,38 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 			} 		
     	}, 600, 600);
 		for(Player player : Bukkit.getOnlinePlayers()) Communication.setDefaultTagData(player);
+		Messaging.createLog("Plugin Started.");
 	}
 
 	public void onLoad()
 	{
-		System.out.println("Plugin Booting!");
 		Common.spigot = this;
+		
+		Common.logger = new LoggerHandler_Main();
+		Logger.getLogger("Minecraft").addHandler(Common.logger);
+		Common.spigot.getLogger().addHandler(Common.logger);
+		Messaging.createSafeLog("Plugin Started Preparing.");
 		Yaml.createFiles();
 		Yaml.loadFile("@all");
 		YamlWrapper.applyDefault();
+		Messaging.createLog("Plugin Finished Preparing.");
+		
 	}
 	
 	public void onDisable()
 	{
+		Messaging.createLog("Shutting down.");
+		
 		for(Player player : Bukkit.getOnlinePlayers()) Communication.deletePlayer(player);
 		BlockCluster.cleanup();
 		this.getServer().getScheduler().cancelTasks(this);
 		Yaml.saveFileChanges("@all");
 		Yaml.disgardAndCloseFile("@all");
 		this.getServer().getPluginManager().disablePlugin(this);
+		
+		Logger.getLogger("Minecraft").removeHandler(Common.logger);
+		Common.spigot.getLogger().removeHandler(Common.logger);
+		Messaging.createSafeLog("Shutdown Complete.");
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package me.murrobby.igsq.spigot;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 public class YamlWrapper 
 {
 	public static String getMySQLUsername() 
@@ -30,7 +28,9 @@ public class YamlWrapper
 	}
 	public static boolean isBlockHunt() 
 	{
-		return Yaml.getFieldBool("gameplay.blockhunt", "config");
+		Boolean blockHuntValue = Yaml.getFieldBool("gameplay.blockhunt", "config");
+		if(blockHuntValue == null) return false;
+		return blockHuntValue;
 	}
 	public static void setBlockHunt(boolean data) 
 	{
@@ -38,7 +38,9 @@ public class YamlWrapper
 	}
 	public static boolean isExpert() 
 	{
-		return Yaml.getFieldBool("gameplay.expert", "config");
+		Boolean expertValue = Yaml.getFieldBool("gameplay.expert", "config");
+		if(expertValue == null) return false;
+		return expertValue;
 	} 
 	public static void setExpert(boolean data) 
 	{
@@ -46,7 +48,9 @@ public class YamlWrapper
 	}
 	public static boolean isSMP() 
 	{
-		return Yaml.getFieldBool("gameplay.smp", "config");
+		Boolean smpValue = Yaml.getFieldBool("gameplay.smp", "config");
+		if(smpValue == null) return false;
+		return smpValue;
 	} 
 	public static void setSMP(boolean data) 
 	{
@@ -62,7 +66,9 @@ public class YamlWrapper
 	}
 	public static boolean isLuckpermsSupported() 
 	{
-		return Yaml.getFieldBool("support.luckperms", "config");
+		Boolean luckpermsValue = Yaml.getFieldBool("support.luckperms", "config");
+		if(luckpermsValue == null) return false;
+		return luckpermsValue;
 	}
 	public static void setLuckpermsSupported(boolean data) 
 	{
@@ -234,7 +240,9 @@ public class YamlWrapper
 	
 	public static ErrorLogging getErrorLogSetting() 
 	{
-		return ErrorLogging.valueOf(Yaml.getFieldString("console.errorlog", "internal"));
+		String errorLogSetting = Yaml.getFieldString("console.errorlog", "internal");
+		if(errorLogSetting == null) return ErrorLogging.DETAILED;
+		return ErrorLogging.valueOf(errorLogSetting);
 	}
 	public static void setErrorLogSetting(ErrorLogging data) 
 	{
@@ -280,6 +288,5 @@ public class YamlWrapper
         
         Yaml.addFieldDefault("server","internal","unknown");
         Yaml.addFieldDefault("console.errorlog", "internal",ErrorLogging.DETAILED.toString());
-        for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
     }
 }

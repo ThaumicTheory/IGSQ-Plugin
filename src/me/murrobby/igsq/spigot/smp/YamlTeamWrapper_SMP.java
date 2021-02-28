@@ -1,7 +1,5 @@
 package me.murrobby.igsq.spigot.smp;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import me.murrobby.igsq.spigot.Yaml;
 
 public class YamlTeamWrapper_SMP 
@@ -110,6 +108,5 @@ public class YamlTeamWrapper_SMP
 		Yaml.addFieldDefault(uid + ".leavepending", "teams", "");
 		Yaml.addFieldDefault(uid + ".banned", "teams", "");
 		
-		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
 	}
 }

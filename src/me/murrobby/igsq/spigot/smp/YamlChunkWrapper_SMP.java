@@ -2,8 +2,6 @@ package me.murrobby.igsq.spigot.smp;
 
 import java.util.UUID;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import me.murrobby.igsq.spigot.Yaml;
 
 public class YamlChunkWrapper_SMP 
@@ -58,6 +56,5 @@ public class YamlChunkWrapper_SMP
 		Yaml.addFieldDefault(uid + ".location", "chunks", "");
 		Yaml.addFieldDefault(uid + ".world", "chunks", "");
 		
-		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
 	}
 }

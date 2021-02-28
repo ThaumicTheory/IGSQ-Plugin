@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.logging.Level;
 
 import org.bukkit.plugin.Plugin;
 
@@ -26,7 +27,7 @@ public class Database
 			updateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
 			updateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37),nickname VARCHAR(32),role VARCHAR(32),founder bit(1),birthday bit(1),nitroboost bit(1),supporter bit(1),developer bit(1));");
 		}
-		else System.err.println("A Database Error Has Occured On Startup.");
+		else Messaging.createLog(Level.SEVERE, "Failed to connect to the database!");
 	}
 	public static ResultSet queryCommand(String sql) 
 	{

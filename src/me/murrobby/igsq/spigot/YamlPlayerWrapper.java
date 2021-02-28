@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 
 public class YamlPlayerWrapper
 {
@@ -200,7 +199,9 @@ public class YamlPlayerWrapper
 	}
 	public ErrorLogging getErrorLogSetting() 
 	{
-		return ErrorLogging.valueOf(Yaml.getFieldString(uuid + ".errorlog", "player"));
+		String errorLogSetting = Yaml.getFieldString(uuid + ".errorlog", "player");
+		if(errorLogSetting == null) return ErrorLogging.DISABLED;
+		return ErrorLogging.valueOf(errorLogSetting);
 	}
 	public void setErrorLogSetting(ErrorLogging data) 
 	{
@@ -218,8 +219,6 @@ public class YamlPlayerWrapper
     	Yaml.addFieldDefault(uuid + ".smp.invites", "player", "");
     	Yaml.addFieldDefault(uuid + ".smp.currency", "player", 0);
     	Yaml.addFieldDefault(uuid + ".smp.aspect", "player", "");
-		
-		for(FileConfiguration configuration : Yaml.getConfigurations()) configuration.options().copyDefaults(true);
     }
 	
 	

@@ -47,7 +47,7 @@ public class Main_SMP
 		new PotionSplashEvent_Protection();
 		
 		new EntityAirChangeEvent_Aspect();
-		new PlayServerGameStateChange_Aspect();
+		//new PlayServerGameStateChange_Aspect(); //Re-enable after protocollib fixes this event
 		//Tasks
 		startSMP();
 	}

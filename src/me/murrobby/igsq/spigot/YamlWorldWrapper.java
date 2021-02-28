@@ -11,7 +11,9 @@ public class YamlWorldWrapper
 	}
 	public boolean isRealtime() 
 	{ 
-		return Yaml.getFieldBool(uid + ".realtime.enabled", "internal");
+		Boolean realTimeValue = Yaml.getFieldBool(uid + ".realtime.enabled", "internal");
+		if(realTimeValue == null) return false;
+		return realTimeValue;
 	}
 	public void setRealtime(boolean data) 
 	{ 

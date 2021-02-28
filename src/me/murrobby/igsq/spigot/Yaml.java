@@ -2,7 +2,7 @@ package me.murrobby.igsq.spigot;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -72,9 +72,15 @@ public class Yaml
     {
     	for(int i = 0; i < FILE_NAMES.length;i++) 
     	{
+	    	if(configurations[i] == null) 
+	    	{
+	    		Messaging.createSafeLog(Level.WARNING,"Something wanted to put the value "+ data.toString() +" if no value existed, into " + path +" in " + fileName + " while the yaml was not loaded!");
+	    		return;
+	    	}
     		if(FILE_NAMES[i].equalsIgnoreCase(fileName)) 
     		{
     			getConfigurations()[i].addDefault(path, data);
+    			getConfigurations()[i].options().copyDefaults(true);
     			break;
     		}
     	}
@@ -86,6 +92,11 @@ public class Yaml
     	{
     		if(FILE_NAMES[i].equalsIgnoreCase(fileName)) 
     		{
+    	    	if(configurations[i] == null) 
+    	    	{
+    	    		Messaging.createSafeLog(Level.WARNING,"Something asked for the String from " + path +" in " + fileName + " while the yaml was not loaded!");
+    	    		return null;
+    	    	}
     			return getConfigurations()[i].getString(path);
     		}
     	}
@@ -98,6 +109,11 @@ public class Yaml
     	{
     		if(FILE_NAMES[i].equalsIgnoreCase(fileName)) 
     		{
+    	    	if(configurations[i] == null) 
+    	    	{
+    	    		Messaging.createSafeLog(Level.WARNING,"Something asked for the Boolean from " + path +" in " + fileName + " while the yaml was not loaded!");
+    	    		return null;
+    	    	}
     			return getConfigurations()[i].getBoolean(path);
     		}
     	}
@@ -110,6 +126,11 @@ public class Yaml
     	{
     		if(FILE_NAMES[i].equalsIgnoreCase(fileName)) 
     		{
+    	    	if(configurations[i] == null) 
+    	    	{
+    	    		Messaging.createSafeLog(Level.WARNING,"Something asked for the Integer from " + path +" in " + fileName + " while the yaml was not loaded!");
+    	    		return -1;
+    	    	}
     			return getConfigurations()[i].getInt(path);
     		}
     	}
@@ -117,33 +138,15 @@ public class Yaml
     }
     
     //TODO Java Docs
-    public static void updateField(String path,String fileName,String data) 
+    public static void updateField(String path,String fileName,Object data) 
     {
     	for(int i = 0; i < FILE_NAMES.length;i++) 
     	{
-    		if(FILE_NAMES[i].equalsIgnoreCase(fileName))
-    		{
-    			getConfigurations()[i].set(path, data);
-    			break;
-    		}
-    	}
-    }
-    public static void updateField(String path,String fileName,Boolean data) 
-    {
-    	for(int i = 0; i < FILE_NAMES.length;i++) 
-    	{
-    		if(FILE_NAMES[i].equalsIgnoreCase(fileName))
-    		{
-    			getConfigurations()[i].set(path, data);
-    			break;
-    		}
-    	}
-    }
-    //TODO Java Docs
-    public static void updateField(String path,String fileName,int data) 
-    {
-    	for(int i = 0; i < FILE_NAMES.length;i++) 
-    	{
+	    	if(configurations[i] == null) 
+	    	{
+	    		Messaging.createSafeLog(Level.WARNING,"Something wanted to put the value "+ data.toString() +" into " + path +" in " + fileName + " while the yaml was not loaded!");
+	    		return;
+	    	}
     		if(FILE_NAMES[i].equalsIgnoreCase(fileName))
     		{
     			getConfigurations()[i].set(path, data);
@@ -164,6 +167,11 @@ public class Yaml
 		    	{
 		    		if(FILE_NAMES[i].equalsIgnoreCase(fileName))
 		    		{
+		    	    	if(configurations[i] == null) 
+		    	    	{
+		    	    		Messaging.createSafeLog(Level.WARNING,"Something wanted to delete " + path +" in " + fileName + " while the yaml was not loaded!");
+		    	    		return;
+		    	    	}
 		    			getConfigurations()[i].set(path, null);
 		    			break;
 		    		}
@@ -202,6 +210,12 @@ public class Yaml
 		{
 	    	for(int i = 0; i < FILE_NAMES.length;i++) 
 			{
+    	    	if(configurations[i] == null || files[i] == null) 
+    	    	{
+    	    		if(fileName.equalsIgnoreCase("@all")) Messaging.createSafeLog(Level.WARNING,"Something tried to save all the files while the yaml was not loaded!");
+    	    		else Messaging.createSafeLog(Level.WARNING,"Something tried to save the file " + fileName + " while the yaml was not loaded!");
+    	    		return;
+    	    	}
 				if(fileName.equalsIgnoreCase("@all")) 
 				{
 					getConfigurations()[i].save(files[i]);
@@ -240,7 +254,7 @@ public class Yaml
     // TODO commenting
 	public static void interpretMessage(String message, Player player)
 	{
-		System.out.println("Message: " + message);
+		//System.out.println("Message: " + message);
 		String[] args = message.split(".");
 		if(args.length == 3)
 		{
@@ -249,7 +263,7 @@ public class Yaml
     			updateField(player.getUniqueId() +"." +args[1], args[0], args[2]);
     		}
 		}
-		else System.out.println("Length was not the right size was " + args.length + " needed 3.");
+		//else System.out.println("Length was not the right size was " + args.length + " needed 3.");
 	}
 	public static FileConfiguration[] getConfigurations() {
 		return configurations;

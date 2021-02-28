@@ -14,6 +14,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 import me.murrobby.igsq.shared.Common_Shared;
+import me.murrobby.igsq.spigot.main.LoggerHandler_Main;
 
 public class Common {
     /**
@@ -22,6 +23,7 @@ public class Common {
      * @see Spigot
      */
 	public static Spigot spigot;
+	public static LoggerHandler_Main logger;
     /**
      * illegalChats is a String array of all of the banned words for {@link #filterChat(String, Player) Filter Chat} to compare to.
      * @see #filterChat(String, Player)
