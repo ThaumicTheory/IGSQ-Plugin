@@ -157,27 +157,19 @@ public class Yaml
     //TODO Java Docs
     public static void deleteField(String path,String fileName) 
     {
-    	Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
+    	for(int i = 0; i < FILE_NAMES.length;i++) 
     	{
-
-			@Override
-			public void run() 
-			{
-		    	for(int i = 0; i < FILE_NAMES.length;i++) 
-		    	{
-		    		if(FILE_NAMES[i].equalsIgnoreCase(fileName))
-		    		{
-		    	    	if(configurations[i] == null) 
-		    	    	{
-		    	    		Messaging.createSafeLog(Level.WARNING,"Something wanted to delete " + path +" in " + fileName + " while the yaml was not loaded!");
-		    	    		return;
-		    	    	}
-		    			getConfigurations()[i].set(path, null);
-		    			break;
-		    		}
-		    	}
-			}
-    	},600);
+    		if(FILE_NAMES[i].equalsIgnoreCase(fileName))
+    		{
+    	    	if(configurations[i] == null) 
+    	    	{
+    	    		Messaging.createSafeLog(Level.WARNING,"Something wanted to delete " + path +" in " + fileName + " while the yaml was not loaded!");
+    	    		return;
+    	    	}
+    			getConfigurations()[i].set(path, null);
+    			break;
+    		}
+    	}
     }
   //TODO Java Docs
     public static void loadFile(String fileName) 

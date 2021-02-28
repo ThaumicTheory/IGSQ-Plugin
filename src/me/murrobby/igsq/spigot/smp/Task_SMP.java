@@ -36,7 +36,10 @@ public class Task_SMP {
 	{
 		for(Player_SMP player : Player_SMP.getPlayers()) 
 		{
-			if(player.isUIAccessable()) player.getUI().display();
+			if(player.isUIAccessable()) 
+			{
+				player.getUI().display();
+			}
 			if(player.isAspectAccessable()) player.getAspect().run();
 		}
 	}

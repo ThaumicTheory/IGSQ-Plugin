@@ -86,7 +86,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 					Yaml.loadFile("@all");
 			} 		
     	}, 600, 600);
-		for(Player player : Bukkit.getOnlinePlayers()) Communication.setDefaultTagData(player);
+		for(Player player : Bukkit.getOnlinePlayers()) Communication.setDefaultTagDataReload(player);
 		Messaging.createLog("Plugin Started.");
 	}
 

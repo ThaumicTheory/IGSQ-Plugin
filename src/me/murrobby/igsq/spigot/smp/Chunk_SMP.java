@@ -84,19 +84,17 @@ public class Chunk_SMP
 	}
 	public void deleteChunk() 
 	{
-		yaml.delete();
 		chunks.remove(this);
 		longStore();
+		yaml.delete();
 	}
 	public static void deleteChunk(Team_SMP team) 
 	{
-		for(Chunk_SMP chunk : chunks) if(chunk.getOwner().equals(team)) 
-		{
-			chunk.deleteChunk();
-			break;
-		}
+		List<Chunk_SMP> chunksToBeDeleted = new ArrayList<>();
+		for(Chunk_SMP chunk : chunks) if(chunk.getOwner().equals(team)) chunksToBeDeleted.add(chunk);
+		for(Chunk_SMP chunkToDelete : chunksToBeDeleted) chunkToDelete.deleteChunk();
 	}
-	public static boolean isChunkClaimable(Player player) 
+	public static boolean isChunkClaimable(Player player)  
 	{
 		int x = player.getLocation().getBlockX();
 		int z = player.getLocation().getBlockZ();

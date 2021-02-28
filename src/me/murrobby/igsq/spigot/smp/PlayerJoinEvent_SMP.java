@@ -20,7 +20,6 @@ public class PlayerJoinEvent_SMP implements Listener
 	{
 		if(YamlWrapper.isSMP())
 		{
-			new UI_SMP(event.getPlayer());
 			if(Bukkit.getOnlinePlayers().size() == 1)
 			{
 				Main_SMP.refreshSMP();

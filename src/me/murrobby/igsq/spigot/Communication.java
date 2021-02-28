@@ -179,6 +179,32 @@ public class Communication
 			exception.printStackTrace();
 		}
 	}
+	public static void setDefaultTagDataReload(Player player) 
+	{
+		prefixHashTable.put(player.getUniqueId(), "");
+		suffixHashTable.put(player.getUniqueId(), "");
+		refreshTag(player);
+		try
+		{
+			PacketContainer fakeTeam = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
+			fakeTeam.getStrings().write(0, player.getUniqueId().toString().substring(0, 16));
+			fakeTeam.getIntegers().write( 0, 0 );
+			fakeTeam.getIntegers().write(1, 0);
+			fakeTeam.getIntegers().write( 1, 1 );
+			List<String> playerList = new ArrayList<String>();
+			playerList.add(nameHashTable.get(player.getUniqueId()));
+			fakeTeam.getSpecificModifier(Collection.class).write(0, playerList);
+			teams.add(player.getUniqueId().toString());
+			for(Player selectedPlayer : Bukkit.getOnlinePlayers())
+			{
+				 ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, fakeTeam);
+			}
+		}
+		catch(Exception exception) 
+		{
+			exception.printStackTrace();
+		}
+	}
 	public static void setDefaultTagData(UUID player) 
 	{
 		setDefaultTagData(Bukkit.getPlayer(player));
