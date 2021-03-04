@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -15,6 +16,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 
+import me.murrobby.igsq.shared.Colors;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 
@@ -32,6 +34,7 @@ public class Test_Command {
 	}
 	private Boolean test() 
 	{
+		Bukkit.broadcastMessage("Colour" + Colors.ERROR + "ERROR");
 		int id = 0;
 		if(sender instanceof Player && args.size() >= 1) 
 		{

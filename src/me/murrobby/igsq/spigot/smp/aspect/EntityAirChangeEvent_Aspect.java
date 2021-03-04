@@ -24,7 +24,10 @@ public class EntityAirChangeEvent_Aspect implements Listener
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{
 				Player_SMP player = Player_SMP.getSMPPlayer((OfflinePlayer) event.getEntity());
-				if(player.getAspect().getID().equals(Enum_Aspect.WATER)) event.setCancelled(true);
+				if(player.getAspect().getID().equals(Enum_Aspect.WATER)) 
+				{
+					event.setAmount(273);
+				}
 				
 			}
 		}

@@ -125,7 +125,6 @@ public class Communication
 			}
 		}
 		teams.remove(player.getUniqueId().toString());
-		for(String team : teams) System.out.println(team);
 		prefixHashTable.remove(player.getUniqueId());
 		suffixHashTable.remove(player.getUniqueId());
 		nameHashTable.remove(player.getUniqueId());
@@ -134,8 +133,13 @@ public class Communication
 	{
 		prefixHashTable.put(player.getUniqueId(), "");
 		suffixHashTable.put(player.getUniqueId(), "");
-		refreshTag(player);
+		refreshTagUsername(player);
 		
+		sendTeamsToPlayer(player);
+		createNewTeamForPlayer(player);
+	}
+	private static void sendTeamsToPlayer(Player player) 
+	{
 		for(String team : teams) 
 		{
 			Player selectedPlayer = Bukkit.getPlayer(UUID.fromString(team));
@@ -158,6 +162,9 @@ public class Communication
 				}
 			}
 		}
+	}
+	private static void createNewTeamForPlayer(Player player) 
+	{
 		try
 		{
 			PacketContainer fakeTeam = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
@@ -183,33 +190,13 @@ public class Communication
 	{
 		prefixHashTable.put(player.getUniqueId(), "");
 		suffixHashTable.put(player.getUniqueId(), "");
-		refreshTag(player);
-		try
-		{
-			PacketContainer fakeTeam = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
-			fakeTeam.getStrings().write(0, player.getUniqueId().toString().substring(0, 16));
-			fakeTeam.getIntegers().write( 0, 0 );
-			fakeTeam.getIntegers().write(1, 0);
-			fakeTeam.getIntegers().write( 1, 1 );
-			List<String> playerList = new ArrayList<String>();
-			playerList.add(nameHashTable.get(player.getUniqueId()));
-			fakeTeam.getSpecificModifier(Collection.class).write(0, playerList);
-			teams.add(player.getUniqueId().toString());
-			for(Player selectedPlayer : Bukkit.getOnlinePlayers())
-			{
-				 ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, fakeTeam);
-			}
-		}
-		catch(Exception exception) 
-		{
-			exception.printStackTrace();
-		}
+		refreshTagUsername(player);
 	}
 	public static void setDefaultTagData(UUID player) 
 	{
 		setDefaultTagData(Bukkit.getPlayer(player));
 	}
-	private static void refreshTag(Player player) 
+	private static void refreshTagUsername(Player player) 
 	{
 		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
 		String name = player.getName();

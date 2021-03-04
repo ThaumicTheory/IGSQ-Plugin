@@ -195,7 +195,7 @@ public class YamlPlayerWrapper
 	}
 	public void setSmpAspect(String data) 
 	{
-		Yaml.updateField(uuid + ".smp.invites", "player", data);
+		Yaml.updateField(uuid + ".smp.aspect", "player", data);
 	}
 	public ErrorLogging getErrorLogSetting() 
 	{

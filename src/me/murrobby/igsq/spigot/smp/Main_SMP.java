@@ -5,6 +5,9 @@ import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.smp.aspect.EntityAirChangeEvent_Aspect;
+import me.murrobby.igsq.spigot.smp.aspect.EntityDamageByEntityEvent_Aspect;
+import me.murrobby.igsq.spigot.smp.aspect.EntityTargetEvent_Aspect;
+import me.murrobby.igsq.spigot.smp.aspect.ProjectileHitEvent_Aspect;
 import me.murrobby.igsq.spigot.smp.protection.BlockDamageEvent_Protection;
 import me.murrobby.igsq.spigot.smp.protection.BlockPistonExtendEvent_Protection;
 import me.murrobby.igsq.spigot.smp.protection.BlockPistonRetractEvent_Protection;
@@ -29,6 +32,7 @@ public class Main_SMP
 		new EntityExplodeEvent_SMP();
 		new PlayerJoinEvent_SMP();
 		new PlayerQuitEvent_SMP();
+		new InventoryClickEvent_SMP();
 		
 		
 		new BlockDamageEvent_Protection();
@@ -46,6 +50,9 @@ public class Main_SMP
 		new PotionSplashEvent_Protection();
 		
 		new EntityAirChangeEvent_Aspect();
+		new EntityDamageByEntityEvent_Aspect();
+		new EntityTargetEvent_Aspect();
+		new ProjectileHitEvent_Aspect();
 		//new PlayServerGameStateChange_Aspect(); //Re-enable after protocollib fixes this event
 		//Tasks
 		startSMP();

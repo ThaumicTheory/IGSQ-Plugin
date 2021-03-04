@@ -19,6 +19,7 @@ public class Messaging {
      */
     public static String chatFormatter(String textToFormat) //CF
     {
+    	if(textToFormat == null) return "";
     	String textToColour = textToFormat.replaceAll("[\\r]", ""); //Replaces Windows Enter Chars to what minecraft supports
     	textToColour = textToColour.replaceAll("[\\t]", "        "); //Replaces Windows tab Chars to what minecraft supports
     	String[] textToColourChars = textToColour.split("");
@@ -271,7 +272,7 @@ public class Messaging {
     
     public static void createSafeLog(Level level,String message) 
     {
-    	createLog(level, "[UNSAFE] " + message);
+    	createLog(level, "[@] " + message);
     }
     public static void createSafeLog(String message) 
     {

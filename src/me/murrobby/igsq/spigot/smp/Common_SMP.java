@@ -25,4 +25,5 @@ public class Common_SMP
 		for(String protectedName : protectedNames) if(name.toUpperCase().contains(protectedName.toUpperCase())) return true;
 		return false;
 	}
+	
 }

@@ -22,7 +22,7 @@ public class LoggerHandler_Main extends Handler{
 	@Override
 	public void publish(LogRecord arg0) 
 	{
-		boolean ignore = arg0 != null && arg0.getMessage().startsWith("[UNSAFE] ");
+		boolean ignore = arg0 != null && arg0.getMessage().startsWith("[@] ");
 		if(!ignore) 
 		{
 			if(arg0.getThrown() != null) 

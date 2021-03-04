@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 import me.murrobby.igsq.spigot.smp.aspect.Base_Aspect;
 import me.murrobby.igsq.spigot.smp.aspect.Enum_Aspect;
+import me.murrobby.igsq.spigot.smp.aspect.None_Aspect;
 import me.murrobby.igsq.spigot.smp.aspect.Water_Aspect;
 
 public class Player_SMP {
@@ -55,29 +56,29 @@ public class Player_SMP {
 	
 	public Base_Aspect getAspect()
 	{
-		if((aspect == null && getYaml().getSmpAspect() != null && !getYaml().getSmpAspect().equals("")) || (aspect != null && !aspect.getID().toString().equalsIgnoreCase(getYaml().getSmpAspect()))) aspect = createAspect();
+		if(aspect == null) aspect = createAspect();
 		return aspect;
 	}
 	public Base_Aspect createAspect()
 	{
-		if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.WATER.toString())) return new Water_Aspect(this);
+		if(getYaml().getSmpAspect() != null && getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.WATER.toString())) return new Water_Aspect(this);
 		
 		
 		
-		getYaml().setSmpAspect("");
-		return null;
+		return new None_Aspect(this);
 	}
 	public void setAspect(Base_Aspect aspect)
 	{
 		this.aspect = aspect;
 	}
+	public void updateAspect()
+	{
+		aspect = null;
+		createAspect();
+	}
 	public boolean isUIAccessable() //will be null for an offline player
 	{
 		return getUI() != null;
-	}
-	public boolean isAspectAccessable() //will be null for an offline player
-	{
-		return getAspect() != null;
 	}
 	
 	public int getMoney()

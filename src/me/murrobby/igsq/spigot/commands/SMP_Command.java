@@ -3,10 +3,15 @@ package me.murrobby.igsq.spigot.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.smp.Main_SMP;
+import me.murrobby.igsq.spigot.smp.Player_SMP;
+import me.murrobby.igsq.spigot.smp.aspect.Enum_Aspect;
 
 public class SMP_Command {
 
@@ -22,6 +27,13 @@ public class SMP_Command {
 	private Boolean smp() 
 	{
 		Boolean currentSetting = YamlWrapper.isSMP();
+		if(args.size() == 1 && sender instanceof Player && currentSetting && args.get(0).equalsIgnoreCase("resetaspect")) 
+		{
+			Player_SMP player = Player_SMP.getSMPPlayer((Player) sender);
+			player.getYaml().setSmpAspect(Enum_Aspect.NONE.toString());
+			player.updateAspect();
+			return true;
+		}
 		if((args.size() == 0 || args.get(0).equalsIgnoreCase("true")) && !currentSetting) 
 		{
 			YamlWrapper.setSMP(true);

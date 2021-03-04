@@ -4,10 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.murrobby.igsq.spigot.Common;
+import me.murrobby.igsq.spigot.YamlEntityWrapper;
 import me.murrobby.igsq.spigot.YamlWrapper;
 
 
@@ -21,6 +23,7 @@ public class EntityDeathEvent_Main implements Listener
 	@EventHandler
 	public void EntityDeath_Main(org.bukkit.event.entity.EntityDeathEvent event) 
 	{
+		if(!(event.getEntity() instanceof Player)) new YamlEntityWrapper(event.getEntity()).delete();
 		if(event.getEntity() instanceof EnderDragon) 
 		{
 			EnderDragon enderDragon = (EnderDragon) event.getEntity();

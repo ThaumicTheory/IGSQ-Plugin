@@ -40,7 +40,7 @@ public class Task_SMP {
 			{
 				player.getUI().display();
 			}
-			if(player.isAspectAccessable()) player.getAspect().run();
+			player.getAspect().run();
 		}
 	}
 }
