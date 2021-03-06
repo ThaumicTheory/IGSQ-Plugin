@@ -120,7 +120,7 @@ public class Yaml
     	return false;
     }
     //TODO Java Docs
-    public static int getFieldInt(String path,String fileName) 
+    public static Integer getFieldInt(String path,String fileName) 
     {
     	for(int i = 0; i < FILE_NAMES.length;i++) 
     	{

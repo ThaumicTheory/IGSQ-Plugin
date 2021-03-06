@@ -87,6 +87,41 @@ public class Common {
     	return arrayAppended;
     }
     
+    public static double getTemperature(Player player) 
+    {
+    	return player.getPlayer().getWorld().getTemperature(player.getPlayer().getLocation().getBlockX(), player.getPlayer().getLocation().getBlockY(), player.getPlayer().getLocation().getBlockZ());
+    }
+    
+    public static Weather getWeatherEstimated(Player player) 
+    {
+    	if(player.getWorld().isClearWeather()) return Weather.CLEAR;
+    	boolean thundering = player.getWorld().isThundering();
+    	double temperature = getTemperature(player);
+		if(temperature > 1) return Weather.CLOUDY;
+		else if(temperature < 0.15) 
+		{
+			if(thundering) return Weather.SNOWSTORM;
+			else return Weather.SNOW;
+		}
+		else 
+		{
+			if(thundering) return Weather.STORM;
+			else return Weather.RAIN;
+		}
+    }
+    
+    public static Climate getClimate(Player player) 
+    {
+    	double temperature = getTemperature(player);
+    	if(temperature == 2) return Climate.HELL;
+		if(temperature > 1.5) return Climate.HEATWAVE;
+		if(temperature > 1.2) return Climate.HOT;
+		if(temperature > .6) return Climate.NORMAL;
+		if(temperature > .4) return Climate.COLD;
+		if(temperature > .2) return Climate.FROSTY;
+		if(temperature >= 0) return Climate.FREEZING;
+		return Climate.NORMAL;
+    }
     
    
 	

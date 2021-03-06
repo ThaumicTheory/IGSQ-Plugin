@@ -33,6 +33,7 @@ public class Main_SMP
 		new PlayerJoinEvent_SMP();
 		new PlayerQuitEvent_SMP();
 		new InventoryClickEvent_SMP();
+		new PlayerMoveEvent_SMP();
 		
 		
 		new BlockDamageEvent_Protection();

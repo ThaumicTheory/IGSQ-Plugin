@@ -20,7 +20,9 @@ public class YamlEntityWrapper
 	}
 	public String getSMPAgro() 
 	{
-		return Yaml.getFieldString(uid + ".smp.neutralagro", "entity");
+		String agro = Yaml.getFieldString(uid + ".smp.neutralagro", "entity");
+		if(agro == null) return "";
+		return agro;
 	}
 	public void setSMPAgro(String data) 
 	{
@@ -28,7 +30,9 @@ public class YamlEntityWrapper
 	}
 	public int getSMPLastHit() 
 	{
-		return Yaml.getFieldInt(uid + ".smp.lasthit", "entity");
+		Integer lastHit = Yaml.getFieldInt(uid + ".smp.lasthit", "entity");
+		if(lastHit == null) return 0;
+		return lastHit;
 	}
 	public void setSMPLastHit(int data) 
 	{

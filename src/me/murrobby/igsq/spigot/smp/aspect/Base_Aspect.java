@@ -12,7 +12,7 @@ import me.murrobby.igsq.spigot.smp.Player_SMP;
 
 public abstract class Base_Aspect 
 {
-	private List<EntityType> protective = new ArrayList<>(); //these entities will protect you if you are attacked
+	private List<EntityType> protective = new ArrayList<>(); //these entities will protect you if you are attacked (will only attack entities which they can target normally)
 	private List<EntityType> passive = new ArrayList<>(); //these entities will ignore you
 	private List<EntityType> neutral = new ArrayList<>(); //these entities will target you if provoked
 	private List<EntityType> aggresive = new ArrayList<>(); //these entities will target you
@@ -26,6 +26,7 @@ public abstract class Base_Aspect
 	private Enum_Aspect id;
 	private int secondTracker = 0;
 	private float speed;
+	private String suggester;
 	public List<EntityType> getPassiveEntities() 
 	{
 		return passive;
@@ -106,6 +107,14 @@ public abstract class Base_Aspect
 	public void setLore(String lore) 
 	{
 		this.lore = lore;
+	}
+	public String getSuggester() 
+	{
+		return suggester;
+	}
+	public void setSuggester(String suggester) 
+	{
+		this.suggester = suggester;
 	}
 	public float getMovementSpeed() 
 	{
