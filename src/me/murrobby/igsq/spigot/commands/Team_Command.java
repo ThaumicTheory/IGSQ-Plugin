@@ -22,6 +22,7 @@ import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.smp.Chunk_SMP;
 import me.murrobby.igsq.spigot.smp.Common_SMP;
+import me.murrobby.igsq.spigot.smp.Player_SMP;
 import me.murrobby.igsq.spigot.smp.TeamPermissions_SMP;
 import me.murrobby.igsq.spigot.smp.TeamRank_SMP;
 import me.murrobby.igsq.spigot.smp.Team_SMP;
@@ -96,15 +97,15 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			}
 			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
 			Team_SMP team = Team_SMP.getTeamFromName(name);
-			/*
-			for(Team_SMP invites : new YamlPlayerWrapper(player).getSmpInvites()) {
+			
+			for(Team_SMP invites : Player_SMP.getSMPPlayer(player).getSmpInvites()) {
 				if(team.equals(invites)) {
 					team.addMember(player);
 					team.getDefaultRank().addMember(player);
 					team.removeInvite(player);
 				}
 			}
-			*/
+			
 			
 		}
 		else if(args.get(0).equalsIgnoreCase("leave")) //request to leave team peacefully
@@ -338,7 +339,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 			sender.sendMessage(Messaging.chatFormatter("&#00FF00" + name + " has been banned from your Faction!"));
 			return true;
 		}
-		else if(args.get(0).equalsIgnoreCase("unbanish")) //remove someone from the team and ban them from ever joining again
+		else if(args.get(0).equalsIgnoreCase("unbanish")) //unban someone who was previously banned
 		{
 			if(!requirePermission(player, TeamPermissions_SMP.BAN)) return true;
 			
