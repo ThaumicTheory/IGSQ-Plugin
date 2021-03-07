@@ -49,6 +49,7 @@ public class EntityTargetEvent_Aspect implements Listener
 			}
 			else agressive(event); //target player to be agressive
 		}
+		
 	}
 	private void agressive(org.bukkit.event.entity.EntityTargetEvent event) 
 	{

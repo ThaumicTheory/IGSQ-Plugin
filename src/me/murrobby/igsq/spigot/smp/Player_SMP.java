@@ -14,8 +14,10 @@ import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
 import me.murrobby.igsq.spigot.smp.aspect.Base_Aspect;
+import me.murrobby.igsq.spigot.smp.aspect.Uncertain_Aspect;
 import me.murrobby.igsq.spigot.smp.aspect.Enum_Aspect;
 import me.murrobby.igsq.spigot.smp.aspect.None_Aspect;
+import me.murrobby.igsq.spigot.smp.aspect.Snow_Aspect;
 import me.murrobby.igsq.spigot.smp.aspect.Water_Aspect;
 
 public class Player_SMP {
@@ -61,7 +63,12 @@ public class Player_SMP {
 	}
 	public Base_Aspect createAspect()
 	{
-		if(getYaml().getSmpAspect() != null && getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.WATER.toString())) return new Water_Aspect(this);
+		if(getYaml().getSmpAspect() != null)
+		{
+			if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.WATER.toString())) return new Water_Aspect(this);
+			if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.UNCERTAIN.toString())) return new Uncertain_Aspect(this);
+			if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.SNOW.toString())) return new Snow_Aspect(this);
+		}
 		
 		
 		
