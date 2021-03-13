@@ -17,6 +17,7 @@ import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
+import me.murrobby.igsq.spigot.YamlExpiryController;
 import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.smp.Chunk_SMP;
 import me.murrobby.igsq.spigot.smp.Common_SMP;
@@ -216,6 +217,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					team.addAlly(ally);
 					sender.sendMessage(Messaging.chatFormatter("&#ff61f4You are now Allied with " + name + "!"));
 					team.removeAllyPending(ally);
+					YamlExpiryController.addAlliance(team, ally);
 					return true;
 				}
 			}

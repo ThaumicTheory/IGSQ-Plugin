@@ -1,5 +1,9 @@
 package me.murrobby.igsq.spigot.smp;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import me.murrobby.igsq.spigot.Yaml;
 
 public class YamlTeamWrapper_SMP 
@@ -50,7 +54,7 @@ public class YamlTeamWrapper_SMP
 	}
 	public static void setTeams(String teams) 
 	{
-		Yaml.updateField("teams", "teams",teams);
+		Yaml.updateField("teams", "teams", teams);
 	}
 	public String getAlly() 
 	{ 

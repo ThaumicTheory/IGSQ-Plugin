@@ -103,6 +103,7 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 		Yaml.createFiles();
 		Yaml.loadFile("@all");
 		YamlWrapper.applyDefault();
+		YamlExpiryController.applyDefault();
 		Messaging.createLog("Plugin Finished Preparing.");
 		
 	}
