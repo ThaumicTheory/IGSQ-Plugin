@@ -13,6 +13,8 @@ import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
+import me.murrobby.igsq.spigot.smp.aspect.Abyss_Aspect;
+import me.murrobby.igsq.spigot.smp.aspect.Air_Aspect;
 import me.murrobby.igsq.spigot.smp.aspect.Base_Aspect;
 import me.murrobby.igsq.spigot.smp.aspect.Uncertain_Aspect;
 import me.murrobby.igsq.spigot.smp.aspect.Enum_Aspect;
@@ -25,6 +27,7 @@ public class Player_SMP {
 	private OfflinePlayer player;
 	private UI_SMP userInterface;
 	private Base_Aspect aspect;
+	private boolean wantFly = false;
 	private static List<Player_SMP> players = new ArrayList<>();
 	public Player_SMP(OfflinePlayer player)
 	{
@@ -68,6 +71,8 @@ public class Player_SMP {
 			if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.WATER.toString())) return new Water_Aspect(this);
 			if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.UNCERTAIN.toString())) return new Uncertain_Aspect(this);
 			if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.SNOW.toString())) return new Snow_Aspect(this);
+			if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.AIR.toString())) return new Air_Aspect(this);
+			if(getYaml().getSmpAspect().equalsIgnoreCase(Enum_Aspect.ABYSS.toString())) return new Abyss_Aspect(this);
 		}
 		
 		
@@ -103,6 +108,15 @@ public class Player_SMP {
 	public void removeMoney(int money)
 	{
 		getYaml().setSMPCurrency(getYaml().getSMPCurrency()-money);
+	}
+	
+	public boolean getWantFly()
+	{
+		return wantFly;
+	}
+	public void setWantFly(boolean wantFly)
+	{
+		this.wantFly = wantFly;
 	}
 	
 	

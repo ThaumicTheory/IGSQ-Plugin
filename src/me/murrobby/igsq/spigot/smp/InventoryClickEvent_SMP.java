@@ -47,6 +47,8 @@ public class InventoryClickEvent_SMP implements Listener
 									player.getYaml().setSmpAspect(aspect.getID().toString());
 									player.updateAspect();
 									player.getPlayer().sendMessage(Messaging.chatFormatter("&#DAB210You have picked aspect " + aspect.getName()));
+									player.getPlayer().setAllowFlight(false);
+									player.getPlayer().setFlying(false);
 									break;
 								}
 								else if(event.getCurrentItem().getItemMeta().getDisplayName().equals(aspect.getName() + Messaging.chatFormatter(Common_Aspect.ASPECT_GUI_LORE))) //Aspect Lore

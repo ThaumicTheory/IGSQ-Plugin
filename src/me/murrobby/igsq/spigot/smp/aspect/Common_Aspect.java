@@ -24,6 +24,8 @@ public class Common_Aspect
 		aspects.add(new Water_Aspect());
 		aspects.add(new Uncertain_Aspect());
 		aspects.add(new Snow_Aspect());
+		aspects.add(new Air_Aspect());
+		aspects.add(new Abyss_Aspect());
 	}
 	public static boolean isPlayerInAspectGui(Player_SMP player)
     {

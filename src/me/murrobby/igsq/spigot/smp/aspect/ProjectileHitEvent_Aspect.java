@@ -29,7 +29,7 @@ public class ProjectileHitEvent_Aspect implements Listener
 	{
 		if(YamlWrapper.isSMP())
 		{
-			if(event.getHitEntity() == null || (event.getHitEntity() instanceof Tameable && ((Tameable) event.getEntity()).getOwner() != null)) return;
+			if(event.getHitEntity() == null || (event.getHitEntity() instanceof Tameable && ((Tameable) event.getHitEntity()).getOwner() != null)) return;
 			if(event.getEntity().getShooter() != null && event.getEntity().getShooter() instanceof Player && event.getHitEntity() instanceof LivingEntity && !(event.getHitEntity() instanceof Player))
 			{
 				Player_SMP attacker = Player_SMP.getSMPPlayer((Player) event.getEntity().getShooter());

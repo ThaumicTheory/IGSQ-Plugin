@@ -30,7 +30,7 @@ public class Task_SMP {
 					System.out.println("Task: \"Task SMP\" Expired Closing Task To Save Resources.");
 				}
 			} 		
-    	}, 0, 5);
+    	}, 0, 1);
 	}
 	private void ui()
 	{

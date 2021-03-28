@@ -3,6 +3,7 @@ package me.murrobby.igsq.spigot.smp.aspect;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
@@ -25,8 +26,9 @@ public abstract class Base_Aspect
 	protected Player_SMP player;
 	private Enum_Aspect id;
 	private int secondTracker = 0;
-	private float speed;
+	private float speed = 0.2f;
 	private String suggester;
+	private float flySpeed = 0.2f;
 	public List<EntityType> getPassiveEntities() 
 	{
 		return passive;
@@ -126,6 +128,16 @@ public abstract class Base_Aspect
 		if(speed < -1) speed = -1;
 		this.speed = speed;
 	}
+	public float getFlySpeed() 
+	{
+		return flySpeed;
+	}
+	public void setFlySpeed(float speed) 
+	{
+		if(speed > 1) speed = 1;
+		if(speed < -1) speed = -1;
+		this.flySpeed = speed;
+	}
 	public List<String> getDescription() 
 	{
 		return perkDescription;
@@ -182,7 +194,7 @@ public abstract class Base_Aspect
 	}
 	public void incrementTime() 
 	{
-		secondTracker+=5;
+		secondTracker+=1;
 		if(secondTracker >= 20) secondTracker = 0;
 	}
 	public boolean isSecond()
@@ -213,13 +225,23 @@ public abstract class Base_Aspect
 	
 	public void run() 
 	{
-		if(getPlayer() != null && getPlayer().getOfflinePlayer().getPlayer() != null) 
+		if(getPlayer() != null && getPlayer().getOfflinePlayer().getPlayer() != null)
 		{
-			aspectTick();
-			if(isSecond()) 
+			if(getPlayer().getPlayer().getGameMode().equals(GameMode.SURVIVAL) || getPlayer().getPlayer().getGameMode().equals(GameMode.ADVENTURE)) 
 			{
-				aspectSecond();
 				player.getPlayer().setWalkSpeed(getMovementSpeed());
+				player.getPlayer().setFlySpeed(getFlySpeed());
+				aspectTick();
+				if(isSecond()) 
+				{
+					aspectSecond();
+				}
+			}
+			else 
+			{
+				player.getPlayer().setWalkSpeed(0.2f);
+				player.getPlayer().setFlySpeed(0.1f);
+				getPlayer().getPlayer().setAllowFlight(true);
 			}
 		}
 		incrementTime();

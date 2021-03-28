@@ -1,15 +1,12 @@
 package me.murrobby.igsq.spigot.smp.aspect;
 
-import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.World.Environment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.murrobby.igsq.spigot.Climate;
 import me.murrobby.igsq.spigot.Common;
-import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.Weather;
 import me.murrobby.igsq.spigot.smp.Player_SMP;
 
@@ -97,13 +94,14 @@ public class Snow_Aspect extends Base_Aspect
 			player.getPlayer().removePotionEffect(PotionEffectType.FROZEN);
 		}
 		*/
+		Weather weather = Common.getWeatherEstimated(player.getPlayer());
+		
+		if(weather.equals(Weather.SNOW) || weather.equals(Weather.SNOWSTORM)) player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 39, 0, true,false,false));
 	}
 	@Override
 	public void aspectSecond() 
 	{
 		Climate climate = Common.getClimate(player.getPlayer());
-		
-		//Messaging.createLog("Climate: " + climate.toString() + " Temperature: " + Common.getTemperature(player.getPlayer()));
 		
 		if(!player.getPlayer().hasPotionEffect(PotionEffectType.FIRE_RESISTANCE)) 
 		{

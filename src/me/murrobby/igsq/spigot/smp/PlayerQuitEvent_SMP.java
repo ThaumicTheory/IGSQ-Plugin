@@ -19,7 +19,7 @@ public class PlayerQuitEvent_SMP implements Listener
 	{
 		if(YamlWrapper.isSMP())
 		{
-			UI_SMP.getUIFromPlayer(event.getPlayer()).delete();
+			if(UI_SMP.getUIFromPlayer(event.getPlayer()) != null) UI_SMP.getUIFromPlayer(event.getPlayer()).delete();
 		}
 	}
 	

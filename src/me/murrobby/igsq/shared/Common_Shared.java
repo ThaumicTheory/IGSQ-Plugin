@@ -1,6 +1,15 @@
 package me.murrobby.igsq.shared;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Common_Shared 
 {
@@ -82,6 +91,61 @@ public class Common_Shared
 	public static String convertArgs(List<String> args,String seperator) 
 	{
 		return String.join(" ", args);
+	}
+	
+	public static String getTimeFuture(String timeString) 
+	{
+		String[] array = timeString.split("[tsmhdwMy]");
+		if(array.length != 2) return getTime();
+		long timeComponent = Long.valueOf(array[0]);
+		String unitComponent = array[1];
+		
+		LocalDateTime time = LocalDateTime.now();
+		switch(unitComponent) 
+		{
+			case "t":
+				return getTime(time.plus(timeComponent/50, ChronoUnit.MILLIS));
+			case "s":
+				return getTime(time.plus(timeComponent, ChronoUnit.SECONDS));
+			case "m":
+				return getTime(time.plus(timeComponent, ChronoUnit.MINUTES));
+			case "h":
+				return getTime(time.plus(timeComponent, ChronoUnit.HOURS));
+			case "d":
+				return getTime(time.plus(timeComponent, ChronoUnit.DAYS));
+			case "w":
+				return getTime(time.plus(timeComponent, ChronoUnit.WEEKS));
+			case "M":
+				return getTime(time.plus(timeComponent, ChronoUnit.MONTHS));
+			case "y":
+				return getTime(time.plus(timeComponent, ChronoUnit.YEARS));
+			default: //Future scheduler may run early as it can only calculate a delay in ticks! It is advised to not work in milliseconds
+				return getTime(time.plus(timeComponent, ChronoUnit.MILLIS));
+		}
+	}
+	
+	public static String getTime() 
+	{
+		return getTime(LocalDateTime.now());
+	}
+	public static String getTime(LocalDateTime time) 
+	{
+		return time.get(ChronoField.HOUR_OF_DAY) + 
+		"-" + time.get(ChronoField.MINUTE_OF_HOUR) + 
+		"-" + time.get(ChronoField.SECOND_OF_MINUTE) + 
+		"-" + time.get(ChronoField.MILLI_OF_SECOND)/50 + 
+		"-" + time.get(ChronoField.DAY_OF_MONTH) + 
+		"-" + time.get(ChronoField.MONTH_OF_YEAR) + 
+		"-" + time.get(ChronoField.YEAR);
+	}
+	public static LocalDateTime getTime(String time) 
+	{
+		String[] timeComponents = time.split("-");
+		return LocalDateTime.of(Integer.parseInt(timeComponents[6]),
+				Integer.parseInt(timeComponents[5]), Integer.parseInt(timeComponents[4]),
+				Integer.parseInt(timeComponents[0]), Integer.parseInt(timeComponents[1]),
+				Integer.parseInt(timeComponents[2]),Integer.parseInt(timeComponents[3])*20000);
+		
 	}
 	
 }

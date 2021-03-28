@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -24,6 +25,7 @@ public class Common {
      */
 	public static Spigot spigot;
 	public static LoggerHandler_Main logger;
+	public static FutureScheduler future;
     /**
      * illegalChats is a String array of all of the banned words for {@link #filterChat(String, Player) Filter Chat} to compare to.
      * @see #filterChat(String, Player)
@@ -108,6 +110,26 @@ public class Common {
 			if(thundering) return Weather.STORM;
 			else return Weather.RAIN;
 		}
+    }
+    
+    public static Time getTime(World world) 
+    {
+    	if(world.getEnvironment() != Environment.NORMAL) return Time.NONE;
+    	if(world.getTime() < 13000 || world.getTime() >= 23000) return Time.DAY;
+    	return Time.NIGHT;
+    }
+    public static DetailedTime getTimeDetailed(World world) 
+    {
+    	if(world.getEnvironment() != Environment.NORMAL) return DetailedTime.NONE;
+    	if(world.getTime() > 23500 || world.getTime() <= 4000) return DetailedTime.POSTRISE;
+    	if(world.getTime() <= 7000) return DetailedTime.MIDDAY;
+    	if(world.getTime() <= 12500) return DetailedTime.PRESET;
+    	if(world.getTime() <= 13500) return DetailedTime.SET;
+    	if(world.getTime() <= 16000) return DetailedTime.POSTSET;
+    	if(world.getTime() <= 19000) return DetailedTime.MIDNIGHT;
+    	if(world.getTime() <= 22500) return DetailedTime.PRERISE;
+    	if(world.getTime() <= 23500) return DetailedTime.RISE;
+    	return DetailedTime.NONE;
     }
     
     public static Climate getClimate(Player player) 

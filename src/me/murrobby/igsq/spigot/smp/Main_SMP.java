@@ -34,6 +34,7 @@ public class Main_SMP
 		new PlayerQuitEvent_SMP();
 		new InventoryClickEvent_SMP();
 		new PlayerMoveEvent_SMP();
+		new PlayerToggleFlightEvent_SMP();
 		
 		
 		new BlockDamageEvent_Protection();

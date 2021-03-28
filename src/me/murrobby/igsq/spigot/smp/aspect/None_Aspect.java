@@ -18,10 +18,12 @@ public class None_Aspect extends Base_Aspect
 	{
 		setID(Enum_Aspect.NONE);
 	}
+	
 	@Override
 	public void aspectTick() 
 	{
-
+		player.getPlayer().setAllowFlight(true);
+		player.getPlayer().setFlying(true);
 	}
 	@Override
 	public void aspectSecond() 

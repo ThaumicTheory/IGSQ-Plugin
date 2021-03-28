@@ -1,5 +1,7 @@
 package me.murrobby.igsq.spigot.commands;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +19,7 @@ import me.murrobby.igsq.shared.Common_Shared;
 import me.murrobby.igsq.spigot.Common;
 import me.murrobby.igsq.spigot.Messaging;
 import me.murrobby.igsq.spigot.YamlPlayerWrapper;
-import me.murrobby.igsq.spigot.YamlExpiryController;
+import me.murrobby.igsq.spigot.FutureScheduler;
 import me.murrobby.igsq.spigot.YamlWrapper;
 import me.murrobby.igsq.spigot.smp.Chunk_SMP;
 import me.murrobby.igsq.spigot.smp.Common_SMP;
@@ -217,14 +219,18 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					team.addAlly(ally);
 					sender.sendMessage(Messaging.chatFormatter("&#ff61f4You are now Allied with " + name + "!"));
 					team.removeAllyPending(ally);
-					YamlExpiryController.addAlliance(team, ally);
 					return true;
 				}
 			}
 			//remove pending ally request
 			if(args.get(1).equalsIgnoreCase("remove")) {
-				if(team.isAlly(ally)) {
-					sender.sendMessage(Messaging.chatFormatter("&#FF0000You can't just do that!"));
+				if(team.isAlly(ally)) 
+				{
+					Common.future.addExpirableAlly(team, ally, "1w");
+					LocalDate date = LocalDate.now();
+					LocalTime time = LocalTime.now();
+					date = date.plusDays(7);
+					sender.sendMessage(Messaging.chatFormatter("&#ff61f4Scheduled alliance expiration. Alliance with " + ally.getName() + " will expire at" + time.toString() + "on " + date.toString()));
 					return true;
 				}
 				if(team.isAllyPending(ally)) {

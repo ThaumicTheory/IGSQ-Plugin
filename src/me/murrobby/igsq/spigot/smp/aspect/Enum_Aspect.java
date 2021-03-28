@@ -5,5 +5,7 @@ public enum Enum_Aspect
 	NONE,
 	UNCERTAIN,
 	WATER,
-	SNOW;
+	AIR,
+	SNOW,
+	ABYSS;
 }

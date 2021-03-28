@@ -1,6 +1,5 @@
 package me.murrobby.igsq.spigot.smp.aspect;
 
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.EntityType;
@@ -86,24 +85,23 @@ public class Water_Aspect extends Base_Aspect
 			{
 				player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 19, 0, true,false,false));
 				player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 259, 0, true,false,false));
-				player.getPlayer().setFlySpeed(.1f);
+				setFlySpeed(0.1f);
 				setMovementSpeed(0.25f);
+				player.getPlayer().setAllowFlight(true);
+				if(player.getWantFly()) player.getPlayer().setFlying(true);
 			}
 			else 
 			{
 				player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 19, 0, true,false,false));
-				player.getPlayer().setFlySpeed(.01f);
-				setMovementSpeed(.2f);
+				setMovementSpeed(0.2f);
+				player.getPlayer().setAllowFlight(false);
 			}
 			player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 19, 0, true,false,false));
 			player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 259, 0, true,false,false));
-			player.getPlayer().setAllowFlight(true);
 		}
 		else 
 		{
-			
-			player.getPlayer().setFlySpeed(0.2f);
-			if(player.getPlayer().getGameMode().equals(GameMode.ADVENTURE) || player.getPlayer().getGameMode().equals(GameMode.SURVIVAL))player.getPlayer().setAllowFlight(false);
+			player.getPlayer().setAllowFlight(false);
 			
 			Weather weather = Common.getWeatherEstimated(player.getPlayer());
 			if(!player.getPlayer().hasPotionEffect(PotionEffectType.WATER_BREATHING)) 
@@ -120,7 +118,6 @@ public class Water_Aspect extends Base_Aspect
 			}
 			else setMovementSpeed(.2f);
 		}
-		if(player.getPlayer().getGameMode().equals(GameMode.CREATIVE)||player.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) player.getPlayer().setAllowFlight(true);
 	}
 	@Override
 	public void aspectSecond() 
