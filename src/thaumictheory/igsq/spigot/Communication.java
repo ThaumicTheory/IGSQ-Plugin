@@ -231,13 +231,13 @@ public class Communication
 			packet.getPlayerInfoAction().write(0, PlayerInfoAction.ADD_PLAYER);
 			for(Player selectedPlayer : Bukkit.getOnlinePlayers()) 
 			{
-				Object entityPlayer = selectedPlayer.getClass().getMethod("getHandle").invoke(selectedPlayer);
-				int ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
+				//Object entityPlayer = selectedPlayer.getClass().getMethod("getHandle").invoke(selectedPlayer);
+				//int ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
 				
 				WrappedGameProfile profile = WrappedGameProfile.fromPlayer(selectedPlayer);
 				WrappedGameProfile newProfile = profile.withName(nameHashTable.get(selectedPlayer.getUniqueId()));
 				NativeGameMode gameMode =  NativeGameMode.fromBukkit(selectedPlayer.getGameMode());
-				data.add(new PlayerInfoData(newProfile, ping, gameMode, WrappedChatComponent.fromText(Messaging.chatFormatter(prefixHashTable.get(selectedPlayer.getUniqueId()) + nameHashTable.get(selectedPlayer.getUniqueId()) + suffixHashTable.get(selectedPlayer.getUniqueId())))));
+				data.add(new PlayerInfoData(newProfile, 0, gameMode, WrappedChatComponent.fromText(Messaging.chatFormatter(prefixHashTable.get(selectedPlayer.getUniqueId()) + nameHashTable.get(selectedPlayer.getUniqueId()) + suffixHashTable.get(selectedPlayer.getUniqueId())))));
 			}
 			packet.getPlayerInfoDataLists().write(0, data);
 		}
