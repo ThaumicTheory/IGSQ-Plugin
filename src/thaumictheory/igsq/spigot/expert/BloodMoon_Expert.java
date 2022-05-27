@@ -8,6 +8,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.SpawnCategory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -111,8 +112,8 @@ public class BloodMoon_Expert {
 		if(!enabled) 
 		{
 			yaml.setExpertBloodMoon(false);
-			world.setMonsterSpawnLimit(-1);
-			world.setTicksPerMonsterSpawns(-1);
+			world.setSpawnLimit(SpawnCategory.MONSTER, -1);
+			world.setTicksPerSpawns(SpawnCategory.MONSTER, -1);
 		}
 		else 
 		{
@@ -135,8 +136,8 @@ public class BloodMoon_Expert {
 				{
 					Bukkit.broadcastMessage(Messaging.chatFormatter("&#00FF00I wouldn't enter \""+ world.getName() + "\" tonight..."));
 				}
-				world.setMonsterSpawnLimit(world.getMonsterSpawnLimit()*3);
-				world.setTicksPerMonsterSpawns(10);
+				world.setSpawnLimit(SpawnCategory.MONSTER, world.getSpawnLimit(SpawnCategory.MONSTER)*3);
+				world.setTicksPerSpawns(SpawnCategory.MONSTER, 10);
 			}
 		}
 	}

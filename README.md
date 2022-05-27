@@ -1,7 +1,7 @@
 # IGSQ
 Official Repo of the IGSQ Minecraft server plugin.
 
-<img src="https://cdn.discordapp.com/attachments/741648211164528661/746779896038293574/logo.png" alt="IGSQ Logo" width="512"/>
+<img src="https://media.discordapp.net/attachments/703661349271502949/817068694575644672/IGSQ-AstroSquirrel-01.png" alt="IGSQ Logo" width="512"/>
 
 ## To Do (Listed from highest priority per category)
 
