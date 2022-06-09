@@ -1,7 +1,7 @@
 name: IGSQ-BUNGEE
-version: 0.2.0
+version: 0.2.0-1.16.5
 author: ThaumicTheory
 softdepend: [LuckPerms]
 main: thaumictheory.igsq.bungee.Bungee
 description: Custom Plugin Made For The Official IGSQ Server
-api-version: 1.19
+api-version: 1.16
