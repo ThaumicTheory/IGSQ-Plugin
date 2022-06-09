@@ -48,7 +48,7 @@ public class Messaging {
 		if(wildcards.length %2 != 0) 
 		{
 			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
-			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
+			createLog(Level.WARNING,"Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
 		String message = Yaml.getFieldString(messageName, "message");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
@@ -120,7 +120,7 @@ public class Messaging {
 		if(wildcards.length %2 != 0) 
 		{
 			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
-			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
+			createLog(Level.WARNING,"Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
 		}
 		String message = Yaml.getFieldString(messageName, "message");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
@@ -159,8 +159,6 @@ public class Messaging {
     
     /**
      * display any caught errors to developers online.
-     * @apiNote Raycasts downwards until it hits a Block. Returns the block it hit. Ignores Passable.
-     * @see org.bukkit.block.Block#isPassable
      * @return <b>Block</b>
      */
     public static void sendException(Exception exception,String reason,String errorCode,CommandSender cause) 

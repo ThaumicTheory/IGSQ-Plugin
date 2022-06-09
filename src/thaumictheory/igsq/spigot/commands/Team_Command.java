@@ -21,7 +21,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import thaumictheory.igsq.shared.Common_Shared;
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.FutureScheduler;
 import thaumictheory.igsq.spigot.Messaging;
 import thaumictheory.igsq.spigot.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.YamlWrapper;
@@ -333,11 +332,12 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				return true;
 			}
 			Team_SMP.getPlayersTeam(player).addBanMember(banPlayer);
-			YamlPlayerWrapper yaml = new YamlPlayerWrapper(banPlayer);
+			/*YamlPlayerWrapper yaml = new YamlPlayerWrapper(banPlayer);
 			for(String expertInvite : yaml.getSmpInvites().split(" ")){
 				Team_SMP teamInv = Team_SMP.getTeamFromID(UUID.fromString(expertInvite));
 				//if(Team_SMP.getPlayersTeam(player).equals(teamInv)) yaml.removeSmpInvite(Team_SMP.getPlayersTeam(player));
 			}
+			*/
 			if(Team_SMP.getPlayersTeam(player).equals(Team_SMP.getPlayersTeam(banPlayer))){
 				Team_SMP.getPlayersTeam(player).removeMember(banPlayer);
 				return true;

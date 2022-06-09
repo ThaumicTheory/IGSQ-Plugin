@@ -1,6 +1,5 @@
 package thaumictheory.igsq.spigot.commands;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -106,14 +105,7 @@ public class Test_Command {
 				packet.getIntegers().write(4,0); //Angle Pitch
 				packet.getIntegers().write(5,0); //Angle Yaw
 				packet.getIntegers().write(6, id);
-				try {
-					ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-				}
-				catch (InvocationTargetException e) 
-				{
-					
-					e.printStackTrace();
-				}
+				ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
 				Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
 		    	{
 
@@ -122,12 +114,7 @@ public class Test_Command {
 					{
 						PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
 						packet.getIntegerArrays().write(0, new int[]{entityID});
-						try {
-							ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-						} catch (InvocationTargetException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
 					}
 		    	},100);
 				return true;

@@ -17,9 +17,8 @@ public enum Ranks
 	ELITE3(10,"group.elite3","&#884dff[&#cbb1ffElite III&#884dff] &#cbb1ff","&3[&dEl&b3&3] &d",ChatColor.LIGHT_PURPLE),
 	CELESTIAL(11,"group.celestial","&#00cc9c[&#5cffdaCelestial&#00cc9c] &#5cffda","&b[&fC&b] &b",ChatColor.WHITE),
 	
-	MOD(12,"group.mod","&#a25710[&#eb913aHelpful&#a25710] &#eb913a","&e[&6H&e] &6",ChatColor.GOLD),
-	MOD2(13,"group.mod2","&#997d00[&#ffd100Staff&#997d00] &#ffd100","&6[&eS&6] &e",ChatColor.YELLOW),
-	MOD3(14,"group.mod3","&#999600[&#fffa00Senior Staff&#999600] &#fffa00","&6[&dS&eS&6] &e",ChatColor.YELLOW),
+	STAFF(12,"group.staff","&#a25710[&#eb913aExperimental Staff&#a25710] &#eb913a","&e[&6ES&e] &6",ChatColor.GOLD),
+	STAFF2(13,"group.staff2","&#997d00[&#ffd100Staff&#997d00] &#ffd100","&6[&eS&6] &e",ChatColor.YELLOW),
 	COUNCIL(15,"group.council","&#99003d[&#ff0065Council&#99003d] &#ff0065","&5[&dC&5] &d",ChatColor.LIGHT_PURPLE);
 	
 	private String permission;

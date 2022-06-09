@@ -1,6 +1,5 @@
 package thaumictheory.igsq.spigot.blockhunt;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -204,20 +203,12 @@ public class GameTick_BlockHunt
 				{
 					//player.getLocation().getWorld().spawnFallingBlock(player.getLocation(), Bukkit.createBlockData(Material.valueOf(Yaml.getFieldString(player.getUniqueId().toString()+".blockhunt.block", "internal"))));
 					int entityID = (int) (Math.random() * Integer.MAX_VALUE);
-					try 
+					Player_BlockHunt[] players = gameInstance.getPlayers();
+					if(gameInstance.isStage(Stage.PRE_SEEKER)) players = gameInstance.getHiders();
+					for(Player_BlockHunt selectedPlayer : players) 
 					{
-						Player_BlockHunt[] players = gameInstance.getPlayers();
-						if(gameInstance.isStage(Stage.PRE_SEEKER)) players = gameInstance.getHiders();
-						for(Player_BlockHunt selectedPlayer : players) 
-						{
-							if(selectedPlayer.getPlayer().getUniqueId().equals(player.getPlayer().getUniqueId()) && player.toHider().getGeneric().isCloaked()) ProtocolLibrary.getProtocolManager().sendServerPacket(player.getPlayer(), player.toHider().getGeneric().dynamicCloakPacket(entityID, true));
-							else if((player.toHider().getGeneric().getSeeSelfTime() > 0 ||!selectedPlayer.getPlayer().getUniqueId().equals(player.getPlayer().getUniqueId())) && !player.toHider().getGeneric().isCloaked() ) ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer.getPlayer(), player.toHider().getGeneric().dynamicCloakPacket(entityID, false));
-						}
-					}
-					catch (InvocationTargetException e) 
-					{
-						
-						e.printStackTrace();
+						if(selectedPlayer.getPlayer().getUniqueId().equals(player.getPlayer().getUniqueId()) && player.toHider().getGeneric().isCloaked()) ProtocolLibrary.getProtocolManager().sendServerPacket(player.getPlayer(), player.toHider().getGeneric().dynamicCloakPacket(entityID, true));
+						else if((player.toHider().getGeneric().getSeeSelfTime() > 0 ||!selectedPlayer.getPlayer().getUniqueId().equals(player.getPlayer().getUniqueId())) && !player.toHider().getGeneric().isCloaked() ) ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer.getPlayer(), player.toHider().getGeneric().dynamicCloakPacket(entityID, false));
 					}
 					Common.spigot.scheduler.scheduleSyncDelayedTask(Common.spigot, new Runnable()
 			    	{
@@ -226,20 +217,12 @@ public class GameTick_BlockHunt
 						public void run() 
 						{
 							PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-							try 
+							Player_BlockHunt[] players = gameInstance.getPlayers();
+							packet.getIntegerArrays().write(0, new int[] {entityID});
+							if(gameInstance.isStage(Stage.PRE_SEEKER)) players = gameInstance.getHiders();
+							for(Player_BlockHunt selectedPlayer : players) 
 							{
-								Player_BlockHunt[] players = gameInstance.getPlayers();
-								packet.getIntegerArrays().write(0, new int[] {entityID});
-								if(gameInstance.isStage(Stage.PRE_SEEKER)) players = gameInstance.getHiders();
-								for(Player_BlockHunt selectedPlayer : players) 
-								{
-									ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer.getPlayer(), packet);
-								}
-							}
-							catch (InvocationTargetException e) 
-							{
-								
-								e.printStackTrace();
+								ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer.getPlayer(), packet);
 							}
 						}
 			    	},1);

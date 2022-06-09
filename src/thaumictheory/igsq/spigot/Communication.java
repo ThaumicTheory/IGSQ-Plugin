@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -99,14 +98,7 @@ public class Communication
 		PacketContainer packet = setTagAsPacket(player,prefix,nameColor,tag,suffix);
 		for(Player selectedPlayer : Bukkit.getOnlinePlayers())
 		{
-			try 
-			{
-				ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, packet);
-			}
-			 catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, packet);
 		}
 	}
 	public static void deletePlayer(Player player) 
@@ -116,14 +108,7 @@ public class Communication
 		fakeTeam.getIntegers().write(0,1);
 		for(Player selectedPlayer : Bukkit.getOnlinePlayers()) 
 		{
-			try 
-			{
-				ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, fakeTeam);
-			}
-			catch (InvocationTargetException e) 
-			{
-				e.printStackTrace();
-			}
+			ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, fakeTeam);
 		}
 		teams.remove(player.getUniqueId().toString());
 		prefixHashTable.remove(player.getUniqueId());
@@ -154,13 +139,7 @@ public class Communication
 				List<String> playerList = new ArrayList<String>();
 				playerList.add(nameHashTable.get(selectedPlayer.getUniqueId()));
 				fakeTeam.getSpecificModifier(Collection.class).write(0, playerList);
-				try 
-				{
-					ProtocolLibrary.getProtocolManager().sendServerPacket(player, fakeTeam);
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				ProtocolLibrary.getProtocolManager().sendServerPacket(player, fakeTeam);
 			}
 		}
 	}
@@ -293,14 +272,7 @@ public class Communication
 		PacketContainer packet = new PacketContainer(PacketType.Play.Server.STOP_SOUND);
 		//packet.getBytes().write(0, (byte) 0x1);
 		packet.getSoundCategories().write(0, EnumWrappers.SoundCategory.valueOf(type.toString()));
-		try 
-		{
-			ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-		}
-		catch (InvocationTargetException e) 
-		{
-			e.printStackTrace();
-		}
+		ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
 		
 	}
 }
