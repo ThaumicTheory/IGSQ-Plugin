@@ -14,7 +14,8 @@ import org.bukkit.entity.Player;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.main.LoggerHandler_Main;
 
 public class Common {
@@ -208,15 +209,15 @@ public class Common {
     }
 	public static Boolean isCurrentChatController(String controller,Player player) 
 	{
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
-		String current = Common_Shared.removeNull(yaml.getChatController());
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
+		String current = IGSQ.removeNull(yaml.getChatController());
 		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
 	}
 	public static Boolean isCurrentNameController(String controller,Player player) 
 	{
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
-		String current = Common_Shared.removeNull(yaml.getNameController());
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
+		String current = IGSQ.removeNull(yaml.getNameController());
 		if(current.equalsIgnoreCase(controller)) return true;
 		else return false;
 	}

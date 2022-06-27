@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 
 public class EntityTargetEvent_Expert implements Listener

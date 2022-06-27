@@ -1,7 +1,7 @@
 package thaumictheory.igsq.spigot.blockhunt;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class CustomTag_BlockHunt
 {	

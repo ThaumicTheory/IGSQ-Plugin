@@ -3,7 +3,7 @@ package thaumictheory.igsq.spigot.smp;
 import org.bukkit.Bukkit;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Task_SMP {
 	

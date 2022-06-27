@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Map_BlockHunt 
 {

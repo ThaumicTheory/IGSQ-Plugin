@@ -5,10 +5,13 @@ import java.io.StringWriter;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Messaging {
 	 /**
@@ -47,10 +50,10 @@ public class Messaging {
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
-			createLog(Level.WARNING,"Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
+			createLog(Level.WARNING,"Formatted Messages wildcards were odd! It should be even. Ignoring this request!");
+			return null;
 		}
-		String message = Yaml.getFieldString(messageName, "message");
+		String message = (String) IGSQ.getYaml().getField(messageName, "message.yaml");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
     	return chatFormatter(message);
 	}
@@ -67,7 +70,7 @@ public class Messaging {
      */
     public static String getFormattedMessage(String messageName,String replace,String with) //1
     {
-    	return chatFormatter(Yaml.getFieldString(messageName, "message").replace(replace,with));
+    	return chatFormatter(((String) IGSQ.getYaml().getField(messageName, "message.yaml")).replace(replace,with));
     }
     
     
@@ -82,7 +85,7 @@ public class Messaging {
      */
     public static String getFormattedMessage(String messageName) //0
     {
-    	return chatFormatter(Yaml.getFieldString(messageName, "message"));
+    	return chatFormatter((String) IGSQ.getYaml().getField(messageName, "message.yaml"));
     }
     
 
@@ -119,10 +122,10 @@ public class Messaging {
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
-			createLog(Level.WARNING,"Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
+			createLog(Level.WARNING,"Formatted Messages wildcards were odd! It should be even. Ignoring this request!");
+			return null;
 		}
-		String message = Yaml.getFieldString(messageName, "message");
+		String message = (String) IGSQ.getYaml().getField(messageName, "message.yaml");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
     	return chatFormatterConsole(message);
 	}
@@ -139,7 +142,7 @@ public class Messaging {
      */
     public static String getFormattedMessageConsole(String messageName,String replace,String with) //1 Console
     {
-    	return chatFormatterConsole(Yaml.getFieldString(messageName, "message").replace(replace,with));
+    	return chatFormatterConsole(((String) IGSQ.getYaml().getField(messageName, "message.yaml")).replace(replace,with));
     }
     
     
@@ -154,9 +157,22 @@ public class Messaging {
      */
     public static String getFormattedMessageConsole(String messageName)//0 Console
     {
-    	return chatFormatterConsole(Yaml.getFieldString(messageName, "message"));
+    	return chatFormatterConsole((String) IGSQ.getYaml().getField(messageName, "message.yaml"));
     }
     
+	public static ChatColor getLastLegacyColourByText(String text) 
+	{
+		if(text.length() < 2) return ChatColor.WHITE;
+		String[] chars = text.split("");
+		for(int i = chars.length-2; i <= 0; i--)
+		{
+			if(chars[i].equals("&")) 
+			{
+				return ChatColor.getByChar(chars[i+1]);
+			}
+		}
+		return ChatColor.WHITE;
+	}
     /**
      * display any caught errors to developers online.
      * @return <b>Block</b>
@@ -170,7 +186,7 @@ public class Messaging {
     	String stackTrace = sw.toString();
     	for(Player player : Bukkit.getOnlinePlayers()) 
     	{
-    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
     		if(player.hasPermission("igsq.error")) 
     		{
     			ErrorLogging errorLogStatus = yaml.getErrorLogSetting();
@@ -220,7 +236,7 @@ public class Messaging {
     	}
     	for(Player player : Bukkit.getOnlinePlayers()) 
     	{
-    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
     		if(player.hasPermission("igsq.error")) 
     		{
     			ErrorLogging errorLogStatus = yaml.getErrorLogSetting();
@@ -239,7 +255,7 @@ public class Messaging {
     {
     	for(Player player : Bukkit.getOnlinePlayers()) 
     	{
-    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+    		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
     		if(player.hasPermission("igsq.error")) 
     		{
     			ErrorLogging errorLogStatus = yaml.getErrorLogSetting();

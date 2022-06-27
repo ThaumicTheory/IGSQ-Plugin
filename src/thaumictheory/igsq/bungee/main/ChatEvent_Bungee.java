@@ -7,7 +7,7 @@ import net.md_5.bungee.event.EventHandler;
 import thaumictheory.igsq.bungee.Common;
 import thaumictheory.igsq.bungee.Communication;
 import thaumictheory.igsq.bungee.Messaging;
-import thaumictheory.igsq.bungee.YamlPlayerWrapper;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 
 public class ChatEvent_Bungee implements Listener
 {
@@ -51,7 +51,7 @@ public class ChatEvent_Bungee implements Listener
 				
 				for(ProxiedPlayer selectedPlayer : Common.bungee.getProxy().getPlayers())
 				{
-					YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer);
+					YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer.getUniqueId());
 					if(player.getUniqueId().equals(selectedPlayer.getUniqueId())) continue;
 					Boolean sendmessage = false;
 					String[] message = event.getMessage().split(" ");

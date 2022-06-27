@@ -23,18 +23,18 @@ public class PostLoginEvent_Bungee implements Listener
 		String playerUUID = player.getUniqueId().toString();
 		
 		//Update mc_accounts database if required
-		int usernameUpdate = Database.ScalarCommand("SELECT count(*) FROM mc_accounts WHERE uuid = '"+ playerUUID +"' AND username = '"+ username +"';");
+		int usernameUpdate = Database.scalarCommand("SELECT count(*) FROM mc_accounts WHERE uuid = '"+ playerUUID +"' AND username = '"+ username +"';");
 		if(usernameUpdate == 0) 
 		{
-			usernameUpdate = Database.ScalarCommand("SELECT count(*) FROM mc_accounts WHERE uuid = '"+ playerUUID +"';");
+			usernameUpdate = Database.scalarCommand("SELECT count(*) FROM mc_accounts WHERE uuid = '"+ playerUUID +"';");
 			if(usernameUpdate == 1) 
 			{
 			
-				Database.UpdateCommand("UPDATE mc_accounts SET username = '"+ username +"' WHERE uuid = '"+ playerUUID +"';");
+				Database.updateCommand("UPDATE mc_accounts SET username = '"+ username +"' WHERE uuid = '"+ playerUUID +"';");
 			}
 			else if(usernameUpdate == 0) 
 			{
-				Database.UpdateCommand("INSERT INTO mc_accounts VALUES ('"+ playerUUID +"','" + username +"');");
+				Database.updateCommand("INSERT INTO mc_accounts VALUES ('"+ playerUUID +"','" + username +"');");
 				//Database.UpdateCommand("INSERT INTO discord_2fa VALUES ('"+ playerUUID +"','kick');");
 			}
 		}

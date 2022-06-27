@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.smp.aspect.Abyss_Aspect;
 import thaumictheory.igsq.spigot.smp.aspect.Air_Aspect;
 import thaumictheory.igsq.spigot.smp.aspect.Base_Aspect;
@@ -32,7 +32,7 @@ public class Player_SMP {
 	public Player_SMP(OfflinePlayer player)
 	{
 		this.player = player;
-		yaml = new YamlPlayerWrapper(player);
+		yaml = new YamlPlayerWrapper(player.getUniqueId());
 		getUI();
 		players.add(this);
 	}

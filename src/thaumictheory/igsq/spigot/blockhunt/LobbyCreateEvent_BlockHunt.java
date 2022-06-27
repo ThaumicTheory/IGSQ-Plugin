@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class LobbyCreateEvent_BlockHunt implements Listener
 {

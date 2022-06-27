@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Player_BlockHunt extends GenericPlayer_BlockHunt
 {
@@ -84,7 +84,7 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 		Common_BlockHunt.hidersTeam.removeEntry(getPlayer().getName()); //Will cause issues when with duplicate accounts
 		getPlayer().getInventory().clear();
 		for (PotionEffect effect : getPlayer().getActivePotionEffects()) getPlayer().removePotionEffect(effect.getType());
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(getPlayer());
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(getPlayer().getUniqueId());
 		yaml.setNameController("main");
 		yaml.setChatController("mainlp");
 	}
@@ -104,7 +104,7 @@ public class Player_BlockHunt extends GenericPlayer_BlockHunt
 		getGame().removeHider(this);
 		getGame().removeSeeker(this);
 		getGame().removePlayer(this);
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(getPlayer());
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(getPlayer().getUniqueId());
 		yaml.setNameController(YamlWrapper.getDefaultNameController());
 		yaml.setChatController(YamlWrapper.getDefaultChatController());
 	}

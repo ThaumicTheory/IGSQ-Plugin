@@ -10,7 +10,6 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import thaumictheory.igsq.shared.Common_Shared;
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
 
@@ -39,7 +38,7 @@ public class Block_Command {
 		try 
 		{
 			material = Material.valueOf(args.get(0).toUpperCase());
-			playerArgs = Common_Shared.getBetween(args, 2, args.size());
+			playerArgs.subList(2, args.size());
 			if(args.size() >=3) 
 			{
 				if(args.get(2).equalsIgnoreCase("@all")) 

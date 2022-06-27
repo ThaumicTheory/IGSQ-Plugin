@@ -12,7 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import thaumictheory.igsq.bungee.Messaging;
-import thaumictheory.igsq.bungee.Yaml;
+import thaumictheory.igsq.bungee.yaml.Yaml;
 
 public class Test_Command  extends Command implements TabExecutor
 {
@@ -27,7 +27,7 @@ public class Test_Command  extends Command implements TabExecutor
 		List<String> options = new ArrayList<String>();
 		if(args.length == 1) 
 		{
-			for (String commands : Yaml.fileNames) if(commands.contains(args[0].toLowerCase())) options.add(commands);
+			for (String commands : Yaml.PATHS) if(commands.contains(args[0].toLowerCase())) options.add(commands);
 		}
 		if(args.length == 2) 
 		{

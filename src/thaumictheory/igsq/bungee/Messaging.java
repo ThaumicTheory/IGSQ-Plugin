@@ -2,7 +2,7 @@ package thaumictheory.igsq.bungee;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
 
 public class Messaging 
 {
@@ -56,10 +56,10 @@ public class Messaging
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
-			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
+			System.out.println("Formatted Messages wildcards were odd! It should be even. Ignoring this request!");
+			return null;
 		}
-		String message = Yaml.getFieldString(messageName, "message");
+		String message = (String) IGSQ.getYaml().getField(messageName, "message.yaml");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
     	return TextComponent.fromLegacyText(chatFormatter(message));
 	}
@@ -75,10 +75,10 @@ public class Messaging
 	{
 		if(wildcards.length %2 != 0) 
 		{
-			wildcards = Common_Shared.depend(wildcards, wildcards.length-1);
-			System.out.println("Formatted Messages wildcards were odd! Removing last record to avoid overflow.");
+			System.out.println("Formatted Messages wildcards were odd! It should be even. Ignoring this request!");
+			return null;
 		}
-		String message = Yaml.getFieldString(messageName, "message");
+		String message = (String) IGSQ.getYaml().getField(messageName, "message.yaml");
 		for(int i = 0; wildcards.length > i;i++) message = message.replace(wildcards[i], wildcards[++i]);
     	return chatFormatterConsole(message);
 	}
@@ -95,7 +95,7 @@ public class Messaging
      */
 	public static BaseComponent[] getFormattedMessage(String messageName, String replace,String with)
 	{
-    	return TextComponent.fromLegacyText(chatFormatter(Yaml.getFieldString(messageName, "message").replace(replace, with)));
+    	return TextComponent.fromLegacyText(chatFormatter(((String) IGSQ.getYaml().getField(messageName, "message.yaml")).replace(replace, with)));
 	}
 	 /**
      * Gets a message & replaces wildcards with values defined. this override accepts 1 wildcard. Implements {@link #chatFormatterConsole(String)}.This Version is intended for use In Consoles & Legacy Only!
@@ -107,7 +107,7 @@ public class Messaging
      */
 	public static String getFormattedMessageConsole(String messageName, String replace,String with)
 	{
-    	return chatFormatterConsole(Yaml.getFieldString(messageName, "message").replace(replace, with));
+    	return chatFormatterConsole(((String) IGSQ.getYaml().getField(messageName, "message.yaml")).replace(replace, with));
 	}
 	
 	
@@ -122,7 +122,7 @@ public class Messaging
      */
 	public static BaseComponent[] getFormattedMessage(String messageName)
 	{
-    	return TextComponent.fromLegacyText(chatFormatter(Yaml.getFieldString(messageName, "message")));
+    	return TextComponent.fromLegacyText(chatFormatter((String) IGSQ.getYaml().getField(messageName, "message.yaml")));
 	}
     /**
      * Gets a message & replaces wildcards with values defined. this override accepts 0 wildcards. Implements {@link #chatFormatterConsole(String)}.This Version is intended for use In Consoles & Legacy Only!
@@ -134,6 +134,6 @@ public class Messaging
      */
 	public static String getFormattedMessageConsole(String messageName)
 	{
-    	return chatFormatterConsole(Yaml.getFieldString(messageName, "message"));
+    	return chatFormatterConsole((String) IGSQ.getYaml().getField(messageName, "message.yaml"));
 	}
 }

@@ -30,9 +30,9 @@ public class TwoFA_Command extends Command implements TabExecutor
 			String current_status = null;
 			try 
 			{
-				if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
+				if(Database.scalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
 				{
-					ResultSet current_StatusDB  = Database.QueryCommand("SELECT current_status from discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+					ResultSet current_StatusDB  = Database.queryCommand("SELECT current_status from discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
 					current_StatusDB.next();
 					current_status = current_StatusDB.getString(1);
 					
@@ -50,12 +50,12 @@ public class TwoFA_Command extends Command implements TabExecutor
 					{
 						if(args[1].equalsIgnoreCase("true")) 
 						{
-							Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'pending', ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+							Database.updateCommand("UPDATE discord_2fa SET current_status = 'pending', ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 							player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF002FA Security Enabled!")));
 						}
 						else
 						{
-							Database.UpdateCommand("UPDATE discord_2fa SET current_status = null, ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+							Database.updateCommand("UPDATE discord_2fa SET current_status = null, ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 							player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FF00002FA Security Disabled!")));
 						}
 					}
@@ -72,17 +72,17 @@ public class TwoFA_Command extends Command implements TabExecutor
 			}
 			else if(args.length >= 1 && args[0].equalsIgnoreCase("logout")) 
 			{
-				Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'expired',ip = null,code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+				Database.updateCommand("UPDATE discord_2fa SET current_status = 'expired',ip = null,code = null WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 				player.disconnect(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF00Logout Successful. Goodbye!")));
 			}
 			else
 			{
 				player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFFCurrent 2fa Status")));
-				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") >= 1) 
+				if(Database.scalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") >= 1) 
 				{
-					if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
+					if(Database.scalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
 					{
-						ResultSet discord_2fa = Database.QueryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+						ResultSet discord_2fa = Database.queryCommand("SELECT current_status,code FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
 						try 
 						{
 							if(discord_2fa.next()) 
@@ -130,9 +130,9 @@ public class TwoFA_Command extends Command implements TabExecutor
 		}
 		try 
 		{
-			if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
+			if(Database.scalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
 			{
-				ResultSet current_StatusDB  = Database.QueryCommand("SELECT current_status from discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+				ResultSet current_StatusDB  = Database.queryCommand("SELECT current_status from discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';");
 				current_StatusDB.next();
 				current_status = current_StatusDB.getString(1);
 				
@@ -161,7 +161,7 @@ public class TwoFA_Command extends Command implements TabExecutor
 	private boolean CanModify2FA(ProxiedPlayer player,String current_status) 
 	{
 		if (player.hasPermission("igsq.require2fa")) return false;
-		if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") == 0) return false;
+		if(Database.scalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") == 0) return false;
 		if (current_status == null) return true;
 		if (current_status.equalsIgnoreCase("")) return true;
 		if (current_status.equalsIgnoreCase("accepted")) return true;

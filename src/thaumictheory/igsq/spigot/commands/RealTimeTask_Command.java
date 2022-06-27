@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWorldWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWorldWrapper;
 
 public class RealTimeTask_Command
 {	

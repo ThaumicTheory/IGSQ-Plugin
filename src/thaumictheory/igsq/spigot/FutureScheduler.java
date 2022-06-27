@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
 import thaumictheory.igsq.spigot.smp.Team_SMP;
 
 public class FutureScheduler 
@@ -52,7 +52,7 @@ public class FutureScheduler
 
 	public static void applyDefault() 
     {
-    	Yaml.addFieldDefault("smp.ally", "future", "");
+		IGSQ.getYaml().defaultField("smp.ally", "future", "");
     }
 	
 	private String sort(String data) 
@@ -62,8 +62,8 @@ public class FutureScheduler
 		{
 			for(int j = 0; j < sort.length-1; j++)
 			{
-				LocalDateTime time = Common_Shared.getTime(sort[j].split(":")[0]);
-				LocalDateTime time2 = Common_Shared.getTime(sort[j+1].split(":")[0]);
+				LocalDateTime time = IGSQ.getTime(sort[j].split(":")[0]);
+				LocalDateTime time2 = IGSQ.getTime(sort[j+1].split(":")[0]);
 				if (time.isAfter(time2)) 
                 { 
 					 String temp = sort[j]; 
@@ -77,7 +77,7 @@ public class FutureScheduler
 	private LocalDateTime checkForCloserEvent(String data) 
 	{
 		if(data == null || data.isBlank()) return scheduledEventTime;
-		LocalDateTime time = Common_Shared.getTime(data.split(":")[0]);
+		LocalDateTime time = IGSQ.getTime(data.split(":")[0]);
 		if(time.isAfter(scheduledEventTime) || time.isEqual(scheduledEventTime)) return scheduledEventTime;
 		update = true;
 		return time;
@@ -93,19 +93,19 @@ public class FutureScheduler
 	{
 		if(ally1 == null || ally2 == null) return;
 		if(ally1.equals(ally2)) return;
-		String data = Common_Shared.getTimeFuture(time) + ":" + ally1.getUID().toString()+ ":" + ally2.getUID();
-		if(getExpirableAllies() == null || getExpirableAllies().isBlank()) Yaml.updateField("smp.ally", "future", data);
+		String data = IGSQ.getTimeFuture(time) + ":" + ally1.getUID().toString()+ ":" + ally2.getUID();
+		if(getExpirableAllies() == null || getExpirableAllies().isBlank()) IGSQ.getYaml().setField("smp.ally", "future", data);
 		else setExpirableAllies(getExpirableAllies() + " " + data);
 		
 	}
 	private void setExpirableAllies(String data) 
 	{
-		Yaml.updateField("smp.ally", "future", sort(data));
+		IGSQ.getYaml().setField("smp.ally", "future.yaml", sort(data));
 		readSchedule();
 	}
 	private String getExpirableAllies() 
 	{
-		return Yaml.getFieldString("smp.ally", "future");
+		return (String) IGSQ.getYaml().getField("smp.ally", "future.yaml");
 	}
 	
 	private void runExpirableAlliesSchedule() 

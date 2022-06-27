@@ -14,7 +14,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import thaumictheory.igsq.bungee.Database;
 import thaumictheory.igsq.bungee.Messaging;
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
 
 public class Link_Command extends Command implements TabExecutor
 {
@@ -33,8 +33,8 @@ public class Link_Command extends Command implements TabExecutor
 			
 			if(args.length >= 1 && args[0].equalsIgnoreCase("add")) 
 			{
-				String input = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(arguments," "), ' ');
-				if(Database.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") >= 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Your Account Is Already Linked!"))); //Checks If Mc Account Is Linked First (linked accounts cannot attempt link)
+				String input = IGSQ.removeBeforeCharacter(IGSQ.convertArgs(arguments," "), ' ');
+				if(Database.scalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") >= 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Your Account Is Already Linked!"))); //Checks If Mc Account Is Linked First (linked accounts cannot attempt link)
 				else if(input.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FFFF00Use /link add [discord_username]"))); //If input was empty
 				else //Valid input
 				{
@@ -45,8 +45,8 @@ public class Link_Command extends Command implements TabExecutor
 			}
 			else if(args.length >= 1 && args[0].equalsIgnoreCase("remove")) 
 			{
-				String input = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(arguments," "), ' ');
-				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"'") == 0) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000You Have No Accounts To Remove!")));
+				String input = IGSQ.removeBeforeCharacter(IGSQ.convertArgs(arguments," "), ' ');
+				if(Database.scalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"'") == 0) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000You Have No Accounts To Remove!")));
 				else if(input.equalsIgnoreCase("")) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#FFFF00Use /link remove [discord_username]"))); //If input was empty
 				else //Valid input
 				{
@@ -58,14 +58,14 @@ public class Link_Command extends Command implements TabExecutor
 			else
 			{
 				player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FFFFCurrent Active Link / Link Requests:")));
-				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
+				if(Database.scalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"';") >= 1) 
 				{
-					ResultSet linked_accounts = Database.QueryCommand("SELECT * FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"';");
+					ResultSet linked_accounts = Database.queryCommand("SELECT * FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"';");
 					try 
 					{
 						while(linked_accounts.next()) 
 						{
-							ResultSet discordUsername_RS = Database.QueryCommand("SELECT username FROM discord_accounts WHERE id = '"+ linked_accounts.getString(3) +"'");
+							ResultSet discordUsername_RS = Database.queryCommand("SELECT username FROM discord_accounts WHERE id = '"+ linked_accounts.getString(3) +"'");
 							discordUsername_RS.next();
 							String discordUsername = discordUsername_RS.getString(1);
 							String current_status = linked_accounts.getString(4);
@@ -91,18 +91,18 @@ public class Link_Command extends Command implements TabExecutor
 	}
 	private void AddLink(String id, String username, ProxiedPlayer player) 
 	{
-		if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE id = '"+ id +"' AND current_status = 'linked';") >= 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Discord Account " + username + " Is Already Linked!"))); //Checks If Discord Account Is Linked First (linked accounts cannot attempt link)
-		else if (Database.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"' AND current_status = 'dwait';") >= 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#C8C8C8Already Waiting For This Discord Account To Respond.."))); //Check if link is already waiting for the discord account
-		else if (Database.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"' AND current_status = 'mwait';") >= 1) //Check if link is already waiting for the mc account and should confirm link instead
+		if(Database.scalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE id = '"+ id +"' AND current_status = 'linked';") >= 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#CD0000Discord Account " + username + " Is Already Linked!"))); //Checks If Discord Account Is Linked First (linked accounts cannot attempt link)
+		else if (Database.scalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"' AND current_status = 'dwait';") >= 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#C8C8C8Already Waiting For This Discord Account To Respond.."))); //Check if link is already waiting for the discord account
+		else if (Database.scalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"' AND current_status = 'mwait';") >= 1) //Check if link is already waiting for the mc account and should confirm link instead
 		{
-			Database.UpdateCommand("UPDATE linked_accounts SET current_status = 'linked' WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"';"); //Update Database To Show that Account Link has Been Confirmed
-			Database.UpdateCommand("DELETE FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND NOT id = '"+ id +"';");//Deletes All Other Links Connected To The Mc Account (linked accounts cannot attempt link)
-			Database.UpdateCommand("DELETE FROM linked_accounts WHERE id = '"+ id +"' AND NOT uuid = '"+ player.getUniqueId().toString() +"';");//Deletes All Other Links Connected To The Discord Account (linked accounts cannot attempt link)
+			Database.updateCommand("UPDATE linked_accounts SET current_status = 'linked' WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"';"); //Update Database To Show that Account Link has Been Confirmed
+			Database.updateCommand("DELETE FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND NOT id = '"+ id +"';");//Deletes All Other Links Connected To The Mc Account (linked accounts cannot attempt link)
+			Database.updateCommand("DELETE FROM linked_accounts WHERE id = '"+ id +"' AND NOT uuid = '"+ player.getUniqueId().toString() +"';");//Deletes All Other Links Connected To The Discord Account (linked accounts cannot attempt link)
 			player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF00Account Link With " + username +" Confirmed!")));
 		}
 		else //When No Link Is Present Create Request For Discord
 		{
-			Database.UpdateCommand("INSERT INTO linked_accounts VALUES(null,'"+ player.getUniqueId().toString() +"','"+ id +"','dwait');"); //Create Record In Database To Show Discord Link Request
+			Database.updateCommand("INSERT INTO linked_accounts VALUES(null,'"+ player.getUniqueId().toString() +"','"+ id +"','dwait');"); //Create Record In Database To Show Discord Link Request
 			player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00E936Account Link Now Waiting For "+ username +"'s Discord to confirm! &#FFFF00Type .mclink")));
 		}
 	}
@@ -110,15 +110,15 @@ public class Link_Command extends Command implements TabExecutor
 	{
 		try 
 		{
-			if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_accounts WHERE id = '"+ input +"'") >= 1) //Get username From ID if valid ID inputed
+			if(Database.scalarCommand("SELECT COUNT(*) FROM discord_accounts WHERE id = '"+ input +"'") >= 1) //Get username From ID if valid ID inputed
 			{
-				ResultSet discordUsername_RS = Database.QueryCommand("SELECT username FROM discord_accounts WHERE id = '"+ input +"'");
+				ResultSet discordUsername_RS = Database.queryCommand("SELECT username FROM discord_accounts WHERE id = '"+ input +"'");
 				discordUsername_RS.next();
 				return new String[] {input,discordUsername_RS.getString(1)};
 			}
-			else if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_accounts WHERE username = '"+ input +"'") >= 1) //Get ID From Username if valid username inputed
+			else if(Database.scalarCommand("SELECT COUNT(*) FROM discord_accounts WHERE username = '"+ input +"'") >= 1) //Get ID From Username if valid username inputed
 			{
-				ResultSet discordID_RS = Database.QueryCommand("SELECT id FROM discord_accounts WHERE username = '"+ input +"'");
+				ResultSet discordID_RS = Database.queryCommand("SELECT id FROM discord_accounts WHERE username = '"+ input +"'");
 				discordID_RS.next();
 				return new String[] {discordID_RS.getString(1),input};
 			}
@@ -131,9 +131,9 @@ public class Link_Command extends Command implements TabExecutor
 	}
 	private void RemoveLink(String id, String username, ProxiedPlayer player) 
 	{
-		if(Database.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"';") == 1) //Check If Link Is Present On This Mc Account
+		if(Database.scalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"';") == 1) //Check If Link Is Present On This Mc Account
 		{
-			Database.UpdateCommand("DELETE FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"';"); //Update Database to remove link
+			Database.updateCommand("DELETE FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND id = '"+ id +"';"); //Update Database to remove link
 			player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF00Deleted Link with "+ username)));
 		}
 	}
@@ -156,9 +156,9 @@ public class Link_Command extends Command implements TabExecutor
 		{
 			if(args[0].equalsIgnoreCase("add")) 
 			{
-				if(Database.ScalarCommand("SELECT Count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") == 0) 
+				if(Database.scalarCommand("SELECT Count(*) FROM linked_accounts WHERE uuid = '"+ player.getUniqueId().toString() +"' AND current_status = 'linked';") == 0) 
 				{
-					ResultSet linkableAccounts = Database.QueryCommand("SELECT id,username FROM discord_accounts WHERE id NOT IN(SELECT id FROM linked_accounts WHERE current_status = 'linked') AND NOT id IN(SELECT id FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() +"' AND current_status = 'dwait');");
+					ResultSet linkableAccounts = Database.queryCommand("SELECT id,username FROM discord_accounts WHERE id NOT IN(SELECT id FROM linked_accounts WHERE current_status = 'linked') AND NOT id IN(SELECT id FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() +"' AND current_status = 'dwait');");
 					try
 					{
 						while (linkableAccounts.next())
@@ -175,7 +175,7 @@ public class Link_Command extends Command implements TabExecutor
 			}
 			else if(args[0].equalsIgnoreCase("remove")) 
 			{
-				ResultSet linkableAccounts = Database.QueryCommand("SELECT id,username FROM discord_accounts WHERE id IN(SELECT id FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() +"');");
+				ResultSet linkableAccounts = Database.queryCommand("SELECT id,username FROM discord_accounts WHERE id IN(SELECT id FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() +"');");
 				try
 				{
 					while (linkableAccounts.next())

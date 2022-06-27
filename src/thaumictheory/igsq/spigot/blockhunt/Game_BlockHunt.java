@@ -13,12 +13,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.event.BeginSeekEvent;
 import thaumictheory.igsq.spigot.event.GameEndEvent;
 import thaumictheory.igsq.spigot.event.GameStartEvent;
 import thaumictheory.igsq.spigot.event.LobbyCreateEvent;
 import thaumictheory.igsq.spigot.event.PlayerJoinLobbyEvent;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Game_BlockHunt 
 {

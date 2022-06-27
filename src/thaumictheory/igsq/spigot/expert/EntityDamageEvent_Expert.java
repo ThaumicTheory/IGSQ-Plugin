@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class EntityDamageEvent_Expert implements Listener
 {

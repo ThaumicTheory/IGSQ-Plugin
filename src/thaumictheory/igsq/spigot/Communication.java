@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -25,7 +26,8 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.EnumWrappers.NativeGameMode;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
 
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 
 import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
@@ -40,39 +42,17 @@ public class Communication
 
 	public static void onPluginMessageReceived(String channel, Player player, byte[] message)
 	{
-		if(channel.equals("igsq:yml")) 
+		if(channel.equals("igsq:yaml")) 
 		{
-	        DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
 			try
 			{
-		        int dataType = in.readInt();
-		        String fileName = in.readUTF();
-				String path = in.readUTF();
-				switch(dataType) 
-				{
-					case 0: //String
-			        	String dataString = in.readUTF();
-			        	Yaml.updateField(path, fileName, dataString);
-						break;
-					case 1: //Int
-			        	int dataInt = in.readInt();
-			        	Yaml.updateField(path, fileName, dataInt);
-						break;
-					case 2: //Boolean
-			        	boolean dataBool = in.readBoolean();
-			        	Yaml.updateField(path, fileName, dataBool);
-						break;
-					default:
-						break;
-				}
-				
-		        /*
-				if(data.equalsIgnoreCase("false") || data.equalsIgnoreCase("true")) Yaml.updateField(path, fileName, Boolean.valueOf(data));
-				else if(Integer.getInteger(data) != null) Yaml.updateField(path, fileName, Integer.getInteger(data));
-				else Yaml.updateField(path, fileName, data);
-				*/
+		        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message));
+				String node = in.readUTF();
+		        String path = in.readUTF();
+		        Object data = in.readObject();
+	        	IGSQ.getYaml().setField(node, path, data);
 			}
-			catch (IOException e)
+			catch (Exception e)
 			{
 				Messaging.sendException(e,"Plugin Messaging Channel For Configuration Failed.","REDSTONE_LAMP", player);
 			}
@@ -93,9 +73,9 @@ public class Communication
 			}
 		}
 	}
-	public static void setTag(Player player,String prefix,ChatColor nameColor,String tag,String suffix) 
+	public static void setTag(Player player,String prefix,String tag,String suffix) 
 	{
-		PacketContainer packet = setTagAsPacket(player,prefix,nameColor,tag,suffix);
+		PacketContainer packet = setTagAsPacket(player,prefix,tag,suffix);
 		for(Player selectedPlayer : Bukkit.getOnlinePlayers())
 		{
 			ProtocolLibrary.getProtocolManager().sendServerPacket(selectedPlayer, packet);
@@ -134,8 +114,8 @@ public class Communication
 				PacketContainer fakeTeam = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
 				fakeTeam.getStrings().write(0, team.substring(0, 16));
 				fakeTeam.getIntegers().write( 0, 0 );
-				fakeTeam.getIntegers().write(1, 0);
-				fakeTeam.getIntegers().write( 1, 1 );
+				//fakeTeam.getIntegers().write(1, 0);
+				//fakeTeam.getIntegers().write( 1, 1 );
 				List<String> playerList = new ArrayList<String>();
 				playerList.add(nameHashTable.get(selectedPlayer.getUniqueId()));
 				fakeTeam.getSpecificModifier(Collection.class).write(0, playerList);
@@ -149,9 +129,9 @@ public class Communication
 		{
 			PacketContainer fakeTeam = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
 			fakeTeam.getStrings().write(0, player.getUniqueId().toString().substring(0, 16));
-			fakeTeam.getIntegers().write( 0, 0 );
-			fakeTeam.getIntegers().write(1, 0);
-			fakeTeam.getIntegers().write( 1, 1 );
+			fakeTeam.getIntegers().write( 0, 0);
+			//fakeTeam.getIntegers().write(1, 0);
+			//fakeTeam.getIntegers().write( 1, 1 );
 			List<String> playerList = new ArrayList<String>();
 			playerList.add(nameHashTable.get(player.getUniqueId()));
 			fakeTeam.getSpecificModifier(Collection.class).write(0, playerList);
@@ -178,7 +158,7 @@ public class Communication
 	}
 	private static void refreshTagUsername(Player player) 
 	{
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
 		String name = player.getName();
 		if(yaml.isLinked()) name = convertToSafe(yaml.getNickname());
 		nameHashTable.put(player.getUniqueId(), name);
@@ -197,9 +177,10 @@ public class Communication
 		if(tag.length() > 16) tag = tag.substring(0, 16);
 		return tag;
 	}
-	public static PacketContainer setTagAsPacket(Player player,String prefix,ChatColor nameColor,String tag,String suffix) 
+	public static PacketContainer setTagAsPacket(Player player,String prefix,String tag,String suffix) 
 	{
 		tag = convertToSafe(tag);
+		ChatColor nameColor = Messaging.getLastLegacyColourByText(tag);
 		nameHashTable.put(player.getUniqueId(), tag);
 		prefixHashTable.put(player.getUniqueId(), Messaging.chatFormatter(prefix));
 		suffixHashTable.put(player.getUniqueId(), Messaging.chatFormatter(suffix));
@@ -210,13 +191,10 @@ public class Communication
 			packet.getPlayerInfoAction().write(0, PlayerInfoAction.ADD_PLAYER);
 			for(Player selectedPlayer : Bukkit.getOnlinePlayers()) 
 			{
-				//Object entityPlayer = selectedPlayer.getClass().getMethod("getHandle").invoke(selectedPlayer);
-				//int ping = (int) entityPlayer.getClass().getField("ping").get(entityPlayer);
-				
 				WrappedGameProfile profile = WrappedGameProfile.fromPlayer(selectedPlayer);
 				WrappedGameProfile newProfile = profile.withName(nameHashTable.get(selectedPlayer.getUniqueId()));
 				NativeGameMode gameMode =  NativeGameMode.fromBukkit(selectedPlayer.getGameMode());
-				data.add(new PlayerInfoData(newProfile, 0, gameMode, WrappedChatComponent.fromText(Messaging.chatFormatter(prefixHashTable.get(selectedPlayer.getUniqueId()) + nameHashTable.get(selectedPlayer.getUniqueId()) + suffixHashTable.get(selectedPlayer.getUniqueId())))));
+				data.add(new PlayerInfoData(newProfile, selectedPlayer.getPing(), gameMode, WrappedChatComponent.fromText(Messaging.chatFormatter(prefixHashTable.get(selectedPlayer.getUniqueId()) + nameHashTable.get(selectedPlayer.getUniqueId()) + suffixHashTable.get(selectedPlayer.getUniqueId())))));
 			}
 			packet.getPlayerInfoDataLists().write(0, data);
 		}
@@ -231,7 +209,7 @@ public class Communication
 			PacketContainer fakeTeam = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
 			fakeTeam.getStrings().write(0, player.getUniqueId().toString().substring(0, 16));
 			fakeTeam.getIntegers().write( 0, 2);
-			//fakeTeam.getIntegers().write(1, 5); //Colour
+			
 			fakeTeam.getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat")).write(0, nameColor);
 			fakeTeam.getChatComponents().write( 0, WrappedChatComponent.fromText(player.getName()));
 			fakeTeam.getChatComponents().write( 1,  WrappedChatComponent.fromText(Messaging.chatFormatter(prefix)));
@@ -250,15 +228,14 @@ public class Communication
 		return packet;
 		
 	}
-	public static void requestYaml(String path,String fileName,int dataType) 
+	public static void requestYaml(String path,String fileName) 
 	{
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(stream);
 		try
 		{
-			out.writeInt(dataType);
-			out.writeUTF(Common_Shared.removeNull(fileName));
-			out.writeUTF(Common_Shared.removeNull(path));
+			out.writeUTF(IGSQ.removeNull(fileName));
+			out.writeUTF(IGSQ.removeNull(path));
 			Common.spigot.getServer().sendPluginMessage(Common.spigot, "igsq:ymlreq", stream.toByteArray());
 		}
 		catch(Exception exception) 

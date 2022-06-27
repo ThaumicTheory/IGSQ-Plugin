@@ -5,51 +5,25 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class Common_Shared 
+public class IGSQ 
 {
-	public static <T> List<T> getBetween(List<T> args, int leftSide,int rightSide)
-    {
-        return args.subList(leftSide, rightSide);
-    }
+	private static IYaml YAML;
+	private static ISharedImplementation SI;
+	public IGSQ(IYaml yaml,ISharedImplementation si) 
+	{
+		IGSQ.YAML = yaml;
+		IGSQ.SI = si;
+	}
+	public static IYaml getYaml() 
+	{
+		return YAML;
+	}
 	
-	 //Appends a value to the end of array
-	@Deprecated
-    public static String[] append(String[] array, String value)
-    {
-    	String[] arrayAppended = new String[array.length+1];
-    	for (int i = 0;i < array.length;i++)
-    	{
-    		arrayAppended[i] = array[i];
-    	}
-    	arrayAppended[array.length] = value;
-    	return arrayAppended;
-    }
-    @Deprecated
-    public static String[] arrayAppend(String[] array, String[] array2) 
-    {
-    	String[] appendedArray = array;
-    	for (String string : array2) 
-    	{
-    		appendedArray = append(appendedArray,string);
-    	}
-    	return appendedArray;
-    }
-    @Deprecated
-	public static String[] depend(String[] array, int location)
-    {
-        String[] arrayDepended = new String[array.length-1];
-        int hitRemove = 0;
-        for (int i = 0;i < array.length;i++)
-        {
-            if(location != i){
-                arrayDepended[i-hitRemove] = array[i];
-            }
-            else{
-                hitRemove++;
-            }
-        }
-        return arrayDepended;
-    }
+	public static ISharedImplementation getSharedImplementation() 
+	{
+		return SI;
+	}
+	
     /**
      * Removes all text before a given character. If the character is not found the whole string is returned.
      * @apiNote used in commands to remove the command identifier minecraft: etc
@@ -113,7 +87,7 @@ public class Common_Shared
 				return getTime(time.plus(timeComponent, ChronoUnit.MONTHS));
 			case "y":
 				return getTime(time.plus(timeComponent, ChronoUnit.YEARS));
-			default: //Future scheduler may run early as it can only calculate a delay in ticks! It is advised to not work in milliseconds
+			default: //Future scheduler may run late as it can only calculate a delay in ticks! It is advised to not work in milliseconds
 				return getTime(time.plus(timeComponent, ChronoUnit.MILLIS));
 		}
 	}

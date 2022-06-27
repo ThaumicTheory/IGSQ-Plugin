@@ -6,10 +6,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import thaumictheory.igsq.shared.Role;
+import thaumictheory.igsq.shared.RoleType;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class AsyncPlayerChatEvent_Main implements Listener
 {
@@ -23,7 +25,7 @@ public class AsyncPlayerChatEvent_Main implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer());
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer().getUniqueId());
 			if(!Common.filterChat(event.getMessage(), event.getPlayer())) 
 			{
 				event.setCancelled(true);
@@ -32,7 +34,7 @@ public class AsyncPlayerChatEvent_Main implements Listener
 			{
 				String name = event.getPlayer().getName();
 				if(yaml.isLinked()) name = yaml.getNickname();
-				event.setFormat((Messaging.chatFormatter(Messaging.getFormattedMessage("message", new String[] {"<server>",YamlWrapper.getServerName(), "<prefix>","", "<player>", name,"<suffix>","", "<message>", event.getMessage()}))));
+				event.setFormat((Messaging.chatFormatter(Messaging.getFormattedMessage("message", new String[] {"<server>",YamlWrapper.getServerName(), "<prefix>",Role.getHighestChatPrefix(event.getPlayer().getUniqueId(),RoleType.EITHER), "<player>", name,"<suffix>",Role.getHighestChatSuffix(event.getPlayer().getUniqueId(),RoleType.EITHER), "<message>", event.getMessage()}))));
 			}
 		}
 	}

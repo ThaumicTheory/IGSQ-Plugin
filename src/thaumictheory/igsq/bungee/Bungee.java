@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import thaumictheory.igsq.bungee.commands.Generate_Command;
 import thaumictheory.igsq.bungee.commands.Link_Command;
 import thaumictheory.igsq.bungee.commands.Test_Command;
 import thaumictheory.igsq.bungee.commands.TwoFA_Command;
@@ -15,21 +14,26 @@ import thaumictheory.igsq.bungee.main.PluginMessageEvent_Bungee;
 import thaumictheory.igsq.bungee.main.PostLoginEvent_Bungee;
 import thaumictheory.igsq.bungee.main.ServerKickEvent_Bungee;
 import thaumictheory.igsq.bungee.security.Main_Security;
+import thaumictheory.igsq.bungee.yaml.Yaml;
+import thaumictheory.igsq.bungee.yaml.YamlWrapper;
+import thaumictheory.igsq.shared.IGSQ;
+import thaumictheory.igsq.shared.YamlRoleWrapper;
 
 public class Bungee extends Plugin
 {
 	@Override
 	public void onEnable()
 	{
-		this.getProxy().registerChannel("igsq:yml");
-		this.getProxy().registerChannel("igsq:ymlreq");
+		this.getProxy().registerChannel("igsq:yaml");
+		this.getProxy().registerChannel("igsq:yamlreq");
 		this.getProxy().registerChannel("igsq:sound");
 		
 		
 		Common.bungee = this;
-		Yaml.createFiles();
-		Yaml.loadFile("@all");
-		YamlWrapper.applyDefault();	
+		IGSQ.getYaml().createFiles();
+		IGSQ.getYaml().loadAllFiles();
+		YamlWrapper.applyDefault();
+		YamlRoleWrapper.applyDefault(0);
     	
     	this.getProxy().getScheduler().schedule(this, new Runnable() 
     	{
@@ -37,8 +41,8 @@ public class Bungee extends Plugin
 			@Override
 			public void run() 
 			{
-				Yaml.saveFileChanges("@all");
-				Yaml.loadFile("@all");
+				IGSQ.getYaml().saveAllFiles();
+				IGSQ.getYaml().loadAllFiles();
 				String[] servers = new String[0];
 		    	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
 		    	{
@@ -53,7 +57,7 @@ public class Bungee extends Plugin
 		    		}
 		    		if((!serverChecked) && player.getServer() != null) 
 		    		{
-		    			Communication.sendConfigUpdate("server","internal", player.getServer().getInfo().getName(),player);
+		    			Communication.sendTargetedConfigUpdate("server","internal.yaml", player.getServer().getInfo().getName(),player);
 		    		}
 		    		
 		    	}
@@ -68,25 +72,16 @@ public class Bungee extends Plugin
 		new ServerKickEvent_Bungee();
 		new PluginMessageEvent_Bungee();
 		
+		new Main_LP();
 		new Main_Security();
 		getProxy().getPluginManager().registerCommand(this,new Link_Command());
 		getProxy().getPluginManager().registerCommand(this,new TwoFA_Command());
 		getProxy().getPluginManager().registerCommand(this,new Test_Command());
-		getProxy().getPluginManager().registerCommand(this,new Generate_Command());
-		if(this.getProxy().getPluginManager().getPlugin("LuckPerms") != null && YamlWrapper.isLuckpermsSupported()) 
-		{
-			System.out.println("Luckperms Module Enabled.");
-			new Main_LP();
-		}
-		else 
-		{
-			System.out.println("Luckperms Module Disabled.");
-		}
 	}
 
 	public void onLoad()
 	{
-		
+		new IGSQ(new Yaml(), new BungeeImplementor());
 	}
 	
 	public void onDisable()
@@ -94,8 +89,8 @@ public class Bungee extends Plugin
 		this.getProxy().getScheduler().cancel(this);
 		this.getProxy().getPluginManager().unregisterListeners(this);
 		this.getProxy().getPluginManager().unregisterCommands(this);
-		Yaml.saveFileChanges("@all");
-		Yaml.disgardAndCloseFile("@all");
+		IGSQ.getYaml().saveAllFiles();
+		IGSQ.getYaml().discardAllFiles();
 	}
 	
 }

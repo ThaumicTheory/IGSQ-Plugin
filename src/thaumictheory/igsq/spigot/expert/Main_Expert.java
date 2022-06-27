@@ -1,6 +1,6 @@
 package thaumictheory.igsq.spigot.expert;
 
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Main_Expert 
 {

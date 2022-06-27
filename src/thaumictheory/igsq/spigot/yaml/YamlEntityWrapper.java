@@ -1,6 +1,8 @@
-package thaumictheory.igsq.spigot;
+package thaumictheory.igsq.spigot.yaml;
 
 import org.bukkit.entity.LivingEntity;
+
+import thaumictheory.igsq.shared.IGSQ;
 
 public class YamlEntityWrapper
 {
@@ -16,27 +18,25 @@ public class YamlEntityWrapper
 	
 	public void delete() 
 	{
-		Yaml.deleteField(uid, "entity");
+		IGSQ.getYaml().deleteField(uid, "entity.yaml");
 	}
 	public String getSMPAgro() 
 	{
-		String agro = Yaml.getFieldString(uid + ".smp.neutralagro", "entity");
+		String agro = (String) IGSQ.getYaml().getField(uid + ".smp.neutralagro", "entity.yaml");
 		if(agro == null) return "";
 		return agro;
 	}
 	public void setSMPAgro(String data) 
 	{
-		Yaml.updateField(uid + ".smp.neutralagro", "entity", data);
+		IGSQ.getYaml().setField(uid + ".smp.neutralagro", "entity.yaml", data);
 	}
-	public int getSMPLastHit() 
+	public Integer getSMPLastHit() 
 	{
-		Integer lastHit = Yaml.getFieldInt(uid + ".smp.lasthit", "entity");
-		if(lastHit == null) return 0;
-		return lastHit;
+		return (Integer) IGSQ.getYaml().getField(uid + ".smp.lasthit", "entity.yaml");
 	}
-	public void setSMPLastHit(int data) 
+	public void setSMPLastHit(Integer data) 
 	{
-		Yaml.updateField(uid + ".smp.lasthit", "entity", data);
+		IGSQ.getYaml().setField(uid + ".smp.lasthit", "entity.yaml", data);
 	}
 	public boolean addSMPAgro(String uid) 
 	{
@@ -47,8 +47,8 @@ public class YamlEntityWrapper
 	}
     public void applyDefault() 
     {
-    	Yaml.addFieldDefault(uid + ".smp.neutralagro", "entity", "");
-    	Yaml.addFieldDefault(uid + ".smp.lasthit", "entity", 0);
+    	IGSQ.getYaml().defaultField(uid + ".smp.neutralagro", "entity.yaml", "");
+    	IGSQ.getYaml().defaultField(uid + ".smp.lasthit", "entity.yaml", 0);
     }
 	
 	

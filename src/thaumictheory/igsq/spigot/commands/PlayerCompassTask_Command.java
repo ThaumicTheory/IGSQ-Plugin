@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
 
 public class PlayerCompassTask_Command
 {	
@@ -33,7 +33,7 @@ public class PlayerCompassTask_Command
 				Boolean expireTask = true;
 				for(Player selectedPlayer : Bukkit.getServer().getOnlinePlayers()) 
 				{
-					YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer);
+					YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer.getUniqueId());
 					if(yaml.getPlayerCompassTarget() != null && !yaml.getPlayerCompassTarget().equalsIgnoreCase("")) expireTask = false;
 				}
 				playerCompass();
@@ -49,7 +49,7 @@ public class PlayerCompassTask_Command
 	{
 		for(Player selectedPlayer : Bukkit.getServer().getOnlinePlayers()) 
 		{
-			YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer);
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer.getUniqueId());
 			if(yaml.getPlayerCompassTarget() != null && !yaml.getPlayerCompassTarget().equalsIgnoreCase("")) 
 			{
 				Player targetPlayer = Bukkit.getPlayer(UUID.fromString(yaml.getPlayerCompassTarget()));

@@ -3,7 +3,6 @@ package thaumictheory.igsq.spigot.smp;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.aspect.EntityAirChangeEvent_Aspect;
 import thaumictheory.igsq.spigot.smp.aspect.EntityDamageByEntityEvent_Aspect;
 import thaumictheory.igsq.spigot.smp.aspect.EntityTargetEvent_Aspect;
@@ -21,6 +20,7 @@ import thaumictheory.igsq.spigot.smp.protection.PlayerInteractEntityEvent_Protec
 import thaumictheory.igsq.spigot.smp.protection.PlayerInteractEvent_Protection;
 import thaumictheory.igsq.spigot.smp.protection.PotionSplashEvent_Protection;
 import thaumictheory.igsq.spigot.smp.protection.SpongeAbsorbEvent_Protection;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Main_SMP 
 {
@@ -57,7 +57,7 @@ public class Main_SMP
 		new ProjectileHitEvent_Aspect();
 		//new PlayServerGameStateChange_Aspect(); //Re-enable after protocollib fixes this event
 		//Tasks
-		startSMP();
+		if(YamlWrapper.isSMP())startSMP();
 	}
 	public static void startSMP() //Tasks will close if SMP is turned off therefor they will need to be rerun for enabling SMP
 	{

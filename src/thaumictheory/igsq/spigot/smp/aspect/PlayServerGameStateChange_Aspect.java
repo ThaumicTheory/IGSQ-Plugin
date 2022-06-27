@@ -13,8 +13,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.Player_SMP;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class PlayServerGameStateChange_Aspect implements Listener
 {

@@ -1,14 +1,14 @@
-package thaumictheory.igsq.spigot;
+package thaumictheory.igsq.spigot.smp;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-public class FragmentedBlock 
+public class FragmentedBlock_SMP 
 {
 	private BlockData data;
 	private Location location;
-	public FragmentedBlock(Block block) 
+	public FragmentedBlock_SMP(Block block) 
 	{
 		data = block.getBlockData();
 		location = block.getLocation();

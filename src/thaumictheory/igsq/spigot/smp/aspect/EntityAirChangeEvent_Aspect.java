@@ -7,8 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.Player_SMP;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class EntityAirChangeEvent_Aspect implements Listener
 {

@@ -11,14 +11,11 @@ public class Main_Security
 		new ChatEvent_Security();
 		new TabCompleteEvent_Security();
 		
-		new PluginMessageEvent_Security();
-		new ServerConnectEvent_Security();
 		Start_Security();
 	}
 	public static void Start_Security() //Tasks will need to be closed if security is turned off therefor they will need to be rerun for enabling security
 	{
 		taskID++;
 		new TwoFactorAuthentication_Security(taskID);
-		new DiscordLink_Security(taskID);
 	}
 }

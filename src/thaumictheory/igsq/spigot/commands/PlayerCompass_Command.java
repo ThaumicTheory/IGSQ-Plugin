@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
 
 public class PlayerCompass_Command {
 
@@ -24,7 +24,7 @@ public class PlayerCompass_Command {
 	private Boolean playerCompass() 
 	{
 		Player player = (Player) sender;
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
 		if((args.size() == 0)) 
 		{
 			yaml.setPlayerCompassAccuracy(0);

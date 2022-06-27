@@ -19,7 +19,7 @@ public class ServerCommandEvent_Security implements Listener
 	{
 		if(!event.isCancelled()) 
 		{
-			if(!Common_Security.FilterCommand(event.getCommand(),event.getSender())) 
+			if(!Common_Security.filterCommand(event.getCommand(),event.getSender())) 
 			{
 				event.setCancelled(true);
 			}

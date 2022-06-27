@@ -1,6 +1,5 @@
 package thaumictheory.igsq.spigot;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -9,22 +8,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import thaumictheory.igsq.shared.IGSQ;
+import thaumictheory.igsq.shared.YamlRoleWrapper;
 import thaumictheory.igsq.spigot.blockhunt.Main_BlockHunt;
 import thaumictheory.igsq.spigot.commands.Main_Command;
 import thaumictheory.igsq.spigot.commands.Team_Command;
 import thaumictheory.igsq.spigot.expert.Main_Expert;
-import thaumictheory.igsq.spigot.lp.Main_LP;
-import thaumictheory.igsq.spigot.main.AsyncPlayerChatEvent_Main;
-import thaumictheory.igsq.spigot.main.CreatureSpawnEvent_Main;
-import thaumictheory.igsq.spigot.main.EntityDamageEvent_Main;
-import thaumictheory.igsq.spigot.main.EntityDeathEvent_Main;
-import thaumictheory.igsq.spigot.main.InventoryClickEvent_Main;
 import thaumictheory.igsq.spigot.main.LoggerHandler_Main;
-import thaumictheory.igsq.spigot.main.PlayerCommandPreprocessEvent_Main;
-import thaumictheory.igsq.spigot.main.PlayerJoinEvent_Main;
-import thaumictheory.igsq.spigot.main.PlayerQuitEvent_Main;
+import thaumictheory.igsq.spigot.main.Main_Main;
 import thaumictheory.igsq.spigot.security.Main_Security;
+import thaumictheory.igsq.spigot.smp.BlockCluster_SMP;
 import thaumictheory.igsq.spigot.smp.Main_SMP;
+import thaumictheory.igsq.spigot.yaml.Yaml;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Spigot extends JavaPlugin implements PluginMessageListener
 {
@@ -33,41 +29,18 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 	public void onEnable()
 	{ 
 		Messaging.createLog("Plugin Starting!");
-		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:yml", this);
+		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:yaml", this);
 		this.getServer().getMessenger().registerIncomingPluginChannel(this, "igsq:sound", this);
 		
-		new Database(this);
-		
-		
-		new PlayerJoinEvent_Main();
-		new InventoryClickEvent_Main();
-		new PlayerCommandPreprocessEvent_Main();
-		new EntityDeathEvent_Main();
-		new AsyncPlayerChatEvent_Main();
-		new EntityDamageEvent_Main();
-		new PlayerQuitEvent_Main();
-		new LoggerHandler_Main();
-		new CreatureSpawnEvent_Main();
+		new Main_Main();
 		
 		new Main_Expert();
 		new Main_SMP();
 		new Main_Security();
 		new Main_Command();
 		new Team_Command();
-		if(this.getServer().getPluginManager().getPlugin("LuckPerms") != null && YamlWrapper.isLuckpermsSupported()) 
-		{
-			Messaging.createLog("Luckperms Module Enabled.");
-			new Main_LP(this);
-			YamlWrapper.setDefaultChatController("mainlp");
-			YamlWrapper.setDefaultNameController("main");
-		}
-		else 
-		{
-			if(YamlWrapper.isLuckpermsSupported()) Messaging.createLog(Level.WARNING,"Luckperms Support is on but the plugin cannot be located.");
-			Messaging.createLog("Luckperms Module Disabled.");
-			YamlWrapper.setDefaultChatController("main");
-			YamlWrapper.setDefaultNameController("none");
-		}
+		YamlWrapper.setDefaultChatController("main");
+		YamlWrapper.setDefaultNameController("main");
 		if(YamlWrapper.isBlockHunt()) 
 		{
 			Messaging.createLog("BlockHunt enabled.");
@@ -84,8 +57,8 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 			@Override
 			public void run() 
 			{
-					Yaml.saveFileChanges("@all");
-					Yaml.loadFile("@all");
+				IGSQ.getYaml().saveAllFiles();
+				IGSQ.getYaml().loadAllFiles();
 			} 		
     	}, 600, 600);
 		for(Player player : Bukkit.getOnlinePlayers()) Communication.setDefaultTagDataReload(player);
@@ -94,16 +67,17 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 
 	public void onLoad()
 	{
+		new IGSQ(new Yaml(),new SpigotImplementor());
 		Common.spigot = this;
-		
 		Common.logger = new LoggerHandler_Main();
 		Logger.getLogger("Minecraft").addHandler(Common.logger);
 		Common.spigot.getLogger().addHandler(Common.logger);
 		Messaging.createSafeLog("Plugin Started Preparing.");
-		Yaml.createFiles();
-		Yaml.loadFile("@all");
+		IGSQ.getYaml().createFiles();
+		IGSQ.getYaml().loadAllFiles();
 		YamlWrapper.applyDefault();
 		FutureScheduler.applyDefault();
+		YamlRoleWrapper.applyDefault(0);
 		Messaging.createLog("Plugin Finished Preparing.");
 		
 	}
@@ -113,10 +87,10 @@ public class Spigot extends JavaPlugin implements PluginMessageListener
 		Messaging.createLog("Shutting down.");
 		
 		for(Player player : Bukkit.getOnlinePlayers()) Communication.deletePlayer(player);
-		BlockCluster.cleanup();
+		BlockCluster_SMP.cleanup();
 		this.getServer().getScheduler().cancelTasks(this);
-		Yaml.saveFileChanges("@all");
-		Yaml.disgardAndCloseFile("@all");
+		IGSQ.getYaml().saveAllFiles();
+		IGSQ.getYaml().discardAllFiles();
 		this.getServer().getPluginManager().disablePlugin(this);
 		
 		Logger.getLogger("Minecraft").removeHandler(Common.logger);

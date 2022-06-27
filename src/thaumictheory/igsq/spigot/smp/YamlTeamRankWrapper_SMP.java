@@ -2,7 +2,7 @@ package thaumictheory.igsq.spigot.smp;
 
 import java.util.UUID;
 
-import thaumictheory.igsq.spigot.Yaml;
+import thaumictheory.igsq.shared.IGSQ;
 
 public class YamlTeamRankWrapper_SMP 
 {
@@ -13,65 +13,70 @@ public class YamlTeamRankWrapper_SMP
 	}
 	public String getOwner() 
 	{ 
-		return Yaml.getFieldString(uid + ".owner", "teamranks");
+		return (String) IGSQ.getYaml().getField(uid + ".owner", "teamrank.yaml");
 	}
 	public void setOwner(UUID faction) 
 	{ 
-		Yaml.updateField(uid + ".owner", "teamranks",faction.toString());
+		IGSQ.getYaml().setField(uid + ".owner", "teamrank.yaml",faction.toString());
 	}
 	public String getName() 
 	{ 
-		return Yaml.getFieldString(uid + ".name", "teamranks");
+		return (String) IGSQ.getYaml().getField(uid + ".name", "teamrank.yaml");
 	}
 	public void setName(String name) 
 	{
-		Yaml.updateField(uid + ".name", "teamranks",name);
+		IGSQ.getYaml().setField(uid + ".name", "teamrank.yaml",name);
 	}
-	public Boolean getDefault() 
+	public boolean getDefault() 
 	{ 
-		return Yaml.getFieldBool(uid + ".default", "teamranks");
+		Boolean value = (Boolean) IGSQ.getYaml().getField(uid + ".default", "teamrank.yaml");
+		if(value == null) return false;
+		return value;
 	}
 	public void setDefault(boolean def)
 	{
-		Yaml.updateField(uid + ".default", "teamranks",def);
+		IGSQ.getYaml().setField(uid + ".default", "teamrank.yaml",def);
 	}
-	public Boolean getGivable() 
+	public boolean getGivable() 
 	{ 
-		return Yaml.getFieldBool(uid + ".givable", "teamranks");
+		Boolean value = (Boolean) IGSQ.getYaml().getField(uid + ".givable", "teamrank.yaml");
+		if(value == null) return false;
+		return value;
+
 	}
 	public void setGivable(boolean givable)
 	{
-		Yaml.updateField(uid + ".givable", "teamranks",givable);
+		IGSQ.getYaml().setField(uid + ".givable", "teamrank.yaml",givable);
 	}
 	public String getPermissions() 
 	{ 
-		return Yaml.getFieldString(uid + ".permissions", "teamranks");
+		return (String) IGSQ.getYaml().getField(uid + ".permissions", "teamrank.yaml");
 	}
 	public void setPermissions(String permissions) 
 	{
-		Yaml.updateField(uid + ".permissions", "teamranks",permissions);
+		IGSQ.getYaml().setField(uid + ".permissions", "teamrank.yaml",permissions);
 	}
 	public String getMembers() 
 	{ 
-		return Yaml.getFieldString(uid + ".members", "teamranks");
+		return (String) IGSQ.getYaml().getField(uid + ".members", "teamrank.yaml");
 	}
 	public void setMembers(String name)
 	{ 
-		Yaml.updateField(uid + ".members", "teamranks",name);
+		IGSQ.getYaml().setField(uid + ".members", "teamrank.yaml",name);
 	}
 	public void delete() 
 	{ 
-		Yaml.deleteField(uid, "teamranks");
+		IGSQ.getYaml().deleteField(uid, "teamrank.yaml");
 	}
 	
 	public void applyDefault() 
 	{
-		Yaml.addFieldDefault(uid + ".owner", "teamranks", "");
-		Yaml.addFieldDefault(uid + ".members", "teamranks", "");
-		Yaml.addFieldDefault(uid + ".name", "teamranks", "");
-		Yaml.addFieldDefault(uid + ".permissions", "teamranks", "");
-		Yaml.addFieldDefault(uid + ".default", "teamranks", false);
-		Yaml.addFieldDefault(uid + ".givable", "teamranks", true);
+		IGSQ.getYaml().defaultField(uid + ".owner", "teamrank.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".members", "teamrank.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".name", "teamrank.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".permissions", "teamrank.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".default", "teamrank.yaml", false);
+		IGSQ.getYaml().defaultField(uid + ".givable", "teamrank.yaml", true);
 		
 	}
 }

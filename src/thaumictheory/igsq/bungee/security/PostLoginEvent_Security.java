@@ -8,9 +8,10 @@ import net.md_5.bungee.event.EventHandler;
 import thaumictheory.igsq.bungee.Common;
 import thaumictheory.igsq.bungee.Database;
 import thaumictheory.igsq.bungee.Messaging;
-import thaumictheory.igsq.bungee.YamlPlayerWrapper;
-import thaumictheory.igsq.bungee.YamlWrapper;
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.bungee.lp.Common_LP;
+import thaumictheory.igsq.bungee.yaml.YamlWrapper;
+import thaumictheory.igsq.shared.IGSQ;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 
 public class PostLoginEvent_Security implements Listener
 {
@@ -24,7 +25,8 @@ public class PostLoginEvent_Security implements Listener
 	{
 		//Runs on bungee connect complete
 		ProxiedPlayer player = event.getPlayer();
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
+		yaml.applyDefault();
 		String playerUUID = player.getUniqueId().toString();
 		int playerProtocol = player.getPendingConnection().getVersion();
 		int recomendedProtocol = YamlWrapper.getRecommendedProtocol();
@@ -42,13 +44,13 @@ public class PostLoginEvent_Security implements Listener
 			player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&cYour Minecraft is running a older version than the server! \nIssues will arise! Most Servers Will Be Inaccessible!")));
 		}
 		
-		if(Database.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ playerUUID + "' AND current_status = 'Linked';") == 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF00Your account is already Linked! :)")));
-		else if(Database.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ playerUUID + "' AND current_status = 'mwait';") >= 1)
+		if(Database.scalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ playerUUID + "' AND current_status = 'Linked';") == 1) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#00FF00Your account is already Linked! :)")));
+		else if(Database.scalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ playerUUID + "' AND current_status = 'mwait';") >= 1)
 		{
 			player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#ffb900Your account has a pending link/s. Do &#FFFF00/link &#ffb900to learn more.")));
 			linkMessage(player);
 		}
-		else if(Database.ScalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ playerUUID + "' AND current_status = 'dwait';") >= 1)
+		else if(Database.scalarCommand("SELECT count(*) FROM linked_accounts WHERE uuid = '"+ playerUUID + "' AND current_status = 'dwait';") >= 1)
 		{
 			player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#C8C8C8Your account has a pending outbound link/s. Do &#FFFF00.mclink on discord.")));
 			linkMessage(player);
@@ -62,7 +64,7 @@ public class PostLoginEvent_Security implements Listener
 		
 		
 		String currentStatus = yaml.getStatus();
-		String id = Common_Shared.removeNull(yaml.getID());
+		String id = IGSQ.removeNull(yaml.getID());
 		if((!id.equalsIgnoreCase(""))  && (currentStatus == null || currentStatus.equalsIgnoreCase(""))) player.sendMessage(TextComponent.fromLegacyText(Messaging.chatFormatter("&#a900ffYou can enable 2FA for increased account security! &#FFFF00 See /2fa for more details.")));
 	}
 	

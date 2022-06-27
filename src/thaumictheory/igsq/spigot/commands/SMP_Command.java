@@ -7,10 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.Main_SMP;
 import thaumictheory.igsq.spigot.smp.Player_SMP;
 import thaumictheory.igsq.spigot.smp.aspect.Enum_Aspect;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class SMP_Command {
 

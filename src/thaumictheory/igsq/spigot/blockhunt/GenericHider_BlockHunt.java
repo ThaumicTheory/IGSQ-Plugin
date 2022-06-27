@@ -17,7 +17,7 @@ import com.comphenix.protocol.events.PacketContainer;
 
 import thaumictheory.igsq.spigot.Dictionaries;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class GenericHider_BlockHunt extends GenericPlayer_BlockHunt
 {

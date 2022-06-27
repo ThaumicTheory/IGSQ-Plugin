@@ -9,7 +9,7 @@ import org.bukkit.event.block.Action;
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Dictionaries;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class PlayerInteractEvent_BlockHunt implements Listener
 {

@@ -12,11 +12,11 @@ import org.bukkit.entity.SpawnCategory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
-import thaumictheory.igsq.spigot.YamlWorldWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWorldWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class BloodMoon_Expert {
 	Random random = new Random();
@@ -145,7 +145,7 @@ public class BloodMoon_Expert {
 	{
 		for(Player selectedPlayer : Common.spigot.getServer().getOnlinePlayers()) 
 		{
-			YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer);
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(selectedPlayer.getUniqueId());
 			YamlWorldWrapper worldYaml = new YamlWorldWrapper(selectedPlayer.getWorld());
 			if(!selectedPlayer.hasPotionEffect(PotionEffectType.UNLUCK)) 
 			{

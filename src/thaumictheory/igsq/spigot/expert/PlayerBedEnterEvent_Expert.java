@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWorldWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWorldWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 
 public class PlayerBedEnterEvent_Expert implements Listener

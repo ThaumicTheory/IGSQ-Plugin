@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWorldWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWorldWrapper;
 
 public class RealTime_Command {
 

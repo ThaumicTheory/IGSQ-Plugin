@@ -3,11 +3,12 @@ package thaumictheory.igsq.bungee;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
 
 public class Communication 
 {
@@ -17,7 +18,7 @@ public class Communication
     		DataOutputStream out = new DataOutputStream(stream);
     		try
     		{
-    			out.writeUTF(Common_Shared.removeNull(sound));
+    			out.writeUTF(IGSQ.removeNull(sound));
     			out.writeFloat(volume);
     			out.writeFloat(pitch);
     			player.getServer().getInfo().sendData("igsq:sound", stream.toByteArray());
@@ -28,95 +29,24 @@ public class Communication
     			e.printStackTrace();
     		}
     }
-    public static void sendConfigUpdate(String path,String fileName,String data,ProxiedPlayer player) 
+    public static void sendTargetedConfigUpdate(String node,String path,Object data,ProxiedPlayer player) 
     {
-    			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        		DataOutputStream out = new DataOutputStream(stream);
-        		try
-        		{
-        			out.writeInt(0);//Strings id
-        			out.writeUTF(Common_Shared.removeNull(fileName));
-        			out.writeUTF(Common_Shared.removeNull(path));
-        			out.writeUTF(Common_Shared.removeNull(data));
-        			player.getServer().getInfo().sendData("igsq:yml", stream.toByteArray());
-        		}
+				ByteArrayOutputStream stream = new ByteArrayOutputStream();
+				try
+				{
+		    		ObjectOutputStream out = new ObjectOutputStream(stream);
+					out.writeUTF(IGSQ.removeNull(node));
+					out.writeUTF(IGSQ.removeNull(path));
+					out.writeObject(data);
+					player.getServer().getInfo().sendData("igsq:yaml", stream.toByteArray());
+				}
         		catch (IOException e)
         		{
         			// TODO Auto-generated catch block
         			e.printStackTrace();
         		}
-    	}
-    public static void sendConfigUpdate(String path,String fileName,String data) 
-    {
-    	ArrayList<String> servers = new ArrayList<>();
-    	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
-    	{
-    		Boolean serverChecked = false;
-    		for (String serversDone : servers) 
-    		{
-    			if(player.getServer() != null && serversDone.equals(player.getServer().getInfo().getName())) 
-    			{
-    				serverChecked = true;
-    				break;
-    			}
-    		}
-    		if((!serverChecked) && player.getServer() != null) 
-    		{
-    			servers.add(player.getServer().getInfo().getName());
-    			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        		DataOutputStream out = new DataOutputStream(stream);
-        		try
-        		{
-        			out.writeInt(0);//Strings id
-        			out.writeUTF(Common_Shared.removeNull(fileName));
-        			out.writeUTF(Common_Shared.removeNull(path));
-        			out.writeUTF(Common_Shared.removeNull(data));
-        			player.getServer().getInfo().sendData("igsq:yml", stream.toByteArray());
-        		}
-        		catch (IOException e)
-        		{
-        			// TODO Auto-generated catch block
-        			e.printStackTrace();
-        		}
-    		}
-    	}
-    }
-    public static void sendConfigUpdate(String path,String fileName,int data) 
-    {
-    	ArrayList<String> servers = new ArrayList<>();
-    	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
-    	{
-    		Boolean serverChecked = false;
-    		for (String serversDone : servers) 
-    		{
-    			if(player.getServer() != null && serversDone.equals(player.getServer().getInfo().getName())) 
-    			{
-    				serverChecked = true;
-    				break;
-    			}
-    		}
-    		if((!serverChecked) && player.getServer() != null) 
-    		{
-				servers.add(player.getServer().getInfo().getName());
-    			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        		DataOutputStream out = new DataOutputStream(stream);
-        		try
-        		{
-        			out.writeInt(1);//Ints id
-        			out.writeUTF(Common_Shared.removeNull(fileName));
-        			out.writeUTF(Common_Shared.removeNull(path));
-        			out.writeInt(data);
-        			player.getServer().getInfo().sendData("igsq:yml", stream.toByteArray());
-        		}
-        		catch (IOException e)
-        		{
-        			// TODO Auto-generated catch block
-        			e.printStackTrace();
-        		}
-    		}
-    	}
-    }
-    public static void sendConfigUpdate(String path,String fileName,boolean data) 
+	}
+    public static void sendConfigUpdate(String path,String fileName,Object data) 
     {
     	ArrayList<String> servers = new ArrayList<>();
     	for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) 
@@ -133,21 +63,7 @@ public class Communication
     		if((!serverChecked) && player.getServer() != null) 
     		{
     			servers.add(player.getServer().getInfo().getName());
-    			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        		DataOutputStream out = new DataOutputStream(stream);
-        		try
-        		{
-        			out.writeInt(2);//Booleans id
-        			out.writeUTF(Common_Shared.removeNull(fileName));
-        			out.writeUTF(Common_Shared.removeNull(path));
-        			out.writeBoolean(data);
-        			player.getServer().getInfo().sendData("igsq:yml", stream.toByteArray());
-        		}
-        		catch (IOException e)
-        		{
-        			// TODO Auto-generated catch block
-        			e.printStackTrace();
-        		}
+    			sendTargetedConfigUpdate(path, fileName, data, player);
     		}
     	}
     }

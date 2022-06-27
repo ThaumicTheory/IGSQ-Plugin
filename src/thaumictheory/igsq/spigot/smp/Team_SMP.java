@@ -10,8 +10,8 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
 
 public class Team_SMP 
 {
@@ -229,7 +229,7 @@ public class Team_SMP
 		getDefaultRank().addMember(getOwner());
 		yaml.setOwner(player.getUniqueId().toString());
 		ownerRank.addMember(player);
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId().toString());
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
 		if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#00cc00" + yaml.getNickname() + " &#00FF00is the captain now!"));
 	}
 	public boolean setName(String name,Player changer) 
@@ -263,7 +263,7 @@ public class Team_SMP
 		if(!Chunk_SMP.isChunkClaimable(changer)) return false;
 		Chunk_SMP chunk = new Chunk_SMP(selectedChunk);
 		chunk.setOwner(this);
-		if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#00FF00" + new YamlPlayerWrapper(changer).getNickname()+ " has claimed a new chunk at " + chunk.getLocation().get(0) + ", " + chunk.getLocation().get(1) + " in " + chunk.getWorld().getName() + "."));
+		if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#00FF00" + new YamlPlayerWrapper(changer.getUniqueId()).getNickname()+ " has claimed a new chunk at " + chunk.getLocation().get(0) + ", " + chunk.getLocation().get(1) + " in " + chunk.getWorld().getName() + "."));
 		return true;
 	}
 	public boolean addChunk(Location location) 
@@ -285,7 +285,7 @@ public class Team_SMP
 			{
 				if(changer == null || isOwner(changer)) 
 				{
-					if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#FF0000" + new YamlPlayerWrapper(changer).getNickname() + " has unclaimed a chunk at " + chunk.getLocation().get(0) + ", " + chunk.getLocation().get(1) + " in " + chunk.getWorld().getName() + "."));
+					if(changer != null) for(Player selectedPlayer : getOnlineMembers()) selectedPlayer.sendMessage(Messaging.chatFormatter("&#FF0000" + new YamlPlayerWrapper(changer.getUniqueId()).getNickname() + " has unclaimed a chunk at " + chunk.getLocation().get(0) + ", " + chunk.getLocation().get(1) + " in " + chunk.getWorld().getName() + "."));
 					chunk.deleteChunk();
 				}
 				else changer.sendMessage(Messaging.chatFormatter("&#FF0000You need to be the current leader to remove a chunk!"));
@@ -516,7 +516,7 @@ public class Team_SMP
 		enemy.setEnemy(enemiesEnemies);
 	}
 	public static List<UUID> getRawInvite(OfflinePlayer offlinePlayer) {
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer);
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer.getUniqueId());
 		List<UUID> rawinvites = new ArrayList<>();
 		for(String invitesString : yaml.getSmpInvites().split(" ")) if (!invitesString.equals("")) rawinvites.add(UUID.fromString(invitesString));
 		return rawinvites;
@@ -527,7 +527,7 @@ public class Team_SMP
 		return invites;
 	}
 	public void setInvite(List<Team_SMP> invites, OfflinePlayer offlinePlayer) {
-		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer);
+		YamlPlayerWrapper yaml = new YamlPlayerWrapper(offlinePlayer.getUniqueId());
 		if(invites.size() == 0 || invites == null) 
 		{
 			yaml.setSmpInvites("");

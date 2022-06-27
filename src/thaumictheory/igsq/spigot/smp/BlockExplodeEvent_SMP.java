@@ -15,9 +15,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.util.Vector;
 
-import thaumictheory.igsq.spigot.BlockCluster;
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 
 public class BlockExplodeEvent_SMP implements Listener
@@ -44,7 +43,7 @@ public class BlockExplodeEvent_SMP implements Listener
 					entityLocation.setZ(entityLocation.getZ()+0.5);
 					block.getLocation().getWorld().spawnEntity(entityLocation, EntityType.PRIMED_TNT);
 				}
-				else if(!block.getType().isInteractable() && !BlockCluster.isInACluster(block.getLocation())) 
+				else if(!block.getType().isInteractable() && !BlockCluster_SMP.isInACluster(block.getLocation())) 
 				{
 					clusterBlocks.add(block);
 				}
@@ -63,7 +62,7 @@ public class BlockExplodeEvent_SMP implements Listener
 					entity.setVelocity(entity.getVelocity().add(direction.multiply(force)));
 				}
 			}
-			if(event.blockList().size() > 0) new BlockCluster(clusterBlocks).setInitially(Material.AIR);
+			if(event.blockList().size() > 0) new BlockCluster_SMP(clusterBlocks).setInitially(Material.AIR);
 			
 		}
 	}	

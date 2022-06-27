@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.Team_SMP;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class PotionSplashEvent_Protection implements Listener
 {

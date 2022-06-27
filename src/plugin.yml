@@ -1,6 +1,5 @@
 name: IGSQ-Spigot
 version: 0.2.0
-softdepend: [LuckPerms]
 depend: [ProtocolLib]
 author: ThaumicTheory
 main: thaumictheory.igsq.spigot.Spigot

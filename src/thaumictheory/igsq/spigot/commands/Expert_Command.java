@@ -6,8 +6,8 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.expert.Main_Expert;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Expert_Command {
 

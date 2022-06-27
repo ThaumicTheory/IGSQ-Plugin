@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 
 public class SlimeSplitEvent_Expert implements Listener

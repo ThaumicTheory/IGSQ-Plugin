@@ -14,7 +14,7 @@ import com.comphenix.protocol.events.PacketContainer;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class GameTick_BlockHunt
 {	

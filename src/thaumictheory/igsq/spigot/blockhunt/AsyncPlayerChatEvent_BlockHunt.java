@@ -6,10 +6,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class AsyncPlayerChatEvent_BlockHunt implements Listener
 {
@@ -24,7 +24,7 @@ public class AsyncPlayerChatEvent_BlockHunt implements Listener
 		//Player Chat Capturing
 		if(!event.isCancelled() && YamlWrapper.isBlockHunt()) 
 		{
-			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer());
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer().getUniqueId());
 			if(Common.isCurrentChatController("blockhunt", event.getPlayer())) 
 			{
 				

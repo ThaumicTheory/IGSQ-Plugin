@@ -5,8 +5,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import thaumictheory.igsq.bungee.Common;
 import thaumictheory.igsq.bungee.Database;
-import thaumictheory.igsq.bungee.YamlPlayerWrapper;
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,30 +43,30 @@ public class TwoFactorAuthentication_Security
 	{
 		for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers())
 		{
-			YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
-			if(Database.ScalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '" + player.getUniqueId().toString() + "';") == 1) 
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
+			if(Database.scalarCommand("SELECT COUNT(*) FROM discord_2fa WHERE uuid = '" + player.getUniqueId().toString() + "';") == 1) 
 			{
-				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() + "' AND current_status = 'linked';") == 1) 
+				if(Database.scalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() + "' AND current_status = 'linked';") == 1) 
 				{
-					ResultSet discord_2fa = Database.QueryCommand("SELECT * FROM discord_2fa WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+					ResultSet discord_2fa = Database.queryCommand("SELECT * FROM discord_2fa WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 					try
 					{
 						discord_2fa.next();
-						String current_status = Common_Shared.removeNull(discord_2fa.getString(2));
+						String current_status = IGSQ.removeNull(discord_2fa.getString(2));
 						if(current_status.equalsIgnoreCase("expired") || (player.hasPermission("igsq.require2fa") && current_status.equalsIgnoreCase(""))) //If staff 2FA should be enabled but is not already or should check be re-established
 						{
-							Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'pending' WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+							Database.updateCommand("UPDATE discord_2fa SET current_status = 'pending' WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 							current_status = "pending";
 						}
 						yaml.setStatus(current_status);
 						yaml.setCode(discord_2fa.getString(3));
 						String[] socket = player.getPendingConnection().getSocketAddress().toString().split(":");
-						socket[0] = Common_Shared.removeBeforeCharacter(socket[0], '/');
-						String ip = Common_Shared.removeNull(discord_2fa.getString(4));
-						String serverIP = Common_Shared.removeNull(discord_2fa.getString(4));
+						socket[0] = IGSQ.removeBeforeCharacter(socket[0], '/');
+						String ip = IGSQ.removeNull(discord_2fa.getString(4));
+						String serverIP = IGSQ.removeNull(discord_2fa.getString(4));
 						if(socket.length==2 && (!serverIP.equals(socket[0])) && current_status.equalsIgnoreCase("accepted")) 
 						{
-							Database.UpdateCommand("UPDATE discord_2fa SET current_status = 'pending', ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
+							Database.updateCommand("UPDATE discord_2fa SET current_status = 'pending', ip = NULL WHERE uuid = '" +  player.getUniqueId().toString() +"';");
 							ip = "";
 						}
 						yaml.setLastLoginIP(ip);
@@ -77,14 +77,14 @@ public class TwoFactorAuthentication_Security
 						e.printStackTrace();
 					}
 				}
-				else Database.UpdateCommand("DELETE FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';"); //Update Database to remove 2fa link if main link is not found
+				else Database.updateCommand("DELETE FROM discord_2fa WHERE uuid = '"+ player.getUniqueId().toString() +"';"); //Update Database to remove 2fa link if main link is not found
 			}
 			else
 			{
 				yaml.setStatus("");
 				yaml.setCode("");
 				yaml.setLastLoginIP("");
-				if(Database.ScalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() + "' AND current_status = 'linked';") == 1) Database.UpdateCommand("INSERT INTO discord_2fa (uuid) VALUES('"+ player.getUniqueId().toString() +"');");//2FA record doesnt exist but should
+				if(Database.scalarCommand("SELECT COUNT(*) FROM linked_accounts WHERE uuid = '" + player.getUniqueId().toString() + "' AND current_status = 'linked';") == 1) Database.updateCommand("INSERT INTO discord_2fa (uuid) VALUES('"+ player.getUniqueId().toString() +"');");//2FA record doesnt exist but should
 			}
 		}
 	}

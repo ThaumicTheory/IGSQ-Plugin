@@ -2,7 +2,7 @@ package thaumictheory.igsq.spigot.smp;
 
 import java.util.UUID;
 
-import thaumictheory.igsq.spigot.Yaml;
+import thaumictheory.igsq.shared.IGSQ;
 
 public class YamlChunkWrapper_SMP 
 {
@@ -13,48 +13,48 @@ public class YamlChunkWrapper_SMP
 	}
 	public String getWorld() 
 	{ 
-		return Yaml.getFieldString(uid + ".world", "chunks");
+		return (String) IGSQ.getYaml().getField(uid + ".world", "chunk.yaml");
 	}
 	public void setWorld(UUID worldUID) 
 	{ 
-		Yaml.updateField(uid + ".world", "chunks",worldUID.toString());
+		IGSQ.getYaml().setField(uid + ".world", "chunk.yaml",worldUID.toString());
 	}
 	
 	public String getLocation() 
 	{ 
-		return Yaml.getFieldString(uid + ".location", "chunks");
+		return (String) IGSQ.getYaml().getField(uid + ".location", "chunk.yaml");
 	}
 	public void setLocation(int x,int z) 
 	{ 
-		Yaml.updateField(uid + ".location", "chunks",x + " " + z);
+		IGSQ.getYaml().setField(uid + ".location", "chunk.yaml",x + " " + z);
 	}
 	
 	public String getOwner() 
 	{ 
-		return Yaml.getFieldString(uid + ".owner", "chunks");
+		return (String) IGSQ.getYaml().getField(uid + ".owner", "chunk.yaml");
 	}
 	public void setOwner(UUID faction) 
 	{ 
-		Yaml.updateField(uid + ".owner", "chunks",faction.toString());
+		IGSQ.getYaml().setField(uid + ".owner", "chunk.yaml",faction.toString());
 	}
 	public static String getChunks() 
 	{ 
-		return Yaml.getFieldString("chunks", "chunks");
+		return (String) IGSQ.getYaml().getField("chunk.yaml", "chunk.yaml");
 	}
 	public static void setChunks(String chunks) 
 	{
-		Yaml.updateField("chunks", "chunks",chunks);
+		IGSQ.getYaml().setField("chunk.yaml", "chunk.yaml",chunks);
 	}
 	public void delete() 
 	{ 
-		Yaml.deleteField(uid, "chunks");
+		IGSQ.getYaml().deleteField(uid, "chunk.yaml");
 	}
 	
 	public void applyDefault() 
 	{
-		Yaml.addFieldDefault(uid + ".owner", "chunks", "");
-		Yaml.addFieldDefault(uid + ".location", "chunks", "");
-		Yaml.addFieldDefault(uid + ".world", "chunks", "");
+		IGSQ.getYaml().defaultField(uid + ".owner", "chunk.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".location", "chunk.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".world", "chunk.yaml", "");
 		
 	}
 }

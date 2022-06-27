@@ -16,9 +16,9 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlEntityWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.Player_SMP;
+import thaumictheory.igsq.spigot.yaml.YamlEntityWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 
 

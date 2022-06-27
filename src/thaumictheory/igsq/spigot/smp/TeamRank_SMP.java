@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
 
 public class TeamRank_SMP 
 {
@@ -236,7 +236,7 @@ public class TeamRank_SMP
 		for(OfflinePlayer selectedPlayer : getMembers()) 
 		{
 			if(player.getUniqueId().equals(selectedPlayer.getUniqueId())) message += "&l";
-			message += new YamlPlayerWrapper(selectedPlayer).getNickname() +"&r&#a900FF";
+			message += new YamlPlayerWrapper(selectedPlayer.getUniqueId()).getNickname() +"&r&#a900FF";
 			if(++number != getPermissions().size()) message += ", ";
 		}
 		player.sendMessage(Messaging.chatFormatter(message));

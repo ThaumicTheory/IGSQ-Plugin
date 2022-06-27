@@ -1,6 +1,6 @@
 package thaumictheory.igsq.spigot.smp;
 
-import thaumictheory.igsq.spigot.Yaml;
+import thaumictheory.igsq.shared.IGSQ;
 
 public class YamlTeamWrapper_SMP 
 {
@@ -11,102 +11,102 @@ public class YamlTeamWrapper_SMP
 	}
 	public String getName() 
 	{ 
-		return Yaml.getFieldString(uid + ".name", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".name", "team.yaml");
 	}
 	public void setName(String name) 
 	{ 
-		Yaml.updateField(uid + ".name", "teams",name);
+		IGSQ.getYaml().setField(uid + ".name", "team.yaml",name);
 	}
 	
 	public String getOwner() 
 	{ 
-		return Yaml.getFieldString(uid + ".owner", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".owner", "team.yaml");
 	}
 	public void setOwner(String owner) 
 	{ 
-		Yaml.updateField(uid + ".owner", "teams",owner);
+		IGSQ.getYaml().setField(uid + ".owner", "team.yaml",owner);
 	}
 	
 	public String getMembers() 
 	{ 
-		return Yaml.getFieldString(uid + ".members", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".members", "team.yaml");
 	}
 	public void setMembers(String name)
 	{ 
-		Yaml.updateField(uid + ".members", "teams",name);
+		IGSQ.getYaml().setField(uid + ".members", "team.yaml",name);
 	}
 	
 	public String getRanks() 
 	{ 
-		return Yaml.getFieldString(uid + ".ranks", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".ranks", "team.yaml");
 	}
 	public void setRanks(String ranks)
 	{
-		Yaml.updateField(uid + ".ranks", "teams",ranks);
+		IGSQ.getYaml().setField(uid + ".ranks", "team.yaml",ranks);
 	}
 	public static String getTeams() 
 	{ 
-		return Yaml.getFieldString("teams", "teams");
+		return (String) IGSQ.getYaml().getField("team.yaml", "team.yaml");
 	}
 	public static void setTeams(String teams) 
 	{
-		Yaml.updateField("teams", "teams", teams);
+		IGSQ.getYaml().setField("team.yaml", "team.yaml", teams);
 	}
 	public String getAlly() 
 	{ 
-		return Yaml.getFieldString(uid + ".ally", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".ally", "team.yaml");
 	}
 	public void setAlly(String ally) 
 	{ 
-		Yaml.updateField(uid + ".ally", "teams", ally);
+		IGSQ.getYaml().setField(uid + ".ally", "team.yaml", ally);
 	}
 	public String getAllyPending() 
 	{ 
-		return Yaml.getFieldString(uid + ".allypending", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".allypending", "team.yaml");
 	}
 	public void setAllyPending(String allypending) 
 	{ 
-		Yaml.updateField(uid + ".allypending", "teams", allypending);
+		IGSQ.getYaml().setField(uid + ".allypending", "team.yaml", allypending);
 	}
 	public String getEnemy() 
 	{ 
-		return Yaml.getFieldString(uid + ".enemy", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".enemy", "team.yaml");
 	}
 	public void setEnemy(String enemy) 
 	{ 
-		Yaml.updateField(uid + ".enemy", "teams", enemy);
+		IGSQ.getYaml().setField(uid + ".enemy", "team.yaml", enemy);
 	} 
 	public String getLeavePending() 
 	{ 
-		return Yaml.getFieldString(uid + ".leavepending", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".leavepending", "team.yaml");
 	}
 	public void setLeavePending(String leavepending) 
 	{ 
-		Yaml.updateField(uid + ".leavepending", "teams", leavepending);
+		IGSQ.getYaml().setField(uid + ".leavepending", "team.yaml", leavepending);
 	}
 	public String getBanned() 
 	{ 
-		return Yaml.getFieldString(uid + ".leavepending", "teams");
+		return (String) IGSQ.getYaml().getField(uid + ".leavepending", "team.yaml");
 	}
 	public void setBanned(String banned) 
 	{ 
-		Yaml.updateField(uid + ".leavepending", "teams", banned);
+		IGSQ.getYaml().setField(uid + ".leavepending", "team.yaml", banned);
 	}
 	public void delete() 
 	{ 
-		Yaml.deleteField(uid, "teams");
+		IGSQ.getYaml().deleteField(uid, "team.yaml");
 	}
 	public void applyDefault() 
 	{
-		Yaml.addFieldDefault(uid + ".ranks", "teams", "");
-		Yaml.addFieldDefault(uid + ".members", "teams", "");
-		Yaml.addFieldDefault(uid + ".name", "teams", "");
-		Yaml.addFieldDefault(uid + ".owner", "teams", "");
-		Yaml.addFieldDefault(uid + ".ally", "teams", "");
-		Yaml.addFieldDefault(uid + ".allypending", "teams", "");
-		Yaml.addFieldDefault(uid + ".enemy", "teams", "");
-		Yaml.addFieldDefault(uid + ".leavepending", "teams", "");
-		Yaml.addFieldDefault(uid + ".banned", "teams", "");
+		IGSQ.getYaml().defaultField(uid + ".ranks", "team.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".members", "team.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".name", "team.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".owner", "team.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".ally", "team.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".allypending", "team.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".enemy", "team.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".leavepending", "team.yaml", "");
+		IGSQ.getYaml().defaultField(uid + ".banned", "team.yaml", "");
 		
 	}
 }

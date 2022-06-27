@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlEntityWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlEntityWrapper;
 
 import java.util.Random;
 

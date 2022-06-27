@@ -13,9 +13,9 @@ import org.bukkit.inventory.meta.BookMeta;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.aspect.Base_Aspect;
 import thaumictheory.igsq.spigot.smp.aspect.Common_Aspect;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class InventoryClickEvent_SMP implements Listener
 {

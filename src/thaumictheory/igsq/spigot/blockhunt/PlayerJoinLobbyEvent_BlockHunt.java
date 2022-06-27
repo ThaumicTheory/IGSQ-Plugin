@@ -8,8 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
 
 public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 {
@@ -51,7 +51,7 @@ public class PlayerJoinLobbyEvent_BlockHunt implements Listener
 			event.getPlayer().getGame().nextGameItem();
 			for (PotionEffect effect : event.getPlayer().getPlayer().getActivePotionEffects()) event.getPlayer().getPlayer().removePotionEffect(effect.getType());
 			event.getPlayer().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,1000000000,0, true,false));
-			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer().getPlayer());
+			YamlPlayerWrapper yaml = new YamlPlayerWrapper(event.getPlayer().getPlayer().getUniqueId());
 			yaml.setNameController("blockhunt");
 			yaml.setChatController("blockhunt");
 			

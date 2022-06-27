@@ -6,10 +6,10 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.ErrorLogging;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Error_Command {
 
@@ -42,7 +42,7 @@ public class Error_Command {
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
-						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
 						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FF00Basic&#FF0000!"));
 						yaml.setErrorLogSetting(ErrorLogging.BASIC);
 					}
@@ -57,7 +57,7 @@ public class Error_Command {
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
-						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
 						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#00FFFFDetailed&#FF0000!"));
 						yaml.setErrorLogSetting(ErrorLogging.DETAILED);
 					}
@@ -72,7 +72,7 @@ public class Error_Command {
 					if(sender instanceof Player) 
 					{
 						Player player = (Player) sender;
-						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+						YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
 						player.sendMessage(Messaging.chatFormatter("&#FF0000Error Logging &#C8C8C8Disabled&#FF0000!"));
 						yaml.setErrorLogSetting(ErrorLogging.DISABLED);
 					}

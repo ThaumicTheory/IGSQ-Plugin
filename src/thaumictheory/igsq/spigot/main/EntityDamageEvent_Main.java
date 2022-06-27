@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
 
 public class EntityDamageEvent_Main implements Listener
 {
@@ -24,7 +24,7 @@ public class EntityDamageEvent_Main implements Listener
 			if(event.getEntityType() == EntityType.PLAYER) 
 			{
 				Player player = (Player) event.getEntity();
-				YamlPlayerWrapper yaml = new YamlPlayerWrapper(player);
+				YamlPlayerWrapper yaml = new YamlPlayerWrapper(player.getUniqueId());
 				yaml.setLastDamage(player.getTicksLived());
 			}
 		}

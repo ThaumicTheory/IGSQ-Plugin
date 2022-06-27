@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.TimeSkipEvent.SkipReason;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlWorldWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWorldWrapper;
 
 public class TimeSkipEvent_Command implements Listener
 {

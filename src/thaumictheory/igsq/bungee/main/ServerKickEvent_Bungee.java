@@ -4,7 +4,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import thaumictheory.igsq.bungee.Common;
-import thaumictheory.igsq.bungee.YamlWrapper;
+import thaumictheory.igsq.bungee.yaml.YamlWrapper;
 
 public class ServerKickEvent_Bungee implements Listener
 {

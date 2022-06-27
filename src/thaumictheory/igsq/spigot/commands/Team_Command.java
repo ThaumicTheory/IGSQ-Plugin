@@ -19,17 +19,17 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import thaumictheory.igsq.shared.Common_Shared;
+import thaumictheory.igsq.shared.IGSQ;
+import thaumictheory.igsq.shared.YamlPlayerWrapper;
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlPlayerWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.Chunk_SMP;
 import thaumictheory.igsq.spigot.smp.Common_SMP;
 import thaumictheory.igsq.spigot.smp.Player_SMP;
 import thaumictheory.igsq.spigot.smp.TeamPermissions_SMP;
 import thaumictheory.igsq.spigot.smp.TeamRank_SMP;
 import thaumictheory.igsq.spigot.smp.Team_SMP;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class Team_Command implements CommandExecutor, TabCompleter{
 
@@ -56,7 +56,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name your faction!"));
 				return true;
 			}
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
+			String name = IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' ');
 			if(Team_SMP.getTeamFromName(name) == null) 
 			{
 				if(Common_SMP.isProtectedName(name)) 
@@ -78,7 +78,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				if(Team_SMP.isInATeam(player)) player.sendMessage(Messaging.chatFormatter("&#FF0000You are already in a faction! To join another you will have to defect!\nThis may cause backlash from your current faction!"));
 				
 				player.sendMessage(Messaging.chatFormatter("&#00FF00----------------Lists of Invites----------------"));
-				String expertInvites = new YamlPlayerWrapper(player).getSmpInvites();
+				String expertInvites = new YamlPlayerWrapper(player.getUniqueId()).getSmpInvites();
 				if(expertInvites == null || expertInvites.equals("")) player.sendMessage(Messaging.chatFormatter("&#FF0000You don't have any invites... Create your own by doing /faction found [FactionName] !"));
 				
 				for(String invites : expertInvites.split(" "))
@@ -95,7 +95,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				
 				return true;
 			}
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
+			String name = IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' ');
 			Team_SMP team = Team_SMP.getTeamFromName(name);
 			
 			for(Team_SMP invites : Player_SMP.getSMPPlayer(player).getSmpInvites()) {
@@ -129,7 +129,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				sender.sendMessage(Messaging.chatFormatter("&#FF0000You need to enter a name!"));
 				return true;
 			}
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
+			String name = IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' ');
 			Player invPlayer = Bukkit.getPlayer(name);
 			if(invPlayer == null) 
 			{
@@ -182,7 +182,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				sender.sendMessage(Messaging.chatFormatter("&#FF0000-----------------------------------------------" ));
 				return true;
 			}
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+			String name = IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' '), ' ');
 			Team_SMP ally = Team_SMP.getTeamFromName(name);
 			if(ally == null) 
 			{
@@ -258,7 +258,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				sender.sendMessage(Messaging.chatFormatter("&#FF0000-----------------------------------------------" ));
 				return true;
 			}
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+			String name = IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' '), ' ');
 			Team_SMP enemy = Team_SMP.getTeamFromName(name);
 			if(enemy == null) 
 			{
@@ -305,7 +305,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		{
 			if(!requirePermission(player, TeamPermissions_SMP.KICK)) return true;
 
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
+			String name = IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' ');
 			Player kickPlayer = Bukkit.getPlayer(name);
 			if(kickPlayer == null) 
 			{
@@ -324,7 +324,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		{
 			if(!requirePermission(player, TeamPermissions_SMP.BAN)) return true;
 			
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
+			String name = IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' ');
 			Player banPlayer = Bukkit.getPlayer(name);
 			if(banPlayer == null) 
 			{
@@ -349,7 +349,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 		{
 			if(!requirePermission(player, TeamPermissions_SMP.BAN)) return true;
 			
-			String name = Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' ');
+			String name = IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' ');
 			Player banPlayer = Bukkit.getPlayer(name);
 			if(banPlayer == null) 
 			{
@@ -519,7 +519,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name your rank!"));
 					return true;
 				}
-				String name =  Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+				String name =  IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' '), ' ');
 				if(TeamRank_SMP.getRankFromName(name, team) != null) 
 				{
 					sender.sendMessage(Messaging.chatFormatter("&#CC0000Your faction already has a rank named " + name));
@@ -540,7 +540,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					sender.sendMessage(Messaging.chatFormatter("&#CC0000You need to name the rank!"));
 					return true;
 				}
-				String name =  Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+				String name =  IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' '), ' ');
 				TeamRank_SMP rank = TeamRank_SMP.getRankFromName(name, team);
 				if(rank == null) 
 				{
@@ -565,7 +565,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 					for(TeamRank_SMP rank : team.getRanks()) rank.display(player);
 					return true;
 				}
-				String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+				String name = IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' '), ' ');
 				TeamRank_SMP rank = TeamRank_SMP.getRankFromName(name, team);
 				if(rank == null) sender.sendMessage(Messaging.chatFormatter("&#CC0000Could not find the rank named " + name));
 				else rank.display(player);
@@ -589,7 +589,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				}
 				if(!requirePermission(player, TeamPermissions_SMP.OWNER)) return true;
 				
-				String name = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' ');
+				String name = IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' '), ' ');
 				TeamRank_SMP rank = TeamRank_SMP.getRankFromName(name, team);
 				if(rank == null) 
 				{
@@ -623,7 +623,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				}
 				String permissionString = args.get(2).toUpperCase();
 				TeamPermissions_SMP permission = TeamPermissions_SMP.valueOf(permissionString);
-				String rankName = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' '),' ');
+				String rankName = IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' '), ' '),' ');
 				TeamRank_SMP rank = TeamRank_SMP.getRankFromName(rankName, team);
 				if(permission == null)
 				{
@@ -668,7 +668,7 @@ public class Team_Command implements CommandExecutor, TabCompleter{
 				}
 				String permissionString = args.get(2).toUpperCase();
 				TeamPermissions_SMP permission = TeamPermissions_SMP.valueOf(permissionString);
-				String rankName = Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.removeBeforeCharacter(Common_Shared.convertArgs(args, " "), ' '), ' '),' ');
+				String rankName = IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.removeBeforeCharacter(IGSQ.convertArgs(args, " "), ' '), ' '),' ');
 				TeamRank_SMP rank = TeamRank_SMP.getRankFromName(rankName, team);
 				if(permission == null)
 				{

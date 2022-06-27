@@ -12,7 +12,7 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Dictionaries;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 public class PlayServerBlockChange_BlockHunt implements Listener
 {

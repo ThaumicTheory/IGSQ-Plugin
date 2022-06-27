@@ -10,9 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 
 import thaumictheory.igsq.spigot.Common;
-import thaumictheory.igsq.spigot.YamlEntityWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
 import thaumictheory.igsq.spigot.smp.Player_SMP;
+import thaumictheory.igsq.spigot.yaml.YamlEntityWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 
 public class EntityTargetEvent_Aspect implements Listener

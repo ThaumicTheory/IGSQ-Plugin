@@ -14,8 +14,8 @@ import org.bukkit.potion.PotionEffectType;
 
 import thaumictheory.igsq.spigot.Common;
 import thaumictheory.igsq.spigot.Messaging;
-import thaumictheory.igsq.spigot.YamlWorldWrapper;
-import thaumictheory.igsq.spigot.YamlWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWorldWrapper;
+import thaumictheory.igsq.spigot.yaml.YamlWrapper;
 
 import java.util.Random;
 
