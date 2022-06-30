@@ -1,98 +1,25 @@
 # IGSQ
-Official Repo of the IGSQ Minecraft server plugin.
 
 <img src="https://media.discordapp.net/attachments/703661349271502949/817068694575644672/IGSQ-AstroSquirrel-01.png" alt="IGSQ Logo" width="512"/>
 
-## To Do (Listed from highest priority per category)
+#Welcome to the official repository of the IGSQ mc server software.
+This is the inhouse plugin developed specifically for our minecraft server!
+You are welcome to peek inside but you shall be warned that there will be many spoilers for up and coming features to the server!
 
-**Cleaning Technical Debt**
-- [ ] Messaging overhaul (including colour and message standardisation, Hex Enums and logos)
-- [ ] Command system overhaul (Tab complete, help menu and commands)
-- [ ] documentation is heavily outdated and needs to be updated
-- [ ] More caught error types and bungeecord error support
-**QOL**
-- [ ] Add option for per server login locations.
-- [ ] Hub system (/hub command,per server login locations,)
+The software is built for the newest version of minecraft and java only
+> The only exception being the WIP "community modded LTS version" spigot (and technically bungee) builds meant for a cauldron fork such as magma
+> * note these builds will only be backports of the main build.
 
-**SMP (Expert Mode)**
-- [ ] Basic Faction system (invites and claims and claim power)
-- [ ] Claim Protection System (protecting claimed chunks from damage)
-- [ ] Advanced Factions (Ranks, alliances,enemies, UI)
-- [ ] Primative Economy
-- [ ] Faction Raiding (temporary tnt, with tiers)
-- [ ] text proximity chat
-**BlockHunt**
-- On the backburner for now
+The software supports both bungee and spigot and has them both combined into a single jar file; it is required to be included in bungee and all spigot servers you want to communicate with! 
+* Full support for paper and waterfall (forks of spigot and bungee respectively) should be expected as this is what the IGSQ server runs on
 
-## Developer Notes
+> Therefor any mentions of spigot and bungee in this document can be replaced with paper and waterfall respectively :)
 
-**Colour Standardisation**
+##Dependencies
+#The plugin depends on both Luckperms (a permissions api) and protocollib (a protocol api)
+The bungee plugin requires [Luckperms 5.4](https://luckperms.net/)
+* although not required you probably would wnt to install it on all your spigot servers
 
-*Standard*
-- #C8C8C8 Gray (disabled/nothing to do)
-- #00FF00 Green (enabled/success)
-- #CD0000 Red (Error/Deny)
-- #FF0000 Blood Red (Hard Error/Hard Deny)
-- #FF6161 Peach Red (Error Logging)
-- #FFFF00 Yellow (Instructions)
-- #FFb900 Orange (Attention)
-- #00FFFF light blue (neutral)
-- #a900FF purple
+The spigot plugin requires [protocollib 5.0.0](https://www.spigotmc.org/resources/protocollib.1997/)
 
-*Special*
-- #84FF00 Expert
-- #32FF82 Blood Moon
-- #685985 IGSQ
-- #66ccff BlockHunt Blue
-- #0099ff BlockHunt Blue Secondary
-- #ff0000 BlockHunt Red
-- #990000 BlockHunt Red Secondary
-- #ff6600 BlockHunt Powerup Cooldown
-- #FFFF00 BlockHunt Highlighted
-- #00ff00 BlockHunt Active Powerup
-- #cccccc BlockHunt Disabled
-
-*Ranks*
-- #ff0065 council
-- #fffa00 mod3
-- #ffd100 mod2
-- #eb913a mod
-
-- #5cffda Celestial
-- #cbb1ff elite3
-- #a183e6 elite2
-- #7e65be elite
-- #00f19f epic3
-- #00a368 epic2
-- #005a3a epic
-- #77ec00 soaring
-- #ff2525 flying
-- #0074ff rising
-- #00b7ff default
-
-
-- #bdfff3 founder
-- #ffcbcb birthday
-- #ff61f4 nitroboost
-- #ff899f supporter
-- #67fd67 Developer
-
-- #ec8d00 mod (Trial Staff LEGACY)
-
-**Error Codes**
-
-- ACACIA_LOG database update query failed in Database.UpdateCommand()
-- BIRCH_LOG database query failed in Database.QueryCommand()
-- BIRCH_PLANK database query failed to expire in Database.QueryCommand()
-- COAL_BLOCK data in Discord link didnt exist or was corrupt upon reciept in DiscordLink_Security.DiscordLink()
-- DIRT manually initated error in Error_Command.error()
-- EMERALD_BLOCK failed to load file in Yaml.loadFile()
-- HAY failed to save file changes in Yaml.saveFileChanges()
-- OAK_PLANK database scalar query failed in Database.ScalarCommand()
-- REDSTONE failed to create a file in Yaml.createFiles()
-- REDSTONE_LAMP plugin Messaging Channel For Configurations Failed Communication.onPluginMessageReceived()
-- GLOWSTONE plugin Messaging Channel For Sound Failed Communication.onPluginMessageReceived()
-- STONE data in 2FA didnt exist or was corrupt upon reciept in TwoFactorAuthentication_Security.TwoFactorAuthentication()
-- BEDROCK location string is not a valid location Common.parseLocationFromString()
-
-
+> I am not the creator of either of these tools either do they condone anything here! all rights belong to their respective owners.

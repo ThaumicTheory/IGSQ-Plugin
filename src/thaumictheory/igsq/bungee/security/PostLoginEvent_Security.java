@@ -8,7 +8,6 @@ import net.md_5.bungee.event.EventHandler;
 import thaumictheory.igsq.bungee.Common;
 import thaumictheory.igsq.bungee.Database;
 import thaumictheory.igsq.bungee.Messaging;
-import thaumictheory.igsq.bungee.lp.Common_LP;
 import thaumictheory.igsq.bungee.yaml.YamlWrapper;
 import thaumictheory.igsq.shared.IGSQ;
 import thaumictheory.igsq.shared.YamlPlayerWrapper;
