@@ -21,10 +21,12 @@ public class Database
 		password = YamlWrapper.getMySQLPassword();
 		if(testDatabase()) 
 		{
-			updateCommand("CREATE TABLE IF NOT EXISTS linked_accounts(link_number int PRIMARY KEY AUTO_INCREMENT,uuid VARCHAR(36),id VARCHAR(18),current_status VARCHAR(16));");
-			updateCommand("CREATE TABLE IF NOT EXISTS discord_2fa(uuid VARCHAR(36) PRIMARY KEY,current_status VARCHAR(16),code VARCHAR(6),ip VARCHAR(15));");
-			updateCommand("CREATE TABLE IF NOT EXISTS mc_accounts(uuid VARCHAR(36) PRIMARY KEY,username VARCHAR(16));");
-			updateCommand("CREATE TABLE IF NOT EXISTS discord_accounts(id VARCHAR(18) PRIMARY KEY,username VARCHAR(37),nickname VARCHAR(32),roles INT);");
+			updateCommand("CREATE TABLE IF NOT EXISTS `discord_accounts`(`id` BIGINT UNSIGNED NOT NULL,`username` VARCHAR(37) UNIQUE NOT NULL CHECK (`username` LIKE '__%#____')  ,`nickname` VARCHAR(32) DEFAULT NULL,`roles` INT UNSIGNED NOT NULL DEFAULT 0,PRIMARY KEY(`id`));");
+			//note that the minecraft username field is not checked and extended for safety because of issues on mojangs end (duplicate and illegal usernames) usernames should be 3-16 characters, unique and a-z,A-Z,0-9,_ but are not
+			updateCommand("CREATE TABLE IF NOT EXISTS `mc_accounts`(`uuid` VARCHAR(36) NOT NULL,`username` VARCHAR(32) NOT NULL,PRIMARY KEY(`uuid`));");
+			
+			updateCommand("CREATE TABLE IF NOT EXISTS `linked_accounts`(`uuid` VARCHAR(36) NOT NULL,`id` BIGINT UNSIGNED NOT NULL,`current_status` VARCHAR(16),PRIMARY KEY(`uuid`,`id`), FOREIGN KEY(`uuid`) REFERENCES `mc_accounts`(`uuid`) ON DELETE CASCADE ON UPDATE RESTRICT,FOREIGN KEY(`id`) REFERENCES `discord_accounts`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT);");
+			updateCommand("CREATE TABLE IF NOT EXISTS `discord_2fa`(`uuid` VARCHAR(36) NOT NULL,`id` BIGINT UNSIGNED NOT NULL,`current_status` VARCHAR(16),`code` VARCHAR(6) DEFAULT NULL,`ip` VARCHAR(15) DEFAULT NULL,PRIMARY KEY(`uuid`,`id`), FOREIGN KEY(`uuid`) REFERENCES `mc_accounts`(`uuid`) ON DELETE CASCADE ON UPDATE RESTRICT,FOREIGN KEY(`id`) REFERENCES `discord_accounts`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT);");
 		}
 		else System.err.println("A Database Error Has Occured On Startup.");
 	}
